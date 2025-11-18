@@ -5,6 +5,9 @@ import ErrorPage from "@/pages/ErrorPage.vue";
 import ProfilePage from "@/pages/ProfilePage.vue";
 import LoginPage from "@/pages/LoginPage.vue";
 import StuffPage from "@/pages/StuffPage.vue";
+import SettingPage from "@/pages/SettingPage.vue";
+import ObjectPage from "@/pages/ObjectPage.vue";
+import DocPage from "@/pages/DocPage.vue";
 
 const routes = [
     { path: '/' , redirect: '/home'},
@@ -14,6 +17,9 @@ const routes = [
     { path: '/stuff', component: StuffPage },
     { path: '/logout', component: LoginPage },
     { path: '/login', component: LoginPage},
+    { path: '/settings', component: SettingPage },
+    { path: '/objects', component: ObjectPage },
+    { path: '/docs', component: DocPage},
     { path: '/:pathMatch(.*)*', component: ErrorPage }
 ]
 

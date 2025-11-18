@@ -1,6 +1,6 @@
 <template>
-  <div class="w-full mt-10 max-w-x mx-auto">
-    <!-- Tab Buttons -->
+  <div class="w-5/7 mt-10 max-w-x mx-auto">
+
     <div class="bg-blue-500 p-2 rounded-t-lg">
       <div class="flex justify-center space-x-4">
         <button
@@ -27,16 +27,15 @@
       </div>
     </div>
 
-    <!-- Tab Content -->
     <div
         id="tab1"
         class="p-4 tab-content bg-white shadow-md rounded-lg"
         v-show="activeTab === 'tab1'"
     >
       <h2 class="text-2xl font-semibold mb-2 text-blue-700">Сотрудники отдела 1</h2>
-      <p>
-        <Record></Record>
-      </p>
+        <div class="m-6"><Record></Record></div>
+        <div class="m-6"> <Record></Record></div>
+        <div class="m-6"><Record></Record></div>
     </div>
 
     <div
@@ -45,8 +44,9 @@
         v-show="activeTab === 'tab2'"
     >
       <h2 class="text-2xl font-semibold mb-2 text-blue-700">Сотрудники отдела 2</h2>
-      <Record></Record>
-      <Record></Record>
+      <div class="m-4"><Record></Record></div>
+      <div class="m-4"> <Record></Record></div>
+      <div class="m-4"><Record></Record></div>
     </div>
 
     <div
@@ -55,9 +55,9 @@
         v-show="activeTab === 'tab3'"
     >
       <h2 class="text-2xl font-semibold mb-2 text-blue-700">Сотрудники отдела 3</h2>
-      <Record></Record>
-      <Record></Record>
-      <Record></Record>
+      <div class="m-4"><Record></Record></div>
+      <div class="m-4"> <Record></Record></div>
+      <div class="m-4"><Record></Record></div>
     </div>
   </div>
 </template>

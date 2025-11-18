@@ -69,12 +69,6 @@
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 
-// const profileMenu = [
-//   { name: 'Профиль', href: '/profile', current: false },
-//   { name: 'Настройки', href: '/stuff', current: false },
-//   { name: 'Выйти', href: '/docs', current: false },
-// ]
-
 const navigation = [
   { name: 'Основные средства', href: '/objects', current: false },
   { name: 'Кадры', href: '/stuff', current: false },

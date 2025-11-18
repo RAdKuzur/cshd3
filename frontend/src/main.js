@@ -3,10 +3,13 @@ import './assets/main.css'
 import { createApp } from 'vue'
 import   router  from './router'
 import App from './app.vue'
+import ElementPlus from 'element-plus'
+import 'element-plus/dist/index.css'
 import {Tabs, Tab} from 'vue3-tabs-component';
 
 createApp(App)
     .use(router)
+    .use(ElementPlus)
     .component('tabs', Tabs)
     .component('tab', Tab)
     .mount('#app')

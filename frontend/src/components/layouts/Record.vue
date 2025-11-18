@@ -1,23 +1,19 @@
 <template>
   <div class="lg:flex lg:items-center lg:justify-between">
     <div class="min-w-0 flex-1">
-      <h2 class="text-2xl/7 font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">Back End Developer</h2>
+      <h2 class="text-2xl/7 font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">Фамилия Имя Отчество</h2>
       <div class="mt-1 flex flex-col sm:mt-0 sm:flex-row sm:flex-wrap sm:space-x-6">
         <div class="mt-2 flex items-center text-sm text-gray-500">
           <BriefcaseIcon class="mr-1.5 size-5 shrink-0 text-gray-400" aria-hidden="true" />
-          Full-time
+          Должность
         </div>
         <div class="mt-2 flex items-center text-sm text-gray-500">
           <MapPinIcon class="mr-1.5 size-5 shrink-0 text-gray-400" aria-hidden="true" />
-          Remote
-        </div>
-        <div class="mt-2 flex items-center text-sm text-gray-500">
-          <CurrencyDollarIcon class="mr-1.5 size-5 shrink-0 text-gray-400" aria-hidden="true" />
-          $120k &ndash; $140k
+          Кабинет где работает
         </div>
         <div class="mt-2 flex items-center text-sm text-gray-500">
           <CalendarIcon class="mr-1.5 size-5 shrink-0 text-gray-400" aria-hidden="true" />
-          Closing on January 9, 2020
+          Дата трудоустройства
         </div>
       </div>
     </div>
@@ -25,25 +21,24 @@
       <span class="hidden sm:block">
         <button type="button" class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring inset-ring-gray-300 hover:bg-gray-50">
           <PencilIcon class="mr-1.5 -ml-0.5 size-5 text-gray-400" aria-hidden="true" />
-          Edit
+          Редактировать
         </button>
       </span>
 
       <span class="ml-3 hidden sm:block">
         <button type="button" class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring inset-ring-gray-300 hover:bg-gray-50">
-          <LinkIcon class="mr-1.5 -ml-0.5 size-5 text-gray-400" aria-hidden="true" />
-          View
+          <EyeIcon class="mr-1.5 -ml-0.5 size-5 text-gray-400" aria-hidden="true" />
+          Просмотреть
         </button>
       </span>
 
       <span class="sm:ml-3">
-        <button type="button" class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-          <CheckIcon class="mr-1.5 -ml-0.5 size-5" aria-hidden="true" />
-          Publish
+        <button type="button" class="inline-flex items-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+          <TrashIcon class="mr-1.5 -ml-0.5 size-5" aria-hidden="true" />
+          Удалить
         </button>
       </span>
 
-      <!-- Dropdown -->
       <Menu as="div" class="relative ml-3 sm:hidden">
         <MenuButton class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring inset-ring-gray-300 hover:bg-gray-50">
           More
@@ -69,12 +64,12 @@
 import {
   BriefcaseIcon,
   CalendarIcon,
-  CheckIcon,
   ChevronDownIcon,
   CurrencyDollarIcon,
-  LinkIcon,
   MapPinIcon,
   PencilIcon,
+  TrashIcon,
+  EyeIcon
 } from '@heroicons/vue/20/solid'
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 </script>
