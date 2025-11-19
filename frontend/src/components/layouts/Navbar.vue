@@ -1,78 +1,229 @@
 <template>
-  <Disclosure as="nav" class="relative bg-gray-800" v-slot="{ open }">
-    <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
-      <div class="relative flex h-16 items-center justify-between">
-        <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
-          <DisclosureButton class="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-white/5 hover:text-white focus:outline-2 focus:-outline-offset-1 focus:outline-indigo-500">
-            <span class="absolute -inset-0.5"></span>
-            <span class="sr-only">Главное меню</span>
-            <Bars3Icon v-if="!open" class="block size-6" aria-hidden="true" />
-            <XMarkIcon v-else class="block size-6" aria-hidden="true" />
-          </DisclosureButton>
-        </div>
-        <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-          <div class="flex shrink-0 items-center">
-            <img class="h-9 w-auto" src="/logo.png" alt="" />
-
+  <Disclosure as="nav" class="bg-gradient-to-r from-indigo-600 to-purple-600 shadow-lg" v-slot="{ open }">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="flex h-16 items-center justify-between">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <ScaleIcon class="w-7 h-7 text-white" />
           </div>
-          <div class="hidden sm:ml-6 sm:block">
-            <div class="flex space-x-4">
-              <a v-for="item in navigation" :key="item.name" :href="item.href" :class="[item.current ? 'text-gray-300 text-white' : 'text-gray-300 hover:bg-white/5 hover:text-white', 'rounded-md px-3 py-2 text-sm font-medium']" :aria-current="item.current ? 'page' : undefined">{{ item.name }}</a>
+          <div class="hidden md:block">
+            <div class="ml-10 flex items-baseline space-x-4">
+              <a
+                  v-for="item in navigation"
+                  :key="item.name"
+                  :href="item.href"
+                  :class="[
+                  item.current
+                    ? 'bg-white/20 text-white border-b-2 border-white'
+                    : 'text-indigo-100 hover:bg-white/10 hover:text-white transition-colors duration-200',
+                  'rounded-md px-3 py-2 text-sm font-medium flex items-center'
+                ]"
+                  :aria-current="item.current ? 'page' : undefined"
+              >
+                <component
+                    :is="item.icon"
+                    class="w-4 h-4 mr-2"
+                    aria-hidden="true"
+                />
+                {{ item.name }}
+              </a>
             </div>
           </div>
         </div>
-        <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-          <button type="button" class="relative rounded-full p-1 text-gray-400 focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500">
-            <span class="absolute -inset-1.5"></span>
-            <span class="sr-only">Уведомление</span>
-            <BellIcon class="size-6" aria-hidden="true" />
-          </button>
-
-          <Menu as="div" class="relative ml-3">
-            <MenuButton class="relative flex rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
+        <div class="hidden md:block">
+          <div class="ml-4 flex items-center md:ml-6">
+            <!-- Кнопка уведомлений -->
+            <button class="relative rounded-full p-1 text-indigo-200 hover:text-white hover:bg-white/10 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-white">
               <span class="absolute -inset-1.5"></span>
-              <span class="sr-only">Пользовательское меню</span>
-              <img class="size-8 rounded-full bg-gray-800 outline -outline-offset-1 outline-white/10" src="/person.jpg" alt="" />
-            </MenuButton>
-
-            <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform scale-100" leave-to-class="transform opacity-0 scale-95">
-              <MenuItems class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg outline outline-black/5">
-                <MenuItem v-slot="{ active }">
-                  <a href="/profile" :class="[active ? 'bg-gray-100 outline-hidden' : '', 'block px-4 py-2 text-sm text-gray-700']">Профиль</a>
-                </MenuItem>
-                <MenuItem v-slot="{ active }">
-                  <a href="/settings" :class="[active ? 'bg-gray-100 outline-hidden' : '', 'block px-4 py-2 text-sm text-gray-700']">Настройки</a>
-                </MenuItem>
-                <MenuItem v-slot="{ active }">
-                  <a href="/logout" :class="[active ? 'bg-gray-100 outline-hidden' : '', 'block px-4 py-2 text-sm text-gray-700']">Выход</a>
-                </MenuItem>
-                <MenuItem v-slot="{ active }">
-                  <a href="/login" :class="[active ? 'bg-gray-100 outline-hidden' : '', 'block px-4 py-2 text-sm text-gray-700']">Войти</a>
-                </MenuItem>
-              </MenuItems>
-            </transition>
-          </Menu>
+              <span class="sr-only">Просмотреть уведомления</span>
+              <BellIcon class="h-6 w-6" aria-hidden="true" />
+              <span class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">
+                3
+              </span>
+            </button>
+            <Menu as="div" class="relative ml-3">
+              <MenuButton class="relative flex max-w-xs items-center rounded-full bg-white/10 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-indigo-600 hover:bg-white/20 transition-colors duration-200">
+                <span class="absolute -inset-1.5"></span>
+                <span class="sr-only">Открыть меню пользователя</span>
+                <img class="h-8 w-8 rounded-full border-2 border-white/20" src="/person.jpg" alt="Профиль пользователя" />
+                <span class="ml-2 mr-1 text-indigo-100 text-sm font-medium hidden lg:block">
+                  Алексей Петров
+                </span>
+                <ChevronDownIcon class="ml-1 h-4 w-4 text-indigo-200" aria-hidden="true" />
+              </MenuButton>
+              <transition
+                  enter-active-class="transition ease-out duration-100"
+                  enter-from-class="transform opacity-0 scale-95"
+                  enter-to-class="transform opacity-100 scale-100"
+                  leave-active-class="transition ease-in duration-75"
+                  leave-from-class="transform opacity-100 scale-100"
+                  leave-to-class="transform opacity-0 scale-95"
+              >
+                <MenuItems class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                  <MenuItem v-slot="{ active }">
+                    <a
+                        href="/profile"
+                        :class="[active ? 'bg-gray-100' : '', 'flex items-center px-4 py-2 text-sm text-gray-700']"
+                    >
+                      <UserIcon class="w-4 h-4 mr-2 text-gray-400" />
+                      Профиль
+                    </a>
+                  </MenuItem>
+                  <MenuItem v-slot="{ active }">
+                    <a
+                        href="/settings"
+                        :class="[active ? 'bg-gray-100' : '', 'flex items-center px-4 py-2 text-sm text-gray-700']"
+                    >
+                      <Cog6ToothIcon class="w-4 h-4 mr-2 text-gray-400" />
+                      Настройки
+                    </a>
+                  </MenuItem>
+                  <div class="border-t border-gray-100 my-1"></div>
+                  <MenuItem v-slot="{ active }">
+                    <a
+                        href="/logout"
+                        :class="[active ? 'bg-gray-100' : '', 'flex items-center px-4 py-2 text-sm text-gray-700']"
+                    >
+                      <ArrowRightOnRectangleIcon class="w-4 h-4 mr-2 text-gray-400" />
+                      Выход
+                    </a>
+                  </MenuItem>
+                </MenuItems>
+              </transition>
+            </Menu>
+          </div>
+        </div>
+        <div class="flex md:hidden">
+          <DisclosureButton class="relative inline-flex items-center justify-center rounded-md p-2 text-indigo-200 hover:bg-white/10 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-inset">
+            <span class="absolute -inset-0.5"></span>
+            <span class="sr-only">Открыть главное меню</span>
+            <Bars3Icon v-if="!open" class="block h-6 w-6" aria-hidden="true" />
+            <XMarkIcon v-else class="block h-6 w-6" aria-hidden="true" />
+          </DisclosureButton>
         </div>
       </div>
     </div>
 
-    <DisclosurePanel class="sm:hidden">
+    <DisclosurePanel class="md:hidden border-t border-indigo-500">
       <div class="space-y-1 px-2 pt-2 pb-3">
-        <DisclosureButton v-for="item in navigation" :key="item.name" as="a" :href="item.href" :class="[item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-white/5 hover:text-white', 'block rounded-md px-3 py-2 text-base font-medium']" :aria-current="item.current ? 'page' : undefined">{{ item.name }}</DisclosureButton>
+        <DisclosureButton
+            v-for="item in navigation"
+            :key="item.name"
+            as="a"
+            :href="item.href"
+            :class="[
+            item.current
+              ? 'bg-white/20 text-white border-l-4 border-white'
+              : 'text-indigo-100 hover:bg-white/10 hover:text-white',
+            'block rounded-md px-3 py-2 text-base font-medium flex items-center transition-colors duration-200'
+          ]"
+            :aria-current="item.current ? 'page' : undefined"
+        >
+          <component
+              :is="item.icon"
+              class="w-5 h-5 mr-3"
+              aria-hidden="true"
+          />
+          {{ item.name }}
+        </DisclosureButton>
+      </div>
+
+      <div class="border-t border-indigo-500 pt-4 pb-3">
+        <div class="flex items-center px-5">
+          <div class="flex-shrink-0">
+            <img class="h-10 w-10 rounded-full border-2 border-white/20" src="/person.jpg" alt="Профиль пользователя" />
+          </div>
+          <div class="ml-3">
+            <div class="text-base font-medium text-white">Алексей Петров</div>
+            <div class="text-sm font-medium text-indigo-200">admin@company.com</div>
+          </div>
+          <button class="relative ml-auto flex-shrink-0 rounded-full p-1 text-indigo-200 hover:text-white hover:bg-white/10">
+            <span class="absolute -inset-1.5"></span>
+            <span class="sr-only">Уведомления</span>
+            <BellIcon class="h-6 w-6" aria-hidden="true" />
+            <span class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">
+              3
+            </span>
+          </button>
+        </div>
+        <div class="mt-3 space-y-1 px-2">
+          <DisclosureButton
+              as="a"
+              href="/profile"
+              class="flex items-center rounded-md px-3 py-2 text-base font-medium text-indigo-100 hover:bg-white/10 hover:text-white transition-colors duration-200"
+          >
+            <UserIcon class="w-5 h-5 mr-3" />
+            Профиль
+          </DisclosureButton>
+          <DisclosureButton
+              as="a"
+              href="/settings"
+              class="flex items-center rounded-md px-3 py-2 text-base font-medium text-indigo-100 hover:bg-white/10 hover:text-white transition-colors duration-200"
+          >
+            <Cog6ToothIcon class="w-5 h-5 mr-3" />
+            Настройки
+          </DisclosureButton>
+          <DisclosureButton
+              as="a"
+              href="/logout"
+              class="flex items-center rounded-md px-3 py-2 text-base font-medium text-indigo-100 hover:bg-white/10 hover:text-white transition-colors duration-200"
+          >
+            <ArrowRightOnRectangleIcon class="w-5 h-5 mr-3" />
+            Выход
+          </DisclosureButton>
+        </div>
       </div>
     </DisclosurePanel>
   </Disclosure>
 </template>
 
 <script setup>
-
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
+import {
+  Bars3Icon,
+  BellIcon,
+  XMarkIcon,
+  ChevronDownIcon,
+  UserIcon,
+  Cog6ToothIcon,
+  ArrowRightOnRectangleIcon
+} from '@heroicons/vue/24/outline'
+import {
+  BuildingStorefrontIcon,
+  UserGroupIcon,
+  DocumentTextIcon,
+  MapIcon
+} from '@heroicons/vue/24/outline'
+import {ScaleIcon} from "@heroicons/vue/24/outline/index.js";
 
 const navigation = [
-  { name: 'Основные средства', href: '/objects', current: false },
-  { name: 'Кадры', href: '/stuff', current: false },
-  { name: 'Документооборот', href: '/docs', current: false },
-  { name: 'Интерактивная карта', href: '/map', current: false },
+  {
+    name: 'Основные средства',
+    href: '/objects',
+    current: false,
+    icon: BuildingStorefrontIcon
+  },
+  {
+    name: 'Кадры',
+    href: '/stuff',
+    current: false,
+    icon: UserGroupIcon
+  },
+  {
+    name: 'Документооборот',
+    href: '/docs',
+    current: false,
+    icon: DocumentTextIcon
+  },
+  {
+    name: 'Интерактивная карта',
+    href: '/map',
+    current: false,
+    icon: MapIcon
+  },
 ]
 </script>
+
+<style scoped>
+
+</style>
