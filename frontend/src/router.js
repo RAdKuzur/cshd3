@@ -8,6 +8,7 @@ import StuffPage from "@/pages/StuffPage.vue";
 import SettingPage from "@/pages/SettingPage.vue";
 import ObjectPage from "@/pages/ObjectPage.vue";
 import DocPage from "@/pages/DocPage.vue";
+import MapPage from "@/pages/MapPage.vue";
 
 const routes = [
     { path: '/' , redirect: '/home'},
@@ -20,6 +21,7 @@ const routes = [
     { path: '/settings', component: SettingPage },
     { path: '/objects', component: ObjectPage },
     { path: '/docs', component: DocPage},
+    { path: '/map', component: MapPage },
     { path: '/:pathMatch(.*)*', component: ErrorPage }
 ]
 

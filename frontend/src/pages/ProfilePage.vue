@@ -18,13 +18,10 @@
             </div>
             <hr class="my-6 border-t border-gray-300">
             <div class="flex flex-col">
-              <span class="text-gray-700 uppercase font-bold tracking-wider mb-2">Skills</span>
+              <span class="text-gray-700 uppercase font-bold tracking-wider mb-2">Контакты</span>
               <ul>
-                <li class="mb-2">JavaScript</li>
-                <li class="mb-2">React</li>
-                <li class="mb-2">Node.js</li>
-                <li class="mb-2">HTML/CSS</li>
-                <li class="mb-2">Tailwind Css</li>
+                <li class="mb-2">Почта</li>
+                <li class="mb-2">Телефон</li>
               </ul>
             </div>
           </div>

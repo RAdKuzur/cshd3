@@ -72,7 +72,7 @@ import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 const navigation = [
   { name: 'Основные средства', href: '/objects', current: false },
   { name: 'Кадры', href: '/stuff', current: false },
-  { name: 'Документация', href: '/docs', current: false },
+  { name: 'Документооборот', href: '/docs', current: false },
   { name: 'Интерактивная карта', href: '/map', current: false },
 ]
 </script>
