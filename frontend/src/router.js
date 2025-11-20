@@ -1,33 +1,46 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import AuthService from "@/services/AuthService";
 
+// импорт страниц
 import HomePage from "@/pages/HomePage.vue";
-import ErrorPage from "@/pages/ErrorPage.vue";
-import ProfilePage from "@/pages/ProfilePage.vue";
 import LoginPage from "@/pages/LoginPage.vue";
+import ProfilePage from "@/pages/ProfilePage.vue";
 import StuffPage from "@/pages/StuffPage.vue";
 import SettingPage from "@/pages/SettingPage.vue";
 import ObjectPage from "@/pages/ObjectPage.vue";
 import DocPage from "@/pages/DocPage.vue";
 import MapPage from "@/pages/MapPage.vue";
+import ErrorPage from "@/pages/ErrorPage.vue";
 
 const routes = [
-    { path: '/' , redirect: '/home'},
+    { path: '/', redirect: '/home' },
     { path: '/home', component: HomePage },
-    { path: '/error', component: ErrorPage },
-    { path: '/profile', component: ProfilePage  },
-    { path: '/stuff', component: StuffPage },
-    { path: '/logout', component: LoginPage },
-    { path: '/login', component: LoginPage},
-    { path: '/settings', component: SettingPage },
-    { path: '/objects', component: ObjectPage },
-    { path: '/docs', component: DocPage},
-    { path: '/map', component: MapPage },
+    { path: '/login', component: LoginPage },
+    { path: '/profile', component: ProfilePage, meta: { auth: true } },
+    { path: '/stuff', component: StuffPage, meta: { auth: true } },
+    { path: '/settings', component: SettingPage, meta: { auth: true } },
+    { path: '/objects', component: ObjectPage, meta: { auth: true } },
+    { path: '/docs', component: DocPage, meta: { auth: true } },
+    { path: '/map', component: MapPage, meta: { auth: true } },
     { path: '/:pathMatch(.*)*', component: ErrorPage }
-]
+];
 
 const router = createRouter({
     history: createWebHistory(),
-    routes,
-})
+    routes
+});
 
-export default router
+router.beforeEach(async (to, from, next) => {
+    // если маршрут не защищён → пропускаем
+    if (!to.meta.auth) return next();
+
+    try {
+        await AuthService.check(); // проверяем токен через сервер
+        next();
+    } catch (e) {
+        // сервер вернул 401 → редирект на login
+        next('/login');
+    }
+});
+
+export default router;

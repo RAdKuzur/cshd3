@@ -37,7 +37,7 @@
             </label>
             <div class="relative">
               <input
-                  v-model="form.email"
+                  v-model="form.login"
                   type="email"
                   id="email"
                   required
@@ -192,6 +192,8 @@
 
 <script setup>
 import { ref, computed } from 'vue'
+import AuthService from "@/services/AuthService";
+import { useRouter } from "vue-router";
 import {
   ScaleIcon,
   EnvelopeIcon,
@@ -203,66 +205,37 @@ import {
   CheckCircleIcon
 } from '@heroicons/vue/24/outline'
 
-// Реактивные данные
+const router = useRouter();
+
 const form = ref({
-  email: '',
+  login: '',
   password: '',
   remember: false
 })
 
-const loading = ref(false)
-const showPassword = ref(false)
-const showForgotPassword = ref(false)
+const loading = ref(false);
+const showPassword = ref(false);
+const showForgotPassword = ref(false);
+const errorMessage = ref(null);
 
-// Валидация email
-const emailValid = computed(() => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  return form.value.email && emailRegex.test(form.value.email)
-})
+// Валидация email/login
+const loginValid = computed(() => form.value.login.length > 2);
 
-// Обработка входа
 const handleLogin = async () => {
-  if (!emailValid.value || !form.value.password) {
-    return
+  errorMessage.value = null;
+  if (!form.value.login || !form.value.password) {
+    errorMessage.value = "Введите логин и пароль";
+    return;
   }
 
-  loading.value = true
-
+  loading.value = true;
   try {
-    // Имитация запроса на сервер
-    await new Promise(resolve => setTimeout(resolve, 1500))
-    console.log('Вход выполнен:', form.value)
-    // Здесь будет реальная логика входа
-  } catch (error) {
-    console.error('Ошибка входа:', error)
+    await AuthService.login(form.value.login, form.value.password);
+    router.push("/home"); // если успешно, сразу на /home
+  } catch (e) {
+    errorMessage.value = e.response?.data?.message || "Ошибка входа";
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
-
-// Контакт с поддержкой
-const contactSupport = () => {
-  window.location.href = 'mailto:support@mosoblsud.ru'
-}
+};
 </script>
-
-<style scoped>
-/* Дополнительные стили для улучшения UX */
-input:focus {
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-}
-
-/* Анимация появления модального окна */
-.fixed {
-  animation: fadeIn 0.3s ease-out;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-</style>

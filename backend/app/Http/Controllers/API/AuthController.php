@@ -37,7 +37,7 @@ class AuthController extends Controller
                 'message' => 'Успешный вход',
             ])
                 ->cookie('refresh_token', $tokens['refreshToken'], 10)
-                ->cookie('access_token', $tokens['accessToken'], 2);
+                ->cookie('access_token', $tokens['accessToken'], 1);
         }
         else {
             return response()->json([
@@ -46,7 +46,10 @@ class AuthController extends Controller
             ], 401);
         }
     }
-
+    public function check(Request $request)
+    {
+        return response()->json(['success' => true]);
+    }
     public function forgotPassword(Request $request)
     {
 

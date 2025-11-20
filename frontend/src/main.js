@@ -1,5 +1,5 @@
 import './assets/main.css'
-
+import "@/plugins/axios";
 import { createApp } from 'vue'
 import   router  from './router'
 import App from './app.vue'
