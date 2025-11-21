@@ -21,9 +21,10 @@ return new class extends Migration
 
         Schema::create('tokens', function (Blueprint $table) {
             $table->id();
-            $table->string('refresh_token');
+            $table->string('refresh_token', 1000);
             $table->integer('user_id')->constrained('users')->cascadeOnDelete();
             $table->datetime('expires_at');
+            $table->string('device_id')->nullable();
             $table->boolean('is_revoked')->default(false);
             $table->string('user_agent');
             $table->string('ip_address')->nullable();

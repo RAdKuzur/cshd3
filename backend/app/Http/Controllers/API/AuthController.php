@@ -7,7 +7,6 @@ use App\Http\Requests\LoginRequest;
 use App\Models\User;
 use App\Repositories\UserRepository;
 use App\Services\AuthService;
-use http\Cookie;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -36,8 +35,8 @@ class AuthController extends Controller
                 'success' => true,
                 'message' => 'Успешный вход',
             ])
-                ->cookie('refresh_token', $tokens['refreshToken'], 10)
-                ->cookie('access_token', $tokens['accessToken'], 1);
+                ->cookie('refresh_token', $tokens['refreshToken'], (int)env('REFRESH_TOKEN_TIME'))
+                ->cookie('access_token', $tokens['accessToken'], (int)env('ACCESS_TOKEN_TIME'));
         }
         else {
             return response()->json([
@@ -48,7 +47,21 @@ class AuthController extends Controller
     }
     public function check(Request $request)
     {
-        return response()->json(['success' => true]);
+        $accessToken = $request->cookie('access_token');
+        $refreshToken = $request->cookie('refresh_token');
+        if ($this->authService->isAuth($accessToken, $refreshToken)) {
+            $tokens = $this->authService->refresh($refreshToken);
+            return response()->json([
+                'success' => true,
+            ])
+            ->cookie('refresh_token', $tokens['refreshToken'], (int)env('REFRESH_TOKEN_TIME'))
+            ->cookie('access_token', $tokens['accessToken'], (int)env('ACCESS_TOKEN_TIME'));
+        }
+        return response()->json([
+            'success' => false,
+            'refresh_token' => $refreshToken,
+            'access_token' => $accessToken,
+        ], 401);
     }
     public function forgotPassword(Request $request)
     {

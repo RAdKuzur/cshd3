@@ -12,7 +12,8 @@ class Token extends Model
         'user_id',
         'expires_at',
         'user_agent',
-        'ip_address'
+        'ip_address',
+        'device_id'
     ];
 
     /**
