@@ -1,0 +1,1 @@
+cd backend && php artisan schedule:work
