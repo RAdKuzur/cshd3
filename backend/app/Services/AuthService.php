@@ -48,11 +48,11 @@ class AuthService
         }
         else if(!is_null($refreshToken) && is_null($accessToken)){
             $data = JWTAuth::setToken($refreshToken)->getPayload();
-            return count($this->tokenRepository->isValidToken($refreshToken, $data['sub'])) > 0;
+            return count($this->tokenRepository->isValidToken($refreshToken, $data['user_id'])) > 0;
         }
         else if(!is_null($refreshToken) && !is_null($accessToken)){
             $data = JWTAuth::setToken($accessToken)->getPayload();
-            return $data['user_id'] && count($this->tokenRepository->isValidToken($refreshToken, $data['sub'])) > 0;
+            return $data['user_id'] && count($this->tokenRepository->isValidToken($refreshToken, $data['user_id'])) > 0;
         }
         else {
             //not authorizated, but very strange situation

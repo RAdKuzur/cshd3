@@ -15,7 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string('url');
             $table->string('ip_address');
-            $table->integer('user_id')->constrained('users')->cascadeOnDelete();
+            $table->string('host');
+            $table->string('request_method');
+            $table->datetime('request_time');
+            $table->string('user_agent');
+            $table->string('path');
+            //$table->integer('user_id')->constrained('users')->cascadeOnDelete();
             $table->timestamps();
         });
     }
