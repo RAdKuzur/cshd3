@@ -38,6 +38,9 @@ class AuthService
             'accessToken' => $accessToken,
         ];
     }
+    public function logout($token){
+        $this->tokenRepository->deleteByToken($token);
+    }
     public function isAuth($accessToken, $refreshToken){
         if (is_null($refreshToken) && is_null($accessToken)) {
             //not authorizated

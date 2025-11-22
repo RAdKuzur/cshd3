@@ -59,8 +59,6 @@ class AuthController extends Controller
         }
         return response()->json([
             'success' => false,
-            'refresh_token' => $refreshToken,
-            'access_token' => $accessToken,
         ], 401);
     }
     public function forgotPassword(Request $request)
@@ -68,9 +66,11 @@ class AuthController extends Controller
 
     }
     public function logout(Request $request){
-
-    }
-    public function refresh(Request $request){
-
+        $refreshToken = $request->cookie('refresh_token');
+        $this->authService->logout($refreshToken);
+        return response()->json([
+            'success' => true,
+            'message' => 'Выход их системы'
+        ])->cookie('refresh_token', null, 0)->cookie('access_token', null, 0);
     }
 }

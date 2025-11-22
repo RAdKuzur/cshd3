@@ -79,7 +79,7 @@
                     </a>
                   </MenuItem>
                   <div class="border-t border-gray-100 my-1"></div>
-                  <MenuItem v-slot="{ active }">
+                  <MenuItem v-slot="{ active }"  @click="logout">
                     <a
                         href="/logout"
                         :class="[active ? 'bg-gray-100' : '', 'flex items-center px-4 py-2 text-sm text-gray-700']"
@@ -195,6 +195,15 @@ import {
   MapIcon
 } from '@heroicons/vue/24/outline'
 import {ScaleIcon} from "@heroicons/vue/24/outline/index.js";
+import AuthService from "@/services/AuthService.js";
+
+async function logout() {
+  try {
+    await AuthService.logout();
+  } catch (e) {
+    console.log('Ошибка выхода')
+  }
+}
 
 const navigation = [
   {

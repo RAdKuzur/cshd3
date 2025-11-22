@@ -1,23 +1,30 @@
 import axios from "axios";
 
-axios.defaults.withCredentials = true; // важно для HttpOnly cookies
+axios.defaults.withCredentials = true;
 
 const API_URL = "http://localhost:8000/api";
 
 export default {
-    // Логин
     async login(login, password) {
         const response = await axios.post(`${API_URL}/login`, { login, password });
-        return response.data; // сервер уже выставляет access_token + refresh_token в cookie
+        return response.data;
     },
 
-    // Проверка авторизации
     async check() {
-        return axios.get(`${API_URL}/check`); // эндпоинт на бэкенде возвращает 200 если токен валидный
+        return axios.get(`${API_URL}/check`);
     },
 
-    // Логаут
     async logout() {
         await axios.post(`${API_URL}/logout`);
+    },
+
+    // Добавляем метод для проверки статуса авторизации
+    async isAuthenticated() {
+        try {
+            await this.check();
+            return true;
+        } catch (error) {
+            return false;
+        }
     }
 };

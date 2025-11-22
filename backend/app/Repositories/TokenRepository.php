@@ -33,5 +33,10 @@ class TokenRepository
             'user_id' => $user->id,
         ])->delete();
     }
-
+    public function deleteByToken($token)
+    {
+        return Token::where([
+            'refresh_token' => $token,
+        ])->delete();
+    }
 }

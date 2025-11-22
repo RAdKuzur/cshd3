@@ -16,6 +16,7 @@ const routes = [
     { path: '/', redirect: '/home' },
     { path: '/home', component: HomePage },
     { path: '/login', component: LoginPage },
+    { path: '/logout' }, // маршрут для выхода
     { path: '/profile', component: ProfilePage, meta: { auth: true } },
     { path: '/stuff', component: StuffPage, meta: { auth: true } },
     { path: '/settings', component: SettingPage, meta: { auth: true } },
@@ -31,6 +32,21 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
+    // Обработка выхода
+    if (to.path === '/logout') {
+        try {
+            // Вызываем метод выхода (если он есть в AuthService)
+            if (AuthService.logout) {
+                await AuthService.logout();
+            }
+        } catch (e) {
+            console.error('Ошибка при выходе:', e);
+        } finally {
+            // Всегда перенаправляем на страницу входа
+            return next('/login');
+        }
+    }
+
     // если маршрут не защищён → пропускаем
     if (!to.meta.auth) return next();
 
