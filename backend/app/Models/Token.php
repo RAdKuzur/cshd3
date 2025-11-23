@@ -39,4 +39,7 @@ class Token extends Model
     public function toRevoke(){
         $this->is_revoke = true;
     }
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
 }

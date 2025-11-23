@@ -13,6 +13,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 /* @property string $password */
 
 /* @property Token[] $tokens  */
+/* @property Permission[] $permissions */
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -28,7 +29,6 @@ class User extends Authenticatable implements JWTSubject
         'username',
         'email',
         'password',
-        'phone_number'
     ];
 
     /**
@@ -46,5 +46,11 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+    public function tokens(){
+        return $this->hasMany(Token::class);
+    }
+    public function permissions(){
+        return $this->hasMany(Permission::class);
     }
 }
