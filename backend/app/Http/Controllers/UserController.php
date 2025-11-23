@@ -16,10 +16,14 @@ class UserController extends Controller
         $this->userService = $userService;
     }
 
-    public function profile(Request $request){
-        $accessToken = $request->cookie('access_token');
-        $userId = JWTAuth::setToken($accessToken)->getPayload()['user_id'];
-        $userInfo = $this->userService->getProfileInfo($userId);
-
+    public function profile($username){
+        $data = $this->userService->getProfileInfo(
+            $username
+        );
+        return response()->json([
+            'success' => true,
+            'data' => $data,
+            'message' => 'Инфо о профиле'
+        ]);
     }
 }

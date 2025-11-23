@@ -1,88 +1,26 @@
 <script setup>
-import { ref } from 'vue'
+import {onMounted, ref} from 'vue'
+import axios from 'axios'
 
-// Данные пользователя
-const user = ref({
-  name: 'Алексей Петров',
-  position: 'Senior Developer',
-  department: 'IT Отдел',
-  email: 'alexey@company.com',
-  phone: '+7 (999) 123-45-67',
-  bio: 'Full-stack разработчик с 5-летним опытом. Специализируюсь на Vue.js и Node.js. Увлекаюсь созданием масштабируемых веб-приложений и оптимизацией производительности.',
-  avatar: '/person.jpg',
-  skills: ['Коммуникабельность', 'Общество']
+
+const user = ref({})
+const workExperience = ref({})
+const contacts = ref({})
+const education = ref({})
+const fetchUserData = async () => {
+  try {
+    const response = await axios.get("http://localhost:8000/api/profile/user")
+    user.value = response.data.data.user;
+    contacts.value = response.data.data.contacts
+    workExperience.value = response.data.data.workExperience
+    education.value = response.data.data.education
+  } catch (err) {
+    console.error('Ошибка при загрузке данных:', err)
+  }
+}
+onMounted(() => {
+  fetchUserData()
 })
-
-// Опыт работы
-const workExperience = ref([
-  {
-    id: 1,
-    position: 'Senior Frontend Developer',
-    company: 'Tech Solutions Inc.',
-    period: '2022 - настоящее время',
-    description: 'Разработка и поддержка крупного SaaS-продукта. Руководство командой из 3 разработчиков. Внедрение микросервисной архитектуры.',
-    technologies: ['Коммуникабельность', 'TypeScript', 'GraphQL', 'Jest', 'Docker']
-  },
-  {
-    id: 2,
-    position: 'Full-stack Developer',
-    company: 'Digital Agency Pro',
-    period: '2019 - 2022',
-    description: 'Создание веб-приложений для клиентов из различных отраслей. Участие в полном цикле разработки от проектирования до деплоя.',
-    technologies: ['Vue.js', 'React', 'Node.js', 'MongoDB', 'AWS']
-  },
-  {
-    id: 3,
-    position: 'Web Developer',
-    company: 'StartUp Innovations',
-    period: '2017 - 2019',
-    description: 'Разработка MVP для стартапов. Быстрое прототипирование и итеративная разработка.',
-    technologies: ['JavaScript', 'React', 'Firebase', 'REST API']
-  }
-])
-
-// Образование
-const education = ref([
-  {
-    id: 1,
-    institution: 'Московский Государственный Технический Университет',
-    degree: 'Магистр компьютерных наук',
-    period: '2015 - 2017',
-    description: 'Специализация в области распределенных систем и веб-технологий.'
-  },
-  {
-    id: 2,
-    institution: 'Санкт-Петербургский Политехнический Университет',
-    degree: 'Бакалавр информатики',
-    period: '2011 - 2015',
-    description: 'Основы программирования, алгоритмы и структуры данных.'
-  }
-])
-
-// Контакты
-const contacts = ref([
-  {
-    type: 'email',
-    value: 'petrov@company.com',
-    icon: '📧'
-  },
-  {
-    type: 'phone',
-    value: '+7 (999) 123-45-67',
-    icon: '📱'
-  },
-  {
-    type: 'location',
-    value: 'Москва, Россия',
-    icon: '📍'
-  },
-  {
-    type: 'linkedin',
-    value: 'linkedin.com',
-    icon: '💼'
-  }
-])
-
 const sendEmail = () => {
   window.location.href = `mailto:${user.value.email}`
 }
@@ -167,17 +105,6 @@ const sendEmail = () => {
               </div>
             </div>
           </div>
-
-          <!-- Статистика -->
-          <div class="bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Статистика</h3>
-            <div class="space-y-4">
-              <div class="flex justify-between items-center">
-                <span class="text-gray-600">Лет опыта</span>
-                <span class="font-semibold text-gray-900">6+</span>
-              </div>
-            </div>
-          </div>
         </div>
 
         <!-- Правая колонка - Контент -->
@@ -192,22 +119,7 @@ const sendEmail = () => {
               </h2>
             </div>
             <p class="text-gray-700 leading-relaxed text-lg">{{ user.bio }}</p>
-
-            <!-- Достижения -->
-            <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div class="bg-gradient-to-br from-blue-50 to-indigo-50 p-4 rounded-lg border border-blue-200">
-                <div class="text-2xl font-bold text-blue-600 mb-1">50+</div>
-                <div class="text-sm text-blue-800">Успешных проектов</div>
-              </div>
-              <div class="bg-gradient-to-br from-green-50 to-emerald-50 p-4 rounded-lg border border-green-200">
-                <div class="text-2xl font-bold text-green-600 mb-1">99%</div>
-                <div class="text-sm text-green-800">Довольных клиентов</div>
-              </div>
-              <div class="bg-gradient-to-br from-purple-50 to-pink-50 p-4 rounded-lg border border-purple-200">
-                <div class="text-2xl font-bold text-purple-600 mb-1">15+</div>
-                <div class="text-sm text-purple-800">Технологий освоено</div>
-              </div>
-            </div>
+            <!-- МЕСТО ДЛЯ ДОСТИЖЕНИЙ -->
           </div>
 
           <!-- Опыт работы -->
@@ -283,39 +195,7 @@ const sendEmail = () => {
             </div>
           </div>
 
-          <!-- Сертификаты -->
-          <div class="bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
-            <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-              <span class="w-3 h-3 bg-yellow-500 rounded-full mr-3"></span>
-              Сертификаты
-            </h2>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
-                <div class="flex items-center mb-3">
-                  <div class="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center mr-3">
-                    <span class="text-yellow-600 font-bold">V</span>
-                  </div>
-                  <div>
-                    <h4 class="font-semibold text-gray-900">Vue.js Certified Developer</h4>
-                    <p class="text-sm text-gray-500">Vue School • 2023</p>
-                  </div>
-                </div>
-              </div>
-
-              <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
-                <div class="flex items-center mb-3">
-                  <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
-                    <span class="text-blue-600 font-bold">A</span>
-                  </div>
-                  <div>
-                    <h4 class="font-semibold text-gray-900">AWS Solutions Architect</h4>
-                    <p class="text-sm text-gray-500">Amazon • 2022</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <!-- МЕСТО ДЛЯ СЕРТИФИКАТОВ -->
         </div>
       </div>
     </div>

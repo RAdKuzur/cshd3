@@ -31,6 +31,9 @@ const router = createRouter({
     routes
 });
 
+
+// это Auth v1.0 пока она выключена, пусть всё обрабатывает middleware бэкенда
+
 router.beforeEach(async (to, from, next) => {
     // Обработка выхода
     if (to.path === '/logout') {

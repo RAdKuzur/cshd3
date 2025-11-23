@@ -19,7 +19,6 @@ return new class extends Migration
             $table->string('request_method');
             $table->datetime('request_time');
             $table->string('user_agent');
-            $table->string('path');
             //$table->integer('user_id')->constrained('users')->cascadeOnDelete();
             $table->timestamps();
         });

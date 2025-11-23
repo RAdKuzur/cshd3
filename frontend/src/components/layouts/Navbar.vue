@@ -30,7 +30,22 @@
             </div>
           </div>
         </div>
-        <div class="hidden md:block">
+
+        <!-- Блок для неавторизованных пользователей -->
+        <div v-show="isAuth" class="hidden md:block">
+          <div class="ml-4 flex items-center md:ml-6 space-x-3">
+            <!-- Кнопка входа -->
+            <a
+                href="/login"
+                class="relative flex items-center rounded-md bg-white/10 px-4 py-2 text-sm font-medium text-white hover:bg-white/20 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-indigo-600"
+            >
+              <UserIcon class="w-4 h-4 mr-2" aria-hidden="true" />
+              Войти
+            </a>
+          </div>
+        </div>
+
+        <div v-show="!isAuth" class="hidden md:block">
           <div class="ml-4 flex items-center md:ml-6">
             <!-- Кнопка уведомлений -->
             <button class="relative rounded-full p-1 text-indigo-200 hover:text-white hover:bg-white/10 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-white">
@@ -47,7 +62,7 @@
                 <span class="sr-only">Открыть меню пользователя</span>
                 <img class="h-8 w-8 rounded-full border-2 border-white/20" src="/person.jpg" alt="Профиль пользователя" />
                 <span class="ml-2 mr-1 text-indigo-100 text-sm font-medium hidden lg:block">
-                  Алексей Петров
+                  {{ profileBar.fio }}
                 </span>
                 <ChevronDownIcon class="ml-1 h-4 w-4 text-indigo-200" aria-hidden="true" />
               </MenuButton>
@@ -93,6 +108,7 @@
             </Menu>
           </div>
         </div>
+
         <div class="flex md:hidden">
           <DisclosureButton class="relative inline-flex items-center justify-center rounded-md p-2 text-indigo-200 hover:bg-white/10 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-inset">
             <span class="absolute -inset-0.5"></span>
@@ -128,14 +144,37 @@
         </DisclosureButton>
       </div>
 
-      <div class="border-t border-indigo-500 pt-4 pb-3">
+      <!-- Мобильное меню для неавторизованных пользователей -->
+      <div v-if="isAuth" class="border-t border-indigo-500 pt-4 pb-3">
+        <div class="space-y-2 px-2">
+          <DisclosureButton
+              as="a"
+              href="/login"
+              class="flex items-center justify-center rounded-md bg-white/10 px-3 py-2 text-base font-medium text-white hover:bg-white/20 transition-colors duration-200"
+          >
+            <UserIcon class="w-5 h-5 mr-3" />
+            Войти
+          </DisclosureButton>
+          <DisclosureButton
+              as="a"
+              href="/register"
+              class="flex items-center justify-center rounded-md bg-white px-3 py-2 text-base font-medium text-indigo-600 hover:bg-gray-100 transition-colors duration-200"
+          >
+            <UserPlusIcon class="w-5 h-5 mr-3" />
+            Регистрация
+          </DisclosureButton>
+        </div>
+      </div>
+
+      <!-- Мобильное меню для авторизованных пользователей (ваш исходный код) -->
+      <div v-else class="border-t border-indigo-500 pt-4 pb-3">
         <div class="flex items-center px-5">
           <div class="flex-shrink-0">
             <img class="h-10 w-10 rounded-full border-2 border-white/20" src="/person.jpg" alt="Профиль пользователя" />
           </div>
           <div class="ml-3">
-            <div class="text-base font-medium text-white">Алексей Петров</div>
-            <div class="text-sm font-medium text-indigo-200">admin@company.com</div>
+            <div class="text-base font-medium text-white">{{ profileBar.fio }}</div>
+            <div class="text-sm font-medium text-indigo-200"></div>
           </div>
           <button class="relative ml-auto flex-shrink-0 rounded-full p-1 text-indigo-200 hover:text-white hover:bg-white/10">
             <span class="absolute -inset-1.5"></span>
@@ -186,7 +225,8 @@ import {
   ChevronDownIcon,
   UserIcon,
   Cog6ToothIcon,
-  ArrowRightOnRectangleIcon
+  ArrowRightOnRectangleIcon,
+  UserPlusIcon // Добавлена новая иконка
 } from '@heroicons/vue/24/outline'
 import {
   BuildingStorefrontIcon,
@@ -196,6 +236,7 @@ import {
 } from '@heroicons/vue/24/outline'
 import {ScaleIcon} from "@heroicons/vue/24/outline/index.js";
 import AuthService from "@/services/AuthService.js";
+import {computed, onMounted, ref} from "vue";
 
 async function logout() {
   try {
@@ -204,6 +245,42 @@ async function logout() {
     console.log('Ошибка выхода')
   }
 }
+const profileBar = ref({
+  username: '',
+  fio: ''
+})
+const isAuth = computed(() => {
+  return !profileBar.value.fio;
+})
+onMounted(() => {
+  profileBar.value.fio = localStorage.getItem('fio')
+  profileBar.value.username = localStorage.getItem('username')
+})
+
+const createStorageEvent = (key, newValue) => {
+  window.dispatchEvent(new CustomEvent('localStorageChange', {
+    detail: { key, newValue }
+  }))
+}
+
+const originalSetItem = localStorage.setItem
+localStorage.setItem = function(key, value) {
+  originalSetItem.call(this, key, value)
+  createStorageEvent(key, value)
+}
+
+const originalRemoveItem = localStorage.removeItem
+localStorage.removeItem = function(key) {
+  originalRemoveItem.call(this, key)
+  createStorageEvent(key, null)
+}
+
+window.addEventListener('localStorageChange', (event) => {
+  const { key, newValue } = event.detail
+  if (key === 'fio' || key === 'username') {
+    profileBar.value[key] = newValue
+  }
+})
 
 const navigation = [
   {

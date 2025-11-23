@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $request_method
  * @property \Illuminate\Support\Carbon $request_time
  * @property string $user_agent
- * @property string $path
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
  */
@@ -25,7 +24,6 @@ class Visit extends Model
         'request_method',
         'request_time',
         'user_agent',
-        'path'
     ];
     protected $hidden = [
     ];

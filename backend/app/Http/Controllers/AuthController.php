@@ -32,6 +32,9 @@ class AuthController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Успешный вход',
+                'username' => $user->username,
+                'fio' => $user->people->getFullFio(),
+
             ])
                 ->cookie('refresh_token', $tokens['refreshToken'], (int)env('REFRESH_TOKEN_TIME'))
                 ->cookie('access_token', $tokens['accessToken'], (int)env('ACCESS_TOKEN_TIME'));
@@ -51,6 +54,8 @@ class AuthController extends Controller
             $tokens = $this->authService->refresh($refreshToken);
             return response()->json([
                 'success' => true,
+                'username' => $tokens['username'],
+                'fio' => $tokens['fio'],
             ])
             ->cookie('refresh_token', $tokens['refreshToken'], (int)env('REFRESH_TOKEN_TIME'))
             ->cookie('access_token', $tokens['accessToken'], (int)env('ACCESS_TOKEN_TIME'));

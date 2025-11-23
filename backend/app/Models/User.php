@@ -7,13 +7,14 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-/* @property $id */
-/* @property string $username */
-/* @property string $email */
-/* @property string $password */
-
-/* @property Token[] $tokens  */
-/* @property Permission[] $permissions */
+/** @property $id
+* @property string $username
+* @property string $email
+* @property string
+* @property Token[] $tokens
+* @property Permission[] $permissions
+* @property People $people
+@property People $people */
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -52,5 +53,8 @@ class User extends Authenticatable implements JWTSubject
     }
     public function permissions(){
         return $this->hasMany(Permission::class);
+    }
+    public function people(){
+        return $this->hasOne(People::class);
     }
 }

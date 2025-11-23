@@ -78,6 +78,8 @@ class AuthService
         return [
             'refreshToken' => $refreshToken,
             'accessToken' => $accessToken,
+            'username' => $user->username,
+            'fio' => $user->people->getFullFio(),
         ];
     }
 }
