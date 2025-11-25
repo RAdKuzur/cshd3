@@ -17,7 +17,7 @@ const routes = [
     { path: '/home', component: HomePage },
     { path: '/login', component: LoginPage },
     { path: '/logout' }, // маршрут для выхода
-    { path: '/profile', component: ProfilePage, meta: { auth: true } },
+    { path: '/profile/:username', component: ProfilePage, meta: { auth: true } },
     { path: '/stuff', component: StuffPage, meta: { auth: true } },
     { path: '/settings', component: SettingPage, meta: { auth: true } },
     { path: '/objects', component: ObjectPage, meta: { auth: true } },

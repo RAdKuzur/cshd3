@@ -1,7 +1,7 @@
 <script setup>
 import {onMounted, ref} from 'vue'
 import axios from 'axios'
-
+import { useRoute } from 'vue-router'
 
 const user = ref({})
 const workExperience = ref({})
@@ -9,7 +9,10 @@ const contacts = ref({})
 const education = ref({})
 const fetchUserData = async () => {
   try {
-    const response = await axios.get("http://localhost:8000/api/profile/user")
+    const route = useRoute()
+    const username = route.params.username
+    console.log("http://localhost:8000/api/profile/" + username)
+    const response = await axios.get("http://localhost:8000/api/profile/" + username)
     user.value = response.data.data.user;
     contacts.value = response.data.data.contacts
     workExperience.value = response.data.data.workExperience

@@ -77,7 +77,7 @@
                 <MenuItems class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                   <MenuItem v-slot="{ active }">
                     <a
-                        href="/profile"
+                        :href="profileUrl"
                         :class="[active ? 'bg-gray-100' : '', 'flex items-center px-4 py-2 text-sm text-gray-700']"
                     >
                       <UserIcon class="w-4 h-4 mr-2 text-gray-400" />
@@ -251,6 +251,9 @@ const profileBar = ref({
 })
 const isAuth = computed(() => {
   return !profileBar.value.fio;
+})
+const profileUrl = computed(() => {
+  return `/profile/${profileBar.value.username}`
 })
 onMounted(() => {
   profileBar.value.fio = localStorage.getItem('fio')
