@@ -11,6 +11,9 @@ import ObjectPage from "@/pages/ObjectPage.vue";
 import DocPage from "@/pages/DocPage.vue";
 import MapPage from "@/pages/MapPage.vue";
 import ErrorPage from "@/pages/ErrorPage.vue";
+import TaskPage from "@/pages/TaskPage.vue";
+import AdminPage from "@/pages/AdminPage.vue";
+import ReportPage from "@/pages/ReportPage.vue";
 
 const routes = [
     { path: '/', redirect: '/home' },
@@ -23,6 +26,9 @@ const routes = [
     { path: '/objects', component: ObjectPage, meta: { auth: true } },
     { path: '/docs', component: DocPage, meta: { auth: true } },
     { path: '/map', component: MapPage, meta: { auth: true } },
+    { path: '/tasks', component: TaskPage, meta: { auth: true } },
+    { path: '/admin', component: AdminPage, meta: { auth: true } },
+    { path: '/reports', component: ReportPage, meta: { auth: true } },
     { path: '/:pathMatch(.*)*', component: ErrorPage }
 ];
 

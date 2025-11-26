@@ -225,8 +225,10 @@ import {
   ChevronDownIcon,
   UserIcon,
   Cog6ToothIcon,
-  ArrowRightOnRectangleIcon,
-  UserPlusIcon // Добавлена новая иконка
+  UserPlusIcon,
+  CheckIcon,
+  CalculatorIcon,
+  CommandLineIcon
 } from '@heroicons/vue/24/outline'
 import {
   BuildingStorefrontIcon,
@@ -287,7 +289,7 @@ window.addEventListener('localStorageChange', (event) => {
 
 const navigation = [
   {
-    name: 'Основные средства',
+    name: 'Материальные ценности',
     href: '/objects',
     current: false,
     icon: BuildingStorefrontIcon
@@ -305,10 +307,28 @@ const navigation = [
     icon: DocumentTextIcon
   },
   {
+    name: 'Задачи',
+    href: '/tasks',
+    current: false,
+    icon: CheckIcon
+  },
+  {
+    name: 'Отчёты',
+    href: '/reports',
+    current: false,
+    icon: CalculatorIcon
+  },
+  {
     name: 'Интерактивная карта',
     href: '/map',
     current: false,
     icon: MapIcon
+  },
+  {
+    name: 'Панель администратора',
+    href: '/admin',
+    current: false,
+    icon: CommandLineIcon
   },
 ]
 </script>
