@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $position_id
  * @property bool $is_active
  * @property int $branch_id
+ * @property \Illuminate\Support\Carbon $start_date
+ * @property \Illuminate\Support\Carbon $end_date
  *
  * @property People $people
  * @property Position $position
@@ -19,8 +21,9 @@ class PeoplePosition extends Model
     protected $fillable = [
         'people_id',
         'position_id',
-        'is_active',
-        'branch_id'
+        'branch_id',
+        'start_date',
+        'end_date'
     ];
     protected $hidden = [
 

@@ -13,10 +13,14 @@ use Illuminate\Database\Eloquent\Model;
  * @property $birthdate
  * @property string|null $icon_link
  * @property $about
+ * @property int $auditorium_id
+ * @property boolean $is_active
  *
  * @property User $user
  * @property Organization $organization
  * @property PeoplePosition[] $peoplePositions
+ * @property Auditorium $auditorium
+ * @property AuditoriumResponsibility[] $auditoriumResponsibilities
  * */
 class People extends Model
 {
@@ -30,7 +34,9 @@ class People extends Model
         'user_id',
         'birthdate',
         'icon_link',
-        'about'
+        'about',
+        'auditorium_id',
+        'is_active'
     ];
     protected $hidden = [];
 
@@ -87,5 +93,12 @@ class People extends Model
     }
     public function getFullFio(){
         return $this->surname . ' ' . $this->firstname . ' ' . $this->patronymic;
+    }
+    public function auditorium()
+    {
+        return $this->belongsTo(Auditorium::class);
+    }
+    public function auditoriumResponsibilities(){
+        return $this->hasMany(AuditoriumResponsibility::class);
     }
 }

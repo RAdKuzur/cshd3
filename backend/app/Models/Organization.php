@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $ogrn
  *
  * @property People[] $people
+ * @property Department[] $departments
  */
 class Organization extends Model
 {
@@ -25,5 +26,9 @@ class Organization extends Model
     ];
     public function people(){
         return $this->hasMany(People::class);
+    }
+
+    public function departments(){
+        return $this->hasMany(Department::class);
     }
 }
