@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property People[] $people
  * @property Department[] $departments
- * @property Branch $branches
+ * @property Branch[] $branches
  */
 class Organization extends Model
 {
