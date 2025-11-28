@@ -14,7 +14,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 * @property Token[] $tokens
 * @property Permission[] $permissions
 * @property People $people
-@property People $people */
+*/
 
 class User extends Authenticatable implements JWTSubject
 {

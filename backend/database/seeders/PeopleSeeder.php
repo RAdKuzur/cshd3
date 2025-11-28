@@ -13,16 +13,26 @@ class PeopleSeeder extends Seeder
      */
     public function run(): void
     {
+        //positions
+        for ($i = 0; $i < 10; $i++) {
+            DB::table('positions')->insert([
+                'name' => 'Position ' . $i,
+            ]);
+        }
+        //people
         foreach(DB::table('organizations')->get() as $organization) {
-            foreach (DB::table('users')->get() as $user) {
+            foreach (DB::table('users')->get() as $index => $user) {
                 DB::table('people')->insert([
-                    'firstname' => 'John',
-                    'surname' => 'Doe',
-                    'patronymic' => 'Doevich',
+                    'firstname' => 'John' . $index,
+                    'surname' => 'Doe' . $index,
+                    'patronymic' => 'Doevich' . $index,
                     'phone_number' => '+77777777777',
+                    'birthdate' => now(),
                     'organization_id' => $organization->id,
                     'user_id' => $user->id,
                     'icon_link' => '/person.jpg',
+                    'auditorium_id' => 1,
+                    'is_active' => true,
                     'about' => json_encode([
                         'bio' => 'ABOUT ME TEXT',
                         'workExperience' => [
@@ -50,6 +60,19 @@ class PeopleSeeder extends Seeder
                     ])
                 ]);
             }
+        }
+
+        //people_positions
+        foreach(DB::table('people')->get() as $person) {
+            $randomPositionId = DB::table('positions')->inRandomOrder()->first()->id;
+            $randomBranchId = DB::table('branches')->inRandomOrder()->first()->id;
+            DB::table('people_positions')->insert([
+                'people_id' => $person->id,
+                'position_id' => $randomPositionId,
+                'branch_id' => $randomBranchId,
+                'start_date' => now(),
+                'end_date' => now()->addYear()
+            ]);
         }
     }
 }

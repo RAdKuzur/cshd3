@@ -53,23 +53,13 @@ class People extends Model
         return $this->hasMany(PeoplePosition::class);
     }
     public function getPosition(){
-        $positions = $this->peoplePositions->filter(function($peoplePosition){
-            return $peoplePosition->is_active == true;
-        });
-        if ($positions->isNotEmpty()) {
-            return $positions->first()->position->name;
-        }
-        return null;
+        //refactoring
+        return $this->peoplePositions()->first()->position->name;
     }
     public function getBranchName()
     {
-        $positions = $this->peoplePositions->filter(function($peoplePosition){
-            return $peoplePosition->is_active == true;
-        });
-        if ($positions->isNotEmpty()) {
-            return $positions->first()->branch->name;
-        }
-        return null;
+        //refactoring
+        return  $this->peoplePositions()->first()->branch->name;
     }
     public function getEducation()
     {

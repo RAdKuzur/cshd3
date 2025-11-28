@@ -16,16 +16,18 @@ return new class extends Migration
             $table->string('name');
             $table->timestamps();
         });
-        Schema::create('branches', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-        });
         Schema::create('organizations', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('address')->nullable();
             $table->string('inn')->nullable();
             $table->string('ogrn')->nullable();
+            $table->timestamps();
+        });
+        Schema::create('branches', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->integer('organization_id')->constrained('organizations');
             $table->timestamps();
         });
         Schema::create('people', function (Blueprint $table) {
@@ -38,6 +40,8 @@ return new class extends Migration
             $table->date('birthdate')->nullable();
             $table->integer('organization_id')->constrained('organizations');
             $table->integer('user_id')->constrained('users');
+            $table->integer('auditorium_id')->constrained('auditoriums');
+            $table->boolean('is_active');
             $table->text('about')->nullable();
             $table->timestamps();
         });
@@ -46,7 +50,8 @@ return new class extends Migration
             $table->integer('people_id')->constrained('people', 'people_id');
             $table->integer('position_id')->constrained('positions');
             $table->integer('branch_id')->constrained('branches');
-            $table->boolean('is_active');
+            $table->date('start_date');
+            $table->date('end_date');
             $table->timestamps();
         });
     }

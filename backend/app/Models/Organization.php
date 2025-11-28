@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property People[] $people
  * @property Department[] $departments
+ * @property Branch $branches
  */
 class Organization extends Model
 {
@@ -30,5 +31,8 @@ class Organization extends Model
 
     public function departments(){
         return $this->hasMany(Department::class);
+    }
+    public function branches(){
+        return $this->hasMany(Branch::class);
     }
 }
