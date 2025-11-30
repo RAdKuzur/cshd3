@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Auditorium extends Model
 {
-    protected $table = 'auditorium';
+    protected $table = 'auditoriums';
     protected $fillable = [
         'name',
         'number',

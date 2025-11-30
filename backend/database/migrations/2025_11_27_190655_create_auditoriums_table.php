@@ -11,22 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('departments', function (Blueprint $table){
-            $table->id();
-            $table->string('name');
-            $table->integer('organization_id')->constrained('organizations');
-            $table->string('address');
-            $table->timestamps();
-        });
-
-        Schema::create('auditoriums', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('number');
-            $table->integer('floor');
-            $table->integer('department_id')->constrained('departments');
-            $table->timestamps();
-        });
+//        Schema::create('departments', function (Blueprint $table){
+//            $table->id();
+//            $table->string('name');
+//            $table->integer('organization_id')->constrained('organizations');
+//            $table->string('address');
+//            $table->timestamps();
+//        });
+//
+//        Schema::create('auditoriums', function (Blueprint $table) {
+//            $table->id();
+//            $table->string('name');
+//            $table->string('number');
+//            $table->integer('floor');
+//            $table->integer('department_id')->constrained('departments');
+//            $table->timestamps();
+//        });
 
     }
 
@@ -35,7 +35,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('auditoriums');
-        Schema::dropIfExists('departments');
+//        Schema::dropIfExists('auditoriums');
+//        Schema::dropIfExists('departments');
     }
 };

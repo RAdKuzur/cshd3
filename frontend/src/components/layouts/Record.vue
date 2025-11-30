@@ -1,75 +1,86 @@
+<!-- Record.vue -->
 <template>
-  <div class="lg:flex lg:items-center lg:justify-between">
-    <div class="min-w-0 flex-1">
-      <h2 class="text-2xl/7 font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">Фамилия Имя Отчество</h2>
-      <div class="mt-1 flex flex-col sm:mt-0 sm:flex-row sm:flex-wrap sm:space-x-6">
-        <div class="mt-2 flex items-center text-sm text-gray-500">
-          <BriefcaseIcon class="mr-1.5 size-5 shrink-0 text-gray-400" aria-hidden="true" />
-          Должность
+  <div class="bg-white rounded-xl border border-gray-200 p-6 hover:shadow-md transition-all duration-200">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center space-x-4">
+        <div class="flex-shrink-0">
+          <img
+              v-if="employee.icon_link"
+              :src="employee.icon_link"
+              :alt="employee.name"
+              class="h-12 w-12 rounded-full object-cover"
+          />
+          <div
+              v-else
+              class="h-12 w-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold"
+          >
+            {{ getInitials(employee.name) }}
+          </div>
         </div>
-        <div class="mt-2 flex items-center text-sm text-gray-500">
-          <MapPinIcon class="mr-1.5 size-5 shrink-0 text-gray-400" aria-hidden="true" />
-          Кабинет где работает
-        </div>
-        <div class="mt-2 flex items-center text-sm text-gray-500">
-          <CalendarIcon class="mr-1.5 size-5 shrink-0 text-gray-400" aria-hidden="true" />
-          Дата трудоустройства
+
+        <!-- Основная информация -->
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center space-x-2">
+            <h3 class="text-lg font-semibold text-gray-900 truncate">
+              {{ employee.name }}
+            </h3>
+            <span
+                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"
+            >
+              Активен
+            </span>
+          </div>
+          <div class="flex items-center space-x-4 mt-2 text-sm text-gray-500">
+            <span class="flex items-center">
+              <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+              {{ employee.position }}
+            </span>
+            <span class="flex items-center">
+              <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+              </svg>
+              {{ employee.auditorium }}
+            </span>
+            <span class="flex items-center">
+              <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              С {{ formatDate(employee.start_date) }}
+            </span>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="mt-5 flex lg:mt-0 lg:ml-4">
-      <span class="hidden sm:block">
-        <button type="button" class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring inset-ring-gray-300 hover:bg-gray-50">
-          <PencilIcon class="mr-1.5 -ml-0.5 size-5 text-gray-400" aria-hidden="true" />
-          Редактировать
+
+      <!-- Действия -->
+      <div class="flex items-center space-x-2">
+        <button class="p-2 text-gray-400 hover:text-gray-600 transition-colors">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+          </svg>
         </button>
-      </span>
-
-      <span class="ml-3 hidden sm:block">
-        <button type="button" class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring inset-ring-gray-300 hover:bg-gray-50">
-          <EyeIcon class="mr-1.5 -ml-0.5 size-5 text-gray-400" aria-hidden="true" />
-          Просмотреть
-        </button>
-      </span>
-
-      <span class="sm:ml-3">
-        <button type="button" class="inline-flex items-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-          <TrashIcon class="mr-1.5 -ml-0.5 size-5" aria-hidden="true" />
-          Удалить
-        </button>
-      </span>
-
-      <Menu as="div" class="relative ml-3 sm:hidden">
-        <MenuButton class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring inset-ring-gray-300 hover:bg-gray-50">
-          More
-          <ChevronDownIcon class="-mr-1 ml-1.5 size-5 text-gray-400" aria-hidden="true" />
-        </MenuButton>
-
-        <transition enter-active-class="transition ease-out duration-200" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform scale-100" leave-to-class="transform opacity-0 scale-95">
-          <MenuItems class="absolute left-0 z-10 mt-2 -mr-1 w-24 origin-top-right rounded-md bg-white py-1 shadow-lg outline outline-black/5">
-            <MenuItem v-slot="{ active }">
-              <a href="#" :class="[active ? 'bg-gray-100 outline-hidden' : '', 'block px-4 py-2 text-sm text-gray-700']">Edit</a>
-            </MenuItem>
-            <MenuItem v-slot="{ active }">
-              <a href="#" :class="[active ? 'bg-gray-100 outline-hidden' : '', 'block px-4 py-2 text-sm text-gray-700']">View</a>
-            </MenuItem>
-          </MenuItems>
-        </transition>
-      </Menu>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import {
-  BriefcaseIcon,
-  CalendarIcon,
-  ChevronDownIcon,
-  CurrencyDollarIcon,
-  MapPinIcon,
-  PencilIcon,
-  TrashIcon,
-  EyeIcon
-} from '@heroicons/vue/20/solid'
-import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
+defineProps({
+  employee: {
+    type: Object,
+    required: true
+  }
+})
+
+const getInitials = (name) => {
+  if (!name) return '??'
+  return name.split(' ').map(word => word[0]).join('').toUpperCase()
+}
+
+const formatDate = (dateString) => {
+  if (!dateString) return ''
+  const date = new Date(dateString)
+  return date.toLocaleDateString('ru-RU')
+}
 </script>

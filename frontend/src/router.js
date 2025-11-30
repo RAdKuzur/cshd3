@@ -21,7 +21,7 @@ const routes = [
     { path: '/login', component: LoginPage },
     { path: '/logout' }, // маршрут для выхода
     { path: '/profile/:username', component: ProfilePage, meta: { auth: true } },
-    { path: '/stuff', component: StuffPage, meta: { auth: true } },
+    { path: '/stuff', component: StuffPage },
     { path: '/settings', component: SettingPage, meta: { auth: true } },
     { path: '/objects', component: ObjectPage, meta: { auth: true } },
     { path: '/docs', component: DocPage, meta: { auth: true } },
