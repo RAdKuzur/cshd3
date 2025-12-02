@@ -8,11 +8,11 @@
             <h1 class="text-3xl font-bold text-gray-900">Техника и Электроника</h1>
             <p class="text-gray-600 mt-2">Всего предметов: {{ filteredItems.length }}</p>
           </div>
-          <a href="/things/electronics/create">
+          <router-link to="/things/electronics/create">
             <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg font-semibold shadow-sm transition-colors">
               + Добавить предмет
             </button>
-          </a>
+          </router-link>
         </div>
 
         <!-- Панель поиска и фильтров -->
@@ -22,7 +22,7 @@
               <input
                   v-model="searchQuery"
                   type="text"
-                  placeholder="Поиск по названию, серийному или инвентарному номеру..."
+                  placeholder="Поиск по названию, серийному или инвентарному номеру, аудитории..."
                   class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
               >
               <div class="absolute inset-y-0 left-0 pl-3 flex items-center">
@@ -38,7 +38,7 @@
               class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
           >
             <option value="">Все состояния</option>
-            <option v-for="(label, key) in conditions" :key="key" :value="key">
+            <option v-for="(label, key) in conditions" :key="key" :value="label">
               {{ label }}
             </option>
           </select>
@@ -51,6 +51,7 @@
             <option value="name">По названию</option>
             <option value="price">По стоимости</option>
             <option value="condition">По состоянию</option>
+            <option value="auditorium_name">По аудитории</option>
           </select>
         </div>
       </div>
@@ -108,9 +109,11 @@
                     </svg>
                   </div>
                   <div class="ml-4">
-                    <div class="text-sm font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors">
-                      {{ item.name || `Элемент ${item.id}` }}
-                    </div>
+                    <router-link :to="`/things/electronics/view/${item.id}`" class="block">
+                      <div class="text-sm font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors hover:underline">
+                        {{ item.name || `Элемент ${item.id}` }}
+                      </div>
+                    </router-link>
                     <div class="text-sm text-gray-500">
                       Инв. №: {{ item.inv_number }}
                     </div>
@@ -139,41 +142,71 @@
                 </div>
               </td>
 
+              <!-- Кабинет размещения -->
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 h-8 w-8 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+                    <svg class="h-4 w-4 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div class="text-sm font-semibold text-gray-900">
+                      {{ item.auditorium_name || 'Не указана' }}
+                    </div>
+                    <div v-if="item.auditorium_floor" class="text-xs text-gray-500">
+                      {{ item.auditorium_floor }}
+                    </div>
+                  </div>
+                </div>
+              </td>
+
               <!-- Дата ввода в эксплуатацию -->
               <td class="px-6 py-4 whitespace-nowrap">
                 <div class="text-sm text-gray-900 font-medium">{{ formatDate(item.operation_date) }}</div>
                 <div class="text-xs text-gray-500">{{ getYearsInUse(item.operation_date) }} в использовании</div>
               </td>
 
-              <!-- Стоимость -->
+              <!-- Балансовая стоимость -->
               <td class="px-6 py-4 whitespace-nowrap">
-                <div class="text-sm font-semibold text-gray-900">
-                  {{ formatCurrency(item.price) }}
-                </div>
-                <div v-if="item.comment" class="text-xs text-gray-500 truncate max-w-xs" :title="item.comment">
-                  {{ item.comment }}
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 h-8 w-8 bg-green-100 rounded-lg flex items-center justify-center mr-3">
+                    <svg class="h-4 w-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div class="text-sm font-semibold text-gray-900">
+                      {{ formatCurrency(item.price) }}
+                    </div>
+                    <div class="text-xs text-gray-500">
+                      Балансовая стоимость
+                    </div>
+                  </div>
                 </div>
               </td>
 
               <!-- Действия -->
               <td class="px-6 py-4 whitespace-nowrap">
                 <div class="flex items-center space-x-2">
-                  <button class="p-2 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                    </svg>
-                  </button>
-                  <button class="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                    </svg>
-                  </button>
-                  <button class="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
-                  </button>
+                  <!-- Кнопка просмотра -->
+                  <router-link :to="`/things/electronics/view/${item.id}`">
+                    <button class="p-2 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors" title="Просмотреть">
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      </svg>
+                    </button>
+                  </router-link>
+
+                  <!-- Кнопка редактирования -->
+                  <router-link :to="`/things/electronics/edit/${item.id}`">
+                    <button class="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors" title="Редактировать">
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                      </svg>
+                    </button>
+                  </router-link>
                 </div>
               </td>
             </tr>
@@ -246,23 +279,27 @@
     </div>
   </div>
 </template>
-
 <script setup>
 import { ref, computed, watch, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import axios from 'axios'
+
+const router = useRouter()
 
 // Реактивные данные
 const headers = ref([
   { key: 'name', label: 'Название и номер' },
   { key: 'condition', label: 'Состояние и тип' },
+  { key: 'auditorium_name', label: 'Кабинет размещения' },
   { key: 'operation_date', label: 'Дата введения в эксплуатацию' },
-  { key: 'price', label: 'Стоимость и комментарий' },
+  { key: 'price', label: 'Балансовая стоимость' },
   { key: 'actions', label: 'Действия' }
 ])
 
 const items = ref([])
 const types = ref({})
 const conditions = ref({})
+const auditoriums = ref([]) // Добавляем массив аудиторий
 const isLoading = ref(false)
 const error = ref(null)
 
@@ -283,24 +320,40 @@ const loadData = async () => {
     error.value = null
 
     // Загружаем данные параллельно
-    const [electronicsResponse, typesResponse] = await Promise.all([
+    const [electronicsResponse, typesResponse, auditoriumsResponse] = await Promise.all([
       axios.get('http://127.0.0.1:8000/api/things/electronics'),
-      axios.get('http://127.0.0.1:8000/api/things/info-type')
+      axios.get('http://127.0.0.1:8000/api/things/info-type'),
+      axios.get('http://127.0.0.1:8000/api/auditoriums/index') // Загружаем аудитории
     ])
 
+    // Сохраняем аудитории
+    if (auditoriumsResponse.data.success) {
+      auditoriums.value = auditoriumsResponse.data.data || []
+      console.log('Загруженные аудитории:', auditoriums.value)
+    }
+
     if (electronicsResponse.data.success) {
-      items.value = electronicsResponse.data.data.map(item => ({
-        id: item.id,
-        name: `${item.name}`,
-        inv_number: item.inv_number,
-        serial_number: item.serial_number,
-        type: item.type, // это числовой ID типа
-        condition: item.condition, // это строка "Исправно работает" или "Сломано"
-        parent: item.parent,
-        operation_date: item.operation_date,
-        price: item.price,
-        comment: item.comment || ''
-      }))
+      items.value = electronicsResponse.data.data.map(item => {
+        // Находим аудиторию по ID
+        const auditorium = auditoriums.value.find(a => a.id === item.auditorium_id)
+        const auditoriumName = auditorium ? auditorium.name : 'Не указана'
+        const auditoriumFloor = auditorium ? getFloorText(auditorium.floor) : ''
+
+        return {
+          id: item.id,
+          name: `${item.name}`,
+          inv_number: item.inv_number,
+          serial_number: item.serial_number,
+          type: item.type,
+          condition: item.condition,
+          parent: item.parent,
+          operation_date: item.operation_date,
+          price: item.price,
+          auditorium_id: item.auditorium_id,
+          auditorium_name: auditoriumName,
+          auditorium_floor: auditoriumFloor
+        }
+      })
       console.log('Загруженные элементы:', items.value)
     } else {
       throw new Error('Не удалось загрузить список элементов')
@@ -316,7 +369,6 @@ const loadData = async () => {
   } catch (err) {
     console.error('Ошибка при загрузке данных:', err)
     error.value = err.message
-    // Можно добавить уведомление пользователю
   } finally {
     isLoading.value = false
   }
@@ -330,29 +382,23 @@ onMounted(() => {
 const filteredItems = computed(() => {
   let filtered = items.value
 
-  // Фильтрация по поиску
+  // Фильтрация по поиску (добавлен поиск по аудитории)
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase()
     filtered = filtered.filter(item =>
         (item.name && item.name.toLowerCase().includes(query)) ||
         (item.serial_number && item.serial_number.toLowerCase().includes(query)) ||
         (item.inv_number && item.inv_number.toString().toLowerCase().includes(query)) ||
-        (getTypeName(item.type) && getTypeName(item.type).toLowerCase().includes(query))
+        (getTypeName(item.type) && getTypeName(item.type).toLowerCase().includes(query)) ||
+        (item.auditorium_name && item.auditorium_name.toLowerCase().includes(query))
     )
   }
 
-  // Фильтрация по состоянию (теперь используем ключи из conditions)
+  // Фильтрация по состоянию
   if (conditionFilter.value) {
-    // Находим ключ состояния по его русскому названию
-    const conditionKey = Object.keys(conditions.value).find(
-        key => conditions.value[key] === conditionFilter.value
-    )
-    if (conditionKey) {
-      filtered = filtered.filter(item => {
-        // Сравниваем русское название состояния из API с выбранным фильтром
-        return item.condition === conditionFilter.value
-      })
-    }
+    filtered = filtered.filter(item => {
+      return item.condition === conditionFilter.value
+    })
   }
 
   // Сортировка
@@ -367,6 +413,10 @@ const filteredItems = computed(() => {
       // Сортировка по состоянию - используем порядок из conditions
       aVal = Object.values(conditions.value).indexOf(a.condition)
       bVal = Object.values(conditions.value).indexOf(b.condition)
+    } else if (sortKey.value === 'auditorium_name') {
+      // Сортировка по аудитории
+      aVal = a.auditorium_name || 'Я'
+      bVal = b.auditorium_name || 'Я'
     }
 
     if (aVal < bVal) return sortOrder.value === 'asc' ? -1 : 1
@@ -415,12 +465,10 @@ const getTypeName = (typeId) => {
 }
 
 const getConditionLabel = (condition) => {
-  // Возвращаем как есть, т.к. в API уже приходит русское название
   return condition || 'Не указано'
 }
 
 const getConditionColor = (condition) => {
-  // Маппинг русских названий на цвета
   const colorMap = {
     'Исправно работает': 'bg-green-500',
     'Сломано': 'bg-red-500',
@@ -432,6 +480,37 @@ const getConditionColor = (condition) => {
     'В ремонте': 'bg-purple-400'
   }
   return colorMap[condition] || 'bg-gray-400'
+}
+
+// Форматируем текст для отображения этажа
+const getFloorText = (floorNumber) => {
+  if (!floorNumber && floorNumber !== 0) return ''
+
+  // Правильное склонение для слова "этаж"
+  const lastDigit = floorNumber % 10
+  const lastTwoDigits = floorNumber % 100
+
+  if (lastTwoDigits >= 11 && lastTwoDigits <= 19) {
+    return `${floorNumber} этаж`
+  }
+
+  switch (lastDigit) {
+    case 1:
+      return `${floorNumber} этаж`
+    case 2:
+    case 3:
+    case 4:
+      return `${floorNumber} этажа`
+    default:
+      return `${floorNumber} этаж`
+  }
+}
+
+// Функция для получения названия аудитории по ID
+const getAuditoriumNameById = (auditoriumId) => {
+  if (!auditoriumId) return 'Не указана'
+  const auditorium = auditoriums.value.find(a => a.id === auditoriumId)
+  return auditorium ? auditorium.name : `ID: ${auditoriumId}`
 }
 
 const sortTable = (key) => {

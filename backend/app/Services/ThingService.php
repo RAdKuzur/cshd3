@@ -31,6 +31,7 @@ class ThingService
                 'parent' => $electronic->parent ? $electronic->parent->inv_number : null,
                 'operation_date' => $electronic->operation_date,
                 'price' => $electronic->price,
+                'auditorium_id' => $electronic->auditorium_id,
             ];
         }
         return $data;
@@ -47,8 +48,29 @@ class ThingService
         }
         return $data;
     }
+    public function get($id)
+    {
+        $model = $this->thingRepository->get($id);
+        return [
+            'id' => $model->id,
+            'name' => $model->name,
+            'inv_number' => $model->inv_number,
+            'serial_number' => $model->serial_number,
+            'type' => $model->thing_type_id,
+            'condition' => $model->condition,
+            'thing_parent_id' => $model->thing_parent_id,
+            'operation_date' => $model->operation_date,
+            'price' => $model->price,
+            'comment' => $model->comment,
+            'auditorium_id' => $model->auditorium_id,
+        ];
+    }
     public function create($data)
     {
         $this->thingRepository->create($data);
+    }
+    public function update($id, $data)
+    {
+        $this->thingRepository->update($id, $data);
     }
 }

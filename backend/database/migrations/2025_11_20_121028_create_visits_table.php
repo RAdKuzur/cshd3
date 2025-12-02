@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('visits', function (Blueprint $table) {
             $table->id();
-            $table->string('url');
-            $table->string('ip_address');
-            $table->string('host');
-            $table->string('request_method');
-            $table->datetime('request_time');
-            $table->string('user_agent');
+            $table->string('url')->nullable();
+            $table->string('ip_address')->nullable();
+            $table->string('host')->nullable();
+            $table->string('request_method')->nullable();
+            $table->datetime('request_time')->nullable();
+            $table->string('user_agent')->nullable();
             //$table->integer('user_id')->constrained('users')->cascadeOnDelete();
             $table->timestamps();
         });

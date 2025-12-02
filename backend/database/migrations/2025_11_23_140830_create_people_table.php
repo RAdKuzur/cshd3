@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('organizations', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name')->unique();
             $table->string('address')->nullable();
             $table->string('inn')->nullable();
             $table->string('ogrn')->nullable();
@@ -22,46 +22,46 @@ return new class extends Migration
 
         Schema::create('departments', function (Blueprint $table){
             $table->id();
-            $table->string('name');
+            $table->string('name')->nullable(false);
             $table->foreignId('organization_id')->constrained('organizations');
-            $table->string('address');
+            $table->string('address')->nullable();
             $table->timestamps();
         });
 
         Schema::create('auditoriums', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('number');
-            $table->integer('floor');
+            $table->string('name')->nullable(false);
+            $table->string('number')->nullable(false);
+            $table->integer('floor')->nullable(false);
             $table->foreignId('department_id')->constrained('departments');
             $table->timestamps();
         });
 
         Schema::create('positions', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name')->nullable(false);
             $table->timestamps();
         });
 
         Schema::create('branches', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name')->nullable(false);
             $table->foreignId('organization_id')->constrained('organizations');
             $table->timestamps();
         });
 
         Schema::create('people', function (Blueprint $table) {
             $table->id();
-            $table->string('firstname');
-            $table->string('surname');
+            $table->string('firstname')->nullable(false);
+            $table->string('surname')->nullable(false);
             $table->string('patronymic')->nullable();
-            $table->string('phone_number');
+            $table->string('phone_number')->nullable();
             $table->string('icon_link')->nullable();
             $table->date('birthdate')->nullable();
             $table->foreignId('organization_id')->constrained('organizations');
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('auditorium_id')->constrained('auditoriums');
-            $table->boolean('is_active');
+            $table->boolean('is_active')->nullable(false);
             $table->text('about')->nullable();
             $table->timestamps();
         });
@@ -71,8 +71,8 @@ return new class extends Migration
             $table->foreignId('people_id')->constrained('people');
             $table->foreignId('position_id')->constrained('positions');
             $table->foreignId('branch_id')->constrained('branches');
-            $table->date('start_date');
-            $table->date('end_date');
+            $table->date('start_date')->nullable();
+            $table->date('end_date')->nullable();
             $table->timestamps();
         });
 

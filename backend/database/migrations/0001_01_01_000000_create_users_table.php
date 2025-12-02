@@ -23,10 +23,10 @@ return new class extends Migration
             $table->id();
             $table->string('refresh_token', 1000);
             $table->foreignId('user_id')->constrained('users');
-            $table->datetime('expires_at');
+            $table->datetime('expires_at')->nullable(false);
             $table->string('device_id')->nullable();
             $table->boolean('is_revoked')->default(false);
-            $table->string('user_agent');
+            $table->string('user_agent')->nullable();
             $table->string('ip_address')->nullable();
             $table->timestamps();
         });

@@ -5,11 +5,11 @@
       <div class="mb-8">
         <div class="flex items-center justify-between">
           <div>
-            <h1 class="text-3xl font-bold text-gray-900">Создание нового предмета</h1>
-            <p class="text-gray-600 mt-2">Заполните все необходимые поля для добавления основного средства</p>
+            <h1 class="text-3xl font-bold text-gray-900">Редактирование предмета</h1>
+            <p class="text-gray-600 mt-2">Редактирование основного средства #{{ thingId }}</p>
           </div>
           <router-link
-              to="/things"
+              to="/things/electronics"
               class="text-gray-600 hover:text-gray-900 flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -20,8 +20,23 @@
         </div>
       </div>
 
-      <!-- Форма создания -->
-      <div class="bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
+      <!-- Индикатор загрузки -->
+      <div v-if="isLoading && !error" class="flex justify-center items-center h-64">
+        <div class="text-gray-600">Загрузка данных...</div>
+      </div>
+
+      <!-- Ошибка -->
+      <div v-else-if="error" class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+        <div class="flex items-center">
+          <svg class="w-5 h-5 text-red-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span class="text-red-800">{{ error }}</span>
+        </div>
+      </div>
+
+      <!-- Форма редактирования -->
+      <div v-if="!isLoading && !error && formData" class="bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
         <form @submit.prevent="handleSubmit">
           <!-- Основная информация -->
           <div class="mb-8">
@@ -120,7 +135,7 @@
                   <option
                       v-for="(name, id) in types"
                       :key="id"
-                      :value="id"
+                      :value="parseInt(id)"
                   >
                     {{ name }}
                   </option>
@@ -156,14 +171,14 @@
               <!-- Аудитория размещения -->
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">
-                  Кабинет размещения
+                  Аудитория размещения *
                 </label>
                 <select
-                    required
                     v-model="formData.auditorium_id"
+                    required
                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
                 >
-                  <option value="">Не выбрано</option>
+                  <option value="">Выберите аудиторию</option>
                   <option
                       v-for="auditorium in auditoriums"
                       :key="auditorium.id"
@@ -173,7 +188,7 @@
                   </option>
                 </select>
                 <p class="mt-1 text-sm text-gray-500">
-                  Кабинет, где находится предмет
+                  Аудитория, где находится предмет
                 </p>
               </div>
 
@@ -183,7 +198,7 @@
                   Состояние *
                 </label>
                 <select
-                    v-model="formData.condition"
+                    v-model="selectedCondition"
                     required
                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
                 >
@@ -191,7 +206,7 @@
                   <option
                       v-for="(label, key) in conditions"
                       :key="key"
-                      :value="parseInt(key)"
+                      :value="label"
                   >
                     {{ label }}
                   </option>
@@ -256,8 +271,16 @@
               Отмена
             </router-link>
             <button
+                type="button"
+                @click="handleReset"
+                class="px-6 py-3 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors"
+                :disabled="isSubmitting"
+            >
+              Сбросить изменения
+            </button>
+            <button
                 type="submit"
-                :disabled="isSubmitting || isLoading"
+                :disabled="isSubmitting"
                 class="px-6 py-3 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               <span v-if="isSubmitting">
@@ -268,64 +291,31 @@
                 Сохранение...
               </span>
               <span v-else>
-                Создать предмет
+                Сохранить изменения
               </span>
             </button>
           </div>
         </form>
       </div>
-
-      <!-- Предпросмотр -->
-      <div v-if="showPreview" class="mt-8">
-        <h2 class="text-xl font-semibold text-gray-900 mb-4">Предпросмотр данных</h2>
-        <div class="bg-gray-50 rounded-xl p-6 border border-gray-200">
-          <div class="grid grid-cols-2 gap-4">
-            <div v-for="(value, key) in formData" :key="key" class="border-b border-gray-200 pb-2">
-              <div class="text-sm text-gray-500 capitalize">{{ formatKey(key) }}</div>
-              <div class="font-medium">
-                <template v-if="key === 'thing_type_id' && Object.keys(types).length">
-                  {{ getTypeName(value) || 'Не указано' }}
-                </template>
-                <template v-else-if="key === 'thing_parent_id' && parentThings.length">
-                  {{ getParentInvNumber(value) || 'Не указано' }}
-                </template>
-                <template v-else-if="key === 'auditorium_id' && auditoriums.length">
-                  {{ getAuditoriumName(value) || 'Не указано' }}
-                </template>
-                <template v-else-if="key === 'condition'">
-                  {{ getConditionLabel(value) || 'Не указано' }}
-                </template>
-                <template v-else>
-                  {{ value || 'Не указано' }}
-                </template>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </template>
 <script setup>
-import { ref, reactive, onMounted, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, reactive, onMounted, computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import axios from "axios"
 
+const route = useRoute()
 const router = useRouter()
 
+const thingId = route.params.id
+
 // Данные формы
-const formData = reactive({
-  name: '',
-  serial_number: '',
-  inv_number: '',
-  operation_date: '',
-  thing_type_id: '',
-  thing_parent_id: '',
-  auditorium_id: '', // Добавляем новое поле
-  condition: '',
-  price: 0,
-  comment: ''
-})
+const formData = ref(null)
+const originalData = ref(null)
+
+// Состояние как число (ID из API)
+const conditionId = ref(null)
 
 // Динамические данные с сервера
 const types = ref({})
@@ -334,33 +324,105 @@ const parentThings = ref([])
 const auditoriums = ref([]) // Добавляем массив аудиторий
 const isLoading = ref(false)
 const isSubmitting = ref(false)
-const showPreview = ref(false)
+const error = ref(null)
 
-// Наблюдатель для предпросмотра
-watch(formData, (newValue) => {
-  console.log('Form data updated:', newValue)
-  showPreview.value = Object.values(newValue).some(value => value !== '' && value !== 0)
-}, { deep: true })
+// Вычисляемое свойство для выбранного состояния
+const selectedCondition = computed({
+  get() {
+    // Преобразуем ID состояния в строку для поиска в условиях
+    if (conditionId.value !== null && conditions.value[conditionId.value]) {
+      return conditions.value[conditionId.value]
+    }
+    return ''
+  },
+  set(value) {
+    // Находим ID по строковому значению
+    for (const [key, label] of Object.entries(conditions.value)) {
+      if (label === value) {
+        conditionId.value = parseInt(key)
+        break
+      }
+    }
+  }
+})
 
 // Загрузка данных при монтировании компонента
 onMounted(async () => {
-  await loadFormData()
-
-  // Автозаполнение текущей даты
-  const today = new Date().toISOString().split('T')[0]
-  formData.operation_date = today
+  await Promise.all([
+    loadThingData(),
+    loadFormData()
+  ])
 })
+
+// Загрузка данных предмета для редактирования
+const loadThingData = async () => {
+  try {
+    isLoading.value = true
+    error.value = null
+
+    const response = await axios.get(`http://127.0.0.1:8000/api/things/edit/${thingId}`)
+
+    if (response.data.success && response.data.data) {
+      const data = response.data.data
+
+      console.log('Полученные данные от API:', data)
+
+      // Сохраняем оригинальный ID состояния
+      conditionId.value = data.condition
+
+      // Форматирование даты для input type="date"
+      let operationDate = ''
+      if (data.operation_date) {
+        try {
+          const date = new Date(data.operation_date)
+          operationDate = date.toISOString().split('T')[0]
+        } catch (e) {
+          console.error('Ошибка форматирования даты:', e)
+          operationDate = data.operation_date
+        }
+      }
+
+      // Преобразование данных для формы
+      formData.value = {
+        name: data.name || '',
+        serial_number: data.serial_number || '',
+        inv_number: data.inv_number || '',
+        operation_date: operationDate,
+        thing_type_id: data.type || '',
+        thing_parent_id: data.thing_parent_id || '',
+        auditorium_id: data.auditorium_id || '', // Добавляем поле аудитории
+        price: data.price || 0,
+        comment: data.comment || ''
+      }
+
+      originalData.value = {
+        ...JSON.parse(JSON.stringify(formData.value)),
+        condition: conditionId.value
+      }
+
+      console.log('Данные для формы:', formData.value)
+      console.log('ID состояния:', conditionId.value)
+      console.log('ID аудитории:', formData.value.auditorium_id)
+    } else {
+      throw new Error('Данные предмета не найдены')
+    }
+
+  } catch (err) {
+    console.error('Ошибка загрузки данных предмета:', err)
+    error.value = 'Не удалось загрузить данные предмета. Проверьте соединение с сервером.'
+  } finally {
+    isLoading.value = false
+  }
+}
 
 // Загрузка типов, условий, родительских предметов и аудиторий с сервера
 const loadFormData = async () => {
   try {
-    isLoading.value = true
-
     // Загружаем все данные параллельно
     const [typesResponse, parentsResponse, auditoriumsResponse] = await Promise.all([
       axios.get('http://127.0.0.1:8000/api/things/info-type'),
       axios.get('http://127.0.0.1:8000/api/things/simple-electronics'),
-      axios.get('http://127.0.0.1:8000/api/auditoriums/index') // Добавляем запрос аудиторий
+      axios.get('http://127.0.0.1:8000/api/auditoriums/index')
     ])
 
     // Обработка типов и условий
@@ -369,6 +431,10 @@ const loadFormData = async () => {
       conditions.value = typesResponse.data.conditions || {}
       console.log('Загруженные типы:', types.value)
       console.log('Загруженные условия:', conditions.value)
+
+      // После загрузки условий, обновляем вычисляемое свойство
+      console.log('Текущее состояние предмета (ID):', conditionId.value)
+      console.log('Соответствующая метка:', conditions.value[conditionId.value])
     } else {
       console.error('Ошибка загрузки типов и условий:', typesResponse.data)
       types.value = {}
@@ -399,35 +465,15 @@ const loadFormData = async () => {
     conditions.value = {}
     parentThings.value = []
     auditoriums.value = []
-  } finally {
-    isLoading.value = false
   }
 }
 
-// Получение названия типа по ID
-const getTypeName = (typeId) => {
-  if (!typeId) return ''
-  return types.value[typeId] || ''
-}
-
-// Получение инвентарного номера родительского предмета по ID
-const getParentInvNumber = (parentId) => {
-  if (!parentId) return ''
-  const parent = parentThings.value.find(item => item.id == parentId)
-  return parent ? `INV-${parent.inv_number}` : ''
-}
-
-// Получение названия аудитории по ID
-const getAuditoriumName = (auditoriumId) => {
-  if (!auditoriumId) return ''
-  const auditorium = auditoriums.value.find(item => item.id == auditoriumId)
-  return auditorium ? auditorium.name : ''
-}
-
-// Получение метки состояния по ID
-const getConditionLabel = (conditionId) => {
-  if (conditionId === '' || conditionId === null) return ''
-  return conditions.value[conditionId] || ''
+// Сброс изменений
+const handleReset = () => {
+  if (originalData.value) {
+    formData.value = JSON.parse(JSON.stringify(originalData.value))
+    conditionId.value = originalData.value.condition
+  }
 }
 
 // Обработка отправки формы
@@ -435,33 +481,33 @@ const handleSubmit = async () => {
   try {
     isSubmitting.value = true
 
-    // Валидация
-    if (!formData.name || !formData.serial_number || !formData.inv_number ||
-        !formData.operation_date || !formData.thing_type_id ||
-        !formData.price || formData.condition === '') {
-      alert('Пожалуйста, заполните все обязательные поля')
+    // Валидация (добавляем проверку аудитории)
+    if (!formData.value.name || !formData.value.serial_number || !formData.value.inv_number ||
+        !formData.value.operation_date || !formData.value.thing_type_id ||
+        !formData.value.price || conditionId.value === null || !formData.value.auditorium_id) {
+      alert('Пожалуйста, заполните все обязательные поля, включая аудиторию размещения')
       return
     }
 
     // Подготовка данных для отправки
     const dataToSend = {
-      name: formData.name,
-      serial_number: formData.serial_number,
-      inv_number: formData.inv_number,
-      operation_date: formData.operation_date,
-      thing_type_id: parseInt(formData.thing_type_id),
-      thing_parent_id: formData.thing_parent_id ? parseInt(formData.thing_parent_id) : null,
-      auditorium_id: formData.auditorium_id ? parseInt(formData.auditorium_id) : null, // Добавляем аудиторию
-      condition: parseInt(formData.condition),
-      price: parseFloat(formData.price),
-      comment: formData.comment || ''
+      name: formData.value.name,
+      serial_number: formData.value.serial_number,
+      inv_number: formData.value.inv_number,
+      operation_date: formData.value.operation_date,
+      thing_type_id: parseInt(formData.value.thing_type_id),
+      thing_parent_id: formData.value.thing_parent_id ? parseInt(formData.value.thing_parent_id) : null,
+      auditorium_id: parseInt(formData.value.auditorium_id), // Добавляем аудиторию
+      condition: conditionId.value,
+      price: parseFloat(formData.value.price),
+      comment: formData.value.comment || ''
     }
 
-    console.log('Отправляемые данные:', dataToSend)
+    console.log('Отправляемые данные для обновления:', dataToSend)
 
     // Отправка данных на сервер
-    const response = await axios.post(
-        'http://127.0.0.1:8000/api/things/create',
+    const response = await axios.put(
+        `http://127.0.0.1:8000/api/things/update/${thingId}`,
         dataToSend,
         {
           headers: {
@@ -471,16 +517,16 @@ const handleSubmit = async () => {
     )
 
     if (response.data && response.data.success) {
-      alert('Предмет успешно создан!')
+      alert('Предмет успешно обновлен!')
       router.push('/things')
     } else {
-      throw new Error(response.data?.message || 'Ошибка при создании предмета')
+      throw new Error(response.data?.message || 'Ошибка при обновлении предмета')
     }
 
   } catch (error) {
-    console.error('Ошибка при создании предмета:', error)
+    console.error('Ошибка при обновлении предмета:', error)
 
-    let errorMessage = 'Произошла ошибка при создании предмета'
+    let errorMessage = 'Произошла ошибка при обновлении предмета'
 
     if (error.response) {
       if (error.response.data && error.response.data.message) {
@@ -502,22 +548,5 @@ const handleSubmit = async () => {
   } finally {
     isSubmitting.value = false
   }
-}
-
-// Форматирование ключей для предпросмотра
-const formatKey = (key) => {
-  const translations = {
-    name: 'Название',
-    serial_number: 'Серийный номер',
-    inv_number: 'Инвентарный номер',
-    operation_date: 'Дата ввода в эксплуатацию',
-    thing_type_id: 'Тип предмета',
-    thing_parent_id: 'Родительский предмет',
-    auditorium_id: 'Кабинет размещения', // Добавляем перевод
-    condition: 'Состояние',
-    price: 'Стоимость',
-    comment: 'Комментарий'
-  }
-  return translations[key] || key
 }
 </script>

@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property Department $department
  * @property People[] $people
+ * @property Thing[] $things
  * @property AuditoriumResponsibility[] $auditoriumResponsibilities
  */
 class Auditorium extends Model
@@ -30,5 +31,8 @@ class Auditorium extends Model
     }
     public function auditoriumResponsibilities(){
         return $this->hasMany(AuditoriumResponsibility::class);
+    }
+    public function things(){
+        return $this->hasMany(Thing::class);
     }
 }

@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('auditorium_id')->constrained('auditoriums');
             $table->foreignId('people_id')->constrained('people');
-            $table->date('start_date');
-            $table->date('end_date');
+            $table->date('start_date')->nullable();
+            $table->date('end_date')->nullable();
             $table->timestamps();
         });
     }

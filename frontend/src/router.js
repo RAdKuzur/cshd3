@@ -8,7 +8,7 @@ import ProfilePage from "@/pages/ProfilePage.vue";
 import StuffPage from "@/pages/StuffPage.vue";
 import SettingPage from "@/pages/SettingPage.vue";
 import DocPage from "@/pages/DocPage.vue";
-import MapPage from "@/pages/MapPage.vue";
+import MapPage from "@/pages/map/MapPage.vue";
 import ErrorPage from "@/pages/ErrorPage.vue";
 import TaskPage from "@/pages/TaskPage.vue";
 import AdminPage from "@/pages/AdminPage.vue";
@@ -17,6 +17,7 @@ import MainThingPage from "@/pages/thing/MainThingPage.vue";
 import ElectronicsPage from "@/pages/thing/electronics/ElectronicsPage.vue";
 import ElectronicsCreatePage from "@/pages/thing/electronics/ElectronicsCreatePage.vue";
 import ElectronicsViewPage from "@/pages/thing/electronics/ElectronicsViewPage.vue";
+import ElectronicsEditPage from "@/pages/thing/electronics/ElectronicsEditPage.vue";
 
 const routes = [
     { path: '/', redirect: '/home' },
@@ -39,7 +40,8 @@ const routes = [
     { path: '/things', component: MainThingPage, meta: { auth: true } },
     { path: '/things/electronics', component: ElectronicsPage, meta: { auth: true } },
     { path: '/things/electronics/create', component: ElectronicsCreatePage, meta: { auth: true } },
-    { path: '/things/electronics/view', component: ElectronicsViewPage, meta: { auth: true } },
+    { path: '/things/electronics/view/:id', component: ElectronicsViewPage, meta: { auth: true } },
+    { path: '/things/electronics/edit/:id', component: ElectronicsEditPage, meta: { auth: true } },
 ];
 
 const router = createRouter({

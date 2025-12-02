@@ -23,4 +23,7 @@ class ThingRepository
     {
         return DB::table("things")->insert($data);
     }
+    public function update($id, $data){
+        return DB::table("things")->where('id', $id)->update($data);
+    }
 }

@@ -19,6 +19,7 @@ class Thing extends Model
         'thing_type_id',
         'thing_parent_id',
         'condition',
+        'auditorium_id',
         'price',
         'comment',
     ];
@@ -43,5 +44,8 @@ class Thing extends Model
     {
         return $this->hasMany(Thing::class, 'thing_parent_id');
     }
-
+    public function auditorium(): BelongsTo
+    {
+        return $this->belongsTo(Auditorium::class, 'auditorium_id');
+    }
 }

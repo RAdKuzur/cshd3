@@ -6,7 +6,7 @@
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-4">
             <router-link
-                to="/things"
+                to="/things/electronics"
                 class="text-gray-600 hover:text-gray-900 flex items-center gap-2 px-3 py-2 hover:bg-gray-100 transition-colors"
             >
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -34,8 +34,22 @@
         </div>
       </div>
 
+      <!-- Индикатор загрузки -->
+      <div v-if="isLoading" class="flex justify-center items-center h-64">
+        <div class="text-gray-600">Загрузка данных...</div>
+      </div>
+
+      <div v-else-if="error" class="bg-red-50 border border-red-200 rounded-lg p-4">
+        <div class="flex items-center">
+          <svg class="w-5 h-5 text-red-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span class="text-red-800">{{ error }}</span>
+        </div>
+      </div>
+
       <!-- Основная информация -->
-      <div class="bg-white shadow-lg border border-gray-200 p-6 mb-6">
+      <div v-if="!isLoading && thing && !error" class="bg-white shadow-lg border border-gray-200 p-6 mb-6">
         <h2 class="text-xl font-semibold text-gray-900 mb-6 pb-2 border-b border-gray-200">
           Основная информация
         </h2>
@@ -65,7 +79,7 @@
       </div>
 
       <!-- Классификация и состояние -->
-      <div class="bg-white shadow-lg border border-gray-200 p-6 mb-6">
+      <div v-if="!isLoading && thing && !error" class="bg-white shadow-lg border border-gray-200 p-6 mb-6">
         <h2 class="text-xl font-semibold text-gray-900 mb-6 pb-2 border-b border-gray-200">
           Классификация и состояние
         </h2>
@@ -74,12 +88,12 @@
           <div>
             <div class="text-sm font-medium text-gray-500 mb-1">Тип предмета</div>
             <div class="flex items-center gap-2">
-              <div :class="getTypeColor(thing?.thing_type_id)" class="w-8 h-8 flex items-center justify-center text-white">
+              <div :class="getTypeColor(thing?.type)" class="w-8 h-8 rounded-full flex items-center justify-center text-white">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" />
                 </svg>
               </div>
-              <div class="text-lg text-gray-900">{{ getTypeLabel(thing?.thing_type_id) || 'Не указан' }}</div>
+              <div class="text-lg text-gray-900">{{ getTypeLabel(thing?.type) || 'Не указан' }}</div>
             </div>
           </div>
 
@@ -93,7 +107,7 @@
           <div>
             <div class="text-sm font-medium text-gray-500 mb-1">Состояние</div>
             <div class="flex items-center gap-2">
-              <div :class="getConditionColor(thing?.condition)" class="w-8 h-8 flex items-center justify-center text-white">
+              <div :class="getConditionColor(thing?.condition)" class="w-8 h-8 rounded-full flex items-center justify-center text-white">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" />
                 </svg>
@@ -109,21 +123,57 @@
         </div>
       </div>
 
+      <!-- Расположение (кабинет и этаж) -->
+      <div v-if="!isLoading && thing && !error" class="bg-white shadow-lg border border-gray-200 p-6 mb-6">
+        <h2 class="text-xl font-semibold text-gray-900 mb-6 pb-2 border-b border-gray-200">
+          Расположение
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <div class="text-sm font-medium text-gray-500 mb-1">Кабинет размещения</div>
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                </svg>
+              </div>
+              <div class="text-lg font-semibold text-gray-900">
+                {{ getAuditoriumName(thing?.auditorium_id) || 'Не указан' }}
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="text-sm font-medium text-gray-500 mb-1">Этаж</div>
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 bg-blue-50 rounded-full flex items-center justify-center">
+                <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>
+              </div>
+              <div class="text-lg text-gray-900">
+                {{ getAuditoriumFloor(thing?.auditorium_id) || 'Не указан' }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Комментарий -->
-      <div class="bg-white shadow-lg border border-gray-200 p-6 mb-6">
+      <div v-if="!isLoading && thing && !error && thing?.comment" class="bg-white shadow-lg border border-gray-200 p-6 mb-6">
         <h2 class="text-xl font-semibold text-gray-900 mb-4">Дополнительная информация</h2>
 
         <div>
           <div class="text-sm font-medium text-gray-500 mb-2">Комментарий</div>
-          <div v-if="thing?.comment" class="bg-gray-50 p-4 border border-gray-200">
+          <div class="bg-gray-50 p-4 border border-gray-200 rounded-lg">
             <div class="text-gray-700 whitespace-pre-line">{{ thing.comment }}</div>
           </div>
-          <div v-else class="text-gray-500 italic">Нет комментария</div>
         </div>
       </div>
 
       <!-- Дополнительная информация -->
-      <div class="bg-white shadow-lg border border-gray-200 p-6">
+      <div v-if="!isLoading && thing && !error" class="bg-white shadow-lg border border-gray-200 p-6">
         <h2 class="text-xl font-semibold text-gray-900 mb-4">Системная информация</h2>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -145,7 +195,7 @@
       </div>
 
       <!-- Действия -->
-      <div class="mt-8 flex items-center justify-between bg-white shadow-lg border border-gray-200 p-6">
+      <div v-if="!isLoading && thing && !error" class="mt-8 flex items-center justify-between bg-white shadow-lg border border-gray-200 p-6">
         <div class="text-sm text-gray-500">
           Статус: <span class="font-medium text-green-600">Активный</span>
         </div>
@@ -183,56 +233,135 @@ import { useRoute, useRouter } from 'vue-router'
 const route = useRoute()
 const router = useRouter()
 
-// Данные предмета
+// Данные
 const thing = ref(null)
+const auditoriums = ref([]) // Массив аудиторий с этажами
 const isLoading = ref(true)
+const error = ref(null)
+const conditionsMap = ref({})
+const typeMap = ref({})
 
 // Загрузка данных при монтировании
 onMounted(async () => {
-  await loadThingData()
+  await Promise.all([
+    loadThingData(),
+    loadConditions(),
+    loadAuditoriums()
+  ])
 })
 
 // Загрузка данных предмета
 const loadThingData = async () => {
   try {
     isLoading.value = true
+    error.value = null
     const thingId = route.params.id
 
-    // Здесь будет запрос к API
-    // const response = await fetch(`/api/things/${thingId}`)
-    // thing.value = await response.json()
+    const response = await fetch(`http://127.0.0.1:8000/api/things/view/${thingId}`)
 
-    // Временные моковые данные
-    thing.value = {
-      id: thingId,
-      name: 'Ноутбук Dell Latitude 5420',
-      serial_number: 'CN-0R3XX1-64180-2B9-016K',
-      inv_number: 'INV-2023-001',
-      operation_date: '2023-01-15',
-      thing_type_id: 'computer',
-      thing_parent_id: '',
-      condition: 'excellent',
-      price: 125000,
-      comment: 'Для руководителя отдела. Конфигурация: i7-1185G7, 16GB RAM, 512GB SSD',
-      created_at: '2023-01-15T10:30:00Z',
-      updated_at: '2023-12-01T14:20:00Z'
+    if (!response.ok) {
+      throw new Error(`Ошибка загрузки: ${response.status}`)
     }
 
-  } catch (error) {
-    console.error('Ошибка загрузки данных:', error)
-    alert('Не удалось загрузить данные предмета')
+    const data = await response.json()
+
+    if (data.success && data.data) {
+      thing.value = data.data
+      console.log('Полученные данные предмета:', thing.value)
+    } else {
+      throw new Error('Данные не найдены')
+    }
+
+  } catch (err) {
+    console.error('Ошибка загрузки данных:', err)
+    error.value = 'Не удалось загрузить данные предмета.'
   } finally {
     isLoading.value = false
   }
 }
 
-// Форматирование даты
-const formatDate = (dateString) => {
-  if (!dateString) return ''
-  return new Date(dateString).toLocaleDateString('ru-RU')
+// Загрузка аудиторий с этажами
+const loadAuditoriums = async () => {
+  try {
+    const response = await fetch('http://127.0.0.1:8000/api/auditoriums/index')
+    if (response.ok) {
+      const data = await response.json()
+      if (data.success && data.data) {
+        auditoriums.value = data.data
+        console.log('Загруженные аудитории:', auditoriums.value)
+      }
+    }
+  } catch (error) {
+    console.error('Ошибка загрузки аудиторий:', error)
+  }
 }
 
-// Форматирование валюты
+// Загружаем условия и типы
+const loadConditions = async () => {
+  try {
+    const response = await fetch('http://127.0.0.1:8000/api/things/info-type')
+    if (response.ok) {
+      const data = await response.json()
+      if (data.success) {
+        typeMap.value = data.types || {}
+        conditionsMap.value = data.conditions || {}
+        console.log('Загруженные условия:', conditionsMap.value)
+        console.log('Загруженные типы:', typeMap.value)
+      }
+    }
+  } catch (error) {
+    console.error('Ошибка загрузки условий:', error)
+  }
+}
+
+// Получение названия кабинета по ID
+const getAuditoriumName = (auditoriumId) => {
+  if (!auditoriumId) return 'Не указан'
+
+  const auditorium = auditoriums.value.find(a => a.id === auditoriumId)
+  return auditorium ? auditorium.name : `ID: ${auditoriumId}`
+}
+
+// Получение этажа кабинета
+const getAuditoriumFloor = (auditoriumId) => {
+  if (!auditoriumId) return 'Не указан'
+
+  const auditorium = auditoriums.value.find(a => a.id === auditoriumId)
+  if (!auditorium || auditorium.floor === undefined || auditorium.floor === null) {
+    return 'Не указан'
+  }
+
+  // Форматирование этажа с правильным склонением
+  const floor = parseInt(auditorium.floor)
+  const lastDigit = floor % 10
+  const lastTwoDigits = floor % 100
+
+  if (lastTwoDigits >= 11 && lastTwoDigits <= 19) {
+    return `${floor} этаж`
+  }
+
+  switch (lastDigit) {
+    case 1:
+      return `${floor} этаж`
+    case 2:
+    case 3:
+    case 4:
+      return `${floor} этажа`
+    default:
+      return `${floor} этаж`
+  }
+}
+
+// Методы форматирования
+const formatDate = (dateString) => {
+  if (!dateString) return ''
+  try {
+    return new Date(dateString).toLocaleDateString('ru-RU')
+  } catch (e) {
+    return dateString
+  }
+}
+
 const formatCurrency = (amount) => {
   if (!amount && amount !== 0) return ''
   return new Intl.NumberFormat('ru-RU', {
@@ -242,13 +371,16 @@ const formatCurrency = (amount) => {
   }).format(amount)
 }
 
-// Сколько лет в использовании
 const getYearsInUse = (dateString) => {
   if (!dateString) return ''
-  const now = new Date()
-  const date = new Date(dateString)
-  const years = now.getFullYear() - date.getFullYear()
-  return years === 0 ? '<1 года' : `${years} ${getYearsText(years)}`
+  try {
+    const now = new Date()
+    const date = new Date(dateString)
+    const years = now.getFullYear() - date.getFullYear()
+    return years === 0 ? '<1 года' : `${years} ${getYearsText(years)}`
+  } catch (e) {
+    return ''
+  }
 }
 
 const getYearsText = (years) => {
@@ -258,62 +390,72 @@ const getYearsText = (years) => {
 }
 
 // Метки для состояния
-const getConditionLabel = (condition) => {
-  const labels = {
-    'new': 'Новый',
-    'excellent': 'Отличное',
-    'good': 'Хорошее',
-    'satisfactory': 'Удовлетворительное',
-    'bad': 'Плохое',
-    'broken': 'Сломан',
-    'repair': 'В ремонте'
+const getConditionLabel = (conditionId) => {
+  if (conditionId === null || conditionId === undefined) return 'Не указано'
+
+  if (Object.keys(conditionsMap.value).length > 0) {
+    return conditionsMap.value[conditionId] || `Состояние ${conditionId}`
   }
-  return labels[condition] || condition
+
+  // Запасной вариант, если не успели загрузить
+  const staticConditions = {
+    0: 'Исправно работает',
+    1: 'Сломано',
+    2: 'В ремонте'
+  }
+
+  return staticConditions[conditionId] || `Состояние ${conditionId}`
 }
 
-// Цвета для состояния
-const getConditionColor = (condition) => {
+const getConditionColor = (conditionId) => {
+  if (conditionId === null || conditionId === undefined) return 'bg-gray-400'
+
   const colors = {
-    'new': 'bg-green-500',
-    'excellent': 'bg-green-400',
-    'good': 'bg-blue-400',
-    'satisfactory': 'bg-yellow-400',
-    'bad': 'bg-orange-400',
-    'broken': 'bg-red-500',
-    'repair': 'bg-purple-400'
+    0: 'bg-green-500',
+    1: 'bg-red-500',
+    2: 'bg-purple-400',
+    3: 'bg-green-500',
+    4: 'bg-green-400',
+    5: 'bg-blue-400',
+    6: 'bg-yellow-400',
+    7: 'bg-orange-400',
   }
-  return colors[condition] || 'bg-gray-400'
+
+  return colors[conditionId] || 'bg-gray-400'
 }
 
-// Метки для типа
 const getTypeLabel = (typeId) => {
-  const labels = {
-    'computer': 'Компьютерная техника',
-    'furniture': 'Офисная мебель',
-    'equipment': 'Оргтехника',
-    'production': 'Производственное оборудование',
-    'vehicle': 'Транспорт',
-    'other': 'Другое'
+  if (typeId === null || typeId === undefined) return 'Не указан'
+
+  if (typeof typeId === 'string') {
+    return typeId
   }
-  return labels[typeId] || typeId
+
+  if (Object.keys(typeMap.value).length > 0) {
+    return typeMap.value[typeId] || `Тип ${typeId}`
+  }
+
+  return `Тип ${typeId}`
 }
 
-// Цвета для типа
 const getTypeColor = (typeId) => {
+  if (typeId === null || typeId === undefined) return 'bg-gray-400'
+
   const colors = {
-    'computer': 'bg-blue-500',
-    'furniture': 'bg-emerald-500',
-    'equipment': 'bg-purple-500',
-    'production': 'bg-amber-500',
-    'vehicle': 'bg-red-500',
-    'other': 'bg-gray-500'
+    1: 'bg-blue-500',
+    2: 'bg-emerald-500',
+    3: 'bg-purple-500',
+    4: 'bg-amber-500',
+    5: 'bg-red-500',
+    6: 'bg-gray-500'
   }
+
   return colors[typeId] || 'bg-gray-400'
 }
 
 // Обработчики действий
 const handleEdit = () => {
-  router.push(`/thing/edit/${route.params.id}`)
+  router.push(`/things/electronics/edit/${route.params.id}`)
 }
 
 const handlePrint = () => {
@@ -326,14 +468,28 @@ const handleDelete = async () => {
   }
 
   try {
-    // Здесь будет запрос на удаление
-    // await fetch(`/api/things/${route.params.id}`, { method: 'DELETE' })
+    const thingId = route.params.id
+    const response = await fetch(`http://127.0.0.1:8000/api/things/delete/${thingId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
 
-    alert('Предмет успешно удален')
-    router.push('/things')
+    if (!response.ok) {
+      throw new Error(`Ошибка удаления: ${response.status}`)
+    }
+
+    const data = await response.json()
+    if (data.success) {
+      alert('Предмет успешно удален')
+      router.push('/things')
+    } else {
+      throw new Error(data.message || 'Ошибка при удалении')
+    }
   } catch (error) {
     console.error('Ошибка удаления:', error)
-    alert('Не удалось удалить предмет')
+    alert('Не удалось удалить предмет: ' + error.message)
   }
 }
 </script>

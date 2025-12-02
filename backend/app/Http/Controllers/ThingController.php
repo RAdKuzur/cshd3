@@ -10,21 +10,19 @@ use Illuminate\Http\Request;
 
 class ThingController extends Controller
 {
-    private ThingRepository $thingRepository;
     private ThingService $thingService;
     public function __construct(
         ThingRepository $thingRepository,
         ThingService $thingService
     )
     {
-        $this->thingRepository = $thingRepository;
         $this->thingService = $thingService;
     }
 
     public function infoType(){
         $types = ThingTypeDictionary::type();
         $conditions = ConditionDictionary::type();
-        return json_encode([
+        return response()->json([
             'success' => true,
             'code' => 200,
             'types' => json_decode(json_encode($types, JSON_FORCE_OBJECT)),
@@ -35,7 +33,7 @@ class ThingController extends Controller
     public function simpleElectronics()
     {
         $electronics = $this->thingService->simpleElectronics();
-        return json_encode([
+        return response()->json([
             'success' => true,
             'code' => 200,
             'data' => $electronics,
@@ -44,7 +42,7 @@ class ThingController extends Controller
     public function electronics()
     {
         $electronics = $this->thingService->electronics();
-        return json_encode([
+        return response()->json([
             'success' => true,
             'code' => 200,
             'data' => $electronics,
@@ -61,12 +59,49 @@ class ThingController extends Controller
             'thing_parent_id' => 'nullable',
             'price' => 'required',
             'comment' => 'nullable',
+            'auditorium_id' => 'required',
         ]);
         $this->thingService->create($data);
-        return json_encode([
+        return response()->json([
             'success' => true,
             'code' => 200,
-            $data
+        ]);
+    }
+    public function view($id)
+    {
+        $model = $this->thingService->get($id);
+        return response()->json([
+            'success' => true,
+            'code' => 200,
+            'data' => $model,
+        ]);
+    }
+    public function edit($id){
+        $model = $this->thingService->get($id);
+        return response()->json([
+            'success' => true,
+            'code' => 200,
+            'data' => $model,
+        ]);
+    }
+    public function update(Request $request, $id)
+    {
+        $data = $request->validate([
+            'name' => 'required',
+            'inv_number' => 'nullable',
+            'serial_number' => 'nullable',
+            'operation_date' => 'required',
+            'thing_type_id' => 'required',
+            'condition' => 'required',
+            'thing_parent_id' => 'nullable',
+            'price' => 'required',
+            'comment' => 'nullable',
+            'auditorium_id' => 'required',
+        ]);
+        $this->thingService->update($id, $data);
+        return response()->json([
+            'success' => true,
+            'code' => 200,
         ]);
     }
 }
