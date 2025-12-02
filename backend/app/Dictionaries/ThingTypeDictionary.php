@@ -4,7 +4,7 @@ namespace App\Dictionaries;
 
 use function Symfony\Component\String\s;
 
-class ThingTypeDictionary
+class ThingTypeDictionary implements BaseDictionary
 {
     public const ARM = 0;
     public const PC = 1;
@@ -36,6 +36,9 @@ class ThingTypeDictionary
             self::PASSPORT_SCANNER => 'Сканер паспортов',
             self::CARD_PRINTER => 'Принтер для карточек',
         ];
+    }
+    public static function get($index){
+        return self::type()[$index];
     }
     public static function indexElectronics($index){
         return array_search($index, self::type());
