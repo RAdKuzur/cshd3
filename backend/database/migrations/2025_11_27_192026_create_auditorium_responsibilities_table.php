@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('auditorium_responsibilities', function (Blueprint $table) {
             $table->id();
-            $table->integer('auditorium_id')->constrained('auditoriums');
-            $table->integer('people_id')->constrained('people');
+            $table->foreignId('auditorium_id')->constrained('auditoriums');
+            $table->foreignId('people_id')->constrained('people');
             $table->date('start_date');
-            $table->boolean('is_active');
+            $table->date('end_date');
             $table->timestamps();
         });
     }

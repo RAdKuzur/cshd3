@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
             OrganizationSeeder::class,
             UserSeeder::class,
             PeopleSeeder::class,
-            AuditoriumResponsibilitySeeder::class
+            AuditoriumResponsibilitySeeder::class,
         ]);
     }
 }

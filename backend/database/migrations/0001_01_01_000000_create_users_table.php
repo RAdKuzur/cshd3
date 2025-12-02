@@ -22,7 +22,7 @@ return new class extends Migration
         Schema::create('tokens', function (Blueprint $table) {
             $table->id();
             $table->string('refresh_token', 1000);
-            $table->integer('user_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained('users');
             $table->datetime('expires_at');
             $table->string('device_id')->nullable();
             $table->boolean('is_revoked')->default(false);
@@ -46,8 +46,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
         Schema::dropIfExists('tokens');
         Schema::dropIfExists('sessions');
+        Schema::dropIfExists('users');
     }
 };

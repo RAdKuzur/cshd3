@@ -1,13 +1,14 @@
 <template>
   <div class="p-6 bg-gradient-to-br from-gray-50 to-blue-50 min-h-screen">
     <div class="max-w-7xl mx-auto">
+      <!-- Заголовок и элементы управления -->
       <div class="mb-8">
         <div class="flex justify-between items-center">
           <div>
-            <h1 class="text-3xl font-bold text-gray-900">Учет основных средств</h1>
+            <h1 class="text-3xl font-bold text-gray-900">Техника и Электроника</h1>
             <p class="text-gray-600 mt-2">Всего предметов: {{ filteredItems.length }}</p>
           </div>
-          <a href="/thing/create">
+          <a href="/things/electronics/create">
             <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg font-semibold shadow-sm transition-colors">
               + Добавить предмет
             </button>
@@ -21,7 +22,7 @@
               <input
                   v-model="searchQuery"
                   type="text"
-                  placeholder="Поиск по инвентарному номеру или типу..."
+                  placeholder="Поиск по названию, серийному или инвентарному номеру..."
                   class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
               >
               <div class="absolute inset-y-0 left-0 pl-3 flex items-center">
@@ -33,21 +34,38 @@
           </div>
 
           <select
-              v-model="typeFilter"
+              v-model="conditionFilter"
               class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
           >
-            <option value="">Все типы</option>
-            <option value="Компьютерная техника">Компьютерная техника</option>
-            <option value="Офисная мебель">Офисная мебель</option>
-            <option value="Оргтехника">Оргтехника</option>
-            <option value="Производственное оборудование">Производственное оборудование</option>
-            <option value="Транспорт">Транспорт</option>
+            <option value="">Все состояния</option>
+            <option v-for="(label, key) in conditions" :key="key" :value="key">
+              {{ label }}
+            </option>
+          </select>
+
+          <select
+              v-model="sortField"
+              class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+          >
+            <option value="operation_date">Сортировка по дате</option>
+            <option value="name">По названию</option>
+            <option value="price">По стоимости</option>
+            <option value="condition">По состоянию</option>
           </select>
         </div>
       </div>
 
+      <!-- Загрузка -->
+      <div v-if="isLoading" class="text-center py-12">
+        <svg class="animate-spin mx-auto h-8 w-8 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <p class="mt-2 text-gray-600">Загрузка данных...</p>
+      </div>
+
       <!-- Таблица -->
-      <div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+      <div v-else class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
         <div class="overflow-x-auto">
           <table class="w-full">
             <thead class="bg-gradient-to-r from-indigo-500 to-purple-600">
@@ -81,6 +99,7 @@
                 :key="item.id"
                 class="hover:bg-gradient-to-r hover:from-indigo-50 hover:to-white transition-all duration-200 group"
             >
+              <!-- Инвентарный номер и название -->
               <td class="px-6 py-4 whitespace-nowrap">
                 <div class="flex items-center">
                   <div class="flex-shrink-0 h-10 w-10 bg-indigo-100 rounded-lg flex items-center justify-center">
@@ -90,43 +109,53 @@
                   </div>
                   <div class="ml-4">
                     <div class="text-sm font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors">
-                      {{ item.inventoryNumber }}
+                      {{ item.name || `Элемент ${item.id}` }}
                     </div>
                     <div class="text-sm text-gray-500">
-                      ID: {{ item.id }}
+                      Инв. №: {{ item.inv_number }}
+                    </div>
+                    <div class="text-xs text-gray-400">
+                      Сер. №: {{ item.serial_number }}
                     </div>
                   </div>
                 </div>
               </td>
 
+              <!-- Тип и состояние -->
               <td class="px-6 py-4 whitespace-nowrap">
                 <div class="flex items-center">
-                  <div class="flex-shrink-0 h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center mr-3">
-                    <svg class="h-4 w-4 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <div :class="getConditionColor(item.condition)" class="flex-shrink-0 h-8 w-8 rounded-full flex items-center justify-center mr-3">
+                    <svg class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" />
                     </svg>
                   </div>
                   <div>
-                    <div class="text-sm font-medium text-gray-900">{{ item.type }}</div>
-                    <div class="text-xs text-gray-500">{{ item.subType }}</div>
+                    <div class="text-sm font-medium text-gray-900">{{ getConditionLabel(item.condition) }}</div>
+                    <div class="text-xs text-gray-500">{{ getTypeName(item.type) }}</div>
+                    <div v-if="item.parent" class="text-xs text-blue-600">
+                      Родитель: {{ item.parent }}
+                    </div>
                   </div>
                 </div>
               </td>
 
+              <!-- Дата ввода в эксплуатацию -->
               <td class="px-6 py-4 whitespace-nowrap">
-                <div class="text-sm text-gray-900 font-medium">{{ formatDate(item.commissioningDate) }}</div>
-                <div class="text-xs text-gray-500">{{ getYearsInUse(item.commissioningDate) }} в использовании</div>
+                <div class="text-sm text-gray-900 font-medium">{{ formatDate(item.operation_date) }}</div>
+                <div class="text-xs text-gray-500">{{ getYearsInUse(item.operation_date) }} в использовании</div>
               </td>
 
+              <!-- Стоимость -->
               <td class="px-6 py-4 whitespace-nowrap">
                 <div class="text-sm font-semibold text-gray-900">
-                  {{ formatCurrency(item.bookValue) }}
+                  {{ formatCurrency(item.price) }}
                 </div>
-                <div class="text-xs text-gray-500">
-                  Остаточная: {{ formatCurrency(item.residualValue) }}
+                <div v-if="item.comment" class="text-xs text-gray-500 truncate max-w-xs" :title="item.comment">
+                  {{ item.comment }}
                 </div>
               </td>
 
+              <!-- Действия -->
               <td class="px-6 py-4 whitespace-nowrap">
                 <div class="flex items-center space-x-2">
                   <button class="p-2 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors">
@@ -153,7 +182,7 @@
         </div>
 
         <!-- Пустое состояние -->
-        <div v-if="filteredItems.length === 0" class="text-center py-12">
+        <div v-if="!isLoading && filteredItems.length === 0" class="text-center py-12">
           <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
@@ -162,7 +191,7 @@
         </div>
 
         <!-- Пагинация -->
-        <div v-if="filteredItems.length > 0" class="px-6 py-4 border-t border-gray-200 bg-gray-50">
+        <div v-if="!isLoading && filteredItems.length > 0" class="px-6 py-4 border-t border-gray-200 bg-gray-50">
           <div class="flex items-center justify-between">
             <div class="text-sm text-gray-700">
               Показано с {{ startIndex }} по {{ endIndex }} из {{ filteredItems.length }} записей
@@ -219,137 +248,83 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
+import axios from 'axios'
 
 // Реактивные данные
 const headers = ref([
-  { key: 'inventoryNumber', label: 'Инвентарный номер' },
-  { key: 'type', label: 'Тип предмета' },
-  { key: 'commissioningDate', label: 'Дата введения в эксплуатацию' },
-  { key: 'bookValue', label: 'Балансовая стоимость' },
+  { key: 'name', label: 'Название и номер' },
+  { key: 'condition', label: 'Состояние и тип' },
+  { key: 'operation_date', label: 'Дата введения в эксплуатацию' },
+  { key: 'price', label: 'Стоимость и комментарий' },
   { key: 'actions', label: 'Действия' }
 ])
 
-// Тестовые данные
-const items = ref([
-  {
-    id: 1,
-    inventoryNumber: 'INV-2023-001',
-    type: 'Компьютерная техника',
-    subType: 'Ноутбук',
-    commissioningDate: '2023-01-15',
-    bookValue: 125000,
-    residualValue: 98000
-  },
-  {
-    id: 2,
-    inventoryNumber: 'INV-2022-045',
-    type: 'Офисная мебель',
-    subType: 'Рабочий стол',
-    commissioningDate: '2022-03-20',
-    bookValue: 45000,
-    residualValue: 32000
-  },
-  {
-    id: 3,
-    inventoryNumber: 'INV-2023-078',
-    type: 'Оргтехника',
-    subType: 'МФУ',
-    commissioningDate: '2023-02-10',
-    bookValue: 89000,
-    residualValue: 75000
-  },
-  {
-    id: 4,
-    inventoryNumber: 'INV-2021-123',
-    type: 'Производственное оборудование',
-    subType: 'Станок',
-    commissioningDate: '2021-11-05',
-    bookValue: 450000,
-    residualValue: 280000
-  },
-  {
-    id: 5,
-    inventoryNumber: 'INV-2023-156',
-    type: 'Компьютерная техника',
-    subType: 'Монитор',
-    commissioningDate: '2023-03-25',
-    bookValue: 35000,
-    residualValue: 32000
-  },
-  {
-    id: 6,
-    inventoryNumber: 'INV-2020-089',
-    type: 'Транспорт',
-    subType: 'Легковой автомобиль',
-    commissioningDate: '2020-07-12',
-    bookValue: 1200000,
-    residualValue: 850000
-  },
-  {
-    id: 7,
-    inventoryNumber: 'INV-2023-201',
-    type: 'Офисная мебель',
-    subType: 'Офисное кресло',
-    commissioningDate: '2023-04-18',
-    bookValue: 25000,
-    residualValue: 22000
-  },
-  {
-    id: 8,
-    inventoryNumber: 'INV-2022-167',
-    type: 'Оргтехника',
-    subType: 'Принтер',
-    commissioningDate: '2022-09-30',
-    bookValue: 42000,
-    residualValue: 31000
-  },
-  {
-    id: 9,
-    inventoryNumber: 'INV-2023-045',
-    type: 'Компьютерная техника',
-    subType: 'Системный блок',
-    commissioningDate: '2023-01-08',
-    bookValue: 78000,
-    residualValue: 65000
-  },
-  {
-    id: 10,
-    inventoryNumber: 'INV-2021-234',
-    type: 'Производственное оборудование',
-    subType: 'Компрессор',
-    commissioningDate: '2021-05-22',
-    bookValue: 320000,
-    residualValue: 210000
-  },
-  {
-    id: 11,
-    inventoryNumber: 'INV-2023-189',
-    type: 'Офисная мебель',
-    subType: 'Шкаф',
-    commissioningDate: '2023-06-14',
-    bookValue: 68000,
-    residualValue: 62000
-  },
-  {
-    id: 12,
-    inventoryNumber: 'INV-2022-278',
-    type: 'Транспорт',
-    subType: 'Грузовой автомобиль',
-    commissioningDate: '2022-12-03',
-    bookValue: 2500000,
-    residualValue: 1900000
-  }
-])
+const items = ref([])
+const types = ref({})
+const conditions = ref({})
+const isLoading = ref(false)
+const error = ref(null)
 
 const searchQuery = ref('')
-const typeFilter = ref('')
-const sortKey = ref('commissioningDate')
+const conditionFilter = ref('')
+const sortField = ref('operation_date')
+const sortKey = ref('operation_date')
 const sortOrder = ref('desc')
 
 // Пагинация
 const currentPage = ref(1)
 const itemsPerPage = ref(10)
+
+// Загрузка данных
+const loadData = async () => {
+  try {
+    isLoading.value = true
+    error.value = null
+
+    // Загружаем данные параллельно
+    const [electronicsResponse, typesResponse] = await Promise.all([
+      axios.get('http://127.0.0.1:8000/api/things/electronics'),
+      axios.get('http://127.0.0.1:8000/api/things/info-type')
+    ])
+
+    if (electronicsResponse.data.success) {
+      items.value = electronicsResponse.data.data.map(item => ({
+        id: item.id,
+        name: `${item.name}`,
+        inv_number: item.inv_number,
+        serial_number: item.serial_number,
+        type: item.type, // это числовой ID типа
+        condition: item.condition, // это строка "Исправно работает" или "Сломано"
+        parent: item.parent,
+        operation_date: item.operation_date,
+        price: item.price,
+        comment: item.comment || ''
+      }))
+      console.log('Загруженные элементы:', items.value)
+    } else {
+      throw new Error('Не удалось загрузить список элементов')
+    }
+
+    if (typesResponse.data.success) {
+      types.value = typesResponse.data.types || {}
+      conditions.value = typesResponse.data.conditions || {}
+      console.log('Загруженные типы:', types.value)
+      console.log('Загруженные условия:', conditions.value)
+    }
+
+  } catch (err) {
+    console.error('Ошибка при загрузке данных:', err)
+    error.value = err.message
+    // Можно добавить уведомление пользователю
+  } finally {
+    isLoading.value = false
+  }
+}
+
+onMounted(() => {
+  loadData()
+})
 
 // Вычисляемые свойства
 const filteredItems = computed(() => {
@@ -359,15 +334,25 @@ const filteredItems = computed(() => {
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase()
     filtered = filtered.filter(item =>
-        item.inventoryNumber.toLowerCase().includes(query) ||
-        item.type.toLowerCase().includes(query) ||
-        item.subType.toLowerCase().includes(query)
+        (item.name && item.name.toLowerCase().includes(query)) ||
+        (item.serial_number && item.serial_number.toLowerCase().includes(query)) ||
+        (item.inv_number && item.inv_number.toString().toLowerCase().includes(query)) ||
+        (getTypeName(item.type) && getTypeName(item.type).toLowerCase().includes(query))
     )
   }
 
-  // Фильтрация по типу
-  if (typeFilter.value) {
-    filtered = filtered.filter(item => item.type === typeFilter.value)
+  // Фильтрация по состоянию (теперь используем ключи из conditions)
+  if (conditionFilter.value) {
+    // Находим ключ состояния по его русскому названию
+    const conditionKey = Object.keys(conditions.value).find(
+        key => conditions.value[key] === conditionFilter.value
+    )
+    if (conditionKey) {
+      filtered = filtered.filter(item => {
+        // Сравниваем русское название состояния из API с выбранным фильтром
+        return item.condition === conditionFilter.value
+      })
+    }
   }
 
   // Сортировка
@@ -375,9 +360,13 @@ const filteredItems = computed(() => {
     let aVal = a[sortKey.value]
     let bVal = b[sortKey.value]
 
-    if (sortKey.value === 'commissioningDate') {
+    if (sortKey.value === 'operation_date') {
       aVal = new Date(aVal)
       bVal = new Date(bVal)
+    } else if (sortKey.value === 'condition') {
+      // Сортировка по состоянию - используем порядок из conditions
+      aVal = Object.values(conditions.value).indexOf(a.condition)
+      bVal = Object.values(conditions.value).indexOf(b.condition)
     }
 
     if (aVal < bVal) return sortOrder.value === 'asc' ? -1 : 1
@@ -420,6 +409,31 @@ const visiblePages = computed(() => {
 const showEllipsis = computed(() => totalPages.value > visiblePages.value.length)
 
 // Методы
+const getTypeName = (typeId) => {
+  if (!typeId) return ''
+  return types.value[typeId] || `Тип ${typeId}`
+}
+
+const getConditionLabel = (condition) => {
+  // Возвращаем как есть, т.к. в API уже приходит русское название
+  return condition || 'Не указано'
+}
+
+const getConditionColor = (condition) => {
+  // Маппинг русских названий на цвета
+  const colorMap = {
+    'Исправно работает': 'bg-green-500',
+    'Сломано': 'bg-red-500',
+    'Новый': 'bg-green-500',
+    'Отличное': 'bg-green-400',
+    'Хорошее': 'bg-blue-400',
+    'Удовлетворительное': 'bg-yellow-400',
+    'Плохое': 'bg-orange-400',
+    'В ремонте': 'bg-purple-400'
+  }
+  return colorMap[condition] || 'bg-gray-400'
+}
+
 const sortTable = (key) => {
   if (sortKey.value === key) {
     sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc'
@@ -446,10 +460,16 @@ const goToPage = (page) => {
 }
 
 const formatDate = (dateString) => {
-  return new Date(dateString).toLocaleDateString('ru-RU')
+  if (!dateString) return 'Не указана'
+  try {
+    return new Date(dateString).toLocaleDateString('ru-RU')
+  } catch (e) {
+    return dateString
+  }
 }
 
 const formatCurrency = (amount) => {
+  if (!amount) return '0 ₽'
   return new Intl.NumberFormat('ru-RU', {
     style: 'currency',
     currency: 'RUB',
@@ -458,10 +478,15 @@ const formatCurrency = (amount) => {
 }
 
 const getYearsInUse = (dateString) => {
-  const now = new Date()
-  const date = new Date(dateString)
-  const years = now.getFullYear() - date.getFullYear()
-  return years === 0 ? '<1 года' : `${years} ${getYearsText(years)}`
+  if (!dateString) return 'Неизвестно'
+  try {
+    const now = new Date()
+    const date = new Date(dateString)
+    const years = now.getFullYear() - date.getFullYear()
+    return years === 0 ? '<1 года' : `${years} ${getYearsText(years)}`
+  } catch (e) {
+    return 'Неизвестно'
+  }
 }
 
 const getYearsText = (years) => {
@@ -471,8 +496,13 @@ const getYearsText = (years) => {
 }
 
 // Сброс пагинации при изменении фильтров
-watch([searchQuery, typeFilter], () => {
+watch([searchQuery, conditionFilter], () => {
   currentPage.value = 1
+})
+
+watch([sortField], () => {
+  sortKey.value = sortField.value
+  sortOrder.value = 'desc'
 })
 
 watch(itemsPerPage, () => {

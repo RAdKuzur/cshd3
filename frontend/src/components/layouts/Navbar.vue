@@ -290,7 +290,7 @@ window.addEventListener('localStorageChange', (event) => {
 const navigation = [
   {
     name: 'Материальные ценности',
-    href: '/objects',
+    href: '/things',
     current: false,
     icon: BuildingStorefrontIcon
   },

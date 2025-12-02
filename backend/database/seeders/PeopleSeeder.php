@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Auditorium;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -31,7 +32,7 @@ class PeopleSeeder extends Seeder
                     'organization_id' => $organization->id,
                     'user_id' => $user->id,
                     'icon_link' => '/person.jpg',
-                    'auditorium_id' => 1,
+                    'auditorium_id' => Auditorium::inRandomOrder()->value('id'),
                     'is_active' => true,
                     'about' => json_encode([
                         'bio' => 'ABOUT ME TEXT',
@@ -63,16 +64,16 @@ class PeopleSeeder extends Seeder
         }
 
         //people_positions
-        foreach(DB::table('people')->get() as $person) {
-            $randomPositionId = DB::table('positions')->inRandomOrder()->first()->id;
-            $randomBranchId = DB::table('branches')->inRandomOrder()->first()->id;
-            DB::table('people_positions')->insert([
-                'people_id' => $person->id,
-                'position_id' => $randomPositionId,
-                'branch_id' => $randomBranchId,
-                'start_date' => now(),
-                'end_date' => now()->addYear()
-            ]);
-        }
+//        foreach(DB::table('people')->get() as $person) {
+//            $randomPositionId = DB::table('positions')->inRandomOrder()->first()->id;
+//            $randomBranchId = DB::table('branches')->inRandomOrder()->first()->id;
+//            DB::table('people_positions')->insert([
+//                'people_id' => $person->id,
+//                'position_id' => $randomPositionId,
+//                'branch_id' => $randomBranchId,
+//                'start_date' => now(),
+//                'end_date' => now()->addYear()
+//            ]);
+//        }
     }
 }

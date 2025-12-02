@@ -7,13 +7,16 @@ import LoginPage from "@/pages/LoginPage.vue";
 import ProfilePage from "@/pages/ProfilePage.vue";
 import StuffPage from "@/pages/StuffPage.vue";
 import SettingPage from "@/pages/SettingPage.vue";
-import ObjectPage from "@/pages/ObjectPage.vue";
 import DocPage from "@/pages/DocPage.vue";
 import MapPage from "@/pages/MapPage.vue";
 import ErrorPage from "@/pages/ErrorPage.vue";
 import TaskPage from "@/pages/TaskPage.vue";
 import AdminPage from "@/pages/AdminPage.vue";
 import ReportPage from "@/pages/ReportPage.vue";
+import MainThingPage from "@/pages/thing/MainThingPage.vue";
+import ElectronicsPage from "@/pages/thing/electronics/ElectronicsPage.vue";
+import ElectronicsCreatePage from "@/pages/thing/electronics/ElectronicsCreatePage.vue";
+import ElectronicsViewPage from "@/pages/thing/electronics/ElectronicsViewPage.vue";
 
 const routes = [
     { path: '/', redirect: '/home' },
@@ -23,13 +26,20 @@ const routes = [
     { path: '/profile/:username', component: ProfilePage, meta: { auth: true } },
     { path: '/stuff', component: StuffPage },
     { path: '/settings', component: SettingPage, meta: { auth: true } },
-    { path: '/objects', component: ObjectPage, meta: { auth: true } },
+    { path: '/things', component: MainThingPage, meta: { auth: true } },
     { path: '/docs', component: DocPage, meta: { auth: true } },
     { path: '/map', component: MapPage, meta: { auth: true } },
     { path: '/tasks', component: TaskPage, meta: { auth: true } },
     { path: '/admin', component: AdminPage, meta: { auth: true } },
     { path: '/reports', component: ReportPage, meta: { auth: true } },
-    { path: '/:pathMatch(.*)*', component: ErrorPage }
+    { path: '/:pathMatch(.*)*', component: ErrorPage },
+
+
+
+    { path: '/things', component: MainThingPage, meta: { auth: true } },
+    { path: '/things/electronics', component: ElectronicsPage, meta: { auth: true } },
+    { path: '/things/electronics/create', component: ElectronicsCreatePage, meta: { auth: true } },
+    { path: '/things/electronics/view', component: ElectronicsViewPage, meta: { auth: true } },
 ];
 
 const router = createRouter({
@@ -60,7 +70,7 @@ router.beforeEach(async (to, from, next) => {
     if (!to.meta.auth) return next();
 
     try {
-        await AuthService.check(); // проверяем токен через сервер
+        // await AuthService.check(); // проверяем токен через сервер
         next();
     } catch (e) {
         // сервер вернул 401 → редирект на login

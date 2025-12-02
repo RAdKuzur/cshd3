@@ -19,8 +19,8 @@ return new class extends Migration
         });
         Schema::create('permissions', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id')->constrained('users')->cascadeOnDelete();
-            $table->integer('rule_id')->constrained('rules')->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('rule_id')->constrained('rules');
             $table->timestamps();
         });
     }
