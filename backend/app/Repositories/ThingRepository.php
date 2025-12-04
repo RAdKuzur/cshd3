@@ -26,4 +26,7 @@ class ThingRepository
     public function update($id, $data){
         return DB::table("things")->where('id', $id)->update($data);
     }
+    public function delete($id){
+        return DB::table("things")->where('id', $id)->delete();
+    }
 }

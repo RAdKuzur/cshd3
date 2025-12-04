@@ -11,45 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('organizations', function (Blueprint $table) {
-            $table->id();
-            $table->string('name')->unique();
-            $table->string('address')->nullable();
-            $table->string('inn')->nullable();
-            $table->string('ogrn')->nullable();
-            $table->timestamps();
-        });
-
-        Schema::create('departments', function (Blueprint $table){
-            $table->id();
-            $table->string('name')->nullable(false);
-            $table->foreignId('organization_id')->constrained('organizations');
-            $table->string('address')->nullable();
-            $table->timestamps();
-        });
-
-        Schema::create('auditoriums', function (Blueprint $table) {
-            $table->id();
-            $table->string('name')->nullable(false);
-            $table->string('number')->nullable(false);
-            $table->integer('floor')->nullable(false);
-            $table->foreignId('department_id')->constrained('departments');
-            $table->timestamps();
-        });
-
         Schema::create('positions', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable(false);
             $table->timestamps();
         });
-
-        Schema::create('branches', function (Blueprint $table) {
-            $table->id();
-            $table->string('name')->nullable(false);
-            $table->foreignId('organization_id')->constrained('organizations');
-            $table->timestamps();
-        });
-
         Schema::create('people', function (Blueprint $table) {
             $table->id();
             $table->string('firstname')->nullable(false);
@@ -75,7 +41,6 @@ return new class extends Migration
             $table->date('end_date')->nullable();
             $table->timestamps();
         });
-
     }
 
     /**
@@ -86,9 +51,5 @@ return new class extends Migration
         Schema::dropIfExists('people_positions');
         Schema::dropIfExists('people');
         Schema::dropIfExists('positions');
-        Schema::dropIfExists('branches');
-        Schema::dropIfExists('auditoriums');
-        Schema::dropIfExists('departments');
-        Schema::dropIfExists('organizations');
     }
 };

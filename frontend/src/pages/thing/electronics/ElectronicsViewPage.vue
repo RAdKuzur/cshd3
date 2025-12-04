@@ -299,7 +299,7 @@ const loadAuditoriums = async () => {
 // Загружаем условия и типы
 const loadConditions = async () => {
   try {
-    const response = await fetch('http://127.0.0.1:8000/api/things/info-type')
+    const response = await fetch('http://127.0.0.1:8000/api/info/thing-types')
     if (response.ok) {
       const data = await response.json()
       if (data.success) {

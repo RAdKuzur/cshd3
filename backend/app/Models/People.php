@@ -53,13 +53,13 @@ class People extends Model
         return $this->hasMany(PeoplePosition::class);
     }
     public function getPosition(){
-        //refactoring
-        return $this->peoplePositions()->first()->position->name;
+        return $this->peoplePositions()->where('end_date', null)->first() ?
+            $this->peoplePositions()->where('end_date', null)->first()->position->name : null;
     }
     public function getBranchName()
     {
-        //refactoring
-        return  $this->peoplePositions()->first()->branch->name;
+        return  $this->peoplePositions()->where('end_date', null)->first() ?
+            $this->peoplePositions()->where('end_date', null)->first()->branch->name : null;
     }
     public function getEducation()
     {

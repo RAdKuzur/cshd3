@@ -358,7 +358,7 @@ const loadFormData = async () => {
 
     // Загружаем все данные параллельно
     const [typesResponse, parentsResponse, auditoriumsResponse] = await Promise.all([
-      axios.get('http://127.0.0.1:8000/api/things/info-type'),
+      axios.get('http://127.0.0.1:8000/api/info/thing-types'),
       axios.get('http://127.0.0.1:8000/api/things/simple-electronics'),
       axios.get('http://127.0.0.1:8000/api/auditoriums/index') // Добавляем запрос аудиторий
     ])

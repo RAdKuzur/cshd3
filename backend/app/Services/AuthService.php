@@ -43,7 +43,6 @@ class AuthService
     }
     public function isAuth($accessToken, $refreshToken){
         if (is_null($refreshToken) && is_null($accessToken)) {
-            //not authorizated
             return false;
         }
         else if(!is_null($refreshToken) && is_null($accessToken)){
@@ -55,7 +54,6 @@ class AuthService
             return $data['user_id'] && count($this->tokenRepository->isValidToken($refreshToken, $data['user_id'])) > 0;
         }
         else {
-            //not authorizated, but very strange situation
             return false;
         }
     }

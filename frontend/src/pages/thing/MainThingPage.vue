@@ -4,7 +4,7 @@
       <!-- Заголовок -->
       <div class="mb-12 text-center">
         <h1 class="text-4xl font-bold text-gray-900 mb-4">
-          Категории основных средств
+          Модуль управления материальными ценностями
         </h1>
         <p class="text-lg text-gray-600 max-w-2xl mx-auto">
           Управляйте всеми типами активов организации. Выберите категорию для просмотра или редактирования
@@ -36,9 +36,6 @@
           </div>
 
           <div class="mt-8 flex items-center justify-between">
-            <span class="text-white/80 text-sm">
-              {{ getCategoryCount('electronics') }} предметов
-            </span>
             <div class="bg-white/20 p-2 group-hover:bg-white/30 transition-colors">
               <svg class="w-5 h-5 text-white transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
@@ -70,9 +67,6 @@
           </div>
 
           <div class="mt-8 flex items-center justify-between">
-            <span class="text-white/80 text-sm">
-              {{ getCategoryCount('furniture') }} предметов
-            </span>
             <div class="bg-white/20 p-2 group-hover:bg-white/30 transition-colors">
               <svg class="w-5 h-5 text-white transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
@@ -104,9 +98,6 @@
           </div>
 
           <div class="mt-8 flex items-center justify-between">
-            <span class="text-white/80 text-sm">
-              {{ getCategoryCount('consumables') }} предметов
-            </span>
             <div class="bg-white/20 p-2 group-hover:bg-white/30 transition-colors">
               <svg class="w-5 h-5 text-white transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
@@ -138,9 +129,6 @@
           </div>
 
           <div class="mt-8 flex items-center justify-between">
-            <span class="text-white/80 text-sm">
-              {{ getCategoryCount('other') }} предметов
-            </span>
             <div class="bg-white/20 p-2 group-hover:bg-white/30 transition-colors">
               <svg class="w-5 h-5 text-white transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />

@@ -19,7 +19,7 @@ class AuditoriumResponsibility extends Model
         'auditorium_id',
         'people_id',
         'start_date',
-        'is_active'
+        'end_date'
     ];
     public function auditorium(){
         return $this->belongsTo(Auditorium::class);

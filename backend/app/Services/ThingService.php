@@ -73,4 +73,8 @@ class ThingService
     {
         $this->thingRepository->update($id, $data);
     }
+    public function delete($id)
+    {
+        $this->thingRepository->delete($id);
+    }
 }

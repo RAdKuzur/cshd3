@@ -18,6 +18,7 @@ import ElectronicsPage from "@/pages/thing/electronics/ElectronicsPage.vue";
 import ElectronicsCreatePage from "@/pages/thing/electronics/ElectronicsCreatePage.vue";
 import ElectronicsViewPage from "@/pages/thing/electronics/ElectronicsViewPage.vue";
 import ElectronicsEditPage from "@/pages/thing/electronics/ElectronicsEditPage.vue";
+import GeneralMapPage from "@/pages/map/GeneralMapPage.vue";
 
 const routes = [
     { path: '/', redirect: '/home' },
@@ -26,13 +27,14 @@ const routes = [
     { path: '/logout' }, // маршрут для выхода
     { path: '/profile/:username', component: ProfilePage, meta: { auth: true } },
     { path: '/stuff', component: StuffPage },
-    { path: '/settings', component: SettingPage, meta: { auth: true } },
+    // { path: '/settings', component: SettingPage, meta: { auth: true } },
     { path: '/things', component: MainThingPage, meta: { auth: true } },
-    { path: '/docs', component: DocPage, meta: { auth: true } },
+    // { path: '/docs', component: DocPage, meta: { auth: true } },
     { path: '/map', component: MapPage, meta: { auth: true } },
-    { path: '/tasks', component: TaskPage, meta: { auth: true } },
-    { path: '/admin', component: AdminPage, meta: { auth: true } },
-    { path: '/reports', component: ReportPage, meta: { auth: true } },
+    { path: '/map/general', component:  GeneralMapPage, meta: { auth: true }},
+    // { path: '/tasks', component: TaskPage, meta: { auth: true } },
+    // { path: '/admin', component: AdminPage, meta: { auth: true } },
+    // { path: '/reports', component: ReportPage, meta: { auth: true } },
     { path: '/:pathMatch(.*)*', component: ErrorPage },
 
 

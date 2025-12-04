@@ -36,6 +36,7 @@ class AuditoriumService
             foreach ($auditorium->things as $thing) {
                 $things[] = [
                     'id' => $thing->id,
+                    'name' => $thing->name,
                     'inv_number' => $thing->inv_number,
                     'thing_type_id' => $thing->thing_type_id,
                     'condition' => $thing->condition,

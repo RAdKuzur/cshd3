@@ -84,15 +84,15 @@
                       Профиль
                     </a>
                   </MenuItem>
-                  <MenuItem v-slot="{ active }">
-                    <a
-                        href="/settings"
-                        :class="[active ? 'bg-gray-100' : '', 'flex items-center px-4 py-2 text-sm text-gray-700']"
-                    >
-                      <Cog6ToothIcon class="w-4 h-4 mr-2 text-gray-400" />
-                      Настройки
-                    </a>
-                  </MenuItem>
+<!--                  <MenuItem v-slot="{ active }">-->
+<!--                    <a-->
+<!--                        href="/settings"-->
+<!--                        :class="[active ? 'bg-gray-100' : '', 'flex items-center px-4 py-2 text-sm text-gray-700']"-->
+<!--                    >-->
+<!--                      <Cog6ToothIcon class="w-4 h-4 mr-2 text-gray-400" />-->
+<!--                      Настройки-->
+<!--                    </a>-->
+<!--                  </MenuItem>-->
                   <div class="border-t border-gray-100 my-1"></div>
                   <MenuItem v-slot="{ active }"  @click="logout">
                     <a
@@ -300,36 +300,36 @@ const navigation = [
     current: false,
     icon: UserGroupIcon
   },
-  {
-    name: 'Документооборот',
-    href: '/docs',
-    current: false,
-    icon: DocumentTextIcon
-  },
-  {
-    name: 'Задачи',
-    href: '/tasks',
-    current: false,
-    icon: CheckIcon
-  },
-  {
-    name: 'Отчёты',
-    href: '/reports',
-    current: false,
-    icon: CalculatorIcon
-  },
+  // {
+  //   name: 'Документооборот',
+  //   href: '/docs',
+  //   current: false,
+  //   icon: DocumentTextIcon
+  // },
+  // {
+  //   name: 'Задачи',
+  //   href: '/tasks',
+  //   current: false,
+  //   icon: CheckIcon
+  // },
+  // {
+  //   name: 'Отчёты',
+  //   href: '/reports',
+  //   current: false,
+  //   icon: CalculatorIcon
+  // },
   {
     name: 'Интерактивная карта',
     href: '/map',
     current: false,
     icon: MapIcon
   },
-  {
-    name: 'Панель администратора',
-    href: '/admin',
-    current: false,
-    icon: CommandLineIcon
-  },
+  // {
+  //   name: 'Панель администратора',
+  //   href: '/admin',
+  //   current: false,
+  //   icon: CommandLineIcon
+  // },
 ]
 </script>
 
