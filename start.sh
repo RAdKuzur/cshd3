@@ -8,7 +8,4 @@ cd frontend && npm install
 echo "Устанавливаем бэкенд зависимости..."
 cd ../backend && composer install
 cp .env.example .env
-echo "Установка завершена!"
-
-cho "Запуск базы данных..."
-cd .. && docker compose up db pgadmin -de
+echo "Установка завершена! Можете запускать docker compose up"
