@@ -16,8 +16,8 @@
         </div>
 
         <!-- Панель поиска и фильтров -->
-        <div class="mt-6 flex gap-4">
-          <div class="flex-1">
+        <div class="mt-6 flex gap-4 flex-wrap">
+          <div class="flex-1 min-w-[300px]">
             <div class="relative">
               <input
                   v-model="searchQuery"
@@ -33,26 +33,39 @@
             </div>
           </div>
 
-          <select
-              v-model="conditionFilter"
-              class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-          >
-            <option value="">Все состояния</option>
-            <option v-for="(label, key) in conditions" :key="key" :value="label">
-              {{ label }}
-            </option>
-          </select>
+          <div class="flex gap-4 flex-wrap">
+            <select
+                v-model="conditionFilter"
+                class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            >
+              <option value="">Все состояния</option>
+              <option v-for="(label, key) in conditions" :key="key" :value="parseInt(key)">
+                {{ label }}
+              </option>
+            </select>
 
-          <select
-              v-model="sortField"
-              class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-          >
-            <option value="operation_date">Сортировка по дате</option>
-            <option value="name">По названию</option>
-            <option value="price">По стоимости</option>
-            <option value="condition">По состоянию</option>
-            <option value="auditorium_name">По аудитории</option>
-          </select>
+            <select
+                v-model="balanceFilter"
+                class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            >
+              <option value="">Все характеристики учёта</option>
+              <option v-for="(name, id) in balanceTypes" :key="id" :value="parseInt(id)">
+                {{ name }}
+              </option>
+            </select>
+
+            <select
+                v-model="sortField"
+                class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            >
+              <option value="operation_date">Сортировка по дате</option>
+              <option value="name">По названию</option>
+              <option value="price">По стоимости</option>
+              <option value="condition">По состоянию</option>
+              <option value="auditorium_name">По аудитории</option>
+              <option value="balance">По характеристике учёта</option>
+            </select>
+          </div>
         </div>
       </div>
 
@@ -142,6 +155,25 @@
                 </div>
               </td>
 
+              <!-- Характеристика учёта -->
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 h-8 w-8 bg-indigo-100 rounded-lg flex items-center justify-center mr-3">
+                    <svg class="h-4 w-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div class="text-sm font-medium text-gray-900">
+                      {{ getBalanceLabel(item.balance) }}
+                    </div>
+                    <div class="text-xs text-indigo-500">
+                      Характеристика учёта
+                    </div>
+                  </div>
+                </div>
+              </td>
+
               <!-- Кабинет размещения -->
               <td class="px-6 py-4 whitespace-nowrap">
                 <div class="flex items-center">
@@ -180,7 +212,7 @@
                       {{ formatCurrency(item.price) }}
                     </div>
                     <div class="text-xs text-gray-500">
-                      Балансовая стоимость
+                      Стоимость
                     </div>
                   </div>
                 </div>
@@ -283,6 +315,7 @@
 import { ref, computed, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
+import {BACKEND_URL} from "@/router.js";
 
 const router = useRouter()
 
@@ -290,6 +323,7 @@ const router = useRouter()
 const headers = ref([
   { key: 'name', label: 'Название и номер' },
   { key: 'condition', label: 'Состояние и тип' },
+  { key: 'balance', label: 'Характеристика учёта' },
   { key: 'auditorium_name', label: 'Кабинет размещения' },
   { key: 'operation_date', label: 'Дата введения в эксплуатацию' },
   { key: 'price', label: 'Балансовая стоимость' },
@@ -299,12 +333,14 @@ const headers = ref([
 const items = ref([])
 const types = ref({})
 const conditions = ref({})
-const auditoriums = ref([]) // Добавляем массив аудиторий
+const balanceTypes = ref({})
+const auditoriums = ref([])
 const isLoading = ref(false)
 const error = ref(null)
 
 const searchQuery = ref('')
 const conditionFilter = ref('')
+const balanceFilter = ref('')
 const sortField = ref('operation_date')
 const sortKey = ref('operation_date')
 const sortOrder = ref('desc')
@@ -320,16 +356,23 @@ const loadData = async () => {
     error.value = null
 
     // Загружаем данные параллельно
-    const [electronicsResponse, typesResponse, auditoriumsResponse] = await Promise.all([
-      axios.get('http://127.0.0.1:8000/api/things/electronics'),
-      axios.get('http://127.0.0.1:8000/api/info/thing-types'),
-      axios.get('http://127.0.0.1:8000/api/auditoriums/index') // Загружаем аудитории
+    const [electronicsResponse, typesResponse, balanceResponse, auditoriumsResponse] = await Promise.all([
+      axios.get(BACKEND_URL + '/api/things/electronics'),
+      axios.get(BACKEND_URL + '/api/info/thing-types'),
+      axios.get(BACKEND_URL + '/api/info/balance'),
+      axios.get(BACKEND_URL + '/api/auditoriums/index')
     ])
 
     // Сохраняем аудитории
     if (auditoriumsResponse.data.success) {
       auditoriums.value = auditoriumsResponse.data.data || []
       console.log('Загруженные аудитории:', auditoriums.value)
+    }
+
+    // Сохраняем характеристики учёта
+    if (balanceResponse.data.success) {
+      balanceTypes.value = balanceResponse.data.types || {}
+      console.log('Загруженные характеристики учёта:', balanceTypes.value)
     }
 
     if (electronicsResponse.data.success) {
@@ -346,6 +389,7 @@ const loadData = async () => {
           serial_number: item.serial_number,
           type: item.type,
           condition: item.condition,
+          balance: item.balance || null,
           parent: item.parent,
           operation_date: item.operation_date,
           price: item.price,
@@ -382,7 +426,7 @@ onMounted(() => {
 const filteredItems = computed(() => {
   let filtered = items.value
 
-  // Фильтрация по поиску (добавлен поиск по аудитории)
+  // Фильтрация по поиску
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase()
     filtered = filtered.filter(item =>
@@ -390,14 +434,24 @@ const filteredItems = computed(() => {
         (item.serial_number && item.serial_number.toLowerCase().includes(query)) ||
         (item.inv_number && item.inv_number.toString().toLowerCase().includes(query)) ||
         (getTypeName(item.type) && getTypeName(item.type).toLowerCase().includes(query)) ||
-        (item.auditorium_name && item.auditorium_name.toLowerCase().includes(query))
+        (item.auditorium_name && item.auditorium_name.toLowerCase().includes(query)) ||
+        (getBalanceLabel(item.balance) && getBalanceLabel(item.balance).toLowerCase().includes(query))
     )
   }
 
-  // Фильтрация по состоянию
-  if (conditionFilter.value) {
+  // Фильтрация по состоянию - используем строгое равенство
+  if (conditionFilter.value !== '') {
+    const conditionId = parseInt(conditionFilter.value)
     filtered = filtered.filter(item => {
-      return item.condition === conditionFilter.value
+      return item.condition === conditionId
+    })
+  }
+
+  // Фильтрация по характеристике учёта
+  if (balanceFilter.value !== '') {
+    const balanceId = parseInt(balanceFilter.value)
+    filtered = filtered.filter(item => {
+      return item.balance === balanceId
     })
   }
 
@@ -411,12 +465,16 @@ const filteredItems = computed(() => {
       bVal = new Date(bVal)
     } else if (sortKey.value === 'condition') {
       // Сортировка по состоянию - используем порядок из conditions
-      aVal = Object.values(conditions.value).indexOf(a.condition)
-      bVal = Object.values(conditions.value).indexOf(b.condition)
+      aVal = Object.values(conditions.value).indexOf(getConditionLabel(a.condition))
+      bVal = Object.values(conditions.value).indexOf(getConditionLabel(b.condition))
     } else if (sortKey.value === 'auditorium_name') {
       // Сортировка по аудитории
       aVal = a.auditorium_name || 'Я'
       bVal = b.auditorium_name || 'Я'
+    } else if (sortKey.value === 'balance') {
+      // Сортировка по характеристике учёта
+      aVal = getBalanceLabel(a.balance) || 'Я'
+      bVal = getBalanceLabel(b.balance) || 'Я'
     }
 
     if (aVal < bVal) return sortOrder.value === 'asc' ? -1 : 1
@@ -465,21 +523,41 @@ const getTypeName = (typeId) => {
 }
 
 const getConditionLabel = (condition) => {
-  return condition || 'Не указано'
+  if (condition === null || condition === undefined) return 'Не указано'
+  return conditions.value[condition] || `${condition}`
 }
 
 const getConditionColor = (condition) => {
-  const colorMap = {
-    'Исправно работает': 'bg-green-500',
-    'Сломано': 'bg-red-500',
-    'Новый': 'bg-green-500',
-    'Отличное': 'bg-green-400',
-    'Хорошее': 'bg-blue-400',
-    'Удовлетворительное': 'bg-yellow-400',
-    'Плохое': 'bg-orange-400',
-    'В ремонте': 'bg-purple-400'
+  if (condition === null || condition === undefined) return 'bg-gray-400'
+
+  const colors = {
+    1: 'bg-green-500',
+    2: 'bg-red-500',
+    3: 'bg-purple-400',
+    4: 'bg-green-500',
+    5: 'bg-green-400',
+    6: 'bg-blue-400',
+    7: 'bg-yellow-400',
+    8: 'bg-orange-400',
   }
-  return colorMap[condition] || 'bg-gray-400'
+
+  return colors[condition] || 'bg-gray-400'
+}
+
+// Получение метки характеристики учёта
+const getBalanceLabel = (balanceId) => {
+  if (balanceId === null || balanceId === undefined) return 'Не указано'
+
+  if (Object.keys(balanceTypes.value).length > 0) {
+    return balanceTypes.value[balanceId] || `Характеристика ${balanceId}`
+  }
+
+  // Запасной вариант, если не успели загрузить
+  const staticBalances = {
+    1: 'Основное средство',
+    2: 'За балансом'
+  }
+  return staticBalances[balanceId] || `Характеристика ${balanceId}`
 }
 
 // Форматируем текст для отображения этажа
@@ -504,13 +582,6 @@ const getFloorText = (floorNumber) => {
     default:
       return `${floorNumber} этаж`
   }
-}
-
-// Функция для получения названия аудитории по ID
-const getAuditoriumNameById = (auditoriumId) => {
-  if (!auditoriumId) return 'Не указана'
-  const auditorium = auditoriums.value.find(a => a.id === auditoriumId)
-  return auditorium ? auditorium.name : `ID: ${auditoriumId}`
 }
 
 const sortTable = (key) => {
@@ -548,7 +619,7 @@ const formatDate = (dateString) => {
 }
 
 const formatCurrency = (amount) => {
-  if (!amount) return '0 ₽'
+  if (!amount && amount !== 0) return '0 ₽'
   return new Intl.NumberFormat('ru-RU', {
     style: 'currency',
     currency: 'RUB',
@@ -575,7 +646,7 @@ const getYearsText = (years) => {
 }
 
 // Сброс пагинации при изменении фильтров
-watch([searchQuery, conditionFilter], () => {
+watch([searchQuery, conditionFilter, balanceFilter], () => {
   currentPage.value = 1
 })
 

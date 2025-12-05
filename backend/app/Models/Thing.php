@@ -19,6 +19,7 @@ class Thing extends Model
         'thing_type_id',
         'thing_parent_id',
         'condition',
+        'balance',
         'auditorium_id',
         'price',
         'comment',

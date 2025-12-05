@@ -41,6 +41,7 @@ class AuditoriumService
                     'thing_type_id' => $thing->thing_type_id,
                     'condition' => $thing->condition,
                     'serial_number' => $thing->serial_number,
+                    'balance' => $thing->balance
                 ];
             }
 

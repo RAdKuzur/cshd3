@@ -95,9 +95,14 @@
                           <span class="font-medium mr-1">Сер. №:</span>
                           <span class="font-mono text-xs">{{ thing.serial_number }}</span>
                         </div>
-                        <div class="col-span-2">
+                        <div class="flex items-center">
                           <span class="font-medium mr-1">Тип:</span>
                           <span>{{ getTypeName(thing.thing_type_id) }}</span>
+                        </div>
+                        <!-- Добавляем характеристику учёта -->
+                        <div class="flex items-center">
+                          <span class="font-medium mr-1">Учёт:</span>
+                          <span class="text-indigo-600 font-medium">{{ getBalanceLabel(thing.balance) }}</span>
                         </div>
                       </div>
                     </div>
@@ -356,6 +361,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
+import {BACKEND_URL} from "@/router.js";
 
 const router = useRouter()
 
@@ -369,6 +375,7 @@ const activeFloor = ref(1)
 const isLoading = ref(false)
 const error = ref(null)
 const types = ref({})
+const balanceTypes = ref({}) // Добавляем характеристики учёта
 
 // Загрузка данных
 const loadData = async () => {
@@ -376,9 +383,10 @@ const loadData = async () => {
     isLoading.value = true
     error.value = null
 
-    const [mapResponse, typesResponse] = await Promise.all([
-      axios.get('http://127.0.0.1:8000/api/auditoriums/map'),
-      axios.get('http://127.0.0.1:8000/api/info/thing-types')
+    const [mapResponse, typesResponse, balanceResponse] = await Promise.all([
+      axios.get(BACKEND_URL + '/api/auditoriums/map'),
+      axios.get(BACKEND_URL + '/api/info/thing-types'),
+      axios.get(BACKEND_URL + '/api/info/balance') // Загружаем характеристики учёта
     ])
 
     if (mapResponse.data.success) {
@@ -389,6 +397,12 @@ const loadData = async () => {
 
     if (typesResponse.data.success) {
       types.value = typesResponse.data.types || {}
+    }
+
+    // Загружаем характеристики учёта
+    if (balanceResponse.data.success) {
+      balanceTypes.value = balanceResponse.data.types || {}
+      console.log('Загруженные характеристики учёта:', balanceTypes.value)
     }
 
   } catch (err) {
@@ -418,7 +432,8 @@ const filteredAuditoriums = computed(() => {
         a.things.some(t =>
             (t.name && t.name.toLowerCase().includes(query)) ||
             t.inv_number.toLowerCase().includes(query) ||
-            t.serial_number.toLowerCase().includes(query)
+            t.serial_number.toLowerCase().includes(query) ||
+            (getBalanceLabel(t.balance) && getBalanceLabel(t.balance).toLowerCase().includes(query)) // Добавляем поиск по характеристике учёта
         )
     )
   }
@@ -457,7 +472,7 @@ const floors = computed(() => {
 
 const workingThingsCount = computed(() => {
   if (!selectedAuditorium.value?.things) return 0
-  return selectedAuditorium.value.things.filter(t => t.condition === 0).length
+  return selectedAuditorium.value.things.filter(t => t.condition === 1).length
 })
 
 // Методы
@@ -492,11 +507,11 @@ const getObjectsCountText = (count) => {
 
 const getConditionColor = (conditionId) => {
   const colorMap = {
-    0: 'bg-green-500',  // Исправно работает
-    1: 'bg-red-500',    // Сломано
-    2: 'bg-yellow-500', // В ремонте
-    3: 'bg-blue-500',   // Резерв
-    4: 'bg-gray-500'    // Другое
+    1: 'bg-green-500',  // Исправно работает
+    2: 'bg-red-500',    // Сломано
+    3: 'bg-yellow-500', // В ремонте
+    4: 'bg-blue-500',   // Резерв
+    5: 'bg-gray-500'    // Другое
   }
   return colorMap[conditionId] || 'bg-gray-400'
 }
@@ -504,6 +519,22 @@ const getConditionColor = (conditionId) => {
 const getTypeName = (typeId) => {
   if (!typeId && typeId !== 0) return 'Не указан'
   return types.value[typeId] || `Тип ${typeId}`
+}
+
+// Получение метки характеристики учёта
+const getBalanceLabel = (balanceId) => {
+  if (balanceId === null || balanceId === undefined) return 'Не указано'
+
+  if (Object.keys(balanceTypes.value).length > 0) {
+    return balanceTypes.value[balanceId] || `Характеристика ${balanceId}`
+  }
+
+  // Запасной вариант, если не успели загрузить
+  const staticBalances = {
+    1: 'Основное средство',
+    2: 'За балансом'
+  }
+  return staticBalances[balanceId] || `Характеристика ${balanceId}`
 }
 
 const viewThing = (thingId) => {

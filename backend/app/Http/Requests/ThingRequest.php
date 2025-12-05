@@ -23,15 +23,16 @@ class ThingRequest extends FormRequest
     {
         return [
             'name' => 'required',
-            'inv_number' => 'required',
-            'serial_number' => 'required',
-            'operation_date' => 'required',
+            'inv_number' => 'nullable',
+            'serial_number' => 'nullable',
+            'operation_date' => 'nullable',
             'thing_type_id' => 'required',
-            'condition' => 'required',
+            'condition' => 'nullable',
             'thing_parent_id' => 'nullable',
-            'price' => 'required',
+            'price' => 'nullable',
             'comment' => 'nullable',
-            'auditorium_id' => 'required',
+            'auditorium_id' => 'nullable',
+            'balance' => 'nullable'
         ];
     }
 }

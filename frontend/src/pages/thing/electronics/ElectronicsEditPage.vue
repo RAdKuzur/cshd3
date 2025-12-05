@@ -65,12 +65,11 @@
               <!-- Серийный номер -->
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">
-                  Серийный номер *
+                  Серийный номер
                 </label>
                 <input
                     v-model="formData.serial_number"
                     type="text"
-                    required
                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
                     placeholder="Например: CN-0R3XX1-64180-2B9-016K"
                 />
@@ -82,12 +81,11 @@
               <!-- Инвентарный номер -->
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">
-                  Инвентарный номер *
+                  Инвентарный номер
                 </label>
                 <input
                     v-model="formData.inv_number"
                     type="text"
-                    required
                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
                     placeholder="Например: INV-2024-001"
                 />
@@ -99,12 +97,11 @@
               <!-- Дата введения в эксплуатацию -->
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">
-                  Дата введения в эксплуатацию *
+                  Дата введения в эксплуатацию
                 </label>
                 <input
                     v-model="formData.operation_date"
                     type="date"
-                    required
                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
                 />
                 <p class="mt-1 text-sm text-gray-500">
@@ -145,6 +142,29 @@
                 </p>
               </div>
 
+              <!-- Характеристика учёта -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                  Характеристика учёта
+                </label>
+                <select
+                    v-model="formData.balance"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                >
+                  <option value="">Выберите характеристику</option>
+                  <option
+                      v-for="(name, id) in balanceTypes"
+                      :key="id"
+                      :value="parseInt(id)"
+                  >
+                    {{ name }}
+                  </option>
+                </select>
+                <p class="mt-1 text-sm text-gray-500">
+                  Тип учёта основного средства
+                </p>
+              </div>
+
               <!-- Родительский предмет -->
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">
@@ -171,14 +191,13 @@
               <!-- Аудитория размещения -->
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">
-                  Аудитория размещения *
+                  Кабинет размещения
                 </label>
                 <select
                     v-model="formData.auditorium_id"
-                    required
                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
                 >
-                  <option value="">Выберите аудиторию</option>
+                  <option value="">Не выбрано</option>
                   <option
                       v-for="auditorium in auditoriums"
                       :key="auditorium.id"
@@ -188,18 +207,17 @@
                   </option>
                 </select>
                 <p class="mt-1 text-sm text-gray-500">
-                  Аудитория, где находится предмет
+                  Кабинет, где находится предмет
                 </p>
               </div>
 
               <!-- Состояние -->
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">
-                  Состояние *
+                  Состояние
                 </label>
                 <select
                     v-model="selectedCondition"
-                    required
                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
                 >
                   <option value="">Выберите состояние</option>
@@ -227,7 +245,6 @@
                       type="number"
                       min="0"
                       step="0.01"
-                      required
                       class="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
                       placeholder="0.00"
                   />
@@ -304,6 +321,7 @@
 import { ref, reactive, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import axios from "axios"
+import {BACKEND_URL} from "@/router.js";
 
 const route = useRoute()
 const router = useRouter()
@@ -320,8 +338,9 @@ const conditionId = ref(null)
 // Динамические данные с сервера
 const types = ref({})
 const conditions = ref({})
+const balanceTypes = ref({}) // Добавляем характеристики учёта
 const parentThings = ref([])
-const auditoriums = ref([]) // Добавляем массив аудиторий
+const auditoriums = ref([])
 const isLoading = ref(false)
 const isSubmitting = ref(false)
 const error = ref(null)
@@ -360,7 +379,7 @@ const loadThingData = async () => {
     isLoading.value = true
     error.value = null
 
-    const response = await axios.get(`http://127.0.0.1:8000/api/things/edit/${thingId}`)
+    const response = await axios.get(BACKEND_URL + `/api/things/edit/${thingId}`)
 
     if (response.data.success && response.data.data) {
       const data = response.data.data
@@ -389,8 +408,9 @@ const loadThingData = async () => {
         inv_number: data.inv_number || '',
         operation_date: operationDate,
         thing_type_id: data.type || '',
+        balance: data.balance || '', // Добавляем поле характеристики учёта
         thing_parent_id: data.thing_parent_id || '',
-        auditorium_id: data.auditorium_id || '', // Добавляем поле аудитории
+        auditorium_id: data.auditorium_id || '',
         price: data.price || 0,
         comment: data.comment || ''
       }
@@ -402,6 +422,7 @@ const loadThingData = async () => {
 
       console.log('Данные для формы:', formData.value)
       console.log('ID состояния:', conditionId.value)
+      console.log('ID характеристики учёта:', formData.value.balance)
       console.log('ID аудитории:', formData.value.auditorium_id)
     } else {
       throw new Error('Данные предмета не найдены')
@@ -419,10 +440,11 @@ const loadThingData = async () => {
 const loadFormData = async () => {
   try {
     // Загружаем все данные параллельно
-    const [typesResponse, parentsResponse, auditoriumsResponse] = await Promise.all([
-      axios.get('http://127.0.0.1:8000/api/info/thing-types'),
-      axios.get('http://127.0.0.1:8000/api/things/simple-electronics'),
-      axios.get('http://127.0.0.1:8000/api/auditoriums/index')
+    const [typesResponse, balanceResponse, parentsResponse, auditoriumsResponse] = await Promise.all([
+      axios.get(BACKEND_URL + '/api/info/thing-types'),
+      axios.get(BACKEND_URL + '/api/info/balance'), // Добавляем запрос характеристик учёта
+      axios.get(BACKEND_URL + '/api/things/simple-electronics'),
+      axios.get(BACKEND_URL + '/api/auditoriums/index')
     ])
 
     // Обработка типов и условий
@@ -439,6 +461,15 @@ const loadFormData = async () => {
       console.error('Ошибка загрузки типов и условий:', typesResponse.data)
       types.value = {}
       conditions.value = {}
+    }
+
+    // Обработка характеристик учёта
+    if (balanceResponse.data.success) {
+      balanceTypes.value = balanceResponse.data.types || {}
+      console.log('Загруженные характеристики учёта:', balanceTypes.value)
+    } else {
+      console.error('Ошибка загрузки характеристик учёта:', balanceResponse.data)
+      balanceTypes.value = {}
     }
 
     // Обработка родительских предметов
@@ -463,6 +494,7 @@ const loadFormData = async () => {
     console.error('Ошибка при загрузке данных формы:', error)
     types.value = {}
     conditions.value = {}
+    balanceTypes.value = {}
     parentThings.value = []
     auditoriums.value = []
   }
@@ -481,11 +513,9 @@ const handleSubmit = async () => {
   try {
     isSubmitting.value = true
 
-    // Валидация (добавляем проверку аудитории)
-    if (!formData.value.name || !formData.value.serial_number || !formData.value.inv_number ||
-        !formData.value.operation_date || !formData.value.thing_type_id ||
-        !formData.value.price || conditionId.value === null || !formData.value.auditorium_id) {
-      alert('Пожалуйста, заполните все обязательные поля, включая аудиторию размещения')
+    // Валидация
+    if (!formData.value.name || !formData.value.thing_type_id) {
+      alert('Пожалуйста, заполните все обязательные поля (Название, Тип предмета и Стоимость)')
       return
     }
 
@@ -496,8 +526,9 @@ const handleSubmit = async () => {
       inv_number: formData.value.inv_number,
       operation_date: formData.value.operation_date,
       thing_type_id: parseInt(formData.value.thing_type_id),
+      balance: formData.value.balance ? parseInt(formData.value.balance) : null, // Добавляем характеристику учёта
       thing_parent_id: formData.value.thing_parent_id ? parseInt(formData.value.thing_parent_id) : null,
-      auditorium_id: parseInt(formData.value.auditorium_id), // Добавляем аудиторию
+      auditorium_id: formData.value.auditorium_id ? parseInt(formData.value.auditorium_id) : null,
       condition: conditionId.value,
       price: parseFloat(formData.value.price),
       comment: formData.value.comment || ''
@@ -507,7 +538,7 @@ const handleSubmit = async () => {
 
     // Отправка данных на сервер
     const response = await axios.put(
-        `http://127.0.0.1:8000/api/things/update/${thingId}`,
+        BACKEND_URL + `/api/things/update/${thingId}`,
         dataToSend,
         {
           headers: {

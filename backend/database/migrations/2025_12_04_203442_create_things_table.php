@@ -18,13 +18,14 @@ return new class extends Migration
             $table->string('inv_number')->nullable();
             $table->date('operation_date')->nullable();
             $table->integer('thing_type_id')->nullable(false);
-            $table->foreignId('auditorium_id')->constrained('auditoriums');
+            $table->foreignId('auditorium_id')->nullable()->constrained('auditoriums');
             $table->foreignId('thing_parent_id')
                 ->nullable()
                 ->constrained('things')
                 ->nullOnDelete();
-            $table->integer('condition')->nullable(false);
-            $table->float('price')->nullable(false)->default(0);
+            $table->integer('condition')->nullable();
+            $table->integer('balance')->nullable();
+            $table->float('price')->nullable()->default(0);
             $table->string('comment')->nullable();
             $table->timestamps();
         });

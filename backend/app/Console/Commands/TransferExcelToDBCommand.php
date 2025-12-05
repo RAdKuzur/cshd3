@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Dictionaries\ConditionDictionary;
+use App\Dictionaries\ThingBalanceDictionary;
 use App\Dictionaries\ThingTypeDictionary;
 use Exception;
 use Illuminate\Console\Command;
@@ -55,10 +56,11 @@ class TransferExcelToDBCommand extends Command
                         'operation_date' => $sheet->getCell('E' . $index)->getValue() ? $sheet->getCell('E' . $index)->getValue() . '-01-01 00:00:00' : null,
                         'thing_type_id' => ThingTypeDictionary::indexElectronics($cellValue),
                         'thing_parent_id' => null,
-                        'condition' => ConditionDictionary::OK,
+                        'condition' => rand(ConditionDictionary::OK, ConditionDictionary::BROKEN),
                         'auditorium_id' => $auditorium->id,
                         'price' => 1,
                         'comment' => null,
+                        'balance' => rand(ThingBalanceDictionary::OS, ThingBalanceDictionary::BALANCE)
                     ];
 
                     DB::table('things')->insert($data);

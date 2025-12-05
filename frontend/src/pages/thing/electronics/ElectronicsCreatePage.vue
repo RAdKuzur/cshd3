@@ -55,7 +55,6 @@
                 <input
                     v-model="formData.serial_number"
                     type="text"
-                    required
                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
                     placeholder="Например: CN-0R3XX1-64180-2B9-016K"
                 />
@@ -72,7 +71,6 @@
                 <input
                     v-model="formData.inv_number"
                     type="text"
-                    required
                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
                     placeholder="Например: INV-2024-001"
                 />
@@ -89,7 +87,6 @@
                 <input
                     v-model="formData.operation_date"
                     type="date"
-                    required
                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
                 />
                 <p class="mt-1 text-sm text-gray-500">
@@ -130,6 +127,29 @@
                 </p>
               </div>
 
+              <!-- Характеристика учёта -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                  Характеристика учёта *
+                </label>
+                <select
+                    v-model="formData.balance"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                >
+                  <option value="">Выберите характеристику</option>
+                  <option
+                      v-for="(name, id) in balanceTypes"
+                      :key="id"
+                      :value="id"
+                  >
+                    {{ name }}
+                  </option>
+                </select>
+                <p class="mt-1 text-sm text-gray-500">
+                  Тип учёта основного средства
+                </p>
+              </div>
+
               <!-- Родительский предмет -->
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">
@@ -159,7 +179,6 @@
                   Кабинет размещения
                 </label>
                 <select
-                    required
                     v-model="formData.auditorium_id"
                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
                 >
@@ -184,7 +203,6 @@
                 </label>
                 <select
                     v-model="formData.condition"
-                    required
                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
                 >
                   <option value="">Выберите состояние</option>
@@ -212,7 +230,6 @@
                       type="number"
                       min="0"
                       step="0.01"
-                      required
                       class="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
                       placeholder="0.00"
                   />
@@ -286,6 +303,9 @@
                 <template v-if="key === 'thing_type_id' && Object.keys(types).length">
                   {{ getTypeName(value) || 'Не указано' }}
                 </template>
+                <template v-else-if="key === 'balance' && Object.keys(balanceTypes).length">
+                  {{ getBalanceName(value) || 'Не указано' }}
+                </template>
                 <template v-else-if="key === 'thing_parent_id' && parentThings.length">
                   {{ getParentInvNumber(value) || 'Не указано' }}
                 </template>
@@ -310,6 +330,7 @@
 import { ref, reactive, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from "axios"
+import {BACKEND_URL} from "@/router.js";
 
 const router = useRouter()
 
@@ -320,8 +341,9 @@ const formData = reactive({
   inv_number: '',
   operation_date: '',
   thing_type_id: '',
+  balance: '', // Добавляем поле для характеристики учёта
   thing_parent_id: '',
-  auditorium_id: '', // Добавляем новое поле
+  auditorium_id: '',
   condition: '',
   price: 0,
   comment: ''
@@ -330,8 +352,9 @@ const formData = reactive({
 // Динамические данные с сервера
 const types = ref({})
 const conditions = ref({})
+const balanceTypes = ref({}) // Изменяем на объект, как в types
 const parentThings = ref([])
-const auditoriums = ref([]) // Добавляем массив аудиторий
+const auditoriums = ref([])
 const isLoading = ref(false)
 const isSubmitting = ref(false)
 const showPreview = ref(false)
@@ -351,16 +374,17 @@ onMounted(async () => {
   formData.operation_date = today
 })
 
-// Загрузка типов, условий, родительских предметов и аудиторий с сервера
+// Загрузка типов, условий, родительских предметов, аудиторий и характеристик учёта с сервера
 const loadFormData = async () => {
   try {
     isLoading.value = true
 
     // Загружаем все данные параллельно
-    const [typesResponse, parentsResponse, auditoriumsResponse] = await Promise.all([
-      axios.get('http://127.0.0.1:8000/api/info/thing-types'),
-      axios.get('http://127.0.0.1:8000/api/things/simple-electronics'),
-      axios.get('http://127.0.0.1:8000/api/auditoriums/index') // Добавляем запрос аудиторий
+    const [typesResponse, balanceResponse, parentsResponse, auditoriumsResponse] = await Promise.all([
+      axios.get(BACKEND_URL + '/api/info/thing-types'),
+      axios.get(BACKEND_URL + '/api/info/balance'), // Запрос характеристик учёта
+      axios.get(BACKEND_URL + '/api/things/simple-electronics'),
+      axios.get(BACKEND_URL + '/api/auditoriums/index')
     ])
 
     // Обработка типов и условий
@@ -373,6 +397,15 @@ const loadFormData = async () => {
       console.error('Ошибка загрузки типов и условий:', typesResponse.data)
       types.value = {}
       conditions.value = {}
+    }
+
+    // Обработка характеристик учёта
+    if (balanceResponse.data.success) {
+      balanceTypes.value = balanceResponse.data.types || {}
+      console.log('Загруженные характеристики учёта:', balanceTypes.value)
+    } else {
+      console.error('Ошибка загрузки характеристик учёта:', balanceResponse.data)
+      balanceTypes.value = {}
     }
 
     // Обработка родительских предметов
@@ -397,6 +430,7 @@ const loadFormData = async () => {
     console.error('Ошибка при загрузке данных формы:', error)
     types.value = {}
     conditions.value = {}
+    balanceTypes.value = {}
     parentThings.value = []
     auditoriums.value = []
   } finally {
@@ -408,6 +442,12 @@ const loadFormData = async () => {
 const getTypeName = (typeId) => {
   if (!typeId) return ''
   return types.value[typeId] || ''
+}
+
+// Получение названия характеристики учёта по ID
+const getBalanceName = (balanceId) => {
+  if (!balanceId) return ''
+  return balanceTypes.value[balanceId] || ''
 }
 
 // Получение инвентарного номера родительского предмета по ID
@@ -435,10 +475,7 @@ const handleSubmit = async () => {
   try {
     isSubmitting.value = true
 
-    // Валидация
-    if (!formData.name || !formData.serial_number || !formData.inv_number ||
-        !formData.operation_date || !formData.thing_type_id ||
-        !formData.price || formData.condition === '') {
+    if (!formData.name || !formData.thing_type_id ) {
       alert('Пожалуйста, заполните все обязательные поля')
       return
     }
@@ -450,8 +487,9 @@ const handleSubmit = async () => {
       inv_number: formData.inv_number,
       operation_date: formData.operation_date,
       thing_type_id: parseInt(formData.thing_type_id),
+      balance: parseInt(formData.balance), // Добавляем характеристику учёта
       thing_parent_id: formData.thing_parent_id ? parseInt(formData.thing_parent_id) : null,
-      auditorium_id: formData.auditorium_id ? parseInt(formData.auditorium_id) : null, // Добавляем аудиторию
+      auditorium_id: formData.auditorium_id ? parseInt(formData.auditorium_id) : null,
       condition: parseInt(formData.condition),
       price: parseFloat(formData.price),
       comment: formData.comment || ''
@@ -461,7 +499,7 @@ const handleSubmit = async () => {
 
     // Отправка данных на сервер
     const response = await axios.post(
-        'http://127.0.0.1:8000/api/things/create',
+        BACKEND_URL + '/api/things/create',
         dataToSend,
         {
           headers: {
@@ -512,8 +550,9 @@ const formatKey = (key) => {
     inv_number: 'Инвентарный номер',
     operation_date: 'Дата ввода в эксплуатацию',
     thing_type_id: 'Тип предмета',
+    balance: 'Характеристика учёта', // Добавляем перевод
     thing_parent_id: 'Родительский предмет',
-    auditorium_id: 'Кабинет размещения', // Добавляем перевод
+    auditorium_id: 'Кабинет размещения',
     condition: 'Состояние',
     price: 'Стоимость',
     comment: 'Комментарий'

@@ -6,7 +6,6 @@ use function Symfony\Component\String\s;
 
 class ThingTypeDictionary implements BaseDictionary
 {
-    public const ARM = 0;
     public const PC = 1;
     public const MONITOR = 2;
     public const PRINTER = 3;
@@ -17,6 +16,7 @@ class ThingTypeDictionary implements BaseDictionary
     public const MONOPC = 8;
     public const PASSPORT_SCANNER = 9;
     public const CARD_PRINTER = 10;
+    public const ARM = 11;
     public const ELECTRONICS = [
         self::ARM,self::PC,self::MONITOR,self::PRINTER,
         self::MFU,self::IBP,self::KMA,self::SCANNER,

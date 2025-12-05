@@ -20,6 +20,8 @@ import ElectronicsViewPage from "@/pages/thing/electronics/ElectronicsViewPage.v
 import ElectronicsEditPage from "@/pages/thing/electronics/ElectronicsEditPage.vue";
 import GeneralMapPage from "@/pages/map/GeneralMapPage.vue";
 
+const BACKEND_URL = 'http://127.0.0.1:8000';
+
 const routes = [
     { path: '/', redirect: '/home' },
     { path: '/home', component: HomePage },
@@ -28,7 +30,6 @@ const routes = [
     { path: '/profile/:username', component: ProfilePage, meta: { auth: true } },
     { path: '/stuff', component: StuffPage },
     // { path: '/settings', component: SettingPage, meta: { auth: true } },
-    { path: '/things', component: MainThingPage, meta: { auth: true } },
     // { path: '/docs', component: DocPage, meta: { auth: true } },
     { path: '/map', component: MapPage, meta: { auth: true } },
     { path: '/map/general', component:  GeneralMapPage, meta: { auth: true }},
@@ -81,5 +82,5 @@ router.beforeEach(async (to, from, next) => {
         next('/login');
     }
 });
-
+export { BACKEND_URL };
 export default router;

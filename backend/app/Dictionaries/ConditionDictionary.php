@@ -4,8 +4,8 @@ namespace App\Dictionaries;
 
 class ConditionDictionary implements BaseDictionary
 {
-    public const OK = 0;
-    public const BROKEN = 1;
+    public const OK = 1;
+    public const BROKEN = 2;
 
     public static function type(): array
     {

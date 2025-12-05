@@ -5,8 +5,8 @@ namespace App\Dictionaries;
 class ThingBalanceDictionary implements BaseDictionary
 {
 
-    public const OS = 0;
-    public const BALANCE = 1;
+    public const OS = 1;
+    public const BALANCE = 2;
 
     public static function type(){
         return [

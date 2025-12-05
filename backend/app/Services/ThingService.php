@@ -26,12 +26,13 @@ class ThingService
                 'name' => $electronic->name,
                 'inv_number' => $electronic->inv_number,
                 'serial_number' => $electronic->serial_number,
-                'type' => ThingTypeDictionary::ELECTRONICS[$electronic->thing_type_id],
-                'condition' => ConditionDictionary::get($electronic->condition),
+                'type' => $electronic->thing_type_id ? ThingTypeDictionary::ELECTRONICS[$electronic->thing_type_id] : null,
+                'condition' => $electronic->condition,
                 'parent' => $electronic->parent ? $electronic->parent->inv_number : null,
                 'operation_date' => $electronic->operation_date,
                 'price' => $electronic->price,
                 'auditorium_id' => $electronic->auditorium_id,
+                'balance' => $electronic->balance,
             ];
         }
         return $data;
@@ -63,6 +64,7 @@ class ThingService
             'price' => $model->price,
             'comment' => $model->comment,
             'auditorium_id' => $model->auditorium_id,
+            'balance' => $model->balance,
         ];
     }
     public function create($data)

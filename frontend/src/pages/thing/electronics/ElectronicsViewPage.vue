@@ -97,6 +97,19 @@
             </div>
           </div>
 
+          <!-- Характеристика учёта -->
+          <div>
+            <div class="text-sm font-medium text-gray-500 mb-1">Характеристика учёта</div>
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center">
+                <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+              </div>
+              <div class="text-lg text-gray-900">{{ getBalanceLabel(thing?.balance) || 'Не указано' }}</div>
+            </div>
+          </div>
+
           <div>
             <div class="text-sm font-medium text-gray-500 mb-1">Родительский предмет</div>
             <div class="text-lg text-gray-900">
@@ -229,6 +242,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import {BACKEND_URL} from "@/router.js";
 
 const route = useRoute()
 const router = useRouter()
@@ -240,13 +254,15 @@ const isLoading = ref(true)
 const error = ref(null)
 const conditionsMap = ref({})
 const typeMap = ref({})
+const balanceTypes = ref({}) // Добавляем характеристики учёта
 
 // Загрузка данных при монтировании
 onMounted(async () => {
   await Promise.all([
     loadThingData(),
     loadConditions(),
-    loadAuditoriums()
+    loadAuditoriums(),
+    loadBalanceTypes() // Загружаем характеристики учёта
   ])
 })
 
@@ -257,7 +273,7 @@ const loadThingData = async () => {
     error.value = null
     const thingId = route.params.id
 
-    const response = await fetch(`http://127.0.0.1:8000/api/things/view/${thingId}`)
+    const response = await fetch(BACKEND_URL + `/api/things/view/${thingId}`)
 
     if (!response.ok) {
       throw new Error(`Ошибка загрузки: ${response.status}`)
@@ -280,10 +296,26 @@ const loadThingData = async () => {
   }
 }
 
+// Загрузка характеристик учёта
+const loadBalanceTypes = async () => {
+  try {
+    const response = await fetch(BACKEND_URL + '/api/info/balance')
+    if (response.ok) {
+      const data = await response.json()
+      if (data.success) {
+        balanceTypes.value = data.types || {}
+        console.log('Загруженные характеристики учёта:', balanceTypes.value)
+      }
+    }
+  } catch (error) {
+    console.error('Ошибка загрузки характеристик учёта:', error)
+  }
+}
+
 // Загрузка аудиторий с этажами
 const loadAuditoriums = async () => {
   try {
-    const response = await fetch('http://127.0.0.1:8000/api/auditoriums/index')
+    const response = await fetch(BACKEND_URL + '/api/auditoriums/index')
     if (response.ok) {
       const data = await response.json()
       if (data.success && data.data) {
@@ -299,7 +331,7 @@ const loadAuditoriums = async () => {
 // Загружаем условия и типы
 const loadConditions = async () => {
   try {
-    const response = await fetch('http://127.0.0.1:8000/api/info/thing-types')
+    const response = await fetch(BACKEND_URL + '/api/info/thing-types')
     if (response.ok) {
       const data = await response.json()
       if (data.success) {
@@ -350,6 +382,16 @@ const getAuditoriumFloor = (auditoriumId) => {
     default:
       return `${floor} этаж`
   }
+}
+
+// Получение метки характеристики учёта
+const getBalanceLabel = (balanceId) => {
+  if (balanceId === null || balanceId === undefined) return 'Не указано'
+
+  if (Object.keys(balanceTypes.value).length > 0) {
+    return balanceTypes.value[balanceId] || `Характеристика ${balanceId}`
+  }
+  return staticBalances[balanceId] || `Характеристика ${balanceId}`
 }
 
 // Методы форматирования
@@ -469,7 +511,7 @@ const handleDelete = async () => {
 
   try {
     const thingId = route.params.id
-    const response = await fetch(`http://127.0.0.1:8000/api/things/delete/${thingId}`, {
+    const response = await fetch(BACKEND_URL + `/api/things/delete/${thingId}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
