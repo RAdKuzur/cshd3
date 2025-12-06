@@ -1,4 +1,5 @@
 <template>
+  <!-- Тот же template остаётся без изменений -->
   <div class="p-6 bg-gradient-to-br from-gray-50 to-blue-50 min-h-screen">
     <div class="max-w-7xl mx-auto">
 
@@ -112,18 +113,19 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import axios from 'axios' // Импортируем axios
 import Record from "@/components/layouts/Record.vue";
+import {BACKEND_URL} from "@/router.js";
 
 const activeTab = ref(null)
 const branches = ref([])
 const loading = ref(true)
 
-// Загрузка данных с бэкенда
 const loadStuffData = async () => {
   try {
     loading.value = true
-    const response = await fetch('http://localhost:8000/api/stuff') // Замените на ваш реальный endpoint
-    const result = await response.json()
+    const response = await axios.get(`${BACKEND_URL}/api/stuff`)
+    const result = response.data
 
     if (result.success) {
       branches.value = result.data
@@ -175,9 +177,6 @@ const totalEmployees = computed(() => {
   return branches.value.reduce((total, branch) => total + branch.stuff.length, 0)
 })
 
-const totalBranches = computed(() => {
-  return branches.value.length
-})
 
 onMounted(() => {
   loadStuffData()

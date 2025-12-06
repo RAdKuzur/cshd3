@@ -1,51 +1,33 @@
 <?php
 
-namespace Database\Seeders;
+namespace App\Console\Commands;
 
 use Exception;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
-class OrganizationSeeder extends Seeder
+class TransferAuditoriumDataFromExcelToDBCommand extends Command
 {
-    public const AUDITORIUM_EXCEL_PATH = __DIR__ . '/../../storage/excel/Помещения.xlsx';
     /**
-     * Run the database seeds.
+     * The name and signature of the console command.
+     *
+     * @var string
      */
-    public function run(): void
-    {
-        //organizations
-        DB::table('organizations')->insert([
-            'name' => 'Московский областной суд',
-            'address' => 'Россия, Московская область',
-            'inn' => 7718123097,
-            'ogrn' => 1037718041261,
-        ]);
-        //departments
-        $organizationId = DB::table('organizations')->first()->id;
-        DB::table('departments')->insert([
-            'name' => 'A',
-            'organization_id' => $organizationId,
-            'address' => 'Россия, Московская область',
-        ]);
-        DB::table('departments')->insert([
-            'name' => 'B',
-            'organization_id' => $organizationId,
-            'address' => 'Россия, Московская область',
-        ]);
-        DB::table('departments')->insert([
-            'name' => 'C',
-            'organization_id' => $organizationId,
-            'address' => 'Россия, Московская область',
-        ]);
-        DB::table('departments')->insert([
-            'name' => 'D',
-            'organization_id' => $organizationId,
-            'address' => 'Россия, Московская область',
-        ]);
+    protected $signature = 'app:transfer-auditorium-db';
 
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Импорт кабинетов и отделов в БД';
+    public const AUDITORIUM_EXCEL_PATH = "C:/Users/rkuzu/OneDrive/Desktop/МОСОБЛСУД/Помещения.xlsx";
+    /**
+     * Execute the console command.
+     */
+    public function handle()
+    {
         if (file_exists(self::AUDITORIUM_EXCEL_PATH)) {
             $index = 1;
             $spreadsheet = IOFactory::load(self::AUDITORIUM_EXCEL_PATH);
@@ -68,12 +50,14 @@ class OrganizationSeeder extends Seeder
                     ]);
                     $index++;
                 }
+
                 DB::commit();
             } catch (Exception $e) {
                 DB::rollBack();
                 echo "Ошибка импорта: " . $e->getMessage();
                 throw $e;
             }
+
         }
         else {
             echo "Файл не найден". "\n";

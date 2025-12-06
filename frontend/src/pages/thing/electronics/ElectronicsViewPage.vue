@@ -242,19 +242,22 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import {BACKEND_URL} from "@/router.js";
+import axios from 'axios'
+import { BACKEND_URL } from "@/router.js"
 
 const route = useRoute()
 const router = useRouter()
 
 // Данные
 const thing = ref(null)
-const auditoriums = ref([]) // Массив аудиторий с этажами
+const auditoriums = ref([])
 const isLoading = ref(true)
 const error = ref(null)
 const conditionsMap = ref({})
 const typeMap = ref({})
-const balanceTypes = ref({}) // Добавляем характеристики учёта
+const balanceTypes = ref({})
+
+// Статические данные на случай ошибки загрузки
 
 // Загрузка данных при монтировании
 onMounted(async () => {
@@ -262,7 +265,7 @@ onMounted(async () => {
     loadThingData(),
     loadConditions(),
     loadAuditoriums(),
-    loadBalanceTypes() // Загружаем характеристики учёта
+    loadBalanceTypes()
   ])
 })
 
@@ -273,24 +276,33 @@ const loadThingData = async () => {
     error.value = null
     const thingId = route.params.id
 
-    const response = await fetch(BACKEND_URL + `/api/things/view/${thingId}`)
-
-    if (!response.ok) {
-      throw new Error(`Ошибка загрузки: ${response.status}`)
-    }
-
-    const data = await response.json()
+    const response = await axios.get(`${BACKEND_URL}/api/things/view/${thingId}`)
+    const data = response.data
 
     if (data.success && data.data) {
       thing.value = data.data
       console.log('Полученные данные предмета:', thing.value)
     } else {
-      throw new Error('Данные не найдены')
+      throw new Error(data.message || 'Данные не найдены')
     }
 
   } catch (err) {
     console.error('Ошибка загрузки данных:', err)
-    error.value = 'Не удалось загрузить данные предмета.'
+
+    if (err.response) {
+      // Сервер ответил с ошибкой
+      if (err.response.status === 404) {
+        error.value = 'Предмет не найден'
+      } else {
+        error.value = `Ошибка сервера: ${err.response.status}`
+      }
+    } else if (err.request) {
+      // Запрос был сделан, но ответа не получено
+      error.value = 'Нет ответа от сервера. Проверьте подключение.'
+    } else {
+      // Другая ошибка
+      error.value = err.message || 'Не удалось загрузить данные предмета.'
+    }
   } finally {
     isLoading.value = false
   }
@@ -299,50 +311,53 @@ const loadThingData = async () => {
 // Загрузка характеристик учёта
 const loadBalanceTypes = async () => {
   try {
-    const response = await fetch(BACKEND_URL + '/api/info/balance')
-    if (response.ok) {
-      const data = await response.json()
-      if (data.success) {
-        balanceTypes.value = data.types || {}
-        console.log('Загруженные характеристики учёта:', balanceTypes.value)
-      }
+    const response = await axios.get(`${BACKEND_URL}/api/info/balance`)
+    const data = response.data
+
+    if (data.success) {
+      balanceTypes.value = data.types || {}
+      console.log('Загруженные характеристики учёта:', balanceTypes.value)
     }
-  } catch (error) {
-    console.error('Ошибка загрузки характеристик учёта:', error)
+  } catch (err) {
+    console.error('Ошибка загрузки характеристик учёта:', err)
+    // Используем статические данные при ошибке
+    balanceTypes.value = staticBalances
   }
 }
 
 // Загрузка аудиторий с этажами
 const loadAuditoriums = async () => {
   try {
-    const response = await fetch(BACKEND_URL + '/api/auditoriums/index')
-    if (response.ok) {
-      const data = await response.json()
-      if (data.success && data.data) {
-        auditoriums.value = data.data
-        console.log('Загруженные аудитории:', auditoriums.value)
-      }
+    const response = await axios.get(`${BACKEND_URL}/api/auditoriums/index`)
+    const data = response.data
+
+    if (data.success && data.data) {
+      auditoriums.value = data.data
+      console.log('Загруженные аудитории:', auditoriums.value)
     }
-  } catch (error) {
-    console.error('Ошибка загрузки аудиторий:', error)
+  } catch (err) {
+    console.error('Ошибка загрузки аудиторий:', err)
+    auditoriums.value = []
   }
 }
 
 // Загружаем условия и типы
 const loadConditions = async () => {
   try {
-    const response = await fetch(BACKEND_URL + '/api/info/thing-types')
-    if (response.ok) {
-      const data = await response.json()
-      if (data.success) {
-        typeMap.value = data.types || {}
-        conditionsMap.value = data.conditions || {}
-        console.log('Загруженные условия:', conditionsMap.value)
-        console.log('Загруженные типы:', typeMap.value)
-      }
+    const response = await axios.get(`${BACKEND_URL}/api/info/thing-types`)
+    const data = response.data
+
+    if (data.success) {
+      typeMap.value = data.types || {}
+      conditionsMap.value = data.conditions || {}
+      console.log('Загруженные условия:', conditionsMap.value)
+      console.log('Загруженные типы:', typeMap.value)
     }
-  } catch (error) {
-    console.error('Ошибка загрузки условий:', error)
+  } catch (err) {
+    console.error('Ошибка загрузки условий:', err)
+    // Используем статические данные при ошибке
+    conditionsMap.value = staticConditions
+    typeMap.value = {}
   }
 }
 
@@ -439,13 +454,6 @@ const getConditionLabel = (conditionId) => {
     return conditionsMap.value[conditionId] || `Состояние ${conditionId}`
   }
 
-  // Запасной вариант, если не успели загрузить
-  const staticConditions = {
-    0: 'Исправно работает',
-    1: 'Сломано',
-    2: 'В ремонте'
-  }
-
   return staticConditions[conditionId] || `Состояние ${conditionId}`
 }
 
@@ -453,14 +461,14 @@ const getConditionColor = (conditionId) => {
   if (conditionId === null || conditionId === undefined) return 'bg-gray-400'
 
   const colors = {
-    0: 'bg-green-500',
-    1: 'bg-red-500',
-    2: 'bg-purple-400',
-    3: 'bg-green-500',
-    4: 'bg-green-400',
-    5: 'bg-blue-400',
-    6: 'bg-yellow-400',
-    7: 'bg-orange-400',
+    1: 'bg-green-500',
+    2: 'bg-red-500',
+    3: 'bg-purple-400',
+    4: 'bg-green-500',
+    5: 'bg-green-400',
+    6: 'bg-blue-400',
+    7: 'bg-yellow-400',
+    8: 'bg-orange-400',
   }
 
   return colors[conditionId] || 'bg-gray-400'
@@ -511,27 +519,33 @@ const handleDelete = async () => {
 
   try {
     const thingId = route.params.id
-    const response = await fetch(BACKEND_URL + `/api/things/delete/${thingId}`, {
-      method: 'DELETE',
+    const response = await axios.delete(`${BACKEND_URL}/api/things/delete/${thingId}`, {
       headers: {
         'Content-Type': 'application/json',
       }
     })
 
-    if (!response.ok) {
-      throw new Error(`Ошибка удаления: ${response.status}`)
-    }
-
-    const data = await response.json()
+    const data = response.data
     if (data.success) {
       alert('Предмет успешно удален')
-      router.push('/things')
+      router.push('/things/electronics')
     } else {
       throw new Error(data.message || 'Ошибка при удалении')
     }
-  } catch (error) {
-    console.error('Ошибка удаления:', error)
-    alert('Не удалось удалить предмет: ' + error.message)
+  } catch (err) {
+    console.error('Ошибка удаления:', err)
+
+    let errorMessage = 'Не удалось удалить предмет'
+    if (err.response) {
+      errorMessage += `: ${err.response.status}`
+      if (err.response.data?.message) {
+        errorMessage += ` - ${err.response.data.message}`
+      }
+    } else if (err.message) {
+      errorMessage += `: ${err.message}`
+    }
+
+    alert(errorMessage)
   }
 }
 </script>

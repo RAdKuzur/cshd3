@@ -20,7 +20,7 @@ import ElectronicsViewPage from "@/pages/thing/electronics/ElectronicsViewPage.v
 import ElectronicsEditPage from "@/pages/thing/electronics/ElectronicsEditPage.vue";
 import GeneralMapPage from "@/pages/map/GeneralMapPage.vue";
 
-const BACKEND_URL = 'http://127.0.0.1:8000';
+const BACKEND_URL = 'http://localhost:8000';
 
 const routes = [
     { path: '/', redirect: '/home' },
@@ -78,7 +78,8 @@ router.beforeEach(async (to, from, next) => {
         // await AuthService.check(); // проверяем токен через сервер
         next();
     } catch (e) {
-        // сервер вернул 401 → редирект на login
+        localStorage.removeItem('username');
+        localStorage.removeItem('fio');
         next('/login');
     }
 });

@@ -42,7 +42,7 @@ services:
       - ./backend:/var/www/html
     networks:
       - network
-    command: sh -c "php artisan migrate && php artisan db:seed && php artisan app:excel-to-db && php-fpm"
+    command: sh -c "php artisan migrate:reset && php artisan migrate && php artisan db:seed && php-fpm"
     environment:
       DB_CONNECTION: pgsql
       DB_HOST: db

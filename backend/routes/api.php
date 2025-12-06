@@ -17,13 +17,14 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/info/thing-types', [InfoController::class, 'types'])->name('info.types');
 Route::get('/info/balance', [InfoController::class, 'balance'])->name('info.balance');
 Route::get('/auditoriums/index', [AuditoriumController::class, 'index'])->name('auditorium.index');
+Route::get('/things/simple-electronics', [ElectronicsController::class, 'simpleElectronics'])->name('things.simple-electronics');
 
 Route::middleware([AuthMiddleware::class])->group(function () {
     Route::get('/profile/{username}', [UserController::class, 'profile'])->name('profile');
 
     Route::get('/stuff', [StuffController::class, 'stuff'])->name('stuff');
-    
-    Route::get('/things/simple-electronics', [ElectronicsController::class, 'simpleElectronics'])->name('things.simple-electronics');
+
+
     Route::get('/things/electronics', [ElectronicsController::class, 'electronics'])->name('things.electronics');
     Route::get('/things/view/{id}', [ThingController::class, 'view'])->name('things.view');
     Route::get('/things/edit/{id}', [ThingController::class, 'edit'])->name('things.edit');

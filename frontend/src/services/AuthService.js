@@ -1,4 +1,5 @@
 import axios from "axios";
+import Cookies from "js-cookie";
 
 axios.defaults.withCredentials = true;
 
@@ -34,6 +35,8 @@ export default {
 
     // Добавляем метод для очистки данных
     clearAuthData() {
+        Cookies.remove('access_token')
+        Cookies.remove('refresh_token')
         localStorage.removeItem('username');
         localStorage.removeItem('fio');
     },

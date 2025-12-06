@@ -20,7 +20,7 @@ class ThingTypeDictionary implements BaseDictionary
     public const ELECTRONICS = [
         self::ARM,self::PC,self::MONITOR,self::PRINTER,
         self::MFU,self::IBP,self::KMA,self::SCANNER,
-        self::MONOPC,self::PASSPORT_SCANNER, self::CARD_PRINTER,
+        self::MONOPC,self::PASSPORT_SCANNER, self::CARD_PRINTER, self::ARM
     ];
     public static function type(){
         return [
