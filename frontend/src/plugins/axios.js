@@ -13,11 +13,14 @@ axios.interceptors.response.use(
     response => response,
     error => {
         if (error.response?.status === 401) {
+            // Обработка 401 - неавторизован
             Cookies.remove("access_token");
             Cookies.remove("refresh_token");
             localStorage.removeItem('username');
             localStorage.removeItem('fio');
             window.location.href = "/login";
+        } else if (error.response?.status === 403) {
+            window.location.href = "/error";
         }
         return Promise.reject(error);
     }

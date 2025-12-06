@@ -19,7 +19,8 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             PeopleSeeder::class,
             AuditoriumResponsibilitySeeder::class,
-            ThingSeeder::class
+            ThingSeeder::class,
+            PermissionSeeder::class,
         ]);
     }
 }

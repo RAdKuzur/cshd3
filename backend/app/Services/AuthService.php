@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Models\User;
+use App\Repositories\PermissionRepository;
+use App\Repositories\RuleRepository;
 use App\Repositories\TokenRepository;
 use App\Repositories\UserRepository;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -11,13 +13,19 @@ class AuthService
 {
     private TokenRepository $tokenRepository;
     private UserRepository $userRepository;
+    private PermissionRepository $permissionRepository;
+    private RuleRepository $ruleRepository;
     public function __construct(
         TokenRepository $tokenRepository,
-        UserRepository $userRepository
+        UserRepository $userRepository,
+        PermissionRepository $permissionRepository,
+        RuleRepository $ruleRepository
     )
     {
         $this->tokenRepository = $tokenRepository;
         $this->userRepository = $userRepository;
+        $this->permissionRepository = $permissionRepository;
+        $this->ruleRepository = $ruleRepository;
     }
 
     public function login($user)
@@ -79,5 +87,11 @@ class AuthService
             'username' => $user->username,
             'fio' => $user->people->getFullFio(),
         ];
+    }
+
+    public function hasAccess($userId, $rule)
+    {
+        $ruleId = $this->ruleRepository->getByPath($rule) ? $this->ruleRepository->getByPath($rule)->id : 0;
+        return $this->permissionRepository->hasAccess($userId, $ruleId);
     }
 }

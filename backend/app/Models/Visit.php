@@ -18,12 +18,12 @@ class Visit extends Model
 {
     protected $fillable = [
         'url',
+        'route',
         'ip_address',
         'user_agent',
         'host',
         'request_method',
         'request_time',
-        'user_agent',
     ];
     protected $hidden = [
     ];

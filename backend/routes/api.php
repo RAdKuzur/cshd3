@@ -8,6 +8,7 @@ use App\Http\Controllers\StuffController;
 use App\Http\Controllers\ThingController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\AuthMiddleware;
+use App\Http\Middleware\CheckPermissionMiddleware;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/login', [AuthController::class, 'login'])->name('login');
@@ -19,7 +20,7 @@ Route::get('/info/balance', [InfoController::class, 'balance'])->name('info.bala
 Route::get('/auditoriums/index', [AuditoriumController::class, 'index'])->name('auditorium.index');
 Route::get('/things/simple-electronics', [ElectronicsController::class, 'simpleElectronics'])->name('things.simple-electronics');
 
-Route::middleware([AuthMiddleware::class])->group(function () {
+Route::middleware([AuthMiddleware::class, CheckPermissionMiddleware::class])->group(function () {
     Route::get('/profile/{username}', [UserController::class, 'profile'])->name('profile');
 
     Route::get('/stuff', [StuffController::class, 'stuff'])->name('stuff');
