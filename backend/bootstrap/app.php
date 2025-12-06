@@ -17,6 +17,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $schedule->command('app:clear-expired-tokens')->everyTenSeconds();
     })
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->api(prepend: [
+            \Illuminate\Http\Middleware\HandleCors::class,
+        ]);
 //        $middleware->append(AuthMiddleware::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
