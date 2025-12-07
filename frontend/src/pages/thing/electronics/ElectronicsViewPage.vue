@@ -170,7 +170,44 @@
               </div>
             </div>
           </div>
+
+          <!-- Отдел кабинета -->
+          <div>
+            <div class="text-sm font-medium text-gray-500 mb-1">Отдел</div>
+            <div class="flex items-center gap-2">
+              <div :class="getBranchColor(currentAuditorium?.branch_id)" class="w-8 h-8 rounded-full flex items-center justify-center">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                </svg>
+              </div>
+              <div class="text-lg text-gray-900">
+                {{ getBranchName(currentAuditorium?.branch_id) || 'Не указан' }}
+              </div>
+            </div>
+          </div>
+
+          <!-- Назначение кабинета -->
+          <div>
+            <div class="text-sm font-medium text-gray-500 mb-1">Назначение кабинета</div>
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 bg-teal-100 rounded-full flex items-center justify-center">
+                <svg class="w-4 h-4 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+                </svg>
+              </div>
+              <div class="text-lg text-gray-900">
+                {{ getAuditoriumComment(thing?.auditorium_id) || 'Не указано' }}
+              </div>
+            </div>
+          </div>
         </div>
+
+        <!-- Подробная информация о назначении кабинета -->
+<!--        <div v-if="getAuditoriumComment(thing?.auditorium_id) && getAuditoriumComment(thing?.auditorium_id) !== 'Не указано'"-->
+<!--             class="mt-4 bg-blue-50 border border-blue-100 rounded-lg p-4">-->
+<!--          <div class="text-sm font-medium text-gray-700 mb-2">Подробное описание:</div>-->
+<!--          <div class="text-gray-600 whitespace-pre-line">{{ getAuditoriumComment(thing?.auditorium_id) }}</div>-->
+<!--        </div>-->
       </div>
 
       <!-- Комментарий -->
@@ -240,7 +277,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios'
 import { BACKEND_URL } from "@/router.js"
@@ -251,13 +288,18 @@ const router = useRouter()
 // Данные
 const thing = ref(null)
 const auditoriums = ref([])
+const branches = ref({})
 const isLoading = ref(true)
 const error = ref(null)
 const conditionsMap = ref({})
 const typeMap = ref({})
 const balanceTypes = ref({})
 
-// Статические данные на случай ошибки загрузки
+// Вычисляемое свойство для текущей аудитории
+const currentAuditorium = computed(() => {
+  if (!thing.value?.auditorium_id) return null
+  return auditoriums.value.find(a => a.id === thing.value.auditorium_id)
+})
 
 // Загрузка данных при монтировании
 onMounted(async () => {
@@ -265,7 +307,8 @@ onMounted(async () => {
     loadThingData(),
     loadConditions(),
     loadAuditoriums(),
-    loadBalanceTypes()
+    loadBalanceTypes(),
+    loadBranches() // Загружаем отделы
   ])
 })
 
@@ -290,17 +333,14 @@ const loadThingData = async () => {
     console.error('Ошибка загрузки данных:', err)
 
     if (err.response) {
-      // Сервер ответил с ошибкой
       if (err.response.status === 404) {
         error.value = 'Предмет не найден'
       } else {
         error.value = `Ошибка сервера: ${err.response.status}`
       }
     } else if (err.request) {
-      // Запрос был сделан, но ответа не получено
       error.value = 'Нет ответа от сервера. Проверьте подключение.'
     } else {
-      // Другая ошибка
       error.value = err.message || 'Не удалось загрузить данные предмета.'
     }
   } finally {
@@ -320,12 +360,11 @@ const loadBalanceTypes = async () => {
     }
   } catch (err) {
     console.error('Ошибка загрузки характеристик учёта:', err)
-    // Используем статические данные при ошибке
     balanceTypes.value = staticBalances
   }
 }
 
-// Загрузка аудиторий с этажами
+// Загрузка аудиторий с комментариями и отделами
 const loadAuditoriums = async () => {
   try {
     const response = await axios.get(`${BACKEND_URL}/api/auditoriums/index`)
@@ -338,6 +377,26 @@ const loadAuditoriums = async () => {
   } catch (err) {
     console.error('Ошибка загрузки аудиторий:', err)
     auditoriums.value = []
+  }
+}
+
+// Загрузка отделов
+const loadBranches = async () => {
+  try {
+    const response = await axios.get(`${BACKEND_URL}/api/info/branches`)
+    const data = response.data
+
+    if (data.success) {
+      const branchesData = {}
+      data.data.forEach(branch => {
+        branchesData[branch.id] = branch.name
+      })
+      branches.value = branchesData
+      console.log('Загруженные отделы:', branches.value)
+    }
+  } catch (err) {
+    console.error('Ошибка загрузки отделов:', err)
+    branches.value = {}
   }
 }
 
@@ -355,7 +414,6 @@ const loadConditions = async () => {
     }
   } catch (err) {
     console.error('Ошибка загрузки условий:', err)
-    // Используем статические данные при ошибке
     conditionsMap.value = staticConditions
     typeMap.value = {}
   }
@@ -378,7 +436,6 @@ const getAuditoriumFloor = (auditoriumId) => {
     return 'Не указан'
   }
 
-  // Форматирование этажа с правильным склонением
   const floor = parseInt(auditorium.floor)
   const lastDigit = floor % 10
   const lastTwoDigits = floor % 100
@@ -397,6 +454,50 @@ const getAuditoriumFloor = (auditoriumId) => {
     default:
       return `${floor} этаж`
   }
+}
+
+// Получение комментария кабинета
+const getAuditoriumComment = (auditoriumId) => {
+  if (!auditoriumId) return 'Не указано'
+
+  const auditorium = auditoriums.value.find(a => a.id === auditoriumId)
+  return auditorium?.comment || 'Не указано'
+}
+
+// Получение названия отдела
+const getBranchName = (branchId) => {
+  if (!branchId) return 'Не указан'
+  return branches.value[branchId] || `Отдел ${branchId}`
+}
+
+// Цвет для отдела
+const getBranchColor = (branchId) => {
+  if (!branchId) return 'bg-gray-400'
+
+  const branchColors = {
+    1: 'bg-gradient-to-br from-purple-500 to-purple-600',
+    2: 'bg-gradient-to-br from-green-500 to-green-600',
+    3: 'bg-gradient-to-br from-blue-500 to-blue-600',
+    4: 'bg-gradient-to-br from-red-500 to-red-600',
+    5: 'bg-gradient-to-br from-orange-500 to-orange-600',
+    6: 'bg-gradient-to-br from-teal-500 to-teal-600',
+    7: 'bg-gradient-to-br from-cyan-500 to-cyan-600',
+    8: 'bg-gradient-to-br from-pink-500 to-pink-600',
+    9: 'bg-gradient-to-br from-yellow-500 to-yellow-600',
+    10: 'bg-gradient-to-br from-indigo-500 to-indigo-600',
+    11: 'bg-gradient-to-br from-gray-500 to-gray-600',
+    12: 'bg-gradient-to-br from-purple-500 to-purple-600',
+    13: 'bg-gradient-to-br from-purple-500 to-purple-600',
+    14: 'bg-gradient-to-br from-purple-500 to-purple-600',
+    15: 'bg-gradient-to-br from-lime-500 to-lime-600',
+    16: 'bg-gradient-to-br from-emerald-500 to-emerald-600',
+    17: 'bg-gradient-to-br from-purple-500 to-purple-600',
+    18: 'bg-gradient-to-br from-violet-500 to-violet-600',
+    19: 'bg-gradient-to-br from-amber-500 to-amber-600',
+    20: 'bg-gradient-to-br from-rose-500 to-rose-600'
+  }
+
+  return branchColors[branchId] || 'bg-gradient-to-br from-gray-400 to-gray-500'
 }
 
 // Получение метки характеристики учёта

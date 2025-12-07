@@ -35,7 +35,7 @@ class ThingSeeder extends Seeder
                             'serial_number' => 'б/н',
                             'inv_number' => $sheet->getCell('J' . $index)->getValue() ?: 'б/н',
                             'operation_date' => ($date = DateTime::createFromFormat('d.m.Y', $sheet->getCell('O' . $index)->getValue())) ? $date->getTimestamp() : null,
-                            'thing_type_id' => rand(ThingTypeDictionary::PC, ThingTypeDictionary::ARM),
+                            'thing_type_id' => rand(ThingTypeDictionary::PC, ThingTypeDictionary::OTHER),
                             'thing_parent_id' => null,
                             'condition' => ConditionDictionary::OK,
                             'auditorium_id' => DB::table('auditoriums')->inRandomOrder()->first()->id,

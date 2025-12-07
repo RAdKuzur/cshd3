@@ -25,7 +25,8 @@ class AuditoriumRequest extends FormRequest
             'name' => 'required',
             'number' => 'required',
             'floor' => 'required',
-            'department_id' => 'required'
+            'department_id' => 'required',
+            'branch_id' => 'required'
         ];
     }
 }

@@ -26,6 +26,8 @@ class AuditoriumService
                 'floor' => $auditorium->floor,
                 'number' => $auditorium->number,
                 'department_id' => $auditorium->department_id,
+                'branch_id' => $auditorium->branch_id,
+                'comment' => $auditorium->comment,
             ];
         }
         return $data;
@@ -35,6 +37,7 @@ class AuditoriumService
         $auditoriums = $this->auditoriumRepository->getAll();
         foreach ($auditoriums as $auditorium) {
             $things = [];
+            $employees = [];
             foreach ($auditorium->things as $thing) {
                 $things[] = [
                     'id' => $thing->id,
@@ -46,12 +49,20 @@ class AuditoriumService
                     'balance' => $thing->balance
                 ];
             }
-
+            foreach($auditorium->people as $person){
+                $employees[] = [
+                    'fio' => $person->getFullFio(),
+                    'position' => $person->getPosition(),
+                ];
+            }
             $data[] = [
                 'auditorium_id' => $auditorium->id,
                 'auditorium_name' => $auditorium->name,
+                'comment' => $auditorium->comment,
                 'floor' => $auditorium->floor,
-                'things' => $things
+                'branch_id' => $auditorium->branch_id,
+                'things' => $things,
+                'employees' => $employees
             ];
         }
         return $data;

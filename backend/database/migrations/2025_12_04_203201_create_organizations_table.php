@@ -27,6 +27,12 @@ return new class extends Migration
             $table->string('address')->nullable();
             $table->timestamps();
         });
+        Schema::create('branches', function (Blueprint $table) {
+            $table->id();
+            $table->string('name')->nullable(false);
+            $table->foreignId('organization_id')->constrained('organizations');
+            $table->timestamps();
+        });
 
         Schema::create('auditoriums', function (Blueprint $table) {
             $table->id();
@@ -34,12 +40,8 @@ return new class extends Migration
             $table->string('number')->nullable(false);
             $table->integer('floor')->nullable(false);
             $table->foreignId('department_id')->constrained('departments');
-            $table->timestamps();
-        });
-        Schema::create('branches', function (Blueprint $table) {
-            $table->id();
-            $table->string('name')->nullable(false);
-            $table->foreignId('organization_id')->constrained('organizations');
+            $table->foreignId('branch_id')->constrained('branches');
+            $table->text('comment')->nullable();
             $table->timestamps();
         });
     }
@@ -49,8 +51,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('branches');
         Schema::dropIfExists('auditoriums');
+        Schema::dropIfExists('branches');
         Schema::dropIfExists('departments');
         Schema::dropIfExists('organizations');
     }

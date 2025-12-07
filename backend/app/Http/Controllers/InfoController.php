@@ -5,17 +5,22 @@ namespace App\Http\Controllers;
 use App\Dictionaries\ConditionDictionary;
 use App\Dictionaries\ThingBalanceDictionary;
 use App\Dictionaries\ThingTypeDictionary;
+use App\Repositories\BranchRepository;
+use App\Services\BranchService;
 use App\Services\DepartmentService;
 use Illuminate\Http\Request;
 
 class InfoController extends Controller
 {
     private DepartmentService $departmentService;
+    private BranchService $branchService;
     public function __construct(
-        DepartmentService $departmentService
+        DepartmentService $departmentService,
+        BranchService $branchService,
     )
     {
         $this->departmentService = $departmentService;
+        $this->branchService = $branchService;
     }
 
     public function types(){
@@ -42,6 +47,14 @@ class InfoController extends Controller
             'success' => true,
             'code' => 200,
             'data' => $data
+        ]);
+    }
+    public function branches(){
+        $data = $this->branchService->index();
+        return response()->json([
+            'success' => true,
+            'code' => 200,
+            'data' => $data,
         ]);
     }
 }

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property PeoplePosition[] $people
  * @property Organization $organization
+ * @property Auditorium[] $auditoriums
  * */
 class Branch extends Model
 {
@@ -23,5 +24,8 @@ class Branch extends Model
     }
     public function organization(){
         return $this->belongsTo(Organization::class);
+    }
+    public function auditoriums(){
+        return $this->hasMany(Auditorium::class);
     }
 }

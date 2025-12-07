@@ -40,7 +40,7 @@
               <input
                   v-model="searchQuery"
                   type="text"
-                  placeholder="Поиск по названию, номеру, этажу..."
+                  placeholder="Поиск по названию, номеру, этажу, отделу..."
                   class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm bg-white"
               >
               <div class="absolute inset-y-0 left-0 pl-3 flex items-center">
@@ -73,6 +73,16 @@
             </select>
 
             <select
+                v-model="branchFilter"
+                class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm"
+            >
+              <option value="">Все отделы</option>
+              <option v-for="branch in branchesList" :key="branch.id" :value="branch.id">
+                {{ branch.name }}
+              </option>
+            </select>
+
+            <select
                 v-model="sortField"
                 class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm"
             >
@@ -80,6 +90,7 @@
               <option value="floor">По этажу</option>
               <option value="number">По номеру</option>
               <option value="department_id">По сектору</option>
+              <option value="branch_id">По отделу</option>
             </select>
           </div>
         </div>
@@ -219,6 +230,25 @@
                 </div>
               </td>
 
+              <!-- Отдел -->
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div :class="getBranchColor(auditorium.branch_id)" class="flex-shrink-0 h-8 w-8 rounded-lg flex items-center justify-center mr-3 shadow-sm">
+                    <svg class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div class="text-sm font-medium text-gray-900">
+                      {{ getBranchName(auditorium.branch_id) }}
+                    </div>
+                    <div class="text-xs text-gray-500">
+                      Отдел
+                    </div>
+                  </div>
+                </div>
+              </td>
+
               <!-- Действия -->
               <td class="px-6 py-4 whitespace-nowrap">
                 <div class="flex items-center space-x-2">
@@ -240,7 +270,7 @@
                       title="Удалить"
                   >
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 011.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                     </svg>
                   </button>
                 </div>
@@ -257,7 +287,7 @@
           </svg>
           <h3 class="mt-2 text-sm font-medium text-gray-900">Кабинеты не найдены</h3>
           <p class="mt-1 text-sm text-gray-500">
-            {{ searchQuery || floorFilter || departmentFilter ? 'Попробуйте изменить параметры поиска' : 'Добавьте первый кабинет' }}
+            {{ searchQuery || floorFilter || departmentFilter || branchFilter ? 'Попробуйте изменить параметры поиска' : 'Добавьте первый кабинет' }}
           </p>
         </div>
 
@@ -413,6 +443,24 @@
                   </select>
                   <p v-if="formErrors.department_id" class="mt-1 text-sm text-red-600">{{ formErrors.department_id }}</p>
                 </div>
+
+                <!-- Отдел -->
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">
+                    Отдел
+                  </label>
+                  <select
+                      v-model="form.branch_id"
+                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                      :disabled="isSaving"
+                  >
+                    <option value="">Выберите отдел</option>
+                    <option v-for="branch in branchesList" :key="branch.id" :value="branch.id">
+                      {{ branch.name }}
+                    </option>
+                  </select>
+                  <p v-if="formErrors.branch_id" class="mt-1 text-sm text-red-600">{{ formErrors.branch_id }}</p>
+                </div>
               </div>
 
               <div class="flex justify-end gap-3 mt-6">
@@ -504,11 +552,13 @@ const headers = ref([
   { key: 'id', label: 'ID' },
   { key: 'name', label: 'Название и номер' },
   { key: 'floor', label: 'Этаж' },
-  { key: 'department_id', label: 'Сектор' }
+  { key: 'department_id', label: 'Сектор' },
+  { key: 'branch_id', label: 'Отдел' }
 ])
 
 const auditoriums = ref([])
 const departments = ref([])
+const branches = ref({})
 const isLoading = ref(false)
 const error = ref(null)
 
@@ -516,6 +566,7 @@ const error = ref(null)
 const searchQuery = ref('')
 const floorFilter = ref('')
 const departmentFilter = ref('')
+const branchFilter = ref('')
 const sortField = ref('name')
 const sortKey = ref('name')
 const sortOrder = ref('asc')
@@ -537,7 +588,8 @@ const form = ref({
   name: '',
   number: '',
   floor: '',
-  department_id: ''
+  department_id: '',
+  branch_id: ''
 })
 
 const formErrors = ref({})
@@ -569,9 +621,10 @@ const loadData = async () => {
     error.value = null
 
     // Загружаем данные параллельно
-    const [auditoriumsResponse, departmentsResponse] = await Promise.all([
+    const [auditoriumsResponse, departmentsResponse, branchesResponse] = await Promise.all([
       axios.get(BACKEND_URL + '/api/admin/auditoriums/index'),
-      axios.get(BACKEND_URL + '/api/info/departments')
+      axios.get(BACKEND_URL + '/api/info/departments'),
+      axios.get(BACKEND_URL + '/api/info/branches')
     ])
 
     if (auditoriumsResponse.data.success) {
@@ -584,6 +637,16 @@ const loadData = async () => {
       departments.value = departmentsResponse.data.data || []
     } else {
       throw new Error(departmentsResponse.data.message || 'Не удалось загрузить список секторов')
+    }
+
+    if (branchesResponse.data.success) {
+      const branchesData = {}
+      branchesResponse.data.data.forEach(branch => {
+        branchesData[branch.id] = branch.name
+      })
+      branches.value = branchesData
+    } else {
+      throw new Error(branchesResponse.data.message || 'Не удалось загрузить список отделов')
     }
   } catch (err) {
     console.error('Ошибка при загрузке данных:', err)
@@ -608,6 +671,13 @@ const availableFloors = computed(() => {
   return Array.from(floors).sort((a, b) => a - b)
 })
 
+const branchesList = computed(() => {
+  return Object.entries(branches.value).map(([id, name]) => ({
+    id: parseInt(id),
+    name: name
+  })).sort((a, b) => a.name.localeCompare(b.name))
+})
+
 const filteredAuditoriums = computed(() => {
   let filtered = auditoriums.value
 
@@ -617,7 +687,8 @@ const filteredAuditoriums = computed(() => {
     filtered = filtered.filter(auditorium =>
         (auditorium.name && auditorium.name.toLowerCase().includes(query)) ||
         (auditorium.number && auditorium.number.toString().toLowerCase().includes(query)) ||
-        (getDepartmentFullName(auditorium.department_id) && getDepartmentFullName(auditorium.department_id).toLowerCase().includes(query))
+        (getDepartmentFullName(auditorium.department_id) && getDepartmentFullName(auditorium.department_id).toLowerCase().includes(query)) ||
+        (getBranchName(auditorium.branch_id) && getBranchName(auditorium.branch_id).toLowerCase().includes(query))
     )
   }
 
@@ -633,6 +704,12 @@ const filteredAuditoriums = computed(() => {
     filtered = filtered.filter(auditorium => auditorium.department_id === departmentId)
   }
 
+  // Фильтрация по отделу
+  if (branchFilter.value !== '') {
+    const branchId = parseInt(branchFilter.value)
+    filtered = filtered.filter(auditorium => auditorium.branch_id === branchId)
+  }
+
   // Сортировка
   filtered = [...filtered].sort((a, b) => {
     let aVal = a[sortKey.value]
@@ -645,6 +722,10 @@ const filteredAuditoriums = computed(() => {
       // Сортировка по названию сектора
       aVal = getDepartmentFullName(a.department_id) || ''
       bVal = getDepartmentFullName(b.department_id) || ''
+    } else if (sortKey.value === 'branch_id') {
+      // Сортировка по названию отдела
+      aVal = getBranchName(a.branch_id) || ''
+      bVal = getBranchName(b.branch_id) || ''
     }
 
     if (aVal < bVal) return sortOrder.value === 'asc' ? -1 : 1
@@ -709,6 +790,37 @@ const getDepartmentColor = (departmentId) => {
   return colors[departmentId] || 'bg-gradient-to-br from-gray-400 to-gray-500'
 }
 
+const getBranchName = (branchId) => {
+  if (!branchId) return 'Не указан'
+  return branches.value[branchId] || `Отдел ${branchId}`
+}
+
+const getBranchColor = (branchId) => {
+  const branchColors = {
+    1: 'bg-gradient-to-br from-purple-500 to-purple-600',  // Приемная председателя
+    2: 'bg-gradient-to-br from-green-500 to-green-600',    // Бухгалтерия
+    3: 'bg-gradient-to-br from-blue-500 to-blue-600',      // Отдел кадров
+    4: 'bg-gradient-to-br from-red-500 to-red-600',        // Отдел жалоб
+    5: 'bg-gradient-to-br from-orange-500 to-orange-600',  // Административная коллегия
+    6: 'bg-gradient-to-br from-teal-500 to-teal-600',      // Гр. и адм. по 1 инст. коллегия
+    7: 'bg-gradient-to-br from-cyan-500 to-cyan-600',      // Орг. отдел
+    8: 'bg-gradient-to-br from-pink-500 to-pink-600',      // Уг. апелл. коллегия
+    9: 'bg-gradient-to-br from-yellow-500 to-yellow-600',  // Уг. по 1 инст. коллегия
+    10: 'bg-gradient-to-br from-indigo-500 to-indigo-600', // Гр. апелл. коллегия
+    11: 'bg-gradient-to-br from-gray-500 to-gray-600',     // Иные
+    12: 'bg-gradient-to-br from-purple-500 to-purple-600', // Приемная зам.пред.
+    13: 'bg-gradient-to-br from-purple-500 to-purple-600', // Приемная зам.пред.
+    14: 'bg-gradient-to-br from-purple-500 to-purple-600', // Приемная зам.пред.
+    15: 'bg-gradient-to-br from-lime-500 to-lime-600',     // Экпедиция
+    16: 'bg-gradient-to-br from-emerald-500 to-emerald-600', // Б\Х
+    17: 'bg-gradient-to-br from-purple-500 to-purple-600', // Приемная зам.пред.
+    18: 'bg-gradient-to-br from-violet-500 to-violet-600', // IT-отдел
+    19: 'bg-gradient-to-br from-amber-500 to-amber-600',   // Приставы
+    20: 'bg-gradient-to-br from-rose-500 to-rose-600'      // ККС
+  }
+  return branchColors[branchId] || 'bg-gradient-to-br from-gray-400 to-gray-500'
+}
+
 const sortTable = (key) => {
   if (sortKey.value === key) {
     sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc'
@@ -741,7 +853,8 @@ const openCreateModal = () => {
     name: '',
     number: '',
     floor: '',
-    department_id: ''
+    department_id: '',
+    branch_id: ''
   }
   formErrors.value = {}
   showModal.value = true
@@ -753,7 +866,8 @@ const openEditModal = (auditorium) => {
     name: auditorium.name,
     number: auditorium.number,
     floor: auditorium.floor,
-    department_id: auditorium.department_id
+    department_id: auditorium.department_id,
+    branch_id: auditorium.branch_id || ''
   }
   formErrors.value = {}
   showModal.value = true
@@ -772,7 +886,8 @@ const closeModal = () => {
       name: '',
       number: '',
       floor: '',
-      department_id: ''
+      department_id: '',
+      branch_id: ''
     }
     formErrors.value = {}
   }
@@ -864,7 +979,7 @@ const confirmDelete = async () => {
 }
 
 // Сброс пагинации при изменении фильтров
-watch([searchQuery, floorFilter, departmentFilter], () => {
+watch([searchQuery, floorFilter, departmentFilter, branchFilter], () => {
   currentPage.value = 1
 })
 

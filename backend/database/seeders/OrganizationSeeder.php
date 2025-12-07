@@ -60,11 +60,18 @@ class OrganizationSeeder extends Seeder
                             'organization_id' => DB::table('organizations')->first()->id,
                         ]);
                     }
+                    $index++;
+                }
+                $index = 1;
+                while ($cellValue = trim($sheet->getCell('A' . $index)->getValue())) {
+                    $branch = $sheet->getCell('C' . $index)->getValue();
                     DB::table('auditoriums')->insert([
                         'name' => $sheet->getCell('A' . $index)->getValue() . $sheet->getCell('B' . $index)->getValue(),
                         'number' => $sheet->getCell('B' . $index)->getValue(),
                         'floor' => ((string)($sheet->getCell('B' . $index)->getValue()))[0],
                         'department_id' => DB::table('departments')->where('name', $cellValue)->value('id'),
+                        'branch_id' => DB::table('branches')->where('name', $branch)->value('id'),
+                        'comment' => 'Текст назначения кабинета'
                     ]);
                     $index++;
                 }

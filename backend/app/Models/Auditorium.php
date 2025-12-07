@@ -8,11 +8,14 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $number
  * @property int $floor
  * @property int $department_id
+ * @property int $branch_id
+ * @property string $comment
  *
  * @property Department $department
  * @property People[] $people
  * @property Thing[] $things
  * @property AuditoriumResponsibility[] $auditoriumResponsibilities
+ * @property Branch $branch
  */
 class Auditorium extends Model
 {
@@ -21,10 +24,15 @@ class Auditorium extends Model
         'name',
         'number',
         'floor',
-        'department_id'
+        'department_id',
+        'branch_id'
     ];
     public function department(){
         return $this->belongsTo(Department::class);
+    }
+    public function branch()
+    {
+        $this->belongsTo(Branch::class);
     }
     public function people(){
         return $this->hasMany(People::class);
