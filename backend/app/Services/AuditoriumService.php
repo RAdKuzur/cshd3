@@ -24,6 +24,8 @@ class AuditoriumService
                 'id' => $auditorium->id,
                 'name' => $auditorium->name,
                 'floor' => $auditorium->floor,
+                'number' => $auditorium->number,
+                'department_id' => $auditorium->department_id,
             ];
         }
         return $data;
@@ -53,5 +55,14 @@ class AuditoriumService
             ];
         }
         return $data;
+    }
+    public function create($data){
+        $this->auditoriumRepository->create($data);
+    }
+    public function update($id, $data){
+        $this->auditoriumRepository->update($id, $data);
+    }
+    public function delete($id){
+        $this->auditoriumRepository->delete($id);
     }
 }

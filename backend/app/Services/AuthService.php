@@ -33,12 +33,13 @@ class AuthService
         $refreshToken = JWTAuth::claims([
             'type' => 'refresh',
             'user_id' => $user->id,
-            'time' => now()
+            'time' => now(),
+            'expires_at' => now()->addMinutes((int)env('REFRESH_TOKEN_TIME')),
         ])->fromUser($user);
         $accessToken =  JWTAuth::claims([
             'type' => 'access',
             'user_id' => $user->id,
-            'time' => now()
+            'time' => now()->addMinutes((int)env('ACCESS_TOKEN_TIME'))
         ])->fromUser($user);
         $this->tokenRepository->create($refreshToken, $user);
         return [
@@ -58,7 +59,7 @@ class AuthService
             return count($this->tokenRepository->isValidToken($refreshToken, $data['user_id'])) > 0;
         }
         else if(!is_null($refreshToken) && !is_null($accessToken)){
-            $data = JWTAuth::setToken($accessToken)->getPayload();
+            $data = JWTAuth::setToken($refreshToken)->getPayload();
             return $data['user_id'] && count($this->tokenRepository->isValidToken($refreshToken, $data['user_id'])) > 0;
         }
         else {

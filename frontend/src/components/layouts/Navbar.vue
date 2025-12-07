@@ -324,12 +324,12 @@ const navigation = [
     current: false,
     icon: MapIcon
   },
-  // {
-  //   name: 'Панель администратора',
-  //   href: '/admin',
-  //   current: false,
-  //   icon: CommandLineIcon
-  // },
+  {
+    name: 'Панель администратора',
+    href: '/admin',
+    current: false,
+    icon: CommandLineIcon
+  },
 ]
 </script>
 

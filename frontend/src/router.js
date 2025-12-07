@@ -11,7 +11,7 @@ import DocPage from "@/pages/DocPage.vue";
 import MapPage from "@/pages/map/MapPage.vue";
 import ErrorPage from "@/pages/ErrorPage.vue";
 import TaskPage from "@/pages/TaskPage.vue";
-import AdminPage from "@/pages/AdminPage.vue";
+import AdminPage from "@/pages/admin/AdminPage.vue";
 import ReportPage from "@/pages/ReportPage.vue";
 import MainThingPage from "@/pages/thing/MainThingPage.vue";
 import ElectronicsPage from "@/pages/thing/electronics/ElectronicsPage.vue";
@@ -19,6 +19,12 @@ import ElectronicsCreatePage from "@/pages/thing/electronics/ElectronicsCreatePa
 import ElectronicsViewPage from "@/pages/thing/electronics/ElectronicsViewPage.vue";
 import ElectronicsEditPage from "@/pages/thing/electronics/ElectronicsEditPage.vue";
 import GeneralMapPage from "@/pages/map/GeneralMapPage.vue";
+import AdminPositionPage from "@/pages/admin/position/AdminPositionPage.vue";
+import AdminAuditoriumPage from "@/pages/admin/auditorium/AdminAuditoriumPage.vue";
+import AdminUserPage from "@/pages/admin/user/AdminUserPage.vue";
+import AdminUserCreatePage from "@/pages/admin/user/AdminUserCreatePage.vue";
+import AdminUserEditPage from "@/pages/admin/user/AdminUserEditPage.vue";
+import AdminUserViewPage from "@/pages/admin/user/AdminUserViewPage.vue";
 
 const BACKEND_URL = 'http://localhost:8000';
 
@@ -34,11 +40,17 @@ const routes = [
     { path: '/map', component: MapPage, meta: { auth: true } },
     { path: '/map/general', component:  GeneralMapPage, meta: { auth: true }},
     // { path: '/tasks', component: TaskPage, meta: { auth: true } },
-    // { path: '/admin', component: AdminPage, meta: { auth: true } },
+
     // { path: '/reports', component: ReportPage, meta: { auth: true } },
     { path: '/:pathMatch(.*)*', component: ErrorPage },
 
-
+    { path: '/admin', component: AdminPage, meta: { auth: true } },
+    { path: '/admin/positions', component: AdminPositionPage, meta: { auth: true } },
+    { path: '/admin/auditoriums', component: AdminAuditoriumPage, meta: { auth: true } },
+    { path: '/admin/users', component: AdminUserPage, meta: { auth: true } },
+    { path: '/admin/users/create', component: AdminUserCreatePage, meta: { auth: true } },
+    { path: '/admin/users/edit/:id', component: AdminUserEditPage, meta: { auth: true } },
+    { path: '/admin/users/view/:id', component: AdminUserViewPage, meta: { auth: true } },
 
     { path: '/things', component: MainThingPage, meta: { auth: true } },
     { path: '/things/electronics', component: ElectronicsPage, meta: { auth: true } },

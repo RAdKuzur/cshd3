@@ -26,8 +26,8 @@ return new class extends Migration
             $table->date('birthdate')->nullable();
             $table->foreignId('organization_id')->constrained('organizations');
             $table->foreignId('user_id')->constrained('users');
-            $table->foreignId('auditorium_id')->constrained('auditoriums');
-            $table->boolean('is_active')->nullable(false);
+            $table->foreignId('auditorium_id')->nullable()->constrained('auditoriums');
+            $table->boolean('is_active')->default(0);
             $table->text('about')->nullable();
             $table->timestamps();
         });
