@@ -64,22 +64,22 @@ class People extends Model
     public function getEducation()
     {
         $data = json_decode($this->about);
-        return $data->education;
+        return $data ? $data->education : null;
     }
     public function getBio()
     {
         $data = json_decode($this->about);
-        return $data->bio;
+        return $data ? $data->bio : null;
     }
     public function getWorkExperience()
     {
         $data = json_decode($this->about);
-        return $data->workExperience;
+        return $data ? $data->workExperience : null;
     }
     public function getSkills()
     {
         $data = json_decode($this->about);
-        return $data->skills;
+        return $data ? $data->skills : null;
     }
     public function getFullFio(){
         return $this->surname . ' ' . $this->firstname . ' ' . $this->patronymic;

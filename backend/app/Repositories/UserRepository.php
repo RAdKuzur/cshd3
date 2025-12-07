@@ -28,18 +28,20 @@ class UserRepository
     }
     public function create($data)
     {
-        return DB::table("users")->insert([
+        return DB::table("users")->insertGetId([
             'username' => $data['username'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
     }
     public function update($id, $data){
-        return DB::table("users")->where("id", $id)->update([
-            'username' => $data['username'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
+        return DB::table("users")->where("id", $id)->update(array_merge(
+            [
+                'username' => $data['username'],
+                'email' => $data['email'],
+            ],
+            !empty($data['password']) ? ['password' => Hash::make($data['password'])] : []
+        ));
     }
     public function delete($id)
     {

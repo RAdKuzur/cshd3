@@ -462,7 +462,7 @@ const handleSubmit = async () => {
       patronymic: formData.patronymic ? formData.patronymic.trim() : null,
       username: formData.username.trim(),
       email: formData.email.trim(),
-      phone: formData.phone ? formData.phone.trim() : null,
+      phone_number: formData.phone ? formData.phone.trim() : null,
       birthdate: formData.birthdate || null,
       auditorium_id: formData.auditorium_id ? parseInt(formData.auditorium_id) : null,
       bio: formData.bio ? formData.bio.trim() : null

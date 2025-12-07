@@ -16,7 +16,7 @@ class PeopleRepository
     }
     public function create($data){
         //refactoring
-        return DB::table('people')->insert([
+        return DB::table('people')->insertGetId([
             'firstname' => $data['firstname'],
             'surname' => $data['surname'],
             'patronymic' => $data['patronymic'],
