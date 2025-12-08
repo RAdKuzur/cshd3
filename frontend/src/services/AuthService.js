@@ -30,7 +30,7 @@ export default {
 
     async logout() {
         this.clearAuthData();
-        await axios.post(`${API_URL}/logout`);
+        await axios.post(`${BACKEND_URL}/logout`);
     },
 
     // Добавляем метод для очистки данных
