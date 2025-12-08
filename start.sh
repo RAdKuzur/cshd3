@@ -1,11 +1,18 @@
-echo "Установка зависимостей..."
+echo "Подготовка проекта..."
 
-# Фронтенд
-echo "Устанавливаем фронтенд зависимости..."
+cp .env.example .env
+
+echo "Подготавливаем фронтенд..."
 cd frontend && npm install
 
-# Бэкенд
+
 echo "Устанавливаем бэкенд зависимости..."
-cd ../backend && composer install
-cp .env.example .env
-echo "Установка завершена! Можете запускать docker compose up"
+cd ../backend && cp .env.example .env
+
+echo "Установка завершена! Запускать Docker..."
+
+cd .. && docker compose up --build -d
+docker compose exec backend composer install
+docker compose exec backend php artisan migrate
+
+echo "Проект запущен"
