@@ -26,7 +26,7 @@ import AdminUserCreatePage from "@/pages/admin/user/AdminUserCreatePage.vue";
 import AdminUserEditPage from "@/pages/admin/user/AdminUserEditPage.vue";
 import AdminUserViewPage from "@/pages/admin/user/AdminUserViewPage.vue";
 
-const BACKEND_URL = 'http://localhost:8000';
+const BACKEND_URL = '';
 
 const routes = [
     { path: '/', redirect: '/home' },

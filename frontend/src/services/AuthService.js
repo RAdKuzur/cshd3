@@ -1,13 +1,13 @@
 import axios from "axios";
 import Cookies from "js-cookie";
+import {BACKEND_URL} from "@/router.js";
 
 axios.defaults.withCredentials = true;
 
-const API_URL = "http://localhost:8000/api";
 
 export default {
     async login(login, password) {
-        const response = await axios.post(`${API_URL}/login`, { login, password });
+        const response = await axios.post(`${BACKEND_URL}api/login`, { login, password });
         if (response.data) {
             localStorage.setItem('username', response.data.username);
             localStorage.setItem('fio', response.data.fio);
