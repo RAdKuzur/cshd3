@@ -20,7 +20,11 @@ jobs:
           git pull
 
           echo "Сборка и запуск контейнеров..."
-          docker compose pull || true  # если образы внешние, иначе можно убрать
+          docker compose pull || true
           docker compose up --build -d
 
+          echo "Устанавливаем зависимости и выполняем миграции..."
+          docker compose exec backend composer install --no-interaction --prefer-dist --optimize-autoloader
+          docker compose exec backend php artisan migrate --force
+          
           echo "Deployment finished!"
