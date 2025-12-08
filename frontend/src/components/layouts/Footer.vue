@@ -13,18 +13,18 @@ import {
 const contacts = [
   {
     icon: MapPinIcon,
-    text: 'Московская область, г. Москва, ул. Примерная, д. 123',
+    text: 'Московская область, г. Красногорск, бульвар Строителей, д. 4, корп. 3',
     href: '#'
   },
   {
     icon: PhoneIcon,
-    text: '+7 (495) 123-45-67',
-    href: 'tel:+74951234567'
+    text: '+7 (498) 692-60-00',
+    href: 'tel:+74986926000'
   },
   {
     icon: EnvelopeIcon,
-    text: 'info@mosoblsud.ru',
-    href: 'mailto:info@mosoblsud.ru'
+    text: 'post@mosoblsud.ru',
+    href: 'mailto:post@mosoblsud.ru'
   }
 ]
 
