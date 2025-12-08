@@ -1,6 +1,6 @@
 <template>
   <div class="p-6 bg-gradient-to-br from-gray-50 to-blue-50 min-h-screen">
-    <div class="max-w-7xl mx-auto">
+    <div class="max-w-8xl mx-auto">
       <!-- Заголовок и элементы управления -->
       <div class="mb-8">
         <div class="flex justify-between items-center">

@@ -26,7 +26,7 @@ class ThingService
                 'name' => $electronic->name,
                 'inv_number' => $electronic->inv_number,
                 'serial_number' => $electronic->serial_number,
-                'type' => $electronic->thing_type_id ? ThingTypeDictionary::ELECTRONICS[$electronic->thing_type_id] : null,
+                'type' => $electronic->thing_type_id ? $electronic->thing_type_id : null,
                 'condition' => $electronic->condition,
                 'parent' => $electronic->parent ? $electronic->parent->inv_number : null,
                 'operation_date' => $electronic->operation_date,

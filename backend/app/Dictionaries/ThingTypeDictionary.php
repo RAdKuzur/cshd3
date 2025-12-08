@@ -58,8 +58,8 @@ class ThingTypeDictionary implements BaseDictionary
         self::SOUNDBAR,         // 23
         self::BATTERY,          // 24
         self::HEADSET,          // 25
-        //без self::OTHER
-    ];
+        self::OTHER             // 26
+     ];
     public static function type(){
         return [
             self::PC => 'Системный блок',
