@@ -12,7 +12,7 @@ import MapPage from "@/pages/map/MapPage.vue";
 import ErrorPage from "@/pages/ErrorPage.vue";
 import TaskPage from "@/pages/TaskPage.vue";
 import AdminPage from "@/pages/admin/AdminPage.vue";
-import ReportPage from "@/pages/ReportPage.vue";
+import ReportPage from "@/pages/report/ReportPage.vue";
 import MainThingPage from "@/pages/thing/MainThingPage.vue";
 import ElectronicsPage from "@/pages/thing/electronics/ElectronicsPage.vue";
 import ElectronicsCreatePage from "@/pages/thing/electronics/ElectronicsCreatePage.vue";
@@ -30,6 +30,7 @@ const BACKEND_URL = '';
 
 const routes = [
     { path: '/', redirect: '/home' },
+    { path: '/:pathMatch(.*)*', component: ErrorPage },
     { path: '/home', component: HomePage },
     { path: '/login', component: LoginPage },
     { path: '/logout' }, // маршрут для выхода
@@ -41,8 +42,8 @@ const routes = [
     { path: '/map/general', component:  GeneralMapPage, meta: { auth: true }},
     // { path: '/tasks', component: TaskPage, meta: { auth: true } },
 
-    // { path: '/reports', component: ReportPage, meta: { auth: true } },
-    { path: '/:pathMatch(.*)*', component: ErrorPage },
+    { path: '/reports', component: ReportPage, meta: { auth: true }},
+
 
     { path: '/admin', component: AdminPage, meta: { auth: true } },
     { path: '/admin/positions', component: AdminPositionPage, meta: { auth: true } },

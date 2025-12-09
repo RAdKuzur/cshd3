@@ -307,12 +307,12 @@ const navigation = [
   //   current: false,
   //   icon: CheckIcon
   // },
-  // {
-  //   name: 'Отчёты',
-  //   href: '/reports',
-  //   current: false,
-  //   icon: CalculatorIcon
-  // },
+  {
+    name: 'Отчёты',
+    href: '/reports',
+    current: false,
+    icon: CalculatorIcon
+  },
   {
     name: 'Интерактивная карта',
     href: '/map',
