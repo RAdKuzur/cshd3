@@ -8,25 +8,21 @@
           </div>
           <div class="hidden md:block">
             <div class="ml-10 flex items-baseline space-x-4">
-              <a
+
+              <router-link
                   v-for="item in navigation"
                   :key="item.name"
-                  :href="item.href"
+                  :to="item.href"
                   :class="[
-                  item.current
-                    ? 'bg-white/20 text-white border-b-2 border-white'
-                    : 'text-indigo-100 hover:bg-white/10 hover:text-white transition-colors duration-200',
-                  'rounded-md px-3 py-2 text-sm font-medium flex items-center'
-                ]"
-                  :aria-current="item.current ? 'page' : undefined"
+    item.current
+      ? 'bg-white/20 text-white border-b-2 border-white'
+      : 'text-indigo-100 hover:bg-white/10 hover:text-white transition-colors duration-200',
+    'rounded-md px-3 py-2 text-sm font-medium flex items-center'
+  ]"
               >
-                <component
-                    :is="item.icon"
-                    class="w-4 h-4 mr-2"
-                    aria-hidden="true"
-                />
+                <component :is="item.icon" class="w-4 h-4 mr-2" aria-hidden="true" />
                 {{ item.name }}
-              </a>
+              </router-link>
             </div>
           </div>
         </div>
@@ -35,13 +31,12 @@
         <div v-show="isAuth" class="hidden md:block">
           <div class="ml-4 flex items-center md:ml-6 space-x-3">
             <!-- Кнопка входа -->
-            <a
-                href="/login"
+            <router-link to="/login"
                 class="relative flex items-center rounded-md bg-white/10 px-4 py-2 text-sm font-medium text-white hover:bg-white/20 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-indigo-600"
             >
               <UserIcon class="w-4 h-4 mr-2" aria-hidden="true" />
               Войти
-            </a>
+            </router-link>
           </div>
         </div>
 
@@ -76,13 +71,13 @@
               >
                 <MenuItems class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                   <MenuItem v-slot="{ active }">
-                    <a
-                        :href="profileUrl"
+                    <router-link
+                        :to="profileUrl"
                         :class="[active ? 'bg-gray-100' : '', 'flex items-center px-4 py-2 text-sm text-gray-700']"
                     >
                       <UserIcon class="w-4 h-4 mr-2 text-gray-400" />
                       Профиль
-                    </a>
+                    </router-link>
                   </MenuItem>
 <!--                  <MenuItem v-slot="{ active }">-->
 <!--                    <a-->
@@ -95,13 +90,13 @@
 <!--                  </MenuItem>-->
                   <div class="border-t border-gray-100 my-1"></div>
                   <MenuItem v-slot="{ active }"  @click="logout">
-                    <a
-                        href="/logout"
+                    <router-link
+                        to="/logout"
                         :class="[active ? 'bg-gray-100' : '', 'flex items-center px-4 py-2 text-sm text-gray-700']"
                     >
                       <ArrowRightOnRectangleIcon class="w-4 h-4 mr-2 text-gray-400" />
                       Выход
-                    </a>
+                    </router-link>
                   </MenuItem>
                 </MenuItems>
               </transition>
@@ -125,7 +120,7 @@
         <DisclosureButton
             v-for="item in navigation"
             :key="item.name"
-            as="a"
+            as="router-link"
             :href="item.href"
             :class="[
             item.current
