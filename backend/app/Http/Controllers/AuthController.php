@@ -74,6 +74,8 @@ class AuthController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Выход их системы'
-        ])->cookie('refresh_token', null, 0)->cookie('access_token', null, 0);
+        ])
+            ->cookie('refresh_token', '', 0)
+            ->cookie('access_token', '',0);
     }
 }
