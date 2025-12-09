@@ -14,5 +14,6 @@ echo "Установка завершена! Запускать Docker..."
 cd .. && docker compose up --build -d
 docker compose exec backend composer install
 docker compose exec backend php artisan migrate
+docker compose exec backend php artisan jwt:secret
 
 echo "Проект запущен"
