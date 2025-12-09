@@ -30,17 +30,17 @@ class AuthService
 
     public function login($user)
     {
-        $refreshToken = JWTAuth::setTTL((int)env('REFRESH_TOKEN_TIME'))->claims([
-            'type' => 'refresh',
-            'user_id' => $user->id,
-            'time' => now(),
-            'expires_at' => now()->addMinutes((int)env('REFRESH_TOKEN_TIME')),
-        ])->fromUser($user);
-        $accessToken = JWTAuth::setTTL((int)env('ACCESS_TOKEN_TIME'))->claims([
+        $accessToken = JWTAuth::customClaims([
             'type' => 'access',
             'user_id' => $user->id,
-            'time' => now()->addMinutes((int)env('ACCESS_TOKEN_TIME'))
-        ])->fromUser($user);
+            'exp' => now()->addMinutes((int)env('ACCESS_TOKEN_TIME'))->timestamp])
+            ->fromUser($user);
+        $refreshToken = JWTAuth::customClaims([
+            'type' => 'refresh',
+            'user_id' => $user->id,
+            'exp' => now()->addMinutes((int)env('REFRESH_TOKEN_TIME'))->timestamp
+        ])
+        ->fromUser($user);
         $this->tokenRepository->create($refreshToken, $user);
         return [
             'refreshToken' => $refreshToken,
@@ -51,6 +51,7 @@ class AuthService
         $this->tokenRepository->deleteByToken($token);
     }
     public function isAuth($accessToken, $refreshToken){
+
         if (is_null($refreshToken) && is_null($accessToken)) {
             return false;
         }
@@ -71,15 +72,17 @@ class AuthService
         $data = JWTAuth::setToken($refreshToken)->getPayload();
         $user = $this->userRepository->getById($data['user_id']);
         $this->tokenRepository->delete($refreshToken, $user);
-        $refreshToken = JWTAuth::setTTL((int)env('REFRESH_TOKEN_TIME'))->claims([
-            'type' => 'refresh',
-            'user_id' => $user->id,
-        ])->fromUser($user);
-        $accessToken = JWTAuth::setTTL((int)env('ACCESS_TOKEN_TIME'))->claims([
+        $accessToken = JWTAuth::customClaims([
             'type' => 'access',
             'user_id' => $user->id,
-            'time' => now()
-        ])->fromUser($user);
+            'exp' => now()->addMinutes((int)env('ACCESS_TOKEN_TIME'))->timestamp])
+            ->fromUser($user);
+        $refreshToken = JWTAuth::customClaims([
+            'type' => 'refresh',
+            'user_id' => $user->id,
+            'exp' => now()->addMinutes((int)env('REFRESH_TOKEN_TIME'))->timestamp
+        ])
+            ->fromUser($user);
         $this->tokenRepository->create($refreshToken, $user);
         return [
             'refreshToken' => $refreshToken,
