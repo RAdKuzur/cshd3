@@ -35,10 +35,5 @@ class UserSeeder extends Seeder
             'email' => 'rkuzurgaliev@example.com',
             'password' => Hash::make('password')
         ]);
-
-        //rules
-
-        //permissions
-
     }
 }

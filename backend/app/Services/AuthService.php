@@ -30,13 +30,13 @@ class AuthService
 
     public function login($user)
     {
-        $refreshToken = JWTAuth::claims([
+        $refreshToken = JWTAuth::setTTL((int)env('REFRESH_TOKEN_TIME'))->claims([
             'type' => 'refresh',
             'user_id' => $user->id,
             'time' => now(),
             'expires_at' => now()->addMinutes((int)env('REFRESH_TOKEN_TIME')),
         ])->fromUser($user);
-        $accessToken =  JWTAuth::claims([
+        $accessToken = JWTAuth::setTTL((int)env('ACCESS_TOKEN_TIME'))->claims([
             'type' => 'access',
             'user_id' => $user->id,
             'time' => now()->addMinutes((int)env('ACCESS_TOKEN_TIME'))
@@ -71,12 +71,11 @@ class AuthService
         $data = JWTAuth::setToken($refreshToken)->getPayload();
         $user = $this->userRepository->getById($data['user_id']);
         $this->tokenRepository->delete($refreshToken, $user);
-        $refreshToken = JWTAuth::claims([
+        $refreshToken = JWTAuth::setTTL((int)env('REFRESH_TOKEN_TIME'))->claims([
             'type' => 'refresh',
             'user_id' => $user->id,
-            'time' => now()
         ])->fromUser($user);
-        $accessToken = JWTAuth::claims([
+        $accessToken = JWTAuth::setTTL((int)env('ACCESS_TOKEN_TIME'))->claims([
             'type' => 'access',
             'user_id' => $user->id,
             'time' => now()

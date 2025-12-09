@@ -71,7 +71,7 @@ class OrganizationSeeder extends Seeder
                         'floor' => ((string)($sheet->getCell('B' . $index)->getValue()))[0],
                         'department_id' => DB::table('departments')->where('name', $cellValue)->value('id'),
                         'branch_id' => DB::table('branches')->where('name', $branch)->value('id'),
-                        'comment' => 'Текст назначения кабинета'
+                        'comment' => ((string)($sheet->getCell('D' . $index)->getValue())),
                     ]);
                     $index++;
                 }
