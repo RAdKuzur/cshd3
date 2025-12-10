@@ -58,8 +58,8 @@ Route::middleware([AuthMiddleware::class, CheckPermissionMiddleware::class])->gr
     Route::put('/admin/users/update/{id}' , [AdminUserController::class, 'update'])->name('admin.users.update');
     Route::delete('/admin/users/delete/{id}' , [AdminUserController::class, 'delete'])->name('admin.users.delete');
 
-    Route::get('/reports/auditorium/{id}', [ReportController::class, 'auditorium'])->name('reports.auditorium');
-    Route::get('/reports/auditoriums', [ReportController::class, 'auditoriums'])->name('reports.auditoriums');
-    Route::get('/reports/things', [ReportController::class, 'things'])->name('reports.positions');
-    Route::get('/reports/workstations', [ReportController::class, 'workstations'])->name('reports.workstations');
 });;
+Route::get('/reports/auditorium/{id}', [ReportController::class, 'auditorium'])->name('reports.auditorium');
+Route::get('/reports/auditoriums', [ReportController::class, 'auditoriums'])->name('reports.auditoriums');
+Route::get('/reports/things', [ReportController::class, 'things'])->name('reports.positions');
+Route::get('/reports/workstations', [ReportController::class, 'workstations'])->name('reports.workstations');
