@@ -25,6 +25,8 @@ import AdminUserPage from "@/pages/admin/user/AdminUserPage.vue";
 import AdminUserCreatePage from "@/pages/admin/user/AdminUserCreatePage.vue";
 import AdminUserEditPage from "@/pages/admin/user/AdminUserEditPage.vue";
 import AdminUserViewPage from "@/pages/admin/user/AdminUserViewPage.vue";
+import ReportAuditoriumPage from "@/pages/report/ReportAuditoriumPage.vue";
+import ReportThingPage from "@/pages/report/ReportThingPage.vue";
 
 const BACKEND_URL = '';
 
@@ -43,7 +45,8 @@ const routes = [
     // { path: '/tasks', component: TaskPage, meta: { auth: true } },
 
     { path: '/reports', component: ReportPage, meta: { auth: true }},
-
+    { path: '/reports/auditoriums', component: ReportAuditoriumPage, meta: { auth: true }},
+    { path: '/reports/things', component: ReportThingPage, meta: { auth: true }},
 
     { path: '/admin', component: AdminPage, meta: { auth: true } },
     { path: '/admin/positions', component: AdminPositionPage, meta: { auth: true } },

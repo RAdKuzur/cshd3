@@ -32,7 +32,7 @@ class Auditorium extends Model
     }
     public function branch()
     {
-        $this->belongsTo(Branch::class);
+        return $this->belongsTo(Branch::class);
     }
     public function people(){
         return $this->hasMany(People::class);
