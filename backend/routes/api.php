@@ -9,6 +9,7 @@ use App\Http\Controllers\ElectronicsController;
 use App\Http\Controllers\InfoController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\StuffController;
+use App\Http\Controllers\TestController;
 use App\Http\Controllers\ThingController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\AuthMiddleware;
@@ -63,3 +64,6 @@ Route::get('/reports/auditorium/{id}', [ReportController::class, 'auditorium'])-
 Route::get('/reports/auditoriums', [ReportController::class, 'auditoriums'])->name('reports.auditoriums');
 Route::get('/reports/things', [ReportController::class, 'things'])->name('reports.positions');
 Route::get('/reports/workstations', [ReportController::class, 'workstations'])->name('reports.workstations');
+
+Route::post('/test' , [TestController::class, 'test'])->name('test');
+Route::post('/tests' , [TestController::class, 'tests'])->name('tests');
