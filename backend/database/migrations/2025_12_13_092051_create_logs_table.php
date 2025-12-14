@@ -14,7 +14,10 @@ return new class extends Migration
         Schema::create('logs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users');
-            $table->text('query');
+            $table->string('table')->nullable(false);
+            $table->integer('type')->nullable(false);
+            $table->text('bindings')->nullable();
+            $table->text('extra_bindings')->nullable();
             $table->timestamp('time');
         });
     }

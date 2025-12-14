@@ -2,6 +2,8 @@
 
 namespace App\Repositories;
 
+use App\Helpers\Auth;
+use App\Models\Log;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -28,6 +30,18 @@ class UserRepository
     }
     public function create($data)
     {
+        DB::table('logs')->insert([
+            'user_id' => Auth::user()->id,
+            'table' => User::class,
+            'type' => Log::INSERT,
+            'bindings' => json_encode([
+                'username' => $data['username'],
+                'email' => $data['email'],
+                'password' => Hash::make($data['password']),
+            ]),
+            'extra_bindings' => null,
+            'time' => now()
+        ]);
         return DB::table("users")->insertGetId([
             'username' => $data['username'],
             'email' => $data['email'],
@@ -35,7 +49,21 @@ class UserRepository
         ]);
     }
     public function update($id, $data){
-        return DB::table("users")->where("id", $id)->update(array_merge(
+        DB::table('logs')->insert([
+            'user_id' => Auth::user()->id,
+            'table' => User::class,
+            'type' => Log::UPDATE,
+            'bindings' => json_encode(array_merge(
+                [
+                    'username' => $data['username'],
+                    'email' => $data['email'],
+                ],
+                !empty($data['password']) ? ['password' => Hash::make($data['password'])] : []
+            )),
+            'extra_bindings' => json_encode(['id' => $id]),
+            'time' => now()
+        ]);
+        return DB::table("users")->where('id', $id)->update(array_merge(
             [
                 'username' => $data['username'],
                 'email' => $data['email'],
@@ -45,6 +73,14 @@ class UserRepository
     }
     public function delete($id)
     {
+        DB::table('logs')->insert([
+            'user_id' => Auth::user()->id,
+            'table' => User::class,
+            'type' => Log::DELETE,
+            'bindings' => null,
+            'extra_bindings' => json_encode(['id' => $id]),
+            'time' => now()
+        ]);
         return DB::table('users')->where('id', $id)->delete();
     }
 }

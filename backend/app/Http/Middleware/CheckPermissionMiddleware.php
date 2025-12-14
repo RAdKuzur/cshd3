@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Helpers\Auth;
 use App\Services\AuthService;
 use App\Services\VisitService;
 use Closure;
@@ -27,10 +28,8 @@ class CheckPermissionMiddleware
 
     public function handle(Request $request, Closure $next): Response
     {
-        $refreshToken = $request->cookie('refresh_token');
-        $payload = JWTAuth::setToken($refreshToken)->getPayload();
-        $userId = $payload['user_id'];
-        if($this->authService->hasAccess($userId, request()->route()->getName())) {
+        $user = Auth::user();
+        if($this->authService->hasAccess($user->id, request()->route()->getName())) {
             return $next($request);
         }
         return response()->json([

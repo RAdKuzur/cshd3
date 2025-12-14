@@ -6,8 +6,8 @@ axios.defaults.withCredentials = true;
 
 
 export default {
-    async login(login, password) {
-        const response = await axios.post(`${BACKEND_URL}api/login`, { login, password });
+    async login(email, password) {
+        const response = await axios.post(`${BACKEND_URL}api/login`, { email, password });
         if (response.data) {
             localStorage.setItem('username', response.data.username);
             localStorage.setItem('fio', response.data.fio);

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Helpers\Auth;
 use App\Models\User;
 use App\Repositories\PermissionRepository;
 use App\Repositories\RuleRepository;
@@ -69,8 +70,7 @@ class AuthService
     }
     public function refresh($refreshToken)
     {
-        $data = JWTAuth::setToken($refreshToken)->getPayload();
-        $user = $this->userRepository->getById($data['user_id']);
+        $user = Auth::user();
         $this->tokenRepository->delete($refreshToken, $user);
         $accessToken = JWTAuth::customClaims([
             'type' => 'access',

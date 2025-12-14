@@ -24,10 +24,8 @@ class AuthController extends Controller
     public function login(LoginRequest $request)
     {
         $data = $request->validated();
-        $login = $data['login'];
-        $password = $data['password'];
-        $user = $this->userRepository->getByEmail($login);
-        if ($user && Hash::check($password, $user->password)) {
+        $user = $this->userRepository->getByEmail($data['email']);
+        if ($user && Hash::check($data['password'], $user->password)) {
             $tokens = $this->authService->login($user);
             return response()->json([
                 'success' => true,
@@ -46,24 +44,6 @@ class AuthController extends Controller
             ], 401);
         }
     }
-//    public function check(Request $request)
-//    {
-//        $accessToken = $request->cookie('access_token');
-//        $refreshToken = $request->cookie('refresh_token');
-//        if ($this->authService->isAuth($accessToken, $refreshToken)) {
-//            $tokens = $this->authService->refresh($refreshToken);
-//            return response()->json([
-//                'success' => true,
-//                'username' => $tokens['username'],
-//                'fio' => $tokens['fio'],
-//            ])
-//            ->cookie('refresh_token', $tokens['refreshToken'], (int)env('REFRESH_TOKEN_TIME'))
-//            ->cookie('access_token', $tokens['accessToken'], (int)env('ACCESS_TOKEN_TIME'));
-//        }
-//        return response()->json([
-//            'success' => false,
-//        ], 401);
-//    }
     public function forgotPassword(Request $request)
     {
 
