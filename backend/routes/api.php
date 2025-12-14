@@ -27,7 +27,7 @@ Route::get('/info/branches', [InfoController::class, 'branches'])->name('info.br
 Route::get('/auditoriums/index', [AuditoriumController::class, 'index'])->name('auditorium.index');
 Route::get('/things/simple-electronics', [ElectronicsController::class, 'simpleElectronics'])->name('things.simple-electronics');
 
-Route::middleware([])->group(function () {
+Route::middleware([AuthMiddleware::class, CheckPermissionMiddleware::class])->group(function () {
     Route::get('/profile/{username}', [UserController::class, 'profile'])->name('profile');
 
     Route::get('/stuff', [StuffController::class, 'stuff'])->name('stuff');
