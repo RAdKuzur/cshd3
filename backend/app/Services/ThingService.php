@@ -32,7 +32,7 @@ class ThingService
                 'parent' => $electronic->parent ? $electronic->parent->inv_number : null,
                 'operation_date' => $electronic->operation_date,
                 'price' => $electronic->price,
-                'auditorium_id' => $electronic->auditorium_id,
+                'auditorium_id' => $electronic->getCurrentLocation()->id,
                 'balance' => $electronic->balance,
             ];
         }
@@ -64,7 +64,7 @@ class ThingService
             'operation_date' => $model->operation_date,
             'price' => $model->price,
             'comment' => $model->comment,
-            'auditorium_id' => $model->auditorium_id,
+            'auditorium_id' => $model->getCurrentLocation()->id,
             'balance' => $model->balance,
         ];
     }

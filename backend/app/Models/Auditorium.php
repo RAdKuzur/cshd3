@@ -13,9 +13,10 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property Department $department
  * @property People[] $people
- * @property Thing[] $things
  * @property AuditoriumResponsibility[] $auditoriumResponsibilities
  * @property Branch $branch
+ *
+ * @property ThingAuditorium[] $thingAuditoriums
  */
 class Auditorium extends Model
 {
@@ -40,7 +41,12 @@ class Auditorium extends Model
     public function auditoriumResponsibilities(){
         return $this->hasMany(AuditoriumResponsibility::class);
     }
-    public function things(){
-        return $this->hasMany(Thing::class);
+
+    public function thingAuditoriums(){
+        return $this->hasMany(ThingAuditorium::class);
+    }
+    public function getActualThings()
+    {
+        return $this->thingAuditoriums()->where('end_date', null)->get();
     }
 }

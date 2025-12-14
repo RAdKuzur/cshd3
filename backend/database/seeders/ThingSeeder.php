@@ -36,17 +36,25 @@ class ThingSeeder extends Seeder
                             'thing_type_id' => ThingTypeDictionary::ARM,
                             'thing_parent_id' => null,
                             'condition' => ConditionDictionary::OK,
-                            'auditorium_id' => DB::table('auditoriums')->where([
-                                'name' =>  $sheet->getCell('J' . $i)->getValue() .  $sheet->getCell('K' . $i)->getValue()
-                            ])->first()->id,
+//                            'auditorium_id' => DB::table('auditoriums')->where([
+//                                'name' =>  $sheet->getCell('J' . $i)->getValue() .  $sheet->getCell('K' . $i)->getValue()
+//                            ])->first()->id,
                             'price' => (str_replace(',', '.', preg_replace('/\s+/u', '', $sheet->getCell('I' . $i)->getValue()))
                                 ? str_replace(',', '.', preg_replace('/\s+/u', '', $sheet->getCell('I' . $i)->getValue()))
                                 : 1),
                             'comment' => null,
                             'balance' => ThingBalanceDictionary::index($sheet->getCell('G' . $i)->getValue())
                         ];
-                        DB::table('things')->insert($data);
-
+                        $thingId = DB::table('things')->insertGetId($data);
+                        $auditoriumId = DB::table('auditoriums')->where([
+                                'name' =>  $sheet->getCell('J' . $i)->getValue() .  $sheet->getCell('K' . $i)->getValue()
+                            ])->first()->id;
+                        DB::table('thing_auditoriums')->insertGetId([
+                            'thing_id' => $thingId,
+                            'auditorium_id' => $auditoriumId,
+                            'start_date' => now(),
+                            'end_date' => null,
+                        ]);
                     }
                 }
                 DB::commit();

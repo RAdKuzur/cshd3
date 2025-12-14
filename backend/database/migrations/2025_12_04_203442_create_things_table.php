@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('inv_number')->nullable();
             $table->date('operation_date')->nullable();
             $table->integer('thing_type_id')->nullable(false);
-            $table->foreignId('auditorium_id')->nullable()->constrained('auditoriums');
             $table->foreignId('thing_parent_id')
                 ->nullable()
                 ->constrained('things')

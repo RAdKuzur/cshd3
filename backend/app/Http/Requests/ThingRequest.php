@@ -31,7 +31,6 @@ class ThingRequest extends FormRequest
             'thing_parent_id' => 'nullable',
             'price' => 'nullable',
             'comment' => 'nullable',
-            'auditorium_id' => 'nullable',
             'balance' => 'nullable'
         ];
     }

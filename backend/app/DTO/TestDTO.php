@@ -2,7 +2,7 @@
 
 namespace App\DTO;
 
-class TestDTO
+class TestDTO implements DTO
 {
     public string $email;
     public string $username;

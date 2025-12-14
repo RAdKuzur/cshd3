@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Auditorium;
+use App\Models\ThingAuditorium;
 use App\Repositories\AuditoriumRepository;
 use Illuminate\Support\Facades\DB;
 
@@ -39,15 +40,15 @@ class AuditoriumService
         foreach ($auditoriums as $auditorium) {
             $things = [];
             $employees = [];
-            foreach ($auditorium->things as $thing) {
+            foreach ($auditorium->getActualThings() as $thingAuditorium) {
                 $things[] = [
-                    'id' => $thing->id,
-                    'name' => $thing->name,
-                    'inv_number' => $thing->inv_number,
-                    'thing_type_id' => $thing->thing_type_id,
-                    'condition' => $thing->condition,
-                    'serial_number' => $thing->serial_number,
-                    'balance' => $thing->balance
+                    'id' => $thingAuditorium->thing->id,
+                    'name' => $thingAuditorium->thing->name,
+                    'inv_number' => $thingAuditorium->thing->inv_number,
+                    'thing_type_id' => $thingAuditorium->thing->thing_type_id,
+                    'condition' => $thingAuditorium->thing->condition,
+                    'serial_number' => $thingAuditorium->thing->serial_number,
+                    'balance' => $thingAuditorium->thing->balance
                 ];
             }
             foreach($auditorium->people as $person){

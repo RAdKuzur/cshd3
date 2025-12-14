@@ -51,23 +51,23 @@ class ReportService
         $wName     = 60 * 50;  // 60%
         $wCount    = 10 * 50;  // 10%
         $wInv      = 22 * 50;  // 22%
-        if(count($auditorium->things) > 0){
+        if(count($auditorium->getActualThings()) > 0){
             $table->addRow();
             $table->addCell($wNum)->addText('№', ['bold' => true, 'size' => 12], ['alignment' => Jc::CENTER]);
             $table->addCell($wName)->addText('Наименование', ['bold' => true, 'size' => 12], ['alignment' => Jc::CENTER]);
             $table->addCell($wCount)->addText('Кол-во', ['bold' => true, 'size' => 12], ['alignment' => Jc::CENTER]);
             $table->addCell($wInv)->addText('Инвентарный номер', ['bold' => true, 'size' => 12], ['alignment' => Jc::CENTER]);
-            foreach ($auditorium->things as $index => $item) {
+            foreach ($auditorium->getActualThings() as $index => $item) {
                 $table->addRow();
                 $table->addCell($wNum)->addText($index + 1, ['size' => 12], ['alignment' => Jc::CENTER]);
-                $table->addCell($wName)->addText($item->name, ['size' => 12]);
+                $table->addCell($wName)->addText($item->thing->name, ['size' => 12]);
                 $table->addCell($wCount)->addText(
-                    $item->count ?? 1,
+                    1,
                     ['size' => 14],
                     ['alignment' => Jc::CENTER]
                 );
 
-                $table->addCell($wInv)->addText($item->inv_number, ['size' => 12], ['alignment' => Jc::CENTER]);
+                $table->addCell($wInv)->addText($item->thing->inv_number, ['size' => 12], ['alignment' => Jc::CENTER]);
             }
         }
         else {
@@ -122,7 +122,7 @@ class ReportService
             $wName     = 60 * 50;
             $wCount    = 10 * 50;
             $wInv      = 22 * 50;
-            if (count($auditorium->things) > 0) {
+            if (count($auditorium->getActualThings()) > 0) {
                 $table->addRow();
                 $table->addCell($wNum)->addText('№',
                     ['bold' => true, 'size' => 12],
@@ -140,20 +140,20 @@ class ReportService
                     ['bold' => true, 'size' => 12],
                     ['alignment' => Jc::CENTER]
                 );
-                foreach ($auditorium->things as $index => $item) {
+                foreach ($auditorium->getActualThings() as $index => $item) {
                     $table->addRow();
                     $table->addCell($wNum)->addText($index + 1,
                         ['size' => 12],
                         ['alignment' => Jc::CENTER]
                     );
-                    $table->addCell($wName)->addText($item->name, ['size' => 12]);
+                    $table->addCell($wName)->addText($item->thing->name, ['size' => 12]);
                     $table->addCell($wCount)->addText(
                         $item->count ?? 1,
                         ['size' => 12],
                         ['alignment' => Jc::CENTER]
                     );
                     $table->addCell($wInv)->addText(
-                        $item->inv_number ?? '-',
+                        $item->thing->inv_number ?? '-',
                         ['size' => 12],
                         ['alignment' => Jc::CENTER]
                     );
@@ -191,14 +191,14 @@ class ReportService
         $index = 2;
         foreach ($organization->departments as $department) {
             foreach ($department->auditoriums as $auditorium) {
-                foreach ($auditorium->things as $thing) {
+                foreach ($auditorium->getActualThings() as $thingAuditorium) {
                     $sheet->setCellValue('A' . $index, $index - 1);
-                    $sheet->setCellValue('B' . $index, $thing->name);
-                    $sheet->setCellValue('C' . $index, $thing->inv_number);
-                    $sheet->setCellValue('D' . $index, ThingTypeDictionary::get($thing->thing_type_id));
-                    $sheet->setCellValue('E' . $index, ThingBalanceDictionary::get($thing->balance));
-                    $sheet->setCellValue('F' . $index, $thing->operation_date);
-                    $sheet->setCellValue('G' . $index, $thing->price);
+                    $sheet->setCellValue('B' . $index, $thingAuditorium->thing->name);
+                    $sheet->setCellValue('C' . $index, $thingAuditorium->thing->inv_number);
+                    $sheet->setCellValue('D' . $index, ThingTypeDictionary::get($thingAuditorium->thing->thing_type_id));
+                    $sheet->setCellValue('E' . $index, ThingBalanceDictionary::get($thingAuditorium->thing->balance));
+                    $sheet->setCellValue('F' . $index, $thingAuditorium->thing->operation_date);
+                    $sheet->setCellValue('G' . $index, $thingAuditorium->thing->price);
                     $sheet->setCellValue('H' . $index, $auditorium->name);
                     $index++;
                 }

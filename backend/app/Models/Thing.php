@@ -7,6 +7,25 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/** @property int $id
+ * @property string $name
+ * @property string $serial_number
+ * @property string $inv_number
+ * @property $operation_date
+ * @property int $thing_type_id
+ * @property int $thing_parent_id
+ * @property int $condition
+ * @property int $balance
+ * @property float $price
+ * @property string $comment
+ *
+ * @property ThingResponsibility[] $thingResponsibilities
+ * @property ThingAuditorium[] $thingAuditoriums
+ *
+*/
+
+
+
 class Thing extends Model
 {
     use HasFactory;
@@ -20,7 +39,6 @@ class Thing extends Model
         'thing_parent_id',
         'condition',
         'balance',
-        'auditorium_id',
         'price',
         'comment',
     ];
@@ -37,7 +55,11 @@ class Thing extends Model
     {
         return $this->belongsTo(Thing::class, 'thing_parent_id');
     }
-
+    public function getCurrentLocation(){
+        return $this->thingAuditoriums()->where([
+            'end_date' => null,
+        ])->first()->auditorium;
+    }
     /**
      * Получить дочерние вещи
      */
@@ -45,8 +67,10 @@ class Thing extends Model
     {
         return $this->hasMany(Thing::class, 'thing_parent_id');
     }
-    public function auditorium(): BelongsTo
-    {
-        return $this->belongsTo(Auditorium::class, 'auditorium_id');
+    public function thingAuditoriums(){
+        return $this->hasMany(ThingAuditorium::class);
+    }
+    public function thingResponsibilities(){
+        return $this->hasMany(ThingResponsibility::class);
     }
 }

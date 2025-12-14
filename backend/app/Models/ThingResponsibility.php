@@ -5,6 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+/** @property int $id
+ * @property int $thing_id
+ * @property int $people_id
+ * @property $start_date
+ * @property $end_date
+ *
+ * @property Thing $thing
+ * @property People $people
+*/
 
 class ThingResponsibility extends Model
 {
