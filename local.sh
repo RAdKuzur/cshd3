@@ -1,19 +1,17 @@
 echo "Подготовка проекта..."
-
+echo "Настраиваем окружение проекта..."
 cp .env.example .env
 
-echo "Подготавливаем фронтенд..."
-cd frontend && npm install
+echo "Устанавливаем бэкенд окружение..."
+cd backend && cp .env.example .env
 
-
-echo "Устанавливаем бэкенд зависимости..."
-cd ../backend && cp .env.example .env
-
-echo "Установка завершена! Запускаем Docker..."
+echo "Окружение готово! Запускаем Docker..."
 
 cd .. && docker compose up --build -d
+docker compose exec frontend npm install
 docker compose exec backend composer install
 docker compose exec backend php artisan migrate
+docker compose exec backend php artisan db:seed
 
 echo "Выдача прав на запись логов для laravel"
 #docker compose exec -it backend chown -R www-data:www-data /var/www/html/storage

@@ -68,11 +68,11 @@ class AuthService
         if (is_null($refreshToken) && is_null($accessToken)) {
             return false;
         }
-        else if(!is_null($refreshToken) && is_null($accessToken)){
+        else if(!is_null($refreshToken) && is_null($accessToken) && JWTAuth::setToken($refreshToken)->check()){
             $data = JWTAuth::setToken($refreshToken)->getPayload();
             return count($this->tokenRepository->isValidToken($refreshToken, $data['user_id'])) > 0;
         }
-        else if(!is_null($refreshToken) && !is_null($accessToken)){
+        else if(!is_null($refreshToken) && !is_null($accessToken) && JWTAuth::setToken($refreshToken)->check()){
             $data = JWTAuth::setToken($refreshToken)->getPayload();
             return $data['user_id'] && count($this->tokenRepository->isValidToken($refreshToken, $data['user_id'])) > 0;
         }
