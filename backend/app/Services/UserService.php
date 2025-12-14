@@ -104,7 +104,6 @@ class UserService
     }
     public function create($data)
     {
-        //refactoring
         DB::beginTransaction();
         try {
             $data['user_id'] = $this->userRepository->create($data);
@@ -116,7 +115,6 @@ class UserService
         }
     }
     public function update($id, $data){
-        //refactoring
         DB::beginTransaction();
         try {
             $this->userRepository->update($id, $data);
@@ -129,7 +127,6 @@ class UserService
         }
     }
     public function delete($id){
-        //refactoring
         DB::beginTransaction();
         try {
             $user = $this->userRepository->getById($id);
@@ -140,6 +137,5 @@ class UserService
         catch (\Exception $exception){
             DB::rollBack();
         }
-
     }
 }

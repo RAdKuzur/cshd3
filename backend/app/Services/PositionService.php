@@ -5,6 +5,7 @@ namespace App\Services;
 
 
 use App\Repositories\PositionRepository;
+use Illuminate\Support\Facades\DB;
 
 class PositionService
 {
@@ -36,12 +37,30 @@ class PositionService
     }
     public function create($data)
     {
-        return $this->positionRepository->create($data);
+        DB::beginTransaction();
+        try {
+            $this->positionRepository->create($data);
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+        }
     }
     public function update($id, $data){
-        return $this->positionRepository->update($id, $data);
+        DB::beginTransaction();
+        try {
+            $this->positionRepository->update($id, $data);
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+        }
     }
     public function delete($id){
-        return $this->positionRepository->delete($id);
+        DB::beginTransaction();
+        try {
+            $this->positionRepository->delete($id);
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+        }
     }
 }

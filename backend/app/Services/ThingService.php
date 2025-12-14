@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Dictionaries\ConditionDictionary;
 use App\Dictionaries\ThingTypeDictionary;
 use App\Repositories\ThingRepository;
+use Illuminate\Support\Facades\DB;
 
 class ThingService
 {
@@ -69,14 +70,34 @@ class ThingService
     }
     public function create($data)
     {
-        $this->thingRepository->create($data);
+        DB::beginTransaction();
+        try {
+            $this->thingRepository->create($data);
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+        }
     }
     public function update($id, $data)
     {
-        $this->thingRepository->update($id, $data);
+        DB::beginTransaction();
+        try {
+            $this->thingRepository->update($id, $data);
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+        }
+
     }
     public function delete($id)
     {
-        $this->thingRepository->delete($id);
+        DB::beginTransaction();
+        try {
+            $this->thingRepository->delete($id);
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+        }
+
     }
 }

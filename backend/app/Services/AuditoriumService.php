@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Auditorium;
 use App\Repositories\AuditoriumRepository;
+use Illuminate\Support\Facades\DB;
 
 class AuditoriumService
 {
@@ -68,12 +69,33 @@ class AuditoriumService
         return $data;
     }
     public function create($data){
-        $this->auditoriumRepository->create($data);
+        DB::beginTransaction();
+        try {
+            $this->auditoriumRepository->create($data);
+            DB::commit();
+        }
+        catch (\Exception $e){
+            DB::rollBack();
+        }
     }
     public function update($id, $data){
-        $this->auditoriumRepository->update($id, $data);
+        DB::beginTransaction();
+        try {
+            $this->auditoriumRepository->update($id, $data);
+            DB::commit();
+        }
+        catch (\Exception $e){
+            DB::rollBack();
+        }
     }
     public function delete($id){
-        $this->auditoriumRepository->delete($id);
+        DB::beginTransaction();
+        try {
+            $this->auditoriumRepository->delete($id);
+            DB::commit();
+        }
+        catch (\Exception $e){
+            DB::rollBack();
+        }
     }
 }

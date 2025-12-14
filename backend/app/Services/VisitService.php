@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Repositories\VisitRepository;
+use Illuminate\Support\Facades\DB;
 
 class VisitService
 {
@@ -15,6 +16,12 @@ class VisitService
     }
 
     public function create(){
-        $this->visitRepository->create();
+        DB::beginTransaction();
+        try {
+            $this->visitRepository->create();
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+        }
     }
 }
