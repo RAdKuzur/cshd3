@@ -17,8 +17,7 @@ use App\Http\Middleware\CheckPermissionMiddleware;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/login', [AuthController::class, 'login'])->name('login');
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-//Route::get('/check', [AuthController::class, 'check'])->name('check');
+
 
 Route::get('/info/thing-types', [InfoController::class, 'types'])->name('info.types');
 Route::get('/info/balance', [InfoController::class, 'balance'])->name('info.balance');
@@ -27,7 +26,8 @@ Route::get('/info/branches', [InfoController::class, 'branches'])->name('info.br
 Route::get('/auditoriums/index', [AuditoriumController::class, 'index'])->name('auditorium.index');
 Route::get('/things/simple-electronics', [ElectronicsController::class, 'simpleElectronics'])->name('things.simple-electronics');
 
-Route::middleware([AuthMiddleware::class, CheckPermissionMiddleware::class])->group(function () {
+Route::middleware(['auth:sanctum', CheckPermissionMiddleware::class])->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/profile/{username}', [UserController::class, 'profile'])->name('profile');
 
     Route::get('/stuff', [StuffController::class, 'stuff'])->name('stuff');
@@ -59,11 +59,11 @@ Route::middleware([AuthMiddleware::class, CheckPermissionMiddleware::class])->gr
     Route::put('/admin/users/update/{id}' , [AdminUserController::class, 'update'])->name('admin.users.update');
     Route::delete('/admin/users/delete/{id}' , [AdminUserController::class, 'delete'])->name('admin.users.delete');
 
-});;
-Route::get('/reports/auditorium/{id}', [ReportController::class, 'auditorium'])->name('reports.auditorium');
-Route::get('/reports/auditoriums', [ReportController::class, 'auditoriums'])->name('reports.auditoriums');
-Route::get('/reports/things', [ReportController::class, 'things'])->name('reports.positions');
-Route::get('/reports/workstations', [ReportController::class, 'workstations'])->name('reports.workstations');
+    Route::get('/reports/auditorium/{id}', [ReportController::class, 'auditorium'])->name('reports.auditorium');
+    Route::get('/reports/auditoriums', [ReportController::class, 'auditoriums'])->name('reports.auditoriums');
+    Route::get('/reports/things', [ReportController::class, 'things'])->name('reports.positions');
+    Route::get('/reports/workstations', [ReportController::class, 'workstations'])->name('reports.workstations');
+});
 
 Route::post('/test' , [TestController::class, 'test'])->name('test');
 Route::post('/tests' , [TestController::class, 'tests'])->name('tests');

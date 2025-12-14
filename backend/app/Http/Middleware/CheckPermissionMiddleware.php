@@ -6,6 +6,7 @@ use App\Services\AuthService;
 use App\Services\VisitService;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -27,9 +28,7 @@ class CheckPermissionMiddleware
 
     public function handle(Request $request, Closure $next): Response
     {
-        $refreshToken = $request->cookie('refresh_token');
-        $payload = JWTAuth::setToken($refreshToken)->getPayload();
-        $userId = $payload['user_id'];
+        $userId = Auth::user()->id;
         if($this->authService->hasAccess($userId, request()->route()->getName())) {
             return $next($request);
         }

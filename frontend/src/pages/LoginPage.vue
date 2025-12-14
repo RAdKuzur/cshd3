@@ -37,7 +37,7 @@
             </label>
             <div class="relative">
               <input
-                  v-model="form.login"
+                  v-model="form.email"
                   type="email"
                   id="email"
                   required
@@ -208,7 +208,7 @@ import {
 const router = useRouter();
 
 const form = ref({
-  login: '',
+  email: '',
   password: '',
   remember: false
 })
@@ -219,18 +219,18 @@ const showForgotPassword = ref(false);
 const errorMessage = ref(null);
 
 // Валидация email/login
-const loginValid = computed(() => form.value.login.length > 2);
+const loginValid = computed(() => form.value.email.length > 2);
 
 const handleLogin = async () => {
   errorMessage.value = null;
-  if (!form.value.login || !form.value.password) {
+  if (!form.value.email || !form.value.password) {
     errorMessage.value = "Введите логин и пароль";
     return;
   }
 
   loading.value = true;
   try {
-    await AuthService.login(form.value.login, form.value.password);
+    await AuthService.login(form.value.email, form.value.password);
     router.push("/home"); // если успешно, сразу на /home
   } catch (e) {
     errorMessage.value = e.response?.data?.message || "Ошибка входа";

@@ -7,75 +7,44 @@ use App\Models\User;
 use App\Repositories\UserRepository;
 use App\Services\AuthService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+
 
 class AuthController extends Controller
 {
     private UserRepository $userRepository;
-    private AuthService $authService;
     public function __construct(
         UserRepository $userRepository,
-        AuthService $authService
     ){
         $this->userRepository = $userRepository;
-        $this->authService = $authService;
     }
-    /* @var User $user */
     public function login(LoginRequest $request)
     {
         $data = $request->validated();
-        $login = $data['login'];
-        $password = $data['password'];
-        $user = $this->userRepository->getByEmail($login);
-        if ($user && Hash::check($password, $user->password)) {
-            $tokens = $this->authService->login($user);
+        $user = $this->userRepository->getByEmail($data['email']);
+        if (!$user || !Hash::check($data['password'], $user->password)) {
             return response()->json([
-                'success' => true,
-                'message' => 'Успешный вход',
-                'username' => $user->username,
-                'fio' => $user->people->getFullFio(),
-
-            ])
-                ->cookie('refresh_token', $tokens['refreshToken'], (int)env('REFRESH_TOKEN_TIME'))
-                ->cookie('access_token', $tokens['accessToken'], (int)env('ACCESS_TOKEN_TIME'));
-        }
-        else {
-            return response()->json([
-                'success' => false,
-                'message' => 'Неверный логин и/или пароль'
+                'success' => 'false',
             ], 401);
         }
+        $token = $user->createToken('access_token', ['*'], now()->addMinutes((int)env('ACCESS_TOKEN_TIME')))->plainTextToken;
+        return response()->json([
+            'success' => 'true',
+            'username' => $user->username,
+            'fio' => $user->username,
+            'token' => $token,
+        ]);
     }
-//    public function check(Request $request)
-//    {
-//        $accessToken = $request->cookie('access_token');
-//        $refreshToken = $request->cookie('refresh_token');
-//        if ($this->authService->isAuth($accessToken, $refreshToken)) {
-//            $tokens = $this->authService->refresh($refreshToken);
-//            return response()->json([
-//                'success' => true,
-//                'username' => $tokens['username'],
-//                'fio' => $tokens['fio'],
-//            ])
-//            ->cookie('refresh_token', $tokens['refreshToken'], (int)env('REFRESH_TOKEN_TIME'))
-//            ->cookie('access_token', $tokens['accessToken'], (int)env('ACCESS_TOKEN_TIME'));
-//        }
-//        return response()->json([
-//            'success' => false,
-//        ], 401);
-//    }
     public function forgotPassword(Request $request)
     {
 
     }
     public function logout(Request $request){
-        $refreshToken = $request->cookie('refresh_token');
-        $this->authService->logout($refreshToken);
+        $request->user()->tokens()->delete();
+        // или $request->user()->currentAccessToken()->delete(); если хотим удалить последний access_token
         return response()->json([
-            'success' => true,
-            'message' => 'Выход их системы'
-        ])
-            ->cookie('refresh_token', '', 0)
-            ->cookie('access_token', '',0);
+            'success' => 'true',
+        ]);
     }
 }

@@ -6,6 +6,7 @@ use App\Services\AuthService;
 use App\Services\VisitService;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -16,31 +17,25 @@ class AuthMiddleware
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    private AuthService $authService;
     private VisitService $visitService;
     public function __construct(
-        AuthService $authService,
         VisitService $visitService
     )
     {
-        $this->authService = $authService;
         $this->visitService = $visitService;
     }
 
     public function handle(Request $request, Closure $next): Response
     {
-        $accessToken = $request->cookie('access_token');
-        $refreshToken = $request->cookie('refresh_token');
         $this->visitService->create();
-        if ($this->authService->isAuth($accessToken, $refreshToken)) {
-            $tokens = $this->authService->refresh($refreshToken);
-            return $next($request)
-                ->cookie('refresh_token', $tokens['refreshToken'], (int)env('REFRESH_TOKEN_TIME'))
-                ->cookie('access_token', $tokens['accessToken'], (int)env('ACCESS_TOKEN_TIME'));
+        if(Auth::check()){
+            return $next($request);
         }
-        return response()->json([
-            'success' => false,
-        ], 401);
-
+        else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized'
+            ]);
+        }
     }
 }

@@ -6,8 +6,8 @@ axios.defaults.withCredentials = true;
 
 
 export default {
-    async login(login, password) {
-        const response = await axios.post(`${BACKEND_URL}api/login`, { login, password });
+    async login(email, password) {
+        const response = await axios.post(`${BACKEND_URL}api/login`, { email, password });
         if (response.data) {
             localStorage.setItem('username', response.data.username);
             localStorage.setItem('fio', response.data.fio);
@@ -36,7 +36,7 @@ export default {
     // Добавляем метод для очистки данных
     clearAuthData() {
         Cookies.remove('access_token')
-        Cookies.remove('refresh_token')
+        //Cookies.remove('refresh_token')
         localStorage.removeItem('username');
         localStorage.removeItem('fio');
     },
