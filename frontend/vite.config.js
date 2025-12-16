@@ -5,21 +5,30 @@ import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 
 export default defineConfig({
-  plugins: [
-    vue(),
-    vueDevTools(),
-    tailwindcss()
-  ],
-  //
-  server: {
-    host: true,
-    port: 5173,
-    strictPort: true
-  },
-  //
-  resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
+    plugins: [
+        vue(),
+        vueDevTools(),
+        tailwindcss()
+    ],
+
+    server: {
+        host: true,
+        port: 5173,
+        strictPort: true,
+
+        watch: {
+            usePolling: true,
+            interval: 100
+        },
+
+        hmr: {
+            clientPort: 5173
+        }
     },
-  },
+
+    resolve: {
+        alias: {
+            '@': fileURLToPath(new URL('./src', import.meta.url))
+        }
+    }
 })
