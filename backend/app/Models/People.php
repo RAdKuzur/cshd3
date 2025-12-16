@@ -21,6 +21,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property PeoplePosition[] $peoplePositions
  * @property Auditorium $auditorium
  * @property AuditoriumResponsibility[] $auditoriumResponsibilities
+ * @property TransferAct[] $fromActs
+ * @property TransferAct[] $toActs
  * */
 class People extends Model
 {
@@ -90,5 +92,11 @@ class People extends Model
     }
     public function auditoriumResponsibilities(){
         return $this->hasMany(AuditoriumResponsibility::class);
+    }
+    public function fromActs(){
+        return $this->hasMany(TransferAct::class, 'from', 'id');
+    }
+    public function toActs(){
+        return $this->hasMany(TransferAct::class, 'to', 'id');
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Dictionaries\ConditionDictionary;
 use App\Dictionaries\ThingBalanceDictionary;
 use App\Dictionaries\ThingTypeDictionary;
+use App\Dictionaries\TransferActDictionary;
 use App\Repositories\BranchRepository;
 use App\Services\BranchService;
 use App\Services\DepartmentService;
@@ -55,6 +56,14 @@ class InfoController extends Controller
             'success' => true,
             'code' => 200,
             'data' => $data,
+        ]);
+    }
+    public function transferActTypes(){
+        $data = TransferActDictionary::type();
+        return response()->json([
+            'success' => true,
+            'code' => 200,
+            'data' => $data
         ]);
     }
 }

@@ -44,6 +44,37 @@
           </div>
         </div>
 
+        <!-- Акты -->
+        <div
+            class="category-card group bg-gradient-to-br from-rose-500 to-red-600 hover:from-rose-600 hover:to-red-700"
+            @click="navigateTo('/things/transfer-acts')"
+        >
+          <div class="absolute top-6 right-6">
+            <div class="bg-white/20 backdrop-blur-sm p-3">
+              <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </div>
+          </div>
+
+          <div class="flex-1 flex flex-col justify-end">
+            <h3 class="text-2xl font-bold text-white mb-3">
+              Акты
+            </h3>
+            <p class="text-rose-100/90 text-sm leading-relaxed">
+              Акты списания, акты передачи и акты приема материальных ценностей
+            </p>
+          </div>
+
+          <div class="mt-8 flex items-center justify-between">
+            <div class="bg-white/20 p-2 group-hover:bg-white/30 transition-colors">
+              <svg class="w-5 h-5 text-white transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
 <!--        &lt;!&ndash; Мебель &ndash;&gt;-->
 <!--        <div-->
 <!--            class="category-card group bg-gradient-to-br from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700"-->
@@ -152,7 +183,8 @@ const categories = ref({
   electronics: 42,
   furniture: 28,
   consumables: 156,
-  other: 19
+  other: 19,
+  acts: 15
 })
 
 // Методы

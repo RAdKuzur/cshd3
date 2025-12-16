@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Dictionaries\ConditionDictionary;
 use App\Dictionaries\ThingBalanceDictionary;
 use App\Dictionaries\ThingTypeDictionary;
+use App\Dictionaries\TransferActDictionary;
 use DateTime;
 use Exception;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -36,9 +37,6 @@ class ThingSeeder extends Seeder
                             'thing_type_id' => ThingTypeDictionary::ARM,
                             'thing_parent_id' => null,
                             'condition' => ConditionDictionary::OK,
-//                            'auditorium_id' => DB::table('auditoriums')->where([
-//                                'name' =>  $sheet->getCell('J' . $i)->getValue() .  $sheet->getCell('K' . $i)->getValue()
-//                            ])->first()->id,
                             'price' => (str_replace(',', '.', preg_replace('/\s+/u', '', $sheet->getCell('I' . $i)->getValue()))
                                 ? str_replace(',', '.', preg_replace('/\s+/u', '', $sheet->getCell('I' . $i)->getValue()))
                                 : 1),
@@ -67,5 +65,22 @@ class ThingSeeder extends Seeder
         else {
             echo 'file not found ' . self::EXCEL_PATH;
         }
+
+
+        $transferActId = DB::table('transfer_acts')->insertGetId([
+            'from' => 1,
+            'to' => 3,
+            'time' => now(),
+            'confirmed' => 1,
+            'type' => TransferActDictionary::TRANSFER,
+        ]);
+
+        foreach (DB::table('things')->get() as $things) {
+            DB::table('transfer_act_things')->insertGetId([
+               'thing_id' => $things->id,
+               'transfer_act_id' => $transferActId,
+            ]);
+        }
+
     }
 }

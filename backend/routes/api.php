@@ -7,10 +7,11 @@ use App\Http\Controllers\AuditoriumController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ElectronicsController;
 use App\Http\Controllers\InfoController;
+use App\Http\Controllers\PeopleController;
 use App\Http\Controllers\ReportController;
-use App\Http\Controllers\StuffController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\ThingController;
+use App\Http\Controllers\TransferActController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\AuthMiddleware;
 use App\Http\Middleware\CheckPermissionMiddleware;
@@ -24,13 +25,15 @@ Route::get('/info/thing-types', [InfoController::class, 'types'])->name('info.ty
 Route::get('/info/balance', [InfoController::class, 'balance'])->name('info.balance');
 Route::get('/info/departments', [InfoController::class, 'departments'])->name('info.departments');
 Route::get('/info/branches', [InfoController::class, 'branches'])->name('info.branches');
+Route::get('/info/transfer-acts/types', [InfoController::class, 'transferActTypes'])->name('info.branches');
+
 Route::get('/auditoriums/index', [AuditoriumController::class, 'index'])->name('auditorium.index');
 Route::get('/things/simple-electronics', [ElectronicsController::class, 'simpleElectronics'])->name('things.simple-electronics');
 
 Route::middleware([AuthMiddleware::class, CheckPermissionMiddleware::class])->group(function () {
     Route::get('/profile/{username}', [UserController::class, 'profile'])->name('profile');
 
-    Route::get('/stuff', [StuffController::class, 'stuff'])->name('stuff');
+    Route::get('/stuff', [PeopleController::class, 'stuff'])->name('stuff');
 
 
     Route::get('/things/electronics', [ElectronicsController::class, 'electronics'])->name('things.electronics');
@@ -64,6 +67,10 @@ Route::get('/reports/auditorium/{id}', [ReportController::class, 'auditorium'])-
 Route::get('/reports/auditoriums', [ReportController::class, 'auditoriums'])->name('reports.auditoriums');
 Route::get('/reports/things', [ReportController::class, 'things'])->name('reports.positions');
 Route::get('/reports/workstations', [ReportController::class, 'workstations'])->name('reports.workstations');
+
+Route::get('/transfer-acts/index', [TransferActController::class, 'index'])->name('transfer-acts.index');
+
+Route::get('/people/index', [PeopleController::class, 'index'])->name('people.index');
 
 Route::post('/test' , [TestController::class, 'test'])->name('test');
 Route::post('/tests' , [TestController::class, 'tests'])->name('tests');

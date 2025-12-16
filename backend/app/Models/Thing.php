@@ -21,7 +21,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  *
  * @property ThingResponsibility[] $thingResponsibilities
  * @property ThingAuditorium[] $thingAuditoriums
- *
+ * @property TransferActThing[] $transferActThings
 */
 
 
@@ -72,5 +72,8 @@ class Thing extends Model
     }
     public function thingResponsibilities(){
         return $this->hasMany(ThingResponsibility::class);
+    }
+    public function transferActThings(){
+        return $this->hasMany(TransferActThing::class);
     }
 }

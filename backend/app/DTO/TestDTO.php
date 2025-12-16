@@ -19,7 +19,7 @@ class TestDTO implements DTO
         $this->number = $number;
     }
 
-    public function fromArray(array $array) : self {
+    public static function fromArray(array $array) : self {
         return new self(
             $array['email'],
             $array['username'],
