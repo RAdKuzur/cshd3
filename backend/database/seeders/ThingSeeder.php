@@ -6,6 +6,7 @@ use App\Dictionaries\ConditionDictionary;
 use App\Dictionaries\ThingBalanceDictionary;
 use App\Dictionaries\ThingTypeDictionary;
 use App\Dictionaries\TransferActDictionary;
+use Carbon\Carbon;
 use DateTime;
 use Exception;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -18,69 +19,50 @@ class ThingSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public const EXCEL_PATH = __DIR__ . '/../../storage/excel/АРМ.xlsx';
     public function run(): void
     {
-        if (file_exists(self::EXCEL_PATH)) {
-            $spreadsheet = IOFactory::load(self::EXCEL_PATH);
-            $sheet = $spreadsheet->getActiveSheet();
-            DB::beginTransaction();
-            try {
-                for($i = 3; $i <= 2000; $i++) {
-                    if($sheet->getCell("C" . $i)->getValue()){
-                        $data = [
-                            'name' => $sheet->getCell('C' . $i)->getValue() ?: 'НЕИЗВЕСТНОЕ НАЗВАНИЕ',
-                            'serial_number' => $sheet->getCell('F' . $i)->getValue() ?: 'б/н',
-                            'inv_number' => $sheet->getCell('E' . $i)->getValue() ?: 'б/н',
-                            'operation_date' => (new DateTime('1899-12-31'))->modify('+' . ($sheet->getCell('H' . $i)->getValue() - ($sheet->getCell('H' . $i)->getValue() > 60 ? 1 : 0)) . ' days')->getTimestamp() > 0
-                                ? (new DateTime('1899-12-31'))->modify('+' . ($sheet->getCell('H' . $i)->getValue() - ($sheet->getCell('H' . $i)->getValue() > 60 ? 1 : 0)) . ' days')->format('Y-m-d') : null ,
-                            'thing_type_id' => ThingTypeDictionary::ARM,
-                            'thing_parent_id' => null,
-                            'condition' => ConditionDictionary::OK,
-                            'price' => (str_replace(',', '.', preg_replace('/\s+/u', '', $sheet->getCell('I' . $i)->getValue()))
-                                ? str_replace(',', '.', preg_replace('/\s+/u', '', $sheet->getCell('I' . $i)->getValue()))
-                                : 1),
-                            'comment' => null,
-                            'balance' => ThingBalanceDictionary::index($sheet->getCell('G' . $i)->getValue())
-                        ];
-                        $thingId = DB::table('things')->insertGetId($data);
-                        $auditoriumId = DB::table('auditoriums')->where([
-                                'name' =>  $sheet->getCell('J' . $i)->getValue() .  $sheet->getCell('K' . $i)->getValue()
-                            ])->first()->id;
-                        DB::table('thing_auditoriums')->insertGetId([
-                            'thing_id' => $thingId,
-                            'auditorium_id' => $auditoriumId,
-                            'start_date' => now(),
-                            'end_date' => null,
-                        ]);
-                    }
-                }
-                DB::commit();
-            } catch (Exception $e) {
-                DB::rollBack();
-                echo "Ошибка импорта: " . $e->getMessage();
-                throw $e;
-            }
-        }
-        else {
-            echo 'file not found ' . self::EXCEL_PATH;
-        }
-
-
-        $transferActId = DB::table('transfer_acts')->insertGetId([
-            'from' => 1,
-            'to' => 3,
-            'time' => now(),
-            'confirmed' => 1,
-            'type' => TransferActDictionary::TRANSFER,
-        ]);
-
-        foreach (DB::table('things')->get() as $things) {
-            DB::table('transfer_act_things')->insertGetId([
-               'thing_id' => $things->id,
-               'transfer_act_id' => $transferActId,
+        //things
+        DB::table('things')->truncate();
+        for($i = 1; $i <= 5000; $i++){
+            DB::table('things')->insert([
+                'name' => 'THING #' . $i,
+                'serial_number' => $i,
+                'inv_number' => $i,
+                'operation_date' => Carbon::create(
+                    rand(2000, 2025),
+                    rand(1, 12),
+                    rand(1, 28),
+                    rand(0, 23),
+                    rand(0, 59),
+                    rand(0, 59)
+                )->toDateTimeString(),
+                'thing_type_id' => array_rand(array_keys(ThingTypeDictionary::type())),
+                'thing_parent_id' => null,
+                'condition' => ConditionDictionary::OK,
+                'price' => rand(1, 100000),
+                'comment' => null,
+                'balance' => array_rand(array_keys(ThingBalanceDictionary::type()))
             ]);
         }
-
+        //thing_responsibilities
+        DB::table('thing_responsibilities')->truncate();
+        foreach (DB::table('things')->get() as $thing){
+            DB::table('thing_responsibilities')->insert([
+                'thing_id' => $thing->id,
+                'people_id' => DB::table('people')->inRandomOrder()->first()->id,
+                'start_date' => now(),
+                'end_date' => null,
+            ]);
+        }
+        //thing_auditoriums
+        DB::table('thing_auditoriums')->truncate();
+        foreach (DB::table('things')->get() as $thing){
+            DB::table('thing_auditoriums')->insert([
+                'thing_id' => $thing->id,
+                'auditorium_id' => DB::table('auditoriums')->inRandomOrder()->first()->id,
+                'start_date' => now(),
+                'end_date' => null,
+            ]);
+        }
     }
 }

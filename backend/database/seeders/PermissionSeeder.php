@@ -14,6 +14,8 @@ class PermissionSeeder extends Seeder
      */
     public function run(): void
     {
+        //rules
+        DB::table('rules')->truncate();
         $allRoutes = Route::getRoutes();
         foreach ($allRoutes as $index => $route) {
             if (trim($route->getName()) !== '' && $route->getName() !== 'storage.local') {
@@ -23,6 +25,8 @@ class PermissionSeeder extends Seeder
                 ]);
             }
         }
+        //permissions
+        DB::table('permissions')->truncate();
         foreach (DB::table('rules')->get() as $rule) {
             foreach (DB::table('users')->get() as $users) {
                 DB::table('permissions')->insert([

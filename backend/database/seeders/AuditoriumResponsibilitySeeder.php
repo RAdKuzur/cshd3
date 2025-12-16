@@ -14,13 +14,14 @@ class AuditoriumResponsibilitySeeder extends Seeder
     public function run(): void
     {
         //auditorium_responsibilities
-//        foreach (DB::table('auditorium_responsibilities')->get() as $auditorium) {
-//            DB::table('auditorium_responsibilities')->insert([
-//                'auditorium_id' => $auditorium->id,
-//                'people_id' =>  DB::table('people')->inRandomOrder()->first()->id,
-//                'start_date' => now(),
-//                'is_active' => true
-//            ]);
-//        }
+        DB::table('auditorium_responsibilities')->truncate();
+        foreach (DB::table('auditoriums')->get() as $auditorium) {
+            DB::table('auditorium_responsibilities')->insert([
+                'auditorium_id' => $auditorium->id,
+                'people_id' =>  DB::table('people')->inRandomOrder()->first()->id,
+                'start_date' => now(),
+                'end_date' => now(),
+            ]);
+        }
     }
 }

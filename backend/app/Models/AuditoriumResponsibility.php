@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $auditorium_id
  * @property int $people_id
  * @property \Illuminate\Support\Carbon $start_date
- * @property boolean $is_active
+ * @property \Illuminate\Support\Carbon $end_date
  *
  * @property Auditorium $auditorium
  * @property People $people
