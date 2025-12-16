@@ -499,7 +499,7 @@ const handleSubmit = async () => {
 
     // Отправка данных на сервер
     const response = await axios.post(
-        BACKEND_URL + '/api/things/create',
+        BACKEND_URL + '/api/things/store',
         dataToSend,
         {
           headers: {

@@ -39,7 +39,7 @@ Route::middleware([AuthMiddleware::class, CheckPermissionMiddleware::class])->gr
     Route::get('/things/electronics', [ElectronicsController::class, 'electronics'])->name('things.electronics');
     Route::get('/things/view/{id}', [ThingController::class, 'view'])->name('things.view');
     Route::get('/things/edit/{id}', [ThingController::class, 'edit'])->name('things.edit');
-    Route::post('/things/create', [ThingController::class, 'create'])->name('things.create');
+    Route::post('/things/store', [ThingController::class, 'store'])->name('things.store');
     Route::put('/things/update/{id}', [ThingController::class, 'update'])->name('things.update');
     Route::delete('/things/delete/{id}', [ThingController::class, 'delete'])->name('things.delete');
 
@@ -58,7 +58,7 @@ Route::middleware([AuthMiddleware::class, CheckPermissionMiddleware::class])->gr
 
     Route::get('/admin/users/index' , [AdminUserController::class, 'index'])->name('admin.users.index');
     Route::get('/admin/users/view/{id}' , [AdminUserController::class, 'show'])->name('admin.users.show');
-    Route::post('/admin/users/create' , [AdminUserController::class, 'store'])->name('admin.users.store');
+    Route::post('/admin/users/store' , [AdminUserController::class, 'store'])->name('admin.users.store');
     Route::put('/admin/users/update/{id}' , [AdminUserController::class, 'update'])->name('admin.users.update');
     Route::delete('/admin/users/delete/{id}' , [AdminUserController::class, 'delete'])->name('admin.users.delete');
 
@@ -70,7 +70,7 @@ Route::get('/reports/workstations', [ReportController::class, 'workstations'])->
 
 Route::get('/things/transfer-acts/index', [TransferActController::class, 'index'])->name('transfer-acts.index');
 Route::get('/things/transfer-acts/view/{id}', [TransferActController::class, 'view'])->name('transfer-acts.view');
-Route::post('/things/transfer-acts/create', [TransferActController::class, 'store'])->name('transfer-acts.store');
+Route::post('/things/transfer-acts/store', [TransferActController::class, 'store'])->name('transfer-acts.store');
 Route::put('/things/transfer-acts/update/{id}', [TransferActController::class, 'update'])->name('transfer-acts.update');
 Route::delete('/things/transfer-acts/delete/{id}', [TransferActController::class, 'delete'])->name('transfer-acts.delete');
 

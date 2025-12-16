@@ -453,7 +453,7 @@ const handleSubmit = async () => {
 
     // Отправка данных на сервер
     const response = await axios.post(
-        BACKEND_URL + '/api/admin/users/create',
+        BACKEND_URL + '/api/admin/users/store',
         dataToSend,
         {
           headers: {

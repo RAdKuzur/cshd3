@@ -18,7 +18,7 @@ class ThingController extends Controller
         $this->thingService = $thingService;
     }
 
-    public function create(ThingRequest $request){
+    public function store(ThingRequest $request){
         $data = $request->validated();
         $this->thingService->create($data);
         return response()->json([

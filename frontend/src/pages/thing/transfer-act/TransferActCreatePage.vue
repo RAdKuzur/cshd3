@@ -348,7 +348,7 @@ const submitForm = async () => {
     } else {
       // Создание нового акта
       response = await axios.post(
-          BACKEND_URL + '/api/things/transfer-acts/create',
+          BACKEND_URL + '/api/things/transfer-acts/store',
           payload
       )
     }
