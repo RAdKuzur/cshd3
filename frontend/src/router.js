@@ -28,6 +28,9 @@ import AdminUserViewPage from "@/pages/admin/user/AdminUserViewPage.vue";
 import ReportAuditoriumPage from "@/pages/report/ReportAuditoriumPage.vue";
 import ReportThingPage from "@/pages/report/ReportThingPage.vue";
 import TransferActPage from "@/pages/thing/transfer-act/TransferActPage.vue";
+import TransferActCreatePage from "@/pages/thing/transfer-act/TransferActCreatePage.vue";
+import TransferActViewPage from "@/pages/thing/transfer-act/TransferActViewPage.vue";
+import TransferActEditPage from "@/pages/thing/transfer-act/TransferActEditPage.vue";
 
 const BACKEND_URL = '';
 
@@ -64,7 +67,9 @@ const routes = [
     { path: '/things/electronics/edit/:id', component: ElectronicsEditPage, meta: { auth: true } },
 
     { path: '/things/transfer-acts', component: TransferActPage, meta: { auth: true } },
-
+    { path: '/things/transfer-acts/create', component: TransferActCreatePage, meta: { auth: true } },
+    { path: '/things/transfer-acts/view/:id', component: TransferActViewPage, meta: { auth: true } },
+    { path: '/things/transfer-acts/edit/:id', component: TransferActEditPage, meta: { auth: true } },
 ];
 
 const router = createRouter({

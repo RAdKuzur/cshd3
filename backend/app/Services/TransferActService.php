@@ -24,4 +24,17 @@ class TransferActService
         }
         return $data;
     }
+    public function get($id)
+    {
+        $transferAct = $this->transferActRepository->get($id);
+        return new TransferActDTO(
+            id: $transferAct->id,
+            from: $transferAct->from,
+            to: $transferAct->to,
+            time: $transferAct->time,
+            type: $transferAct->type,
+            confirmed: $transferAct->confirmed,
+            things: $transferAct->transferActThings()->pluck('thing_id')->toArray()
+        );
+    }
 }

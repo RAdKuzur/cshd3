@@ -6,17 +6,22 @@ use App\Models\People;
 
 class PeopleDTO implements DTO
 {
-    public int $id;
-    public string $firstname;
-    public string $surname;
+    public ?int $id;
+    public ?string $firstname;
+    public ?string $surname;
+    public ?string $patronymic;
     public function __construct(
-        int $id,
-        string $firstname,
-        string $surname,
+        ?int $id = null,
+        ?string $firstname = null,
+        ?string $surname = null,
+        ?string $patronymic = null
+
+
     ){
         $this->id = $id;
         $this->firstname = $firstname;
         $this->surname = $surname;
+        $this->patronymic = $patronymic;
     }
     public static function fromArray(array $array)
     {
@@ -25,6 +30,7 @@ class PeopleDTO implements DTO
             $array['id'],
             $array['firstname'],
             $array['surname'],
+            $array['patronymic'],
         );
     }
     public static function fromModel(People $model): self{
@@ -40,6 +46,7 @@ class PeopleDTO implements DTO
             'id' => $this->id,
             'firstname' => $this->firstname,
             'surname' => $this->surname,
+            'patronymic' => $this->patronymic,
         ];
     }
 }

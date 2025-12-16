@@ -23,4 +23,21 @@ class TransferActController extends Controller
             'data' => $transferActs
         ]);
     }
+    public function view($id)
+    {
+        $transferAct = $this->transferActService->get($id);
+        return response()->json([
+            'success' => true,
+            'data' => $transferAct
+        ]);
+    }
+    public function store(Request $request){
+
+    }
+    public function update(Request $request, $id){
+
+    }
+    public function delete($id){
+
+    }
 }

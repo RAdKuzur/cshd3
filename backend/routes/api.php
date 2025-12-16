@@ -68,7 +68,11 @@ Route::get('/reports/auditoriums', [ReportController::class, 'auditoriums'])->na
 Route::get('/reports/things', [ReportController::class, 'things'])->name('reports.positions');
 Route::get('/reports/workstations', [ReportController::class, 'workstations'])->name('reports.workstations');
 
-Route::get('/transfer-acts/index', [TransferActController::class, 'index'])->name('transfer-acts.index');
+Route::get('/things/transfer-acts/index', [TransferActController::class, 'index'])->name('transfer-acts.index');
+Route::get('/things/transfer-acts/view/{id}', [TransferActController::class, 'view'])->name('transfer-acts.view');
+Route::post('/things/transfer-acts/create', [TransferActController::class, 'store'])->name('transfer-acts.store');
+Route::put('/things/transfer-acts/update/{id}', [TransferActController::class, 'update'])->name('transfer-acts.update');
+Route::delete('/things/transfer-acts/delete/{id}', [TransferActController::class, 'delete'])->name('transfer-acts.delete');
 
 Route::get('/people/index', [PeopleController::class, 'index'])->name('people.index');
 
