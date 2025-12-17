@@ -31,7 +31,9 @@ Route::get('/auditoriums/index', [AuditoriumController::class, 'index'])->name('
 Route::get('/things/simple-electronics', [ElectronicsController::class, 'simpleElectronics'])->name('things.simple-electronics');
 
 Route::post('/things/composite-store', [ThingController::class, 'compositeStore'])->name('things.composite-store');
-
+Route::get('/things/index', [ThingController::class, 'index'])->name('things.index');
+Route::get('/things/person/{id}', [ThingController::class, 'personThings'])->name('things.person');
+Route::get('/things/free', [ThingController::class, 'free'])->name('things.free');
 Route::middleware([AuthMiddleware::class, CheckPermissionMiddleware::class])->group(function () {
     Route::get('/profile/{username}', [UserController::class, 'profile'])->name('profile');
 

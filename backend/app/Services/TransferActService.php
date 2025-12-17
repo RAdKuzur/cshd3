@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\DTO\TransferActDTO;
 use App\Repositories\TransferActRepository;
+use Illuminate\Support\Facades\DB;
 
 class TransferActService
 {
@@ -36,5 +37,16 @@ class TransferActService
             confirmed: $transferAct->confirmed,
             things: $transferAct->transferActThings()->pluck('thing_id')->toArray()
         );
+    }
+    public function create(TransferActDTO $transferActDTO){
+        DB::beginTransaction();
+        try {
+            $this->transferActRepository->create($transferActDTO->toArray());
+            DB::commit();
+        }
+        catch (\Exception $exception){
+            throw $exception;
+            DB::rollBack();
+        }
     }
 }

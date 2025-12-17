@@ -4,24 +4,25 @@ namespace App\DTO;
 
 use Carbon\Carbon;
 
-class ThingDTO
+class ThingDTO implements DTO
 {
     /**
      * @param ThingChildDTO[] $children
      */
     public function __construct(
-        public readonly string $name,
-        public readonly ?string $serial_number,
-        public readonly ?string $inv_number,
-        public readonly Carbon $operation_date,
-        public readonly int $thing_type_id,
-        public readonly int $condition,
-        public readonly float $balance,
-        public readonly int $auditorium_id,
-        public readonly ?float $price,
-        public readonly ?string $comment,
-        public readonly bool $is_composite,
-        public readonly array $children = [],
+        public readonly ?string $id = null,
+        public readonly ?string $name = null,
+        public readonly ?string $serial_number = null,
+        public readonly ?string $inv_number= null,
+        public readonly ?Carbon $operation_date = null,
+        public readonly ?int $thing_type_id= null,
+        public readonly ?int $condition = null,
+        public readonly ?float $balance = null,
+        public readonly ?int $auditorium_id = null,
+        public readonly ?float $price = null,
+        public readonly ?string $comment = null,
+        public readonly ?bool $is_composite = null,
+        public readonly ?array $children = [],
     ) {}
 
     public static function fromArray(array $data): self

@@ -21,6 +21,31 @@ class ThingController extends Controller
         $this->thingService = $thingService;
     }
 
+    public function index(){
+        $data = $this->thingService->getActualAll();
+        return response()->json([
+            'success' => true,
+            'data' => $data,
+        ]);
+    }
+
+    public function personThings($id)
+    {
+        $data = $this->thingService->getPersonThings($id);
+        return response()->json([
+            'success' => true,
+            'data' => $data,
+        ]);
+    }
+
+    public function free()
+    {
+        $data = $this->thingService->free();
+        return response()->json([
+            'success' => true,
+            'data' => $data
+        ]);
+    }
     public function compositeStore(StoreThingRequest $request) {
         $dto = ThingDTO::fromArray($request->validated());
         $result = $this->thingService->compositeCreate($dto);
@@ -51,7 +76,6 @@ class ThingController extends Controller
             'data' => $model,
         ]);
     }
-
 
     public function edit($id){
         $model = $this->thingService->get($id);

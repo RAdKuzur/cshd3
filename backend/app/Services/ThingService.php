@@ -91,7 +91,63 @@ class ThingService
             return $e->getMessage();
         }
     }
+    public function getActualAll()
+    {
+        $data = [];
+        $things = $this->thingRepository->getAll();
+        foreach ($things as $thing){
+            $data[] = new ThingDTO(
+                id: $thing->id,
+                name: $thing->name,
+                inv_number: $thing->inv_number,
+                operation_date: $thing->operation_date,
+                thing_type_id: $thing->thing_type_id,
+                price: $thing->price,
+                comment: $thing->comment,
+            );
+        }
+        return $data;
+    }
 
+    public function free()
+    {
+        $data = [];
+        $things = $this->thingRepository->getAll();
+        foreach ($things as $thing){
+            if(!$thing->getActualMaster()) {
+                $data[] = new ThingDTO(
+                    id: $thing->id,
+                    name: $thing->name,
+                    inv_number: $thing->inv_number,
+                    operation_date: $thing->operation_date,
+                    thing_type_id: $thing->thing_type_id,
+                    price: $thing->price,
+                    comment: $thing->comment
+                );
+            }
+        }
+        return $data;
+    }
+
+    public function getPersonThings($id)
+    {
+        $data = [];
+        $things = $this->thingRepository->getAll();
+        foreach ($things as $thing){
+            if($thing->getActualMaster()->id == $id){
+                $data[] = new ThingDTO(
+                    id: $thing->id,
+                    name: $thing->name,
+                    inv_number: $thing->inv_number,
+                    operation_date: $thing->operation_date,
+                    thing_type_id: $thing->thing_type_id,
+                    price: $thing->price,
+                    comment: $thing->comment,
+                );
+            }
+        }
+        return $data;
+    }
     public function create($data)
     {
         DB::beginTransaction();

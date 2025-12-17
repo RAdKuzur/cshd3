@@ -2,7 +2,7 @@
 
 namespace App\DTO;
 
-class ThingChildDTO
+class ThingChildDTO implements DTO
 {
     public function __construct(
         public readonly string $name,

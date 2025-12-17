@@ -59,7 +59,6 @@ class TransferActDTO implements DTO
 
     public function toArray() : array {
         return [
-            'id' => $this->id,
             'from' => $this->from,
             'to' => $this->to,
             'time' => $this->time,

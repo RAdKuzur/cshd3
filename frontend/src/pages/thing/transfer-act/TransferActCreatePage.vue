@@ -52,16 +52,44 @@
         <form @submit.prevent="submitForm">
           <div class="p-8 space-y-6">
 
-            <!-- Основные поля -->
+            <!-- Тип акта -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                Тип акта *
+              </label>
+              <select
+                  v-model="formData.type"
+                  required
+                  @change="onTypeChange"
+                  class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-indigo-500"
+                  :disabled="isEditMode"
+              >
+                <option value="">Выберите тип акта</option>
+                <option
+                    v-for="(label, id) in actTypes"
+                    :key="id"
+                    :value="id"
+                >
+                  {{ label }}
+                </option>
+              </select>
+              <p v-if="formErrors.type" class="mt-1 text-sm text-red-600">
+                {{ formErrors.type }}
+              </p>
+            </div>
+
+            <!-- Поля с людьми -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <!-- От кого -->
-              <div>
+              <!-- От кого - показываем для актов приёма и передачи -->
+              <div v-if="showFromField">
                 <label class="block text-sm font-medium text-gray-700 mb-2">
-                  От кого *
+                  {{ fromFieldLabel }} *
                 </label>
                 <select
                     v-model="formData.from"
                     required
+                    :disabled="isEditMode || isThingsLoading"
+                    @change="onPersonChange('from')"
                     class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-indigo-500"
                 >
                   <option value="">Выберите сотрудника</option>
@@ -76,16 +104,27 @@
                 <p v-if="formErrors.from" class="mt-1 text-sm text-red-600">
                   {{ formErrors.from }}
                 </p>
+                <div v-if="isThingsLoading && formData.from" class="mt-2">
+                  <div class="flex items-center text-gray-500">
+                    <svg class="animate-spin h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                    </svg>
+                    Загрузка материальных ценностей...
+                  </div>
+                </div>
               </div>
 
-              <!-- Кому -->
-              <div>
+              <!-- Кому - показываем для актов передачи и списания -->
+              <div v-if="showToField">
                 <label class="block text-sm font-medium text-gray-700 mb-2">
-                  Кому *
+                  {{ toFieldLabel }} *
                 </label>
                 <select
                     v-model="formData.to"
                     required
+                    :disabled="isEditMode"
+                    @change="onPersonChange('to')"
                     class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-indigo-500"
                 >
                   <option value="">Выберите сотрудника</option>
@@ -103,28 +142,84 @@
               </div>
             </div>
 
-            <!-- Тип акта -->
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">
-                Тип акта *
-              </label>
-              <select
-                  v-model="formData.type"
-                  required
-                  class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-indigo-500"
-              >
-                <option value="">Выберите тип акта</option>
-                <option
-                    v-for="(label, id) in actTypes"
-                    :key="id"
-                    :value="id"
-                >
-                  {{ label }}
-                </option>
-              </select>
-              <p v-if="formErrors.type" class="mt-1 text-sm text-red-600">
-                {{ formErrors.type }}
-              </p>
+            <!-- Материальные ценности -->
+            <div v-if="showThingsSection && formData.type">
+              <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                  Материальные ценности *
+                </label>
+
+                <!-- Поиск по инвентарному номеру -->
+                <div class="mb-4">
+                  <input
+                      type="text"
+                      v-model="searchQuery"
+                      @input="filterThings"
+                      placeholder="Поиск по инвентарному номеру или названию..."
+                      class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
+                  />
+                </div>
+
+                <div v-if="filteredThings.length === 0" class="text-gray-500 italic">
+                  {{ isThingsLoading ? 'Загрузка...' : 'Нет доступных материальных ценностей' }}
+                </div>
+
+                <!-- Выбор материальных ценностей -->
+                <div v-else class="space-y-3 max-h-96 overflow-y-auto pr-2">
+                  <div v-for="thing in filteredThings" :key="thing.id" class="flex items-center p-3 border rounded-lg hover:bg-gray-50">
+                    <input
+                        type="checkbox"
+                        :id="`thing-${thing.id}`"
+                        :value="thing.id"
+                        v-model="selectedThings"
+                        class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                    />
+                    <label :for="`thing-${thing.id}`" class="ml-3 flex-1 cursor-pointer">
+                      <div class="flex justify-between items-start">
+                        <div>
+                          <span class="font-medium text-gray-900">{{ thing.name }}</span>
+                          <div class="text-sm text-gray-500 mt-1 space-y-1">
+                            <div>Инв. номер: {{ thing.inv_number }}</div>
+                            <div>Серийный номер: {{ thing.serial_number }}</div>
+                            <div>Цена: {{ thing.price }} руб.</div>
+                            <div v-if="thing.auditorium_id">Аудитория: {{ thing.auditorium_id }}</div>
+                          </div>
+                        </div>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+
+                <p v-if="formErrors.things" class="mt-1 text-sm text-red-600">
+                  {{ formErrors.things }}
+                </p>
+              </div>
+
+              <!-- Выбранные материальные ценности -->
+              <div v-if="selectedThings.length > 0" class="mt-6">
+                <h3 class="text-lg font-medium text-gray-900 mb-3">Выбранные материальные ценности</h3>
+                <div class="space-y-3">
+                  <div v-for="thingId in selectedThings" :key="thingId" class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div>
+                      <span class="font-medium text-gray-900">
+                        {{ getThingById(thingId)?.name || 'Неизвестный объект' }}
+                      </span>
+                      <div class="text-sm text-gray-500 mt-1">
+                        Инв. номер: {{ getThingById(thingId)?.inv_number || '-' }}
+                      </div>
+                    </div>
+                    <button
+                        type="button"
+                        @click="removeThing(thingId)"
+                        class="text-red-600 hover:text-red-800 p-1"
+                    >
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <!-- Статус подтверждения -->
@@ -149,19 +244,6 @@
               <p class="text-gray-900">
                 {{ formatDateTime(formData.time) }}
               </p>
-            </div>
-
-            <!-- Описание/комментарий -->
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">
-                Комментарий
-              </label>
-              <textarea
-                  v-model="formData.comment"
-                  rows="3"
-                  class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-indigo-500"
-                  placeholder="Дополнительная информация..."
-              ></textarea>
             </div>
           </div>
 
@@ -225,7 +307,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios'
 import { BACKEND_URL } from '@/router.js'
@@ -238,22 +320,62 @@ const actId = route.params.id
 
 // Данные формы
 const formData = ref({
+  type: '',
   from: '',
   to: '',
-  type: '',
   confirmed: false,
-  comment: '',
   time: ''
 })
+
+const selectedThings = ref([]) // Выбранные материальные ценности
+const availableThings = ref([]) // Доступные материальные ценности
+const filteredThings = ref([]) // Отфильтрованные материальные ценности
+const thingsMap = ref({}) // Карта материальных ценностей для быстрого поиска
+const searchQuery = ref('') // Поисковый запрос
 
 const formErrors = ref({})
 const successMessage = ref('')
 const errorMessage = ref('')
 const isSubmitting = ref(false)
+const isThingsLoading = ref(false)
 
 // Справочные данные
 const peopleList = ref([])
 const actTypes = ref({})
+
+// Вычисляемые свойства для отображения полей
+const showFromField = computed(() => {
+  // Показываем поле "От кого" для актов приёма (1) и передачи (2)
+  return formData.value.type === '1' || formData.value.type === '2'
+})
+
+const showToField = computed(() => {
+  // Показываем поле "Кому" для актов передачи (2) и списания (3)
+  return formData.value.type === '2' || formData.value.type === '3'
+})
+
+const fromFieldLabel = computed(() => {
+  if (formData.value.type === '1') return 'От кого (принял)'
+  if (formData.value.type === '2') return 'От кого'
+  return ''
+})
+
+const toFieldLabel = computed(() => {
+  if (formData.value.type === '2') return 'Кому'
+  if (formData.value.type === '3') return 'Кому (списано)'
+  return ''
+})
+
+const showThingsSection = computed(() => {
+  // Для типа 1 (прием) - показываем вещи сразу после выбора типа
+  // Для типа 2 и 3 - показываем после выбора человека
+  if (formData.value.type === '1') {
+    return true
+  } else if (formData.value.type === '2' || formData.value.type === '3') {
+    return formData.value.from !== ''
+  }
+  return false
+})
 
 // Загрузка справочных данных
 const loadReferenceData = async () => {
@@ -276,6 +398,116 @@ const loadReferenceData = async () => {
   }
 }
 
+// Загрузка материальных ценностей
+const loadThings = async () => {
+  if (!formData.value.type) {
+    availableThings.value = []
+    filteredThings.value = []
+    thingsMap.value = {}
+    return
+  }
+
+  isThingsLoading.value = true
+  availableThings.value = []
+  filteredThings.value = []
+  thingsMap.value = {}
+  searchQuery.value = ''
+
+  try {
+    let response
+
+    if (formData.value.type === '1') {
+      // Для акта приёма - свободные материальные ценности
+      response = await axios.get(BACKEND_URL + '/api/things/free')
+    } else if (formData.value.type === '2' || formData.value.type === '3') {
+      // Для актов передачи и списания - материальные ценности у выбранного человека
+      if (!formData.value.from) {
+        console.log('Ожидание выбора человека для типа', formData.value.type)
+        return
+      }
+      response = await axios.get(BACKEND_URL + `/api/things/person/${formData.value.from}`)
+    } else {
+      return
+    }
+
+    console.log('Загрузка вещей для типа:', formData.value.type, 'Ответ:', response.data)
+
+    if (response.data.success) {
+      availableThings.value = response.data.data || []
+      filteredThings.value = [...availableThings.value]
+
+      // Создаем карту для быстрого поиска по ID
+      response.data.data.forEach(thing => {
+        thingsMap.value[thing.id] = thing
+      })
+    }
+  } catch (error) {
+    console.error('Ошибка загрузки материальных ценностей:', error)
+    errorMessage.value = 'Ошибка загрузки материальных ценностей'
+  } finally {
+    isThingsLoading.value = false
+  }
+}
+
+// Фильтрация вещей по поисковому запросу
+const filterThings = () => {
+  if (!searchQuery.value.trim()) {
+    filteredThings.value = [...availableThings.value]
+    return
+  }
+
+  const query = searchQuery.value.toLowerCase().trim()
+  filteredThings.value = availableThings.value.filter(thing => {
+    return (
+        thing.inv_number?.toLowerCase().includes(query) ||
+        thing.name?.toLowerCase().includes(query) ||
+        thing.serial_number?.toLowerCase().includes(query)
+    )
+  })
+}
+
+// Получение информации о материальной ценности по ID
+const getThingById = (id) => {
+  return thingsMap.value[id]
+}
+
+// Удаление выбранной материальной ценности
+const removeThing = (thingId) => {
+  selectedThings.value = selectedThings.value.filter(id => id !== thingId)
+}
+
+// Обработчик изменения типа акта
+const onTypeChange = async () => {
+  // Сбрасываем поля людей и выбранные материальные ценности
+  formData.value.from = ''
+  formData.value.to = ''
+  selectedThings.value = []
+  availableThings.value = []
+  filteredThings.value = []
+  thingsMap.value = {}
+  searchQuery.value = ''
+
+  // Сбрасываем ошибки
+  formErrors.value = {}
+  errorMessage.value = ''
+
+  // Если выбран тип 1 (прием), сразу загружаем вещи
+  if (formData.value.type === '1') {
+    await loadThings()
+  }
+}
+
+// Обработчик изменения выбранного человека
+const onPersonChange = async (field) => {
+  if (field === 'from' && (formData.value.type === '2' || formData.value.type === '3')) {
+    // Для актов передачи и списания при изменении "от кого" загружаем материальные ценности
+    await loadThings()
+  }
+
+  // Сбрасываем выбранные материальные ценности
+  selectedThings.value = []
+}
+
 // Загрузка данных акта для редактирования
 const loadActData = async () => {
   if (!isEditMode.value) return
@@ -286,12 +518,21 @@ const loadActData = async () => {
     if (response.data.success) {
       const actData = response.data.data
       formData.value = {
+        type: actData.type?.toString() || '',
         from: actData.from || '',
         to: actData.to || '',
-        type: actData.type || '',
         confirmed: Boolean(actData.confirmed),
-        comment: actData.comment || '',
         time: actData.time
+      }
+
+      // Загружаем вещи после установки типа
+      if (formData.value.type) {
+        await loadThings()
+
+        // Если есть данные о связанных материальных ценностях
+        if (actData.things && Array.isArray(actData.things)) {
+          selectedThings.value = actData.things.map(thing => thing.id)
+        }
       }
     }
   } catch (error) {
@@ -309,16 +550,25 @@ const submitForm = async () => {
 
   try {
     // Валидация
-    if (!formData.value.from) {
-      formErrors.value.from = 'Выберите отправителя'
-    }
-    if (!formData.value.to) {
-      formErrors.value.to = 'Выберите получателя'
-    }
     if (!formData.value.type) {
       formErrors.value.type = 'Выберите тип акта'
     }
-    if (formData.value.from === formData.value.to) {
+
+    if (showFromField.value && !formData.value.from) {
+      formErrors.value.from = `Выберите ${fromFieldLabel.value.toLowerCase()}`
+    }
+
+    if (showToField.value && !formData.value.to) {
+      formErrors.value.to = `Выберите ${toFieldLabel.value.toLowerCase()}`
+    }
+
+    // Проверка, что выбран хотя бы один материальный объект
+    if (selectedThings.value.length === 0) {
+      formErrors.value.things = 'Выберите хотя бы одну материальную ценность'
+    }
+
+    // Для акта передачи проверяем, что отправитель и получатель не совпадают
+    if (formData.value.type === '2' && formData.value.from === formData.value.to) {
       errorMessage.value = 'Отправитель и получатель не могут быть одним и тем же лицом'
       isSubmitting.value = false
       return
@@ -331,16 +581,16 @@ const submitForm = async () => {
 
     // Подготовка данных для отправки
     const payload = {
-      from: formData.value.from,
-      to: formData.value.to,
-      type: formData.value.type,
-      confirmed: formData.value.confirmed ? 1 : 0,
-      comment: formData.value.comment || ''
+      type: parseInt(formData.value.type),
+      from: formData.value.from || null,
+      to: formData.value.to || null,
+      things: selectedThings.value
     }
+
+    console.log('Отправка данных:', payload)
 
     let response
     if (isEditMode.value) {
-      // Редактирование существующего акта
       response = await axios.put(
           BACKEND_URL + `/api/things/transfer-acts/update/${actId}`,
           payload
@@ -390,6 +640,23 @@ const formatDateTime = (dateString) => {
     minute: '2-digit'
   })
 }
+
+// Наблюдатель за изменениями типа акта
+watch(() => formData.value.type, async (newType) => {
+  if (newType) {
+    // Для типа 1 сразу загружаем вещи
+    if (newType === '1') {
+      await loadThings()
+    }
+  }
+})
+
+// Наблюдатель за изменением человека "от кого" для загрузки материальных ценностей
+watch(() => formData.value.from, async (newFrom) => {
+  if (newFrom && (formData.value.type === '2' || formData.value.type === '3')) {
+    await loadThings()
+  }
+})
 
 // Загружаем данные при монтировании компонента
 onMounted(async () => {

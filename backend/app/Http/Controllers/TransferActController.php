@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TransferActRequest;
 use App\Models\TransferAct;
 use App\Services\TransferActService;
 use Illuminate\Http\Request;
@@ -31,10 +32,14 @@ class TransferActController extends Controller
             'data' => $transferAct
         ]);
     }
-    public function store(Request $request){
-
+    public function store(TransferActRequest $request){
+        $transferAct = $request->toTransferActDTO();
+        $this->transferActService->create($transferAct);
+        return response()->json([
+            'success' => true
+        ]);
     }
-    public function update(Request $request, $id){
+    public function update(TransferActRequest $request, $id){
 
     }
     public function delete($id){

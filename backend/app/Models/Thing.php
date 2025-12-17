@@ -55,6 +55,13 @@ class Thing extends Model
     {
         return $this->belongsTo(Thing::class, 'thing_parent_id');
     }
+    public function getActualMaster(){
+        return $this->thingResponsibilities()->where([
+            'end_date' => null,
+        ])->first() ? $this->thingResponsibilities()->where([
+            'end_date' => null,
+        ])->first()->people : null;
+    }
     public function getCurrentLocation(){
         return $this->thingAuditoriums()->where([
             'end_date' => null,
