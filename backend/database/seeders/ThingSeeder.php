@@ -41,7 +41,8 @@ class ThingSeeder extends Seeder
                 'condition' => ConditionDictionary::OK,
                 'price' => rand(1, 100000),
                 'comment' => null,
-                'balance' => array_rand(array_keys(ThingBalanceDictionary::type()))
+                'balance' => array_rand(array_keys(ThingBalanceDictionary::type())),
+                'is_composite' => false
             ]);
         }
         //thing_responsibilities

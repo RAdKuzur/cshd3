@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Dictionaries\ConditionDictionary;
 use App\Dictionaries\ThingTypeDictionary;
+use App\DTO\ThingDTO;
 use App\Repositories\ThingRepository;
 use Illuminate\Support\Facades\DB;
 
@@ -68,6 +69,29 @@ class ThingService
             'balance' => $model->balance,
         ];
     }
+
+    public function compositeCreate(ThingDTO $dto) {
+        DB::beginTransaction();
+        try {
+            $thinId = $this->thingRepository->create($dto->toArray());
+
+
+            if ($dto->is_composite && !empty($dto->children)) {
+                foreach ($dto->children as $childDTO) {
+
+                    $childData = $childDTO->toArray();
+                    $childData['thing_parent_id'] = $thinId;
+
+                    $this->thingRepository->create($childData);
+                }
+            }
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $e->getMessage();
+        }
+    }
+
     public function create($data)
     {
         DB::beginTransaction();

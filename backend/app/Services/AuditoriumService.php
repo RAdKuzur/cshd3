@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\DTO\AuditoriumDTO;
 use App\Models\Auditorium;
 use App\Models\ThingAuditorium;
 use App\Repositories\AuditoriumRepository;
@@ -69,20 +70,20 @@ class AuditoriumService
         }
         return $data;
     }
-    public function create($data){
+    public function create(AuditoriumDTO $dto){
         DB::beginTransaction();
         try {
-            $this->auditoriumRepository->create($data);
+            $this->auditoriumRepository->create($dto->toArray());
             DB::commit();
         }
         catch (\Exception $e){
             DB::rollBack();
         }
     }
-    public function update($id, $data){
+    public function update($id, AuditoriumDTO $dto){
         DB::beginTransaction();
         try {
-            $this->auditoriumRepository->update($id, $data);
+            $this->auditoriumRepository->update($id, $dto->toArray());
             DB::commit();
         }
         catch (\Exception $e){

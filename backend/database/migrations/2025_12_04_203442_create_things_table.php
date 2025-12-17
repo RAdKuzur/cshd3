@@ -26,6 +26,7 @@ return new class extends Migration
             $table->integer('balance')->nullable();
             $table->float('price')->nullable()->default(0);
             $table->string('comment')->nullable();
+            $table->boolean('is_composite')->nullable()->default(false);
             $table->timestamps();
         });
         Schema::create('thing_responsibilities', function (Blueprint $table) {

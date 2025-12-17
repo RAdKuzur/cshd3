@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DTO\AuditoriumDTO;
 use App\Http\Requests\AuditoriumRequest;
 use App\Services\AuditoriumService;
 use Illuminate\Http\Request;
@@ -27,7 +28,8 @@ class AdminAuditoriumController extends Controller
 
     public function store(AuditoriumRequest $request){
         $data = $request->validated();
-        $this->auditoriumService->create($data);
+        $auditoriumDTO = AuditoriumDTO::fromArray($data);
+        $this->auditoriumService->create($auditoriumDTO);
         return response()->json([
             'success' => true,
             'code' => 200,
@@ -35,7 +37,8 @@ class AdminAuditoriumController extends Controller
     }
     public function update(AuditoriumRequest $request, $id){
         $data = $request->validated();
-        $this->auditoriumService->update($id, $data);
+        $auditoriumDTO = AuditoriumDTO::fromArray($data);
+        $this->auditoriumService->update($id, $auditoriumDTO);
         return response()->json([
             'success' => true,
             'code' => 200,

@@ -31,7 +31,7 @@ class ThingRepository
             'extra_bindings' => null,
             'time' => now()
         ]);
-        return DB::table("things")->insert($data);
+        return DB::table("things")->insertGetId($data);
     }
     public function update($id, $data){
         DB::table('logs')->insert([

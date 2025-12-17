@@ -30,6 +30,8 @@ Route::get('/info/transfer-acts/types', [InfoController::class, 'transferActType
 Route::get('/auditoriums/index', [AuditoriumController::class, 'index'])->name('auditorium.index');
 Route::get('/things/simple-electronics', [ElectronicsController::class, 'simpleElectronics'])->name('things.simple-electronics');
 
+Route::post('/things/composite-store', [ThingController::class, 'compositeStore'])->name('things.composite-store');
+
 Route::middleware([AuthMiddleware::class, CheckPermissionMiddleware::class])->group(function () {
     Route::get('/profile/{username}', [UserController::class, 'profile'])->name('profile');
 

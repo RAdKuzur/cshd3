@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Dictionaries\ConditionDictionary;
 use App\Dictionaries\ThingTypeDictionary;
+use App\DTO\ThingDTO;
+use App\Http\Requests\StoreThingRequest;
 use App\Http\Requests\ThingRequest;
+use App\Models\Thing;
 use App\Repositories\ThingRepository;
 use App\Services\ThingService;
 
@@ -16,6 +19,19 @@ class ThingController extends Controller
     )
     {
         $this->thingService = $thingService;
+    }
+
+    public function compositeStore(StoreThingRequest $request) {
+        $dto = ThingDTO::fromArray($request->validated());
+        $result = $this->thingService->compositeCreate($dto);
+
+        return response()->json(
+            [
+                'message' => $result,
+                'success' => true,
+                'code' => 200,
+            ]
+        );
     }
 
     public function store(ThingRequest $request){
@@ -35,6 +51,8 @@ class ThingController extends Controller
             'data' => $model,
         ]);
     }
+
+
     public function edit($id){
         $model = $this->thingService->get($id);
         return response()->json([
