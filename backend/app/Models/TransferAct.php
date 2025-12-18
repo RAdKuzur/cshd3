@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $type
  *
  * @property People $fromPerson
- * @property People $toPeople
+ * @property People $toPerson
  * @property TransferActThing[] $transferActThings
 */
 class TransferAct extends Model

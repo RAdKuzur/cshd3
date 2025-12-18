@@ -134,7 +134,7 @@ class ThingService
         $data = [];
         $things = $this->thingRepository->getAll();
         foreach ($things as $thing){
-            if($thing->getActualMaster()->id == $id){
+            if($thing->getActualMaster() && $thing->getActualMaster()->id == $id){
                 $data[] = new ThingDTO(
                     id: $thing->id,
                     name: $thing->name,

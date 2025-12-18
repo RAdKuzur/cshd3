@@ -346,23 +346,23 @@ const actTypes = ref({})
 // Вычисляемые свойства для отображения полей
 const showFromField = computed(() => {
   // Показываем поле "От кого" для актов приёма (1) и передачи (2)
-  return formData.value.type === '1' || formData.value.type === '2'
+  return formData.value.type === '3' || formData.value.type === '2'
 })
 
 const showToField = computed(() => {
   // Показываем поле "Кому" для актов передачи (2) и списания (3)
-  return formData.value.type === '2' || formData.value.type === '3'
+  return formData.value.type === '2' || formData.value.type === '1'
 })
 
 const fromFieldLabel = computed(() => {
-  if (formData.value.type === '1') return 'От кого (принял)'
+  if (formData.value.type === '3') return 'МОЛ списания'
   if (formData.value.type === '2') return 'От кого'
   return ''
 })
 
 const toFieldLabel = computed(() => {
   if (formData.value.type === '2') return 'Кому'
-  if (formData.value.type === '3') return 'Кому (списано)'
+  if (formData.value.type === '1') return 'МОЛ зачисления'
   return ''
 })
 

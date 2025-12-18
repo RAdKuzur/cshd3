@@ -21,7 +21,7 @@ class TransferActThing extends Model
     public function thing(){
         return $this->belongsTo(Thing::class);
     }
-    public function transfer_act(){
+    public function transferAct(){
         return $this->belongsTo(TransferAct::class);
     }
 

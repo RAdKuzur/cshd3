@@ -7,6 +7,7 @@ use App\Repositories\ThingRepository;
 use App\Repositories\TransferActRepository;
 use App\Repositories\TransferActThingRepository;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class TransferActService
 {
@@ -54,12 +55,13 @@ class TransferActService
                 $thing = $this->thingRepository->get($thingId);
                 $this->transferActThingRepository->create([
                     'thing_id' => $thing->id,
-                    'transferAct_id' => $transferActDTOId
+                    'transfer_act_id' => $transferActDTOId
                 ]);
             }
             DB::commit();
         }
         catch (\Exception $exception){
+            Log::debug($exception->getMessage());
             DB::rollBack();
         }
     }

@@ -28,7 +28,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Thing extends Model
 {
     use HasFactory;
-
+    protected $table = 'things';
     protected $fillable = [
         'name',
         'serial_number',
@@ -54,8 +54,14 @@ class Thing extends Model
     {
         return $this->belongsTo(Thing::class, 'thing_parent_id');
     }
-    public function getActualMaster(){
-        /* нужно написать */
+    public function getActualMaster()
+    {
+        return $this->transferActThings()
+            ->join('transfer_acts', 'transfer_act_things.transfer_act_id', '=', 'transfer_acts.id')
+            ->orderBy('transfer_acts.time', 'desc')
+            ->first()
+            ?->transferAct
+            ?->toPerson ;
     }
     public function getCurrentLocation(){
         return $this->thingAuditoriums()->where([
