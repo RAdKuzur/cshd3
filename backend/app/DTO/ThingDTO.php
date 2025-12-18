@@ -28,18 +28,18 @@ class ThingDTO implements DTO
     public static function fromArray(array $data): self
     {
         return new self(
-            $data['name'],
-            $data['serial_number'] ?? null,
-            $data['inv_number'] ?? null,
-            Carbon::parse($data['operation_date']),
-            $data['thing_type_id'],
-            $data['condition'],
-            (float)$data['balance'],
-            $data['auditorium_id'],
-            isset($data['price']) ? (float)$data['price'] : null,
-            $data['comment'] ?? null,
-            (bool)$data['is_composite'],
-            self::mapChildren($data['children'] ?? []),
+            name: $data['name'],
+            serial_number: $data['serial_number'] ?? null,
+            inv_number: $data['inv_number'] ?? null,
+            operation_date: Carbon::parse($data['operation_date']),
+            thing_type_id: (int) $data['thing_type_id'],
+            condition: (int) $data['condition'],
+            balance: (float) $data['balance'],
+            auditorium_id: $data['auditorium_id'] ?? null,
+            price: isset($data['price']) ? (float)$data['price'] : null,
+            comment: $data['comment'] ?? null,
+            is_composite: (bool) $data['is_composite'],
+            children: self::mapChildren($data['children'] ?? []),
         );
     }
 

@@ -109,7 +109,7 @@
                   Тип предмета *
                 </label>
                 <select
-                    v-model="formData.thing_type_id"
+                    v-model.number="formData.thing_type_id"
                     required
                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
                 >
@@ -125,6 +125,20 @@
                 <p class="mt-1 text-sm text-gray-500">
                   Категория основного средства
                 </p>
+              </div>
+
+              <!-- Переключатель составного предмета -->
+              <div v-if="isArmType" class="md:col-span-2">
+                <label class="flex items-center gap-3 cursor-pointer">
+                  <input
+                      type="checkbox"
+                      v-model="formData.is_composite"
+                      class="w-5 h-5 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                  />
+                  <span class="text-sm font-medium text-gray-700">
+                    Составной предмет (АРМ)
+                  </span>
+                </label>
               </div>
 
               <!-- Характеристика учёта -->
@@ -264,6 +278,112 @@
             </div>
           </div>
 
+          <!-- Составные элементы -->
+          <div v-if="formData.is_composite" class="mb-8">
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">
+              Составные элементы
+            </h2>
+
+            <div class="space-y-4">
+              <div
+                  v-for="(child, index) in formData.children"
+                  :key="index"
+                  class="border border-gray-200 rounded-xl p-4 bg-gray-50"
+              >
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                  <div>
+                    <label class="text-sm font-medium text-gray-700">Название *</label>
+                    <input
+                        v-model="child.name"
+                        type="text"
+                        class="w-full px-3 py-2 border rounded-lg"
+                    />
+                  </div>
+
+                  <div>
+                    <label class="text-sm font-medium text-gray-700">Тип *</label>
+                    <select
+                        v-model="child.thing_type_id"
+                        class="w-full px-3 py-2 border rounded-lg"
+                    >
+                      <option value="">Выберите тип</option>
+                      <option
+                          v-for="(name, id) in types"
+                          :key="id"
+                          :value="id"
+                      >
+                        {{ name }}
+                      </option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label class="text-sm font-medium text-gray-700">Серийный номер</label>
+                    <input
+                        v-model="child.serial_number"
+                        type="text"
+                        class="w-full px-3 py-2 border rounded-lg"
+                    />
+                  </div>
+
+                  <div>
+                    <label class="text-sm font-medium text-gray-700">Инвентарный номер</label>
+                    <input
+                        v-model="child.inv_number"
+                        type="text"
+                        class="w-full px-3 py-2 border rounded-lg"
+                    />
+                  </div>
+
+                  <div>
+                    <label class="text-sm font-medium text-gray-700">Цена</label>
+                    <input
+                        v-model.number="child.price"
+                        type="number"
+                        step="0.01"
+                        class="w-full px-3 py-2 border rounded-lg"
+                    />
+                  </div>
+
+                  <div>
+                    <label class="text-sm font-medium text-gray-700">Состояние</label>
+                    <select
+                        v-model="child.condition"
+                        class="w-full px-3 py-2 border rounded-lg"
+                    >
+                      <option value="">—</option>
+                      <option
+                          v-for="(label, key) in conditions"
+                          :key="key"
+                          :value="parseInt(key)"
+                      >
+                        {{ label }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+
+                <button
+                    type="button"
+                    @click="removeChild(index)"
+                    class="mt-4 text-red-600 text-sm hover:underline"
+                >
+                  Удалить элемент
+                </button>
+              </div>
+            </div>
+
+            <button
+                type="button"
+                @click="addChild"
+                class="mt-4 px-4 py-2 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200"
+            >
+              ➕ Добавить элемент
+            </button>
+          </div>
+
+
           <!-- Кнопки действий -->
           <div class="flex items-center justify-end gap-4 pt-6 border-t border-gray-200">
             <router-link
@@ -329,25 +449,40 @@
 <script setup>
 import { ref, reactive, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import {createSimpleThing, createCompositeThing} from '@/requests/thingRequest.js'
 import axios from "axios"
+
 import {BACKEND_URL} from "@/router.js";
+import { computed } from 'vue'
+
+const ARM_TYPE_ID = 11
+
+
+const isArmType = computed(() => {
+  return formData.thing_type_id === ARM_TYPE_ID
+})
 
 const router = useRouter()
 
 // Данные формы
+
 const formData = reactive({
   name: '',
   serial_number: '',
   inv_number: '',
   operation_date: '',
   thing_type_id: '',
-  balance: '', // Добавляем поле для характеристики учёта
+  balance: '',
   thing_parent_id: '',
   auditorium_id: '',
   condition: '',
   price: 0,
-  comment: ''
+  comment: '',
+
+  is_composite: false,
+  children: []
 })
+
 
 // Динамические данные с сервера
 const types = ref({})
@@ -470,6 +605,7 @@ const getConditionLabel = (conditionId) => {
   return conditions.value[conditionId] || ''
 }
 
+
 // Обработка отправки формы
 const handleSubmit = async () => {
   try {
@@ -479,6 +615,7 @@ const handleSubmit = async () => {
       alert('Пожалуйста, заполните все обязательные поля')
       return
     }
+
 
     // Подготовка данных для отправки
     const dataToSend = {
@@ -492,21 +629,31 @@ const handleSubmit = async () => {
       auditorium_id: formData.auditorium_id ? parseInt(formData.auditorium_id) : null,
       condition: parseInt(formData.condition),
       price: parseFloat(formData.price),
-      comment: formData.comment || ''
+      comment: formData.comment || '',
+      is_composite: formData.is_composite,
+      children: formData.is_composite
+          ? formData.children.map(child => ({
+            ...child,
+            thing_type_id: Number(child.thing_type_id)
+          }))
+          : []
     }
 
     console.log('Отправляемые данные:', dataToSend)
 
+    const response = (formData.is_composite) ? await createCompositeThing(dataToSend) : await  createSimpleThing(dataToSend)
+
     // Отправка данных на сервер
-    const response = await axios.post(
-        BACKEND_URL + '/api/things/store',
-        dataToSend,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          }
-        }
-    )
+    // const response = await axios.post(
+    //     BACKEND_URL + '/api/things/store',
+    //     dataToSend,
+    //     {
+    //       headers: {
+    //         'Content-Type': 'application/json',
+    //       }
+    //     }
+    // )
+
 
     if (response.data && response.data.success) {
       alert('Предмет успешно создан!')
@@ -540,6 +687,21 @@ const handleSubmit = async () => {
   } finally {
     isSubmitting.value = false
   }
+}
+
+const addChild = () => {
+  formData.children.push({
+    name: '',
+    serial_number: '',
+    inv_number: '',
+    thing_type_id: '',
+    price: null,
+    condition: null
+  })
+}
+
+const removeChild = (index) => {
+  formData.children.splice(index, 1)
 }
 
 // Форматирование ключей для предпросмотра
