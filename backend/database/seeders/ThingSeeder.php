@@ -45,16 +45,6 @@ class ThingSeeder extends Seeder
                 'is_composite' => false
             ]);
         }
-        //thing_responsibilities
-        DB::table('thing_responsibilities')->truncate();
-        foreach (DB::table('things')->get() as $thing){
-            DB::table('thing_responsibilities')->insert([
-                'thing_id' => $thing->id,
-                'people_id' => DB::table('people')->inRandomOrder()->first()->id,
-                'start_date' => now(),
-                'end_date' => null,
-            ]);
-        }
         //thing_auditoriums
         DB::table('thing_auditoriums')->truncate();
         foreach (DB::table('things')->get() as $thing){

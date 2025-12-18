@@ -19,7 +19,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property float $price
  * @property string $comment
  *
- * @property ThingResponsibility[] $thingResponsibilities
  * @property ThingAuditorium[] $thingAuditoriums
  * @property TransferActThing[] $transferActThings
 */
@@ -56,11 +55,7 @@ class Thing extends Model
         return $this->belongsTo(Thing::class, 'thing_parent_id');
     }
     public function getActualMaster(){
-        return $this->thingResponsibilities()->where([
-            'end_date' => null,
-        ])->first() ? $this->thingResponsibilities()->where([
-            'end_date' => null,
-        ])->first()->people : null;
+        /* нужно написать */
     }
     public function getCurrentLocation(){
         return $this->thingAuditoriums()->where([
@@ -76,9 +71,6 @@ class Thing extends Model
     }
     public function thingAuditoriums(){
         return $this->hasMany(ThingAuditorium::class);
-    }
-    public function thingResponsibilities(){
-        return $this->hasMany(ThingResponsibility::class);
     }
     public function transferActThings(){
         return $this->hasMany(TransferActThing::class);

@@ -29,13 +29,6 @@ return new class extends Migration
             $table->boolean('is_composite')->nullable()->default(false);
             $table->timestamps();
         });
-        Schema::create('thing_responsibilities', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('thing_id')->constrained('things');
-            $table->foreignId('people_id')->constrained('people');
-            $table->date('start_date')->nullable();
-            $table->date('end_date')->nullable();
-        });
     }
 
     /**
@@ -43,7 +36,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('thing_responsibilities');
         Schema::dropIfExists('things');
     }
 };

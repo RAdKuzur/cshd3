@@ -16,7 +16,7 @@ class TransferActRepository
     }
     public function create($data)
     {
-        return DB::table('transfer_acts')->insert(array_merge($data, ['confirmed' => 0, 'time' => now()]));
+        return DB::table('transfer_acts')->insertGetId(array_merge($data, ['confirmed' => 0, 'time' => now()]));
     }
     public function update( $id, $data ){
         return DB::table('transfer_acts')->where('id', $id)->update($data);
