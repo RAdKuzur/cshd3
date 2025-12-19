@@ -32,6 +32,14 @@ class TransferActController extends Controller
             'data' => $transferAct
         ]);
     }
+    public function edit($id)
+    {
+        $transferAct = $this->transferActService->get($id);
+        return response()->json([
+            'success' => true,
+            'data' => $transferAct
+        ]);
+    }
     public function store(TransferActRequest $request){
         $transferAct = $request->toTransferActDTO();
         $this->transferActService->create($transferAct);
@@ -40,9 +48,13 @@ class TransferActController extends Controller
         ]);
     }
     public function update(TransferActRequest $request, $id){
-
+        return response()->json([
+            'success' => true
+        ]);
     }
     public function delete($id){
-
+        return response()->json([
+            'success' => true
+        ]);
     }
 }

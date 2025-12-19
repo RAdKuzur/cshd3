@@ -6,16 +6,20 @@ use App\Dictionaries\ConditionDictionary;
 use App\Dictionaries\ThingTypeDictionary;
 use App\DTO\ThingDTO;
 use App\Repositories\ThingRepository;
+use App\Repositories\TransferActRepository;
 use Illuminate\Support\Facades\DB;
 
 class ThingService
 {
     private ThingRepository $thingRepository;
+    private TransferActRepository $transferActRepository;
     public function __construct(
-        ThingRepository $thingRepository
+        ThingRepository $thingRepository,
+        TransferActRepository $transferActRepository
     )
     {
         $this->thingRepository = $thingRepository;
+        $this->transferActRepository = $transferActRepository;
     }
 
     public function electronics()
@@ -144,6 +148,27 @@ class ThingService
                     price: $thing->price,
                     comment: $thing->comment,
                 );
+            }
+        }
+        return $data;
+    }
+    public function getTransferActThings($id)
+    {
+        $data = [];
+        $transferAct = $this->transferActRepository->get($id);
+        if($transferAct){
+            foreach ($transferAct->transferActThings as $transferActThing){
+                if($transferActThing->thing) {
+                    $data[] = new ThingDTO(
+                        id: $transferActThing->thing->id,
+                        name: $transferActThing->thing->name,
+                        inv_number: $transferActThing->thing->inv_number,
+                        operation_date: $transferActThing->thing->operation_date,
+                        thing_type_id: $transferActThing->thing->thing_type_id,
+                        price: $transferActThing->thing->price,
+                        comment: $transferActThing->thing->comment,
+                    );
+                }
             }
         }
         return $data;

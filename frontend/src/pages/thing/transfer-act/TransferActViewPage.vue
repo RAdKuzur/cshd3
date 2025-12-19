@@ -1,6 +1,6 @@
 <template>
   <div class="p-6 bg-gradient-to-br from-gray-50 to-blue-50 min-h-screen">
-    <div class="max-w-4xl mx-auto">
+    <div class="max-w-6xl mx-auto">
 
       <!-- Хлебные крошки -->
       <div class="mb-6">
@@ -70,132 +70,238 @@
       </div>
 
       <!-- Основная информация -->
-      <div v-else class="bg-white rounded-2xl shadow-lg border overflow-hidden">
-        <div class="p-8">
-          <!-- Карточка с информацией -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <!-- Сторона "От кого" -->
-            <div class="space-y-4">
-              <div>
-                <h3 class="text-sm font-medium text-gray-500 mb-1">От кого</h3>
-                <p class="text-lg">
-                  {{ act.fromName || 'Не указано' }}
-                  <span v-if="!act.from" class="text-gray-400 text-sm ml-2">(ID не указан)</span>
-                </p>
+      <div v-else class="space-y-8">
+        <!-- Карточка с общей информацией -->
+        <div class="bg-white rounded-2xl shadow-lg border overflow-hidden">
+          <div class="p-8">
+            <!-- Карточка с информацией -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <!-- Сторона "От кого" -->
+              <div class="space-y-4">
+                <div>
+                  <h3 class="text-sm font-medium text-gray-500 mb-1">От кого</h3>
+                  <p class="text-lg">
+                    {{ act.fromName || 'Не указано' }}
+                    <span v-if="!act.from" class="text-gray-400 text-sm ml-2">(ID не указан)</span>
+                  </p>
+                </div>
+
+                <!-- Если есть ID, можно добавить кнопку просмотра сотрудника -->
+                <div v-if="act.from">
+                  <router-link
+                      :to="`/people/view/${act.from}`"
+                      class="inline-flex items-center text-indigo-600 hover:text-indigo-800"
+                  >
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                    </svg>
+                    Просмотреть сотрудника
+                  </router-link>
+                </div>
               </div>
 
-              <!-- Если есть ID, можно добавить кнопку просмотра сотрудника -->
-              <div v-if="act.from">
-                <router-link
-                    :to="`/people/view/${act.from}`"
-                    class="inline-flex items-center text-indigo-600 hover:text-indigo-800"
-                >
-                  <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                  </svg>
-                  Просмотреть сотрудника
-                </router-link>
+              <!-- Сторона "Кому" -->
+              <div class="space-y-4">
+                <div>
+                  <h3 class="text-sm font-medium text-gray-500 mb-1">Кому</h3>
+                  <p class="text-lg">
+                    {{ act.toName || 'Не указано' }}
+                    <span v-if="!act.to" class="text-gray-400 text-sm ml-2">(ID не указан)</span>
+                  </p>
+                </div>
+
+                <div v-if="act.to">
+                  <router-link
+                      :to="`/people/view/${act.to}`"
+                      class="inline-flex items-center text-indigo-600 hover:text-indigo-800"
+                  >
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                    </svg>
+                    Просмотреть сотрудника
+                  </router-link>
+                </div>
               </div>
             </div>
 
-            <!-- Сторона "Кому" -->
-            <div class="space-y-4">
+            <!-- Разделитель -->
+            <hr class="my-8">
+
+            <!-- Дополнительная информация -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <!-- Тип акта -->
               <div>
-                <h3 class="text-sm font-medium text-gray-500 mb-1">Кому</h3>
-                <p class="text-lg">
-                  {{ act.toName || 'Не указано' }}
-                  <span v-if="!act.to" class="text-gray-400 text-sm ml-2">(ID не указан)</span>
-                </p>
+                <h3 class="text-sm font-medium text-gray-500 mb-1">Тип акта</h3>
+                <p class="text-lg font-medium">{{ act.typeLabel }}</p>
+                <p class="text-sm text-gray-500 mt-1">Код: {{ act.type }}</p>
               </div>
 
-              <div v-if="act.to">
-                <router-link
-                    :to="`/people/view/${act.to}`"
-                    class="inline-flex items-center text-indigo-600 hover:text-indigo-800"
-                >
-                  <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                  </svg>
-                  Просмотреть сотрудника
-                </router-link>
+              <!-- Дата создания -->
+              <div>
+                <h3 class="text-sm font-medium text-gray-500 mb-1">Дата создания</h3>
+                <p class="text-lg">{{ formatDateTime(act.time) }}</p>
               </div>
+
+              <!-- ID акта -->
+              <div>
+                <h3 class="text-sm font-medium text-gray-500 mb-1">Идентификатор</h3>
+                <p class="text-lg font-mono">#{{ act.id }}</p>
+              </div>
+            </div>
+
+            <!-- Место для дополнительных деталей -->
+            <div v-if="additionalData" class="mt-8">
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">Дополнительные данные</h3>
+              <pre class="bg-gray-50 p-4 rounded-lg text-sm">{{ JSON.stringify(additionalData, null, 2) }}</pre>
             </div>
           </div>
 
-          <!-- Разделитель -->
-          <hr class="my-8">
-
-          <!-- Дополнительная информация -->
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <!-- Тип акта -->
-            <div>
-              <h3 class="text-sm font-medium text-gray-500 mb-1">Тип акта</h3>
-              <p class="text-lg font-medium">{{ act.typeLabel }}</p>
-              <p class="text-sm text-gray-500 mt-1">Код: {{ act.type }}</p>
+          <!-- Нижняя панель с действиями -->
+          <div class="px-8 py-4 bg-gray-50 border-t flex justify-between items-center">
+            <div class="text-sm text-gray-500">
+              ID: {{ act.id }}
             </div>
 
-            <!-- Дата создания -->
-            <div>
-              <h3 class="text-sm font-medium text-gray-500 mb-1">Дата создания</h3>
-              <p class="text-lg">{{ formatDateTime(act.time) }}</p>
-            </div>
+            <div class="flex gap-3">
+              <!-- Кнопка печати -->
+              <button
+                  @click="printAct"
+                  class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 flex items-center"
+              >
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
+                </svg>
+                Печать
+              </button>
 
-            <!-- ID акта -->
-            <div>
-              <h3 class="text-sm font-medium text-gray-500 mb-1">Идентификатор</h3>
-              <p class="text-lg font-mono">#{{ act.id }}</p>
-            </div>
-          </div>
+              <!-- Кнопка подтверждения/отмены -->
+              <!--            <button-->
+              <!--                v-if="!act.confirmed"-->
+              <!--                @click="confirmAct"-->
+              <!--                class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center"-->
+              <!--            >-->
+              <!--              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">-->
+              <!--                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>-->
+              <!--              </svg>-->
+              <!--              Подтвердить акт-->
+              <!--            </button>-->
 
-          <!-- Место для дополнительных деталей -->
-          <div v-if="additionalData" class="mt-8">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Дополнительные данные</h3>
-            <pre class="bg-gray-50 p-4 rounded-lg text-sm">{{ JSON.stringify(additionalData, null, 2) }}</pre>
+              <!--            <button-->
+              <!--                v-else-->
+              <!--                @click="unconfirmAct"-->
+              <!--                class="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 flex items-center"-->
+              <!--            >-->
+              <!--              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">-->
+              <!--                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>-->
+              <!--              </svg>-->
+              <!--              Отменить подтверждение-->
+              <!--            </button>-->
+            </div>
           </div>
         </div>
 
-        <!-- Нижняя панель с действиями -->
-        <div class="px-8 py-4 bg-gray-50 border-t flex justify-between items-center">
-          <div class="text-sm text-gray-500">
-            ID: {{ act.id }}
-          </div>
+        <!-- Карточка с материальными ценностями -->
+        <div class="bg-white rounded-2xl shadow-lg border overflow-hidden">
+          <div class="p-6">
+            <div class="flex justify-between items-center mb-6">
+              <h2 class="text-xl font-bold text-gray-900">
+                Материальные ценности
+                <span v-if="things && things.length > 0" class="text-sm font-normal text-gray-500 ml-2">
+                  ({{ things.length }} {{ pluralize(things.length, ['объект', 'объекта', 'объектов']) }})
+                </span>
+              </h2>
 
-          <div class="flex gap-3">
-            <!-- Кнопка печати -->
-            <button
-                @click="printAct"
-                class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 flex items-center"
-            >
-              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
-              </svg>
-              Печать
-            </button>
+              <!-- Суммарная стоимость -->
+              <div v-if="things && things.length > 0" class="text-lg font-semibold text-gray-900">
+                Итого: {{ formatCurrency(totalValue) }}
+              </div>
+            </div>
 
-            <!-- Кнопка подтверждения/отмены -->
-            <button
-                v-if="!act.confirmed"
-                @click="confirmAct"
-                class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center"
-            >
-              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-              </svg>
-              Подтвердить акт
-            </button>
+            <!-- Таблица с материальными ценностями -->
+            <div v-if="things && things.length > 0" class="overflow-x-auto">
+              <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                <tr>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Наименование
+                  </th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Инвентарный №
+                  </th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Серийный №
+                  </th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Тип
+                  </th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Дата ввода
+                  </th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Стоимость
+                  </th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Действия
+                  </th>
+                </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                <tr v-for="thing in things" :key="thing.id" class="hover:bg-gray-50">
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="font-medium text-gray-900">{{ thing.name || 'Без названия' }}</div>
+                    <div v-if="thing.comment" class="text-sm text-gray-500 mt-1">
+                      {{ thing.comment }}
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="text-gray-900">{{ thing.inv_number || '—' }}</span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="text-gray-900">{{ thing.serial_number || '—' }}</span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="text-gray-900">{{ thingTypes[thing.thing_type_id] || `Тип ${thing.thing_type_id}` }}</span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="text-gray-900">{{ formatDate(thing.operation_date) }}</span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="font-medium text-gray-900">{{ formatCurrency(thing.price) }}</span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <router-link
+                        :to="`/things/view/${thing.id}`"
+                        class="text-indigo-600 hover:text-indigo-900"
+                    >
+                      Просмотр
+                    </router-link>
+                  </td>
+                </tr>
+                </tbody>
+                <tfoot v-if="things && things.length > 0" class="bg-gray-50">
+                <tr>
+                  <td colspan="5" class="px-6 py-4 text-right font-medium text-gray-900">
+                    Итого:
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap font-bold text-gray-900">
+                    {{ formatCurrency(totalValue) }}
+                  </td>
+                  <td class="px-6 py-4"></td>
+                </tr>
+                </tfoot>
+              </table>
+            </div>
 
-            <button
-                v-else
-                @click="unconfirmAct"
-                class="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 flex items-center"
-            >
-              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            <!-- Сообщение об отсутствии материальных ценностей -->
+            <div v-else class="text-center py-12">
+              <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
               </svg>
-              Отменить подтверждение
-            </button>
+              <h3 class="mt-2 text-sm font-medium text-gray-900">Нет материальных ценностей</h3>
+              <p class="mt-1 text-sm text-gray-500">В данном акте передачи не указано материальных ценностей.</p>
+            </div>
           </div>
         </div>
       </div>
@@ -235,9 +341,17 @@ const act = ref({
   confirmed: false,
   time: ''
 })
+const things = ref([])
 const people = ref({})
 const actTypes = ref({})
+const thingTypes = ref({})
 const additionalData = ref(null)
+
+// Вычисляем суммарную стоимость
+const totalValue = computed(() => {
+  if (!things.value || !Array.isArray(things.value)) return 0
+  return things.value.reduce((sum, thing) => sum + (Number(thing.price) || 0), 0)
+})
 
 // Загрузка данных акта
 const loadActData = async () => {
@@ -251,50 +365,70 @@ const loadActData = async () => {
   error.value = ''
 
   try {
-    // Загружаем данные параллельно
-    const [actRes, peopleRes, typesRes] = await Promise.all([
-      axios.get(BACKEND_URL + `/api/things/transfer-acts/view/${actId}`),
-      axios.get(BACKEND_URL + '/api/people/index'),
-      axios.get(BACKEND_URL + '/api/info/transfer-acts/types')
-    ])
+    // Сначала загружаем основные данные акта
+    const actRes = await axios.get(BACKEND_URL + `/api/things/transfer-acts/view/${actId}`)
 
-    // Обработка ответов
-    if (!actRes.data.success) {
+    if (!actRes.data || !actRes.data.success) {
       throw new Error('Акт не найден')
     }
 
-    // Сохраняем данные сотрудников
-    if (peopleRes.data.success) {
+    const actData = actRes.data.data || {}
+
+    // Загружаем дополнительные данные параллельно
+    const [thingsRes, peopleRes, typesRes, thingTypesRes] = await Promise.all([
+      axios.get(BACKEND_URL + `/api/things/transfer-acts/things/${actId}`).catch(() => ({ data: { success: false, data: [] } })),
+      axios.get(BACKEND_URL + '/api/people/index').catch(() => ({ data: { success: false, data: [] } })),
+      axios.get(BACKEND_URL + '/api/info/transfer-acts/types').catch(() => ({ data: { success: false, data: {} } })),
+      axios.get(BACKEND_URL + '/api/info/thing-types').catch(() => ({ data: { success: false, data: [] } }))
+    ])
+
+    // Обрабатываем данные сотрудников
+    if (peopleRes.data && peopleRes.data.success && Array.isArray(peopleRes.data.data)) {
       people.value = Object.fromEntries(
-          peopleRes.data.data.map(p => [
-            p.id,
-            `${p.surname} ${p.firstname}`
-          ])
+          peopleRes.data.data
+              .filter(p => p && p.id)
+              .map(p => [p.id, `${p.surname || ''} ${p.firstname || ''}`.trim() || 'Неизвестно'])
       )
     }
 
-    // Сохраняем типы актов
-    if (typesRes.data.success) {
-      actTypes.value = typesRes.data.data
+    // Обрабатываем типы актов
+    if (typesRes.data && typesRes.data.success) {
+      actTypes.value = typesRes.data.data || {}
+    }
+
+    // Обрабатываем типы материальных ценностей
+    if (thingTypesRes.data && thingTypesRes.data.success && Array.isArray(thingTypesRes.data.data)) {
+      thingTypes.value = Object.fromEntries(
+          thingTypesRes.data.data
+              .filter(t => t && t.id)
+              .map(t => [t.id, t.name || `Тип ${t.id}`])
+      )
+    }
+
+    // Обрабатываем материальные ценности
+    if (thingsRes.data && thingsRes.data.success) {
+      things.value = Array.isArray(thingsRes.data.data) ? thingsRes.data.data : []
+    } else {
+      things.value = []
     }
 
     // Формируем данные акта
-    const actData = actRes.data.data
     act.value = {
-      id: actData.id,
-      from: actData.from,
-      to: actData.to,
-      fromName: actData.from ? people.value[actData.from] || 'Неизвестно' : 'Не указано',
-      toName: actData.to ? people.value[actData.to] || 'Неизвестно' : 'Не указано',
-      type: actData.type,
-      typeLabel: actTypes.value[actData.type] || `Тип ${actData.type}`,
+      id: actData.id || '',
+      from: actData.from || null,
+      to: actData.to || null,
+      fromName: actData.from ? (people.value[actData.from] || 'Неизвестно') : 'Не указано',
+      toName: actData.to ? (people.value[actData.to] || 'Неизвестно') : 'Не указано',
+      type: actData.type || '',
+      typeLabel: actTypes.value[actData.type] || `Тип ${actData.type || 'неизвестен'}`,
       confirmed: Boolean(actData.confirmed),
-      time: actData.time
+      time: actData.time || ''
     }
 
   } catch (err) {
-    error.value = err.response?.data?.message || err.message || 'Ошибка загрузки данных'
     console.error('Ошибка загрузки акта:', err)
+    error.value = err.response?.data?.message || err.message || 'Ошибка загрузки данных'
+    things.value = []
   } finally {
     isLoading.value = false
   }
@@ -348,17 +482,60 @@ const goBack = () => {
   router.push('/things/transfer-acts')
 }
 
-// Форматирование даты
+// Форматирование даты и времени
 const formatDateTime = (dateString) => {
   if (!dateString) return '—'
-  const date = new Date(dateString)
-  return date.toLocaleString('ru-RU', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-  })
+  try {
+    const date = new Date(dateString)
+    return date.toLocaleString('ru-RU', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    })
+  } catch {
+    return '—'
+  }
+}
+
+// Форматирование даты
+const formatDate = (dateString) => {
+  if (!dateString) return '—'
+  try {
+    const date = new Date(dateString)
+    return date.toLocaleDateString('ru-RU', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    })
+  } catch {
+    return '—'
+  }
+}
+
+// Форматирование валюты
+const formatCurrency = (value) => {
+  if (!value && value !== 0) return '0 ₽'
+  const numValue = Number(value)
+  if (isNaN(numValue)) return '0 ₽'
+
+  return new Intl.NumberFormat('ru-RU', {
+    style: 'currency',
+    currency: 'RUB',
+    minimumFractionDigits: 0
+  }).format(numValue)
+}
+
+// Функция для склонения существительных
+const pluralize = (number, words) => {
+  if (!number && number !== 0) return words[2]
+  const cases = [2, 0, 1, 1, 1, 2]
+  return words[
+      number % 100 > 4 && number % 100 < 20
+          ? 2
+          : cases[number % 10 < 5 ? number % 10 : 5]
+      ]
 }
 
 // Загружаем данные при монтировании компонента
@@ -389,6 +566,11 @@ watch(() => route.params.id, () => {
   .bg-white {
     box-shadow: none !important;
     border: 1px solid #000 !important;
+  }
+
+  a {
+    text-decoration: none !important;
+    color: black !important;
   }
 }
 </style>

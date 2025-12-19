@@ -46,6 +46,14 @@ class ThingController extends Controller
             'data' => $data
         ]);
     }
+    public function transferActThings($id)
+    {
+        $data = $this->thingService->getTransferActThings($id);
+        return response()->json([
+            'success' => true,
+            'data' => $data
+        ]);
+    }
     public function compositeStore(StoreThingRequest $request) {
         $dto = ThingDTO::fromArray($request->validated());
         $result = $this->thingService->compositeCreate($dto);

@@ -34,7 +34,7 @@ Route::post('/things/composite-store', [ThingController::class, 'compositeStore'
 Route::get('/things/index', [ThingController::class, 'index'])->name('things.index');
 Route::get('/things/person/{id}', [ThingController::class, 'personThings'])->name('things.person');
 Route::get('/things/free', [ThingController::class, 'free'])->name('things.free');
-Route::middleware([AuthMiddleware::class, CheckPermissionMiddleware::class])->group(function () {
+Route::middleware([])->group(function () {
     Route::get('/profile/{username}', [UserController::class, 'profile'])->name('profile');
 
     Route::get('/stuff', [PeopleController::class, 'stuff'])->name('stuff');
@@ -74,10 +74,11 @@ Route::get('/reports/workstations', [ReportController::class, 'workstations'])->
 
 Route::get('/things/transfer-acts/index', [TransferActController::class, 'index'])->name('transfer-acts.index');
 Route::get('/things/transfer-acts/view/{id}', [TransferActController::class, 'view'])->name('transfer-acts.view');
+Route::get('/things/transfer-acts/edit/{id}', [TransferActController::class, 'edit'])->name('transfer-acts.edit');
 Route::post('/things/transfer-acts/store', [TransferActController::class, 'store'])->name('transfer-acts.store');
 Route::put('/things/transfer-acts/update/{id}', [TransferActController::class, 'update'])->name('transfer-acts.update');
 Route::delete('/things/transfer-acts/delete/{id}', [TransferActController::class, 'delete'])->name('transfer-acts.delete');
-
+Route::get('/things/transfer-acts/things/{id}', [ThingController::class, 'transferActThings'])->name('things.transferActThings');
 Route::get('/people/index', [PeopleController::class, 'index'])->name('people.index');
 
 Route::post('/test' , [TestController::class, 'test'])->name('test');
