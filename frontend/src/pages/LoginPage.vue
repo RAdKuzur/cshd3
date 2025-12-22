@@ -191,51 +191,60 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import AuthService from "@/services/AuthService";
-import { useRouter } from "vue-router";
-import {
-  ScaleIcon,
-  EnvelopeIcon,
-  LockClosedIcon,
-  EyeIcon,
-  EyeSlashIcon,
-  ArrowRightIcon,
-  ArrowPathIcon,
-  CheckCircleIcon
-} from '@heroicons/vue/24/outline'
+      import { ref, computed } from 'vue'
+      import { useRouter } from "vue-router";
+      import { useAuthContextStore } from '@/services/AuthContext.js'
 
-const router = useRouter();
+      import {
+        ScaleIcon,
+        EnvelopeIcon,
+        LockClosedIcon,
+        EyeIcon,
+        EyeSlashIcon,
+        ArrowRightIcon,
+        ArrowPathIcon,
+        CheckCircleIcon
+      } from '@heroicons/vue/24/outline'
 
-const form = ref({
-  email: '',
-  password: '',
-  remember: false
-})
+      const router = useRouter();
+      const auth = useAuthContextStore(); // создаем экземпляр стора
 
-const loading = ref(false);
-const showPassword = ref(false);
-const showForgotPassword = ref(false);
-const errorMessage = ref(null);
+      const form = ref({
+        email: '',
+        password: '',
+        remember: false
+      })
 
-// Валидация email/login
-const loginValid = computed(() => form.value.email.length > 2);
+      const loading = ref(false);
+      const showPassword = ref(false);
+      const showForgotPassword = ref(false);
+      const errorMessage = ref(null);
 
-const handleLogin = async () => {
-  errorMessage.value = null;
-  if (!form.value.email || !form.value.password) {
-    errorMessage.value = "Введите логин и пароль";
-    return;
-  }
+      // валидация логина/email
+      const emailValid = computed(() => form.value.email.length > 3);
 
-  loading.value = true;
-  try {
-    await AuthService.login(form.value.email, form.value.password);
-    router.push("/home"); // если успешно, сразу на /home
-  } catch (e) {
-    errorMessage.value = e.response?.data?.message || "Ошибка входа";
-  } finally {
-    loading.value = false;
-  }
-};
+      const handleLogin = async () => {
+        errorMessage.value = null;
+
+        if (!form.value.email || !form.value.password) {
+          errorMessage.value = "Введите логин и пароль";
+          return;
+        }
+
+        loading.value = true;
+        try {
+          await auth.login(form.value.email, form.value.password);
+
+          // Если пользователь включил remember — можно сохранить токен в localStorage в самом store
+          if (form.value.remember) {
+            auth.persistTokens(); // необязательно — зависит от вашей реализации
+          }
+
+          router.push("/home");
+        } catch (e) {
+          errorMessage.value = e?.response?.data?.message || "Ошибка входа";
+        } finally {
+          loading.value = false;
+        }
+      };
 </script>

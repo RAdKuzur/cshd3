@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-//Route::get('/check', [AuthController::class, 'check'])->name('check');
+Route::post('/refresh', [AuthController::class, 'refresh'])->name('refresh');
 
 Route::get('/info/thing-types', [InfoController::class, 'types'])->name('info.types');
 Route::get('/info/balance', [InfoController::class, 'balance'])->name('info.balance');

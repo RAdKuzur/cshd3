@@ -32,7 +32,8 @@ class AuthController extends Controller
                 'message' => 'Успешный вход',
                 'username' => $user->username,
                 'fio' => $user->people->getFullFio(),
-
+                'position' => $user->people->getPosition(),
+                'role' => $user->role,
             ])
                 ->cookie('refresh_token', $tokens['refreshToken'], (int)env('REFRESH_TOKEN_TIME'))
                 ->cookie('access_token', $tokens['accessToken'], (int)env('ACCESS_TOKEN_TIME'));
@@ -46,6 +47,32 @@ class AuthController extends Controller
     }
     public function forgotPassword(Request $request)
     {
+
+    }
+
+    public function refresh(Request $request)
+    {
+        $refreshToken = $request->cookie('refresh_token');
+        if ($this->authService->validateToken($refreshToken)) {
+            $refresh_data = $this->authService->refresh($refreshToken);
+            return response()->json([
+                'success' => true,
+                'message' => 'Успешный вход',
+                'username' => $refresh_data['username'],
+                'fio' => $refresh_data['fio'],
+                'position' => $refresh_data['position'],
+                'role' => $refresh_data['role'],
+            ])
+                ->cookie('refresh_token', $refresh_data['refreshToken'], (int)env('REFRESH_TOKEN_TIME'))
+                ->cookie('access_token', $refresh_data['accessToken'], (int)env('ACCESS_TOKEN_TIME'));
+        }
+        else
+        {
+            return response()->json([
+                'success' => false,
+                'message' => 'Пустой refresh_token или неверный'
+            ], 401);
+        }
 
     }
     public function logout(Request $request){

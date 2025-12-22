@@ -15,7 +15,7 @@ class UserRepository
             'id' => $id
         ])->first();
     }
-    public function getByEmail($email){
+    public function getByEmail($email) : User {
         return User::where([
             'email' => $email
         ])->first();
