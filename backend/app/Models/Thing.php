@@ -66,7 +66,9 @@ class Thing extends Model
     public function getCurrentLocation(){
         return $this->thingAuditoriums()->where([
             'end_date' => null,
-        ])->first()->auditorium;
+        ])->first() ? $this->thingAuditoriums()->where([
+                'end_date' => null,
+            ])->first()->auditorium : null;
     }
     /**
      * Получить дочерние вещи
