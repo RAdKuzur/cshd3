@@ -80,6 +80,14 @@ class AuthService
             return false;
         }
     }
+    public function validateToken($refreshToken)
+    {
+        if (is_null($refreshToken) || !JWTAuth::setToken($refreshToken)->check()) {
+            return false;
+        }
+        $data = JWTAuth::setToken($refreshToken)->getPayload();
+        return count($this->tokenRepository->isValidToken($refreshToken, $data['user_id'])) > 0;
+    }
     public function refresh($refreshToken)
     {
         DB::beginTransaction();
@@ -104,6 +112,8 @@ class AuthService
                 'accessToken' => $accessToken,
                 'username' => $user->username,
                 'fio' => $user->people->getFullFio(),
+                'position' => $user->people->getPosition(),
+                'role' => $user->role,
             ];
         }
         catch (\Exception $e){
