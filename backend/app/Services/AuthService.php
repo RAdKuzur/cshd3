@@ -118,9 +118,9 @@ class AuthService
 
     }
 
-    public function hasAccess($userId, $rule)
+    public function hasAccess($role, $rule)
     {
         $ruleId = $this->ruleRepository->getByPath($rule) ? $this->ruleRepository->getByPath($rule)->id : 0;
-        return $this->permissionRepository->hasAccess($userId, $ruleId);
+        return $this->permissionRepository->hasAccess($role, $ruleId);
     }
 }

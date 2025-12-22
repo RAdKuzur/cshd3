@@ -6,9 +6,9 @@ use Illuminate\Support\Facades\DB;
 
 class PermissionRepository
 {
-    public function hasAccess($userId, $ruleId){
+    public function hasAccess($role, $ruleId){
         return DB::table('permissions')->where([
-            'user_id' => $userId,
+            'role' => $role,
             'rule_id' => $ruleId
         ])->exists();
     }

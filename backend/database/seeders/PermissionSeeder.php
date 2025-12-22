@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Dictionaries\RoleDictionary;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -28,12 +29,10 @@ class PermissionSeeder extends Seeder
         //permissions
         DB::table('permissions')->truncate();
         foreach (DB::table('rules')->get() as $rule) {
-            foreach (DB::table('users')->get() as $users) {
-                DB::table('permissions')->insert([
-                   'rule_id' => $rule->id,
-                   'user_id' => $users->id,
-                ]);
-            }
+            DB::table('permissions')->insert([
+               'rule_id' => $rule->id,
+               'role' => RoleDictionary::ADMIN,
+            ]);
         }
     }
 }

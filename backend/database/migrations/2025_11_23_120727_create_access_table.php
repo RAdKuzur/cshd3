@@ -19,7 +19,7 @@ return new class extends Migration
         });
         Schema::create('permissions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users');
+            $table->integer('role')->nullable(false);
             $table->foreignId('rule_id')->constrained('rules');
             $table->timestamps();
         });

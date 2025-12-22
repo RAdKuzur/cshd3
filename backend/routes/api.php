@@ -34,7 +34,7 @@ Route::post('/things/composite-store', [ThingController::class, 'compositeStore'
 Route::get('/things/index', [ThingController::class, 'index'])->name('things.index');
 Route::get('/things/person/{id}', [ThingController::class, 'personThings'])->name('things.person');
 Route::get('/things/free', [ThingController::class, 'free'])->name('things.free');
-Route::middleware([])->group(function () {
+Route::middleware([CheckPermissionMiddleware::class])->group(function () {
     Route::get('/profile/{username}', [UserController::class, 'profile'])->name('profile');
 
     Route::get('/stuff', [PeopleController::class, 'stuff'])->name('stuff');
