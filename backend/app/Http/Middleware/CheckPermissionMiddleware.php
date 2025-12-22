@@ -29,7 +29,7 @@ class CheckPermissionMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         $user = Auth::user();
-        if($this->authService->hasAccess($user->role, request()->route()->getName())) {
+        if($user && $this->authService->hasAccess($user->role, request()->route()->getName())) {
             return $next($request);
         }
         return response()->json([
