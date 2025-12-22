@@ -55,7 +55,7 @@ class AuditoriumService
             foreach($auditorium->people as $person){
                 $employees[] = [
                     'fio' => $person->getFullFio(),
-                    'position' => $person->getPosition(),
+                    'position' => $person->getPosition()->name,
                 ];
             }
             $data[] = [

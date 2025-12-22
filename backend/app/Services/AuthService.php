@@ -112,7 +112,7 @@ class AuthService
                 'accessToken' => $accessToken,
                 'username' => $user->username,
                 'fio' => $user->people->getFullFio(),
-                'position' => $user->people->getPosition(),
+                'position' => $user->people->getPosition()->name,
                 'role' => $user->role,
             ];
         }

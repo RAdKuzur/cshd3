@@ -32,8 +32,8 @@ class UserService
             'user' => [
                 'id' => $user->id,
                 'name' => $user->people->getFullFio(),
-                'position' => $user->people->getPosition(),
-                'department' => $user->people->getBranchName(),
+                'position' => $user->people->getPosition()->name,
+                'department' => $user->people->getBranch()->name,
                 'email' => $user->email,
                 'phone' => $user->people->phone_number,
                 'bio' => $user->people->getBio(),
