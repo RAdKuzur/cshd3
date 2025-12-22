@@ -37,7 +37,7 @@ class ThingService
                 'parent' => $electronic->parent ? $electronic->parent->inv_number : null,
                 'operation_date' => $electronic->operation_date,
                 'price' => $electronic->price,
-                'auditorium_id' => $electronic->getCurrentLocation()->id,
+                'auditorium_id' => $electronic->getCurrentLocation() ? $electronic->getCurrentLocation()->id : null,
                 'balance' => $electronic->balance,
             ];
         }
