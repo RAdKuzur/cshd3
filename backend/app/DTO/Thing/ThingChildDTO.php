@@ -1,6 +1,8 @@
 <?php
 
-namespace App\DTO;
+namespace App\DTO\Thing;
+
+use App\DTO\DTO;
 
 class ThingChildDTO implements DTO
 {

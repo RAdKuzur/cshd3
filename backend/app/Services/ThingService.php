@@ -2,9 +2,8 @@
 
 namespace App\Services;
 
-use App\Dictionaries\ConditionDictionary;
-use App\Dictionaries\ThingTypeDictionary;
-use App\DTO\ThingDTO;
+use App\DTO\Thing\ThingDTO;
+use App\DTO\Thing\UpdateThingDTO;
 use App\Repositories\ThingRepository;
 use App\Repositories\TransferActRepository;
 use Illuminate\Support\Facades\DB;
@@ -37,7 +36,7 @@ class ThingService
                 'parent' => $electronic->parent ? $electronic->parent->inv_number : null,
                 'operation_date' => $electronic->operation_date,
                 'price' => $electronic->price,
-                'auditorium_id' => $electronic->getCurrentLocation()->id,
+                'auditorium_id' => $electronic->getCurrentLocation() ? $electronic->getCurrentLocation()->id : null,
                 'balance' => $electronic->balance,
             ];
         }
@@ -183,17 +182,39 @@ class ThingService
             DB::rollBack();
         }
     }
-    public function update($id, $data)
-    {
-        DB::beginTransaction();
-        try {
-            $this->thingRepository->update($id, $data);
-            DB::commit();
-        } catch (\Exception $e) {
-            DB::rollBack();
-        }
 
+    public function update(int $id, UpdateThingDTO $dto): void
+    {
+        DB::transaction(function () use ($id, $dto) {
+
+            $thing = Thing::lockForUpdate()->findOrFail($id);
+
+            $thing->update([
+                'condition' => $dto->condition,
+                'comment' => $dto->comment,
+            ]);
+
+            if (!$thing->is_composite) {
+                return;
+            }
+
+            if (!empty($dto->childrenToDelete)) {
+                Thing::whereIn('id', $dto->childrenToDelete)
+                    ->where('parent_id', $thing->id)
+                    ->delete();
+            }
+
+            foreach ($dto->childrenToCreate as $childDTO) {
+                Thing::create([
+                    'name' => $childDTO->name,
+                    'thing_type_id' => $childDTO->thing_type_id,
+                    'price' => $childDTO->price,
+                    'parent_id' => $thing->id,
+                ]);
+            }
+        });
     }
+
     public function delete($id)
     {
         DB::beginTransaction();

@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Dictionaries\ConditionDictionary;
-use App\Dictionaries\ThingTypeDictionary;
-use App\DTO\ThingDTO;
-use App\Http\Requests\StoreThingRequest;
+use App\DTO\Thing\ThingDTO;
+use App\DTO\Thing\UpdateThingDTO;
 use App\Http\Requests\ThingRequest;
-use App\Models\Thing;
-use App\Repositories\ThingRepository;
+use App\Http\Requests\ThingRequest\StoreThingRequest;
+use App\Http\Requests\ThingRequest\UpdateThingRequest;
+
 use App\Services\ThingService;
 
 class ThingController extends Controller
@@ -67,6 +66,18 @@ class ThingController extends Controller
         );
     }
 
+    public function update(StoreThingRequest $request, $id) {
+        $dto = UpdateThingDTO::fromArray($request->validated());
+        $request = $this->thingService->update(id,$dto);
+        return response()->json(
+            [
+                'message' => $request,
+                'success' => true,
+                'code' => 200,
+            ]
+        );
+    }
+
     public function store(ThingRequest $request){
         $data = $request->validated();
         $this->thingService->create($data);
@@ -93,15 +104,17 @@ class ThingController extends Controller
             'data' => $model,
         ]);
     }
-    public function update(ThingRequest $request, $id)
-    {
-        $data = $request->validated();
-        $this->thingService->update($id, $data);
-        return response()->json([
-            'success' => true,
-            'code' => 200,
-        ]);
-    }
+
+
+//    public function update(ThingRequest $request, $id)
+//    {
+//        $data = $request->validated();
+//        $this->thingService->update($id, $data);
+//        return response()->json([
+//            'success' => true,
+//            'code' => 200,
+//        ]);
+//    }
     public function delete($id){
         $this->thingService->delete($id);
         return response()->json([

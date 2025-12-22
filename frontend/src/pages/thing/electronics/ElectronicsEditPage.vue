@@ -53,7 +53,7 @@
                 <input
                     v-model="formData.name"
                     type="text"
-                    required
+                    disabled
                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
                     placeholder="Например: Ноутбук Dell Latitude 5420"
                 />
@@ -70,6 +70,7 @@
                 <input
                     v-model="formData.serial_number"
                     type="text"
+                    disabled
                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
                     placeholder="Например: CN-0R3XX1-64180-2B9-016K"
                 />
@@ -86,6 +87,7 @@
                 <input
                     v-model="formData.inv_number"
                     type="text"
+                    disabled
                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
                     placeholder="Например: INV-2024-001"
                 />
@@ -102,6 +104,7 @@
                 <input
                     v-model="formData.operation_date"
                     type="date"
+                    disabled
                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
                 />
                 <p class="mt-1 text-sm text-gray-500">
@@ -126,6 +129,7 @@
                 <select
                     v-model="formData.thing_type_id"
                     required
+                    disabled
                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
                 >
                   <option value="">Выберите тип</option>
@@ -148,6 +152,7 @@
                   Характеристика учёта
                 </label>
                 <select
+                    disabled
                     v-model="formData.balance"
                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
                 >

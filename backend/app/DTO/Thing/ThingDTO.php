@@ -1,7 +1,8 @@
 <?php
 
-namespace App\DTO;
+namespace App\DTO\Thing;
 
+use App\DTO\DTO;
 use Carbon\Carbon;
 
 class ThingDTO implements DTO
