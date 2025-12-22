@@ -13,7 +13,6 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 * @property string $password
 * @property int $role
 * @property Token[] $tokens
-* @property Permission[] $permissions
 * @property People $people
 */
 
@@ -52,9 +51,6 @@ class User extends Authenticatable implements JWTSubject
     }
     public function tokens(){
         return $this->hasMany(Token::class);
-    }
-    public function permissions(){
-        return $this->hasMany(Permission::class);
     }
     public function people(){
         return $this->hasOne(People::class);
