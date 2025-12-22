@@ -54,17 +54,17 @@ class AuthController extends Controller
     {
         $refreshToken = $request->cookie('refresh_token');
         if ($this->authService->validateToken($refreshToken)) {
-            $refresh_data = $this->authService->refresh($refreshToken);
+            $refreshData = $this->authService->refresh($refreshToken);
             return response()->json([
                 'success' => true,
                 'message' => 'Успешный вход',
-                'username' => $refresh_data['username'],
-                'fio' => $refresh_data['fio'],
-                'position' => $refresh_data['position'],
-                'role' => $refresh_data['role'],
+                'username' => $refreshData['username'],
+                'fio' => $refreshData['fio'],
+                'position' => $refreshData['position'],
+                'role' => $refreshData['role'],
             ])
-                ->cookie('refresh_token', $refresh_data['refreshToken'], (int)env('REFRESH_TOKEN_TIME'))
-                ->cookie('access_token', $refresh_data['accessToken'], (int)env('ACCESS_TOKEN_TIME'));
+                ->cookie('refresh_token', $refreshData['refreshToken'], (int)env('REFRESH_TOKEN_TIME'))
+                ->cookie('access_token', $refreshData['accessToken'], (int)env('ACCESS_TOKEN_TIME'));
         }
         else
         {
