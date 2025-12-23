@@ -31,7 +31,7 @@ class TransferActRequest extends FormRequest
         ];
     }
 
-    public function toTransferActDTO(){
+    public function toTransferActDTO() : TransferActDTO {
         return new TransferActDTO(
             from: $this->validated('from'),
             to: $this->validated('to'),

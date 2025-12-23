@@ -19,16 +19,20 @@ class CheckPermissionMiddleware
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
     private AuthService $authService;
+    private VisitService $visitService;
     public function __construct(
-        AuthService $authService
+        AuthService $authService,
+        VisitService $visitService
     )
     {
         $this->authService = $authService;
+        $this->visitService = $visitService;
     }
 
     public function handle(Request $request, Closure $next): Response
     {
         $user = Auth::user();
+        $this->visitService->create();
         if($user && $this->authService->hasAccess($user->role, request()->route()->getName())) {
             return $next($request);
         }

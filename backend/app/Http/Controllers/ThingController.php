@@ -79,8 +79,8 @@ class ThingController extends Controller
     }
 
     public function create(ThingRequest $request){
-        $data = $request->validated();
-        $this->thingService->create($data);
+        $thing = $request->toThingDTO();
+        $this->thingService->create($thing);
         return response()->json([
             'success' => true,
             'code' => 200,

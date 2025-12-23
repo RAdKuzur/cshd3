@@ -38,7 +38,7 @@ class ThingSeeder extends Seeder
                 )->toDateTimeString(),
                 'thing_type_id' => array_rand(array_keys(ThingTypeDictionary::type())),
                 'thing_parent_id' => null,
-                'condition' => ConditionDictionary::OK,
+                'condition' => ConditionDictionary::NONE_BALANCE,
                 'price' => rand(1, 100000),
                 'comment' => null,
                 'balance' => array_rand(array_keys(ThingBalanceDictionary::type())),

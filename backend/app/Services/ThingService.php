@@ -2,23 +2,29 @@
 
 namespace App\Services;
 
+use App\Dictionaries\ConditionDictionary;
 use App\DTO\Thing\ThingDTO;
 use App\DTO\Thing\UpdateThingDTO;
+use App\Repositories\ThingAuditoriumRepository;
 use App\Repositories\ThingRepository;
 use App\Repositories\TransferActRepository;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ThingService
 {
     private ThingRepository $thingRepository;
     private TransferActRepository $transferActRepository;
+    private ThingAuditoriumRepository $thingAuditoriumRepository;
     public function __construct(
         ThingRepository $thingRepository,
-        TransferActRepository $transferActRepository
+        TransferActRepository $transferActRepository,
+        ThingAuditoriumRepository $thingAuditoriumRepository
     )
     {
         $this->thingRepository = $thingRepository;
         $this->transferActRepository = $transferActRepository;
+        $this->thingAuditoriumRepository = $thingAuditoriumRepository;
     }
 
     public function electronics() : array
@@ -69,7 +75,7 @@ class ThingService
             'operation_date' => $model->operation_date,
             'price' => $model->price,
             'comment' => $model->comment,
-            'auditorium_id' => $model->getCurrentLocation()->id,
+            'auditorium_id' => $model->getCurrentLocation() ? $model->getCurrentLocation()->id : null,
             'balance' => $model->balance,
         ];
     }
@@ -118,7 +124,7 @@ class ThingService
         $data = [];
         $things = $this->thingRepository->getAll();
         foreach ($things as $thing){
-            if(!$thing->getActualMaster()) {
+            if(!$thing->getActualMaster() && $thing->condition == ConditionDictionary::NONE_BALANCE) {
                 $data[] = new ThingDTO(
                     id: $thing->id,
                     name: $thing->name,
@@ -173,13 +179,20 @@ class ThingService
         }
         return $data;
     }
-    public function create($data)
+    public function create(ThingDTO $thing)
     {
         DB::beginTransaction();
         try {
-            $this->thingRepository->create($data);
+            $thingId = $this->thingRepository->create($thing->toArray());
+            $this->thingAuditoriumRepository->create([
+                'auditorium_id' => $thing->auditorium_id,
+                'thing_id' => $thingId,
+                'start_date' => now(),
+                'end_date' => null
+            ]);
             DB::commit();
         } catch (\Exception $e) {
+            Log::debug($e->getMessage());
             DB::rollBack();
         }
     }
