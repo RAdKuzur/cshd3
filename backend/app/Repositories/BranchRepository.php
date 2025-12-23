@@ -7,10 +7,10 @@ use Illuminate\Support\Facades\DB;
 
 class BranchRepository
 {
-    public function get($id){
-        return DB::table('branches')->where(['id' => $id])->get();
+    public function get($id) : Branch {
+        return Branch::find($id);
     }
     public function getAll(){
-        return DB::table('branches')->get();
+        return Branch::all();
     }
 }

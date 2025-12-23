@@ -7,7 +7,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class Auth
 {
-    public static function user(){
+    public static function user() : User|int {
         $accessToken = request()->cookie('access_token');
         $refreshToken = request()->cookie('refresh_token');
         if($refreshToken && JWTAuth::setToken($refreshToken)->check()){
@@ -17,7 +17,7 @@ class Auth
         }
         return 0;
     }
-    public static function check(){
+    public static function check() : bool {
         $accessToken = request()->cookie('access_token');
         $refreshToken = request()->cookie('refresh_token');
         return $refreshToken && JWTAuth::setToken($refreshToken)->check();

@@ -234,8 +234,8 @@ const loadData = async () => {
 
   try {
     const [actsRes, peopleRes, typesRes] = await Promise.all([
-      axios.get(BACKEND_URL + '/api/things/transfer-acts/index'),
-      axios.get(BACKEND_URL + '/api/people/index'),
+      axios.get(BACKEND_URL + '/api/transfer-acts'),
+      axios.get(BACKEND_URL + '/api/people'),
       axios.get(BACKEND_URL + '/api/info/transfer-acts/types')
     ])
 

@@ -54,7 +54,7 @@ class Thing extends Model
     {
         return $this->belongsTo(Thing::class, 'thing_parent_id');
     }
-    public function getActualMaster()
+    public function getActualMaster() : ?People
     {
         return $this->transferActThings()
             ->join('transfer_acts', 'transfer_act_things.transfer_act_id', '=', 'transfer_acts.id')
@@ -63,7 +63,7 @@ class Thing extends Model
             ?->transferAct
             ?->toPerson ;
     }
-    public function getCurrentLocation(){
+    public function getCurrentLocation() : ?Auditorium {
         return $this->thingAuditoriums()->where([
             'end_date' => null,
         ])->first() ? $this->thingAuditoriums()->where([

@@ -351,8 +351,8 @@ const loadData = async () => {
 
     // Загружаем данные параллельно
     const [usersResponse, auditoriumsResponse] = await Promise.all([
-      axios.get(BACKEND_URL + '/api/admin/users/index'),
-      axios.get(BACKEND_URL + '/api/auditoriums/index')
+      axios.get(BACKEND_URL + '/api/admin/users'),
+      axios.get(BACKEND_URL + '/api/auditoriums')
     ])
 
     // Сохраняем аудитории
@@ -565,7 +565,7 @@ const deleteUser = async () => {
 
   try {
     isLoading.value = true
-    await axios.delete(`${BACKEND_URL}/api/admin/users/delete/${userToDelete.value.id}`)
+    await axios.delete(`${BACKEND_URL}/api/admin/users/${userToDelete.value.id}`)
 
     // Удаляем пользователя из списка
     users.value = users.value.filter(user => user.id !== userToDelete.value.id)

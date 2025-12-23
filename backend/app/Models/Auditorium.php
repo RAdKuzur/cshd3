@@ -45,6 +45,9 @@ class Auditorium extends Model
     public function thingAuditoriums(){
         return $this->hasMany(ThingAuditorium::class);
     }
+    /**
+     * @return ThingAuditorium[]
+     */
     public function getActualThings()
     {
         return $this->thingAuditoriums()->where('end_date', null)->get();

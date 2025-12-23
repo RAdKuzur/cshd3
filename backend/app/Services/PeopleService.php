@@ -22,7 +22,7 @@ class PeopleService
         $this->branchRepository = $branchRepository;
         $this->peoplePositionRepository = $peoplePositionRepository;
     }
-    public function stuffAll()
+    public function stuffAll() : array
     {
         $data = [];
         $branches = $this->branchRepository->getAll();
@@ -47,7 +47,7 @@ class PeopleService
         }
         return $data;
     }
-    public function all(){
+    public function all() : array {
         $data = [];
         $people = $this->peopleRepository->getAll();
         foreach ($people as $person) {

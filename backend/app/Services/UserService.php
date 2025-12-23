@@ -25,7 +25,7 @@ class UserService
      * @return array
      * @var  User $user
      */
-    public function getProfileInfo($username)
+    public function getProfileInfo($username) : array
     {
         $user = $this->userRepository->getByUsername($username);
         return [
@@ -56,7 +56,8 @@ class UserService
             'education' => $user->people->getEducation(),
         ];
     }
-    public function getUserInfoAll(){
+    public function getUserInfoAll() : array
+    {
         $users = $this->userRepository->getAll();
         $data = [];
         foreach ($users as $user){
@@ -81,9 +82,9 @@ class UserService
         }
         return $data;
     }
-    public function getUserInfo($id)
+    public function getUserInfo($id) : array
     {
-        $user = $this->userRepository->getById($id);
+        $user = $this->userRepository->get($id);
         $data = $user ? [
             'id' => $user->id,
             'firstname' => $user->people->firstname,
@@ -118,7 +119,7 @@ class UserService
         DB::beginTransaction();
         try {
             $this->userRepository->update($id, $data);
-            $user = $this->userRepository->getById($id);
+            $user = $this->userRepository->get($id);
             $this->peopleRepository->updateByUserId($user->id, $data);
             DB::commit();
         }
@@ -129,7 +130,7 @@ class UserService
     public function delete($id){
         DB::beginTransaction();
         try {
-            $user = $this->userRepository->getById($id);
+            $user = $this->userRepository->get($id);
             $this->peopleRepository->deleteByUserId($user->id);
             $this->userRepository->delete($id);
             DB::commit();

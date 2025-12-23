@@ -435,7 +435,7 @@ const loadData = async () => {
     isLoading.value = true
     error.value = null
 
-    const response = await axios.get(BACKEND_URL + '/api/admin/positions/index')
+    const response = await axios.get(BACKEND_URL + '/api/admin/positions')
 
     if (response.data.success) {
       positions.value = response.data.data || []
@@ -584,8 +584,8 @@ const savePosition = async () => {
     formErrors.value = {}
 
     const url = editingPosition.value
-        ? `${BACKEND_URL}/api/admin/positions/update/${editingPosition.value.id}`
-        : `${BACKEND_URL}/api/admin/positions/store`
+        ? `${BACKEND_URL}/api/admin/positions/${editingPosition.value.id}`
+        : `${BACKEND_URL}/api/admin/positions`
 
     const method = editingPosition.value ? 'put' : 'post'
 
@@ -641,7 +641,7 @@ const confirmDelete = async () => {
   try {
     isDeleting.value = true
 
-    const response = await axios.delete(`${BACKEND_URL}/api/admin/positions/delete/${positionToDelete.value.id}`)
+    const response = await axios.delete(`${BACKEND_URL}/api/admin/positions/${positionToDelete.value.id}`)
 
     if (response.data.success) {
       // Показываем уведомление об успехе

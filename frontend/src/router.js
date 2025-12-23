@@ -77,38 +77,54 @@ const router = createRouter({
 
 // Pinia store
 let authStore
-router.beforeEach(async (to, from, next) => {
-    if (!authStore) authStore = useAuthContextStore()
+    router.beforeEach(async (to, from, next) => {
+        if (!authStore) authStore = useAuthContextStore()
 
-    // Logout route
-    if (to.path === '/logout') {
-        try {
+        // logout
+        if (to.path === '/logout') {
             await authStore.logout()
-        } catch (e) {
-            console.error('Ошибка при выходе:', e)
-        } finally {
             return next('/login')
         }
-    }
 
-    // Если маршрут не защищён
-    if (!to.meta.auth) return next()
-
-    // Проверяем авторизацию через refresh
-    if (!authStore.initialized) {
-        try {
-            await authStore.refresh()
-        } catch (e) {
-            console.error('Ошибка refresh:', e)
+        // публичные маршруты
+        if (!to.meta.auth) {
+            return next()
         }
-    }
 
-    if (authStore.user) {
+        // если уже знаем, что пользователь не авторизован
+        if (authStore.initialized && !authStore.user) {
+            console.log("ТУТА")
+            if (to.path !== '/login') {
+                return next('/login')
+            }
+            return next()
+        }
+
+        // refresh один раз
+        if (!authStore.initialized && !authStore.refreshing) {
+            try {
+                authStore.refreshing = true
+                await authStore.refresh()
+            } catch {
+                // ignore
+            } finally {
+                authStore.initialized = true
+                authStore.refreshing = false
+            }
+        }
+
+        if (authStore.user) {
+            return next()
+        }
+
+        if (to.path !== '/login') {
+            return next('/login')
+        }
+
         return next()
-    } else {
-        return next('/login')
-    }
-})
+    })
+
+
 
 export { BACKEND_URL };
 export default router

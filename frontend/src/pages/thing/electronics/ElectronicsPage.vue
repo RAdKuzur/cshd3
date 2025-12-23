@@ -360,7 +360,7 @@ const loadData = async () => {
       axios.get(BACKEND_URL + '/api/things/electronics'),
       axios.get(BACKEND_URL + '/api/info/thing-types'),
       axios.get(BACKEND_URL + '/api/info/balance'),
-      axios.get(BACKEND_URL + '/api/auditoriums/index')
+      axios.get(BACKEND_URL + '/api/auditoriums')
     ])
 
     // Сохраняем аудитории

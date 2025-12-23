@@ -16,7 +16,7 @@ class AdminUserController extends Controller
         $this->userService = $userService;
     }
 
-    public function index(){
+    public function all(){
         $data = $this->userService->getUserInfoAll();
         return response()->json([
             'success' => true,
@@ -24,7 +24,7 @@ class AdminUserController extends Controller
             'data' => $data
         ]);
     }
-    public function show($id){
+    public function getOne($id){
         $data = $this->userService->getUserInfo($id);
         return response()->json([
             'success' => true,
@@ -33,7 +33,7 @@ class AdminUserController extends Controller
         ]);
     }
 
-    public function store(UserRequest $request){
+    public function create(UserRequest $request){
         $data = $request->validated();
         $this->userService->create($data);
         return response()->json([

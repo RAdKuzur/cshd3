@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 class PositionRepository
 {
-    public function get($id){
+    public function get($id) : Position {
         return Position::find($id);
     }
     public function getAll(){

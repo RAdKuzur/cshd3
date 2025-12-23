@@ -17,14 +17,14 @@ class TransferActController extends Controller
         $this->transferActService = $transferActService;
     }
 
-    public function index(){
-        $transferActs = $this->transferActService->index();
+    public function all(){
+        $transferActs = $this->transferActService->all();
         return response()->json([
             'success' => true,
             'data' => $transferActs
         ]);
     }
-    public function view($id)
+    public function getOne($id)
     {
         $transferAct = $this->transferActService->get($id);
         return response()->json([
@@ -32,15 +32,7 @@ class TransferActController extends Controller
             'data' => $transferAct
         ]);
     }
-    public function edit($id)
-    {
-        $transferAct = $this->transferActService->get($id);
-        return response()->json([
-            'success' => true,
-            'data' => $transferAct
-        ]);
-    }
-    public function store(TransferActRequest $request){
+    public function create(TransferActRequest $request){
         $transferAct = $request->toTransferActDTO();
         $this->transferActService->create($transferAct);
         return response()->json([
@@ -48,6 +40,8 @@ class TransferActController extends Controller
         ]);
     }
     public function update(TransferActRequest $request, $id){
+        $transferAct = $request->toTransferActDTO();
+        $this->transferActService->update($id, $transferAct);
         return response()->json([
             'success' => true
         ]);

@@ -21,7 +21,7 @@ class ThingService
         $this->transferActRepository = $transferActRepository;
     }
 
-    public function electronics()
+    public function electronics() : array
     {
         $electronics = $this->thingRepository->getElectronics();
         $data = [];
@@ -43,7 +43,8 @@ class ThingService
         return $data;
 
     }
-    public function simpleElectronics(){
+    public function simpleElectronics(): array
+    {
         $electronics = $this->thingRepository->getElectronics();
         $data = [];
         foreach ($electronics as $electronic){
@@ -54,7 +55,7 @@ class ThingService
         }
         return $data;
     }
-    public function get($id)
+    public function get($id) : array
     {
         $model = $this->thingRepository->get($id);
         return [
@@ -94,7 +95,7 @@ class ThingService
             return $e->getMessage();
         }
     }
-    public function getActualAll()
+    public function getActualAll() : array
     {
         $data = [];
         $things = $this->thingRepository->getAll();
@@ -112,7 +113,7 @@ class ThingService
         return $data;
     }
 
-    public function free()
+    public function getFreeThings() : array
     {
         $data = [];
         $things = $this->thingRepository->getAll();
@@ -132,7 +133,7 @@ class ThingService
         return $data;
     }
 
-    public function getPersonThings($id)
+    public function getPersonThings($id) : array
     {
         $data = [];
         $things = $this->thingRepository->getAll();
@@ -151,7 +152,7 @@ class ThingService
         }
         return $data;
     }
-    public function getTransferActThings($id)
+    public function getTransferActThings($id) : array
     {
         $data = [];
         $transferAct = $this->transferActRepository->get($id);

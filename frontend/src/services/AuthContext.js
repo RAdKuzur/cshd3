@@ -5,6 +5,7 @@ export const useAuthContextStore = defineStore('auth', {
     state: () => ({
         user: null,
         initialized: false,
+        refreshing: false,
     }),
 
     actions: {
@@ -36,10 +37,10 @@ export const useAuthContextStore = defineStore('auth', {
                     position: profile.position,
                     role: profile.role
                 }
+                return true
             } catch (e) {
                 this.user = null
-            } finally {
-                this.initialized = true
+                throw e
             }
         },
 

@@ -11,7 +11,7 @@ class TransferActRepository
     {
         return TransferAct::all();
     }
-    public function get($id){
+    public function get($id) : TransferAct {
         return TransferAct::find($id);
     }
     public function create($data)

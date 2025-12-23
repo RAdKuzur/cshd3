@@ -367,7 +367,7 @@ const loadFormData = async () => {
   try {
     isLoading.value = true
 
-    const response = await axios.get(BACKEND_URL + '/api/auditoriums/index')
+    const response = await axios.get(BACKEND_URL + '/api/auditoriums')
 
     if (response.data.success) {
       auditoriums.value = response.data.data || []
@@ -453,7 +453,7 @@ const handleSubmit = async () => {
 
     // Отправка данных на сервер
     const response = await axios.post(
-        BACKEND_URL + '/api/admin/users/store',
+        BACKEND_URL + '/api/admin/users',
         dataToSend,
         {
           headers: {

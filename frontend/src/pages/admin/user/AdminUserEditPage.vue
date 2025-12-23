@@ -348,7 +348,7 @@ const loadUserData = async () => {
     isLoading.value = true
     error.value = null
 
-    const response = await axios.get(`${BACKEND_URL}/api/admin/users/view/${userId}`)
+    const response = await axios.get(`${BACKEND_URL}/api/admin/users/${userId}`)
     const data = response.data
 
     if (data.success && data.data) {
@@ -385,7 +385,7 @@ const loadUserData = async () => {
 // Загрузка аудиторий
 const loadAuditoriums = async () => {
   try {
-    const response = await axios.get(BACKEND_URL + '/api/auditoriums/index')
+    const response = await axios.get(BACKEND_URL + '/api/auditoriums')
 
     if (response.data.success) {
       auditoriums.value = response.data.data || []
@@ -478,7 +478,7 @@ const handleSubmit = async () => {
 
     // Отправка данных на сервер
     const response = await axios.put(
-        `${BACKEND_URL}/api/admin/users/update/${userId}`,
+        `${BACKEND_URL}/api/admin/users/${userId}`,
         dataToSend,
         {
           headers: {
@@ -528,7 +528,7 @@ const handleDelete = async () => {
   }
 
   try {
-    const response = await axios.delete(`${BACKEND_URL}/api/admin/users/delete/${userId}`)
+    const response = await axios.delete(`${BACKEND_URL}/api/admin/users/${userId}`)
 
     const data = response.data
     if (data.success) {

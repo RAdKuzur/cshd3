@@ -17,8 +17,8 @@ class AdminAuditoriumController extends Controller
         $this->auditoriumService = $auditoriumService;
     }
 
-    public function index(){
-        $data = $this->auditoriumService->index();
+    public function all(){
+        $data = $this->auditoriumService->all();
         return response()->json([
             'success' => true,
             'code' => 200,
@@ -26,7 +26,7 @@ class AdminAuditoriumController extends Controller
         ]);
     }
 
-    public function store(AuditoriumRequest $request){
+    public function create(AuditoriumRequest $request){
         $data = $request->validated();
         $auditoriumDTO = AuditoriumDTO::fromArray($data);
         $this->auditoriumService->create($auditoriumDTO);

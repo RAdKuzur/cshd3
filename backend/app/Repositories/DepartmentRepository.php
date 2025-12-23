@@ -6,7 +6,7 @@ use App\Models\Department;
 
 class DepartmentRepository
 {
-    public function get($id)
+    public function get($id) : Department
     {
         return Department::find($id);
     }

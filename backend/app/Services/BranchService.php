@@ -14,7 +14,7 @@ class BranchService
         $this->branchRepository = $branchRepository;
     }
 
-    public function index(){
+    public function all() : array {
         $data = [];
         $branches = $this->branchRepository->getAll();
         foreach ($branches as $branch){

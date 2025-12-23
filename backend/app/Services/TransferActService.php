@@ -25,7 +25,7 @@ class TransferActService
         $this->thingRepository = $thingRepository;
     }
 
-    public function index()
+    public function all() : array
     {
         $data = [];
         $transferActs = $this->transferActRepository->getAll();
@@ -34,7 +34,7 @@ class TransferActService
         }
         return $data;
     }
-    public function get($id)
+    public function get($id) : TransferActDTO
     {
         $transferAct = $this->transferActRepository->get($id);
         return new TransferActDTO(
@@ -57,6 +57,28 @@ class TransferActService
                     'thing_id' => $thing->id,
                     'transfer_act_id' => $transferActDTOId
                 ]);
+            }
+            DB::commit();
+        }
+        catch (\Exception $exception){
+            Log::debug($exception->getMessage());
+            DB::rollBack();
+        }
+    }
+    public function update($id, TransferActDTO $transferActDTO){
+        DB::beginTransaction();
+        try {
+            $this->transferActRepository->update($id, $transferActDTO->toArray());
+            foreach ($transferActDTO->things as $thingId) {
+                $thing = $this->thingRepository->get($thingId);
+                $this->transferActThingRepository->create([
+                    'thing_id' => $thing->id,
+                    'transfer_act_id' => $id
+                ]);
+            }
+            foreach ($transferActDTO->deletedThings as $deletedThingId) {
+                $thing = $this->thingRepository->get($deletedThingId);
+                $this->transferActThingRepository->delete($thing->id);
             }
             DB::commit();
         }

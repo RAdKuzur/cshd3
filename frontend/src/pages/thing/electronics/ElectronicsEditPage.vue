@@ -384,7 +384,7 @@ const loadThingData = async () => {
     isLoading.value = true
     error.value = null
 
-    const response = await axios.get(BACKEND_URL + `/api/things/edit/${thingId}`)
+    const response = await axios.get(BACKEND_URL + `/api/things/${thingId}`)
 
     if (response.data.success && response.data.data) {
       const data = response.data.data
@@ -449,7 +449,7 @@ const loadFormData = async () => {
       axios.get(BACKEND_URL + '/api/info/thing-types'),
       axios.get(BACKEND_URL + '/api/info/balance'), // Добавляем запрос характеристик учёта
       axios.get(BACKEND_URL + '/api/things/simple-electronics'),
-      axios.get(BACKEND_URL + '/api/auditoriums/index')
+      axios.get(BACKEND_URL + '/api/auditoriums')
     ])
 
     // Обработка типов и условий
@@ -543,7 +543,7 @@ const handleSubmit = async () => {
 
     // Отправка данных на сервер
     const response = await axios.put(
-        BACKEND_URL + `/api/things/update/${thingId}`,
+        BACKEND_URL + `/api/things/${thingId}`,
         dataToSend,
         {
           headers: {

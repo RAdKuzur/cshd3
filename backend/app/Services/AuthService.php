@@ -27,7 +27,7 @@ class AuthService
         $this->ruleRepository = $ruleRepository;
     }
 
-    public function login($user)
+    public function login($user) : array
     {
         $accessToken = JWTAuth::customClaims([
             'type' => 'access',
@@ -63,7 +63,7 @@ class AuthService
             DB::rollBack();
         }
     }
-    public function isAuth($accessToken, $refreshToken){
+    public function isAuth($accessToken, $refreshToken) : bool {
 
         if (is_null($refreshToken) && is_null($accessToken)) {
             return false;
@@ -80,7 +80,7 @@ class AuthService
             return false;
         }
     }
-    public function validateToken($refreshToken)
+    public function validateToken($refreshToken) : bool
     {
         if (is_null($refreshToken) || !JWTAuth::setToken($refreshToken)->check()) {
             return false;
@@ -88,7 +88,7 @@ class AuthService
         $data = JWTAuth::setToken($refreshToken)->getPayload();
         return count($this->tokenRepository->isValidToken($refreshToken, $data['user_id'])) > 0;
     }
-    public function refresh($refreshToken)
+    public function refresh($refreshToken) : array
     {
         DB::beginTransaction();
         try {
@@ -128,7 +128,7 @@ class AuthService
 
     }
 
-    public function hasAccess($role, $rule)
+    public function hasAccess($role, $rule) : bool
     {
         $ruleId = $this->ruleRepository->getByPath($rule) ? $this->ruleRepository->getByPath($rule)->id : 0;
         return $this->permissionRepository->hasAccess($role, $ruleId);

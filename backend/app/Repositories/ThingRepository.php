@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 class ThingRepository
 {
-    public function get($id)
+    public function get($id) : Thing
     {
         return Thing::where('id', $id)->first();
     }

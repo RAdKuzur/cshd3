@@ -519,7 +519,7 @@ const loadFormData = async () => {
       axios.get(BACKEND_URL + '/api/info/thing-types'),
       axios.get(BACKEND_URL + '/api/info/balance'), // Запрос характеристик учёта
       axios.get(BACKEND_URL + '/api/things/simple-electronics'),
-      axios.get(BACKEND_URL + '/api/auditoriums/index')
+      axios.get(BACKEND_URL + '/api/auditoriums')
     ])
 
     // Обработка типов и условий
