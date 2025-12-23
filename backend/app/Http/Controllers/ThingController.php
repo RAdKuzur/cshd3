@@ -20,7 +20,7 @@ class ThingController extends Controller
         $this->thingService = $thingService;
     }
 
-    public function index(){
+    public function all(){
         $data = $this->thingService->getActualAll();
         return response()->json([
             'success' => true,
@@ -37,9 +37,9 @@ class ThingController extends Controller
         ]);
     }
 
-    public function free()
+    public function getFreeThings()
     {
-        $data = $this->thingService->free();
+        $data = $this->thingService->getFreeThings();
         return response()->json([
             'success' => true,
             'data' => $data
@@ -53,7 +53,7 @@ class ThingController extends Controller
             'data' => $data
         ]);
     }
-    public function compositeStore(StoreThingRequest $request) {
+    public function compositeCreate(StoreThingRequest $request) {
         $dto = ThingDTO::fromArray($request->validated());
         $result = $this->thingService->compositeCreate($dto);
 
@@ -68,7 +68,7 @@ class ThingController extends Controller
 
     public function update(StoreThingRequest $request, $id) {
         $dto = UpdateThingDTO::fromArray($request->validated());
-        $request = $this->thingService->update(id,$dto);
+        $request = $this->thingService->update($id,$dto);
         return response()->json(
             [
                 'message' => $request,
@@ -78,7 +78,7 @@ class ThingController extends Controller
         );
     }
 
-    public function store(ThingRequest $request){
+    public function create(ThingRequest $request){
         $data = $request->validated();
         $this->thingService->create($data);
         return response()->json([
@@ -86,7 +86,7 @@ class ThingController extends Controller
             'code' => 200,
         ]);
     }
-    public function view($id)
+    public function getOne($id)
     {
         $model = $this->thingService->get($id);
         return response()->json([
@@ -95,16 +95,6 @@ class ThingController extends Controller
             'data' => $model,
         ]);
     }
-
-    public function edit($id){
-        $model = $this->thingService->get($id);
-        return response()->json([
-            'success' => true,
-            'code' => 200,
-            'data' => $model,
-        ]);
-    }
-
 
 //    public function update(ThingRequest $request, $id)
 //    {

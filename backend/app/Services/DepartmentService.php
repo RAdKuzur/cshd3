@@ -14,7 +14,7 @@ class DepartmentService
         $this->departmentRepository = $departmentRepository;
     }
 
-    public function index(){
+    public function all(){
         $data = [];
         $departments = $this->departmentRepository->getAll();
         foreach($departments as $department){

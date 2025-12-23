@@ -15,8 +15,8 @@ class AuditoriumController extends Controller
         $this->auditoriumService = $auditoriumService;
     }
 
-    public function index(){
-        $data = $this->auditoriumService->index();
+    public function all(){
+        $data = $this->auditoriumService->all();
         return response()->json([
             'success' => true,
             'code' => 200,

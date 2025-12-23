@@ -43,7 +43,7 @@ class InfoController extends Controller
         ]);
     }
     public function departments(){
-        $data = $this->departmentService->index();
+        $data = $this->departmentService->all();
         return response()->json([
             'success' => true,
             'code' => 200,
@@ -51,7 +51,7 @@ class InfoController extends Controller
         ]);
     }
     public function branches(){
-        $data = $this->branchService->index();
+        $data = $this->branchService->all();
         return response()->json([
             'success' => true,
             'code' => 200,

@@ -366,7 +366,7 @@ const loadActData = async () => {
 
   try {
     // Сначала загружаем основные данные акта
-    const actRes = await axios.get(BACKEND_URL + `/api/things/transfer-acts/view/${actId}`)
+    const actRes = await axios.get(BACKEND_URL + `/api/transfer-acts/${actId}`)
 
     if (!actRes.data || !actRes.data.success) {
       throw new Error('Акт не найден')
@@ -376,8 +376,8 @@ const loadActData = async () => {
 
     // Загружаем дополнительные данные параллельно
     const [thingsRes, peopleRes, typesRes, thingTypesRes] = await Promise.all([
-      axios.get(BACKEND_URL + `/api/things/transfer-acts/things/${actId}`).catch(() => ({ data: { success: false, data: [] } })),
-      axios.get(BACKEND_URL + '/api/people/index').catch(() => ({ data: { success: false, data: [] } })),
+      axios.get(BACKEND_URL + `/api/transfer-acts/things/${actId}`).catch(() => ({ data: { success: false, data: [] } })),
+      axios.get(BACKEND_URL + '/api/people').catch(() => ({ data: { success: false, data: [] } })),
       axios.get(BACKEND_URL + '/api/info/transfer-acts/types').catch(() => ({ data: { success: false, data: {} } })),
       axios.get(BACKEND_URL + '/api/info/thing-types').catch(() => ({ data: { success: false, data: [] } }))
     ])

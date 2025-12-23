@@ -18,7 +18,7 @@ class AuditoriumService
         $this->auditoriumRepository = $auditoriumRepository;
     }
 
-    public function index()
+    public function all()
     {
         $data = [];
         $auditoriums = $this->auditoriumRepository->getAll();

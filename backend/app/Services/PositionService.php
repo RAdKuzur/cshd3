@@ -17,7 +17,7 @@ class PositionService
         $this->positionRepository = $positionRepository;
     }
 
-    public function index(){
+    public function all(){
         $data = [];
         $positions = $this->positionRepository->getAll();
         foreach($positions as $position){

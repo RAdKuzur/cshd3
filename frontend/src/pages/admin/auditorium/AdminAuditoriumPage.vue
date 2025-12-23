@@ -622,7 +622,7 @@ const loadData = async () => {
 
     // Загружаем данные параллельно
     const [auditoriumsResponse, departmentsResponse, branchesResponse] = await Promise.all([
-      axios.get(BACKEND_URL + '/api/admin/auditoriums/index'),
+      axios.get(BACKEND_URL + '/api/admin/auditoriums'),
       axios.get(BACKEND_URL + '/api/info/departments'),
       axios.get(BACKEND_URL + '/api/info/branches')
     ])
@@ -907,8 +907,8 @@ const saveAuditorium = async () => {
     formErrors.value = {}
 
     const url = editingAuditorium.value
-        ? `${BACKEND_URL}/api/admin/auditoriums/update/${editingAuditorium.value.id}`
-        : `${BACKEND_URL}/api/admin/auditoriums/store`
+        ? `${BACKEND_URL}/api/admin/auditoriums/${editingAuditorium.value.id}`
+        : `${BACKEND_URL}/api/admin/auditoriums`
 
     const method = editingAuditorium.value ? 'put' : 'post'
 
@@ -958,7 +958,7 @@ const confirmDelete = async () => {
   try {
     isDeleting.value = true
 
-    const response = await axios.delete(`${BACKEND_URL}/api/admin/auditoriums/delete/${auditoriumToDelete.value.id}`)
+    const response = await axios.delete(`${BACKEND_URL}/api/admin/auditoriums/${auditoriumToDelete.value.id}`)
 
     if (response.data.success) {
       showNotification('Кабинет успешно удален')

@@ -16,8 +16,8 @@ class AdminPositionController extends Controller
         $this->positionService = $positionService;
     }
 
-    public function index(){
-        $data = $this->positionService->index();
+    public function all(){
+        $data = $this->positionService->all();
         return response()->json([
             'success' => true,
             'code' => 200,
@@ -25,7 +25,7 @@ class AdminPositionController extends Controller
         ]);
     }
 
-    public function store(PositionRequest $request){
+    public function create(PositionRequest $request){
         $data = $request->validated();
         $this->positionService->create($data);
         return response()->json([

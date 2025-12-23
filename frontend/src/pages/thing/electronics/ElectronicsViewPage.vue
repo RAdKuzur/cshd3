@@ -319,7 +319,7 @@ const loadThingData = async () => {
     error.value = null
     const thingId = route.params.id
 
-    const response = await axios.get(`${BACKEND_URL}/api/things/view/${thingId}`)
+    const response = await axios.get(`${BACKEND_URL}/api/things/${thingId}`)
     const data = response.data
 
     if (data.success && data.data) {
@@ -367,7 +367,7 @@ const loadBalanceTypes = async () => {
 // Загрузка аудиторий с комментариями и отделами
 const loadAuditoriums = async () => {
   try {
-    const response = await axios.get(`${BACKEND_URL}/api/auditoriums/index`)
+    const response = await axios.get(`${BACKEND_URL}/api/auditoriums`)
     const data = response.data
 
     if (data.success && data.data) {
@@ -620,7 +620,7 @@ const handleDelete = async () => {
 
   try {
     const thingId = route.params.id
-    const response = await axios.delete(`${BACKEND_URL}/api/things/delete/${thingId}`, {
+    const response = await axios.delete(`${BACKEND_URL}/api/things/${thingId}`, {
       headers: {
         'Content-Type': 'application/json',
       }

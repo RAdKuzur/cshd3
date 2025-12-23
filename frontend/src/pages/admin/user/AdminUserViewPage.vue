@@ -270,7 +270,7 @@ const loadUserData = async () => {
     error.value = null
     const userId = route.params.id
 
-    const response = await axios.get(`${BACKEND_URL}/api/admin/users/view/${userId}`)
+    const response = await axios.get(`${BACKEND_URL}/api/admin/users/${userId}`)
     const data = response.data
 
     if (data.success && data.data) {
@@ -305,7 +305,7 @@ const loadUserData = async () => {
 // Загрузка аудиторий
 const loadAuditoriums = async () => {
   try {
-    const response = await axios.get(`${BACKEND_URL}/api/auditoriums/index`)
+    const response = await axios.get(`${BACKEND_URL}/api/auditoriums`)
     const data = response.data
 
     if (data.success && data.data) {
@@ -412,7 +412,7 @@ const handleDelete = async () => {
 
   try {
     const userId = route.params.id
-    const response = await axios.delete(`${BACKEND_URL}/api/admin/users/delete/${userId}`, {
+    const response = await axios.delete(`${BACKEND_URL}/api/admin/users/${userId}`, {
       headers: {
         'Content-Type': 'application/json',
       }

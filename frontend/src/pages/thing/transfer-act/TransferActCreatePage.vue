@@ -381,7 +381,7 @@ const showThingsSection = computed(() => {
 const loadReferenceData = async () => {
   try {
     const [peopleRes, typesRes] = await Promise.all([
-      axios.get(BACKEND_URL + '/api/people/index'),
+      axios.get(BACKEND_URL + '/api/people'),
       axios.get(BACKEND_URL + '/api/info/transfer-acts/types')
     ])
 
@@ -513,7 +513,7 @@ const loadActData = async () => {
   if (!isEditMode.value) return
 
   try {
-    const response = await axios.get(BACKEND_URL + `/api/things/transfer-acts/view/${actId}`)
+    const response = await axios.get(BACKEND_URL + `/api/transfer-acts/${actId}`)
 
     if (response.data.success) {
       const actData = response.data.data
@@ -592,13 +592,13 @@ const submitForm = async () => {
     let response
     if (isEditMode.value) {
       response = await axios.put(
-          BACKEND_URL + `/api/things/transfer-acts/update/${actId}`,
+          BACKEND_URL + `/api/transfer-acts/${actId}`,
           payload
       )
     } else {
       // Создание нового акта
       response = await axios.post(
-          BACKEND_URL + '/api/things/transfer-acts/store',
+          BACKEND_URL + 'api/transfer-acts',
           payload
       )
     }

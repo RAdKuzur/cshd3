@@ -112,7 +112,7 @@ class ThingService
         return $data;
     }
 
-    public function free()
+    public function getFreeThings()
     {
         $data = [];
         $things = $this->thingRepository->getAll();

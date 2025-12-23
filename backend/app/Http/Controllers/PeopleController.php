@@ -14,7 +14,7 @@ class PeopleController extends Controller
     {
         $this->peopleService = $peopleService;
     }
-    public function index(){
+    public function all(){
         $data = $this->peopleService->all();
         return response()->json([
             'success' => true,

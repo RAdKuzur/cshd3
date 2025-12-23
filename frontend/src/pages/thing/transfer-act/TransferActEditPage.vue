@@ -394,7 +394,7 @@ const getTypeLabel = (typeId) => {
 const loadReferenceData = async () => {
   try {
     const [peopleRes, typesRes] = await Promise.all([
-      axios.get(BACKEND_URL + '/api/people/index'),
+      axios.get(BACKEND_URL + '/api/people'),
       axios.get(BACKEND_URL + '/api/info/transfer-acts/types')
     ])
 
@@ -487,7 +487,7 @@ const loadSelectedThingsDetails = async () => {
     // Загружаем информацию о каждой недостающей вещи
     for (const thingId of missingThingIds) {
       try {
-        const response = await axios.get(BACKEND_URL + `/api/things/view/${thingId}`)
+        const response = await axios.get(BACKEND_URL + `/api/things/${thingId}`)
         if (response.data.success && response.data.data) {
           thingsMap.value[thingId] = response.data.data
         }
@@ -550,7 +550,7 @@ const onPersonChange = async (field) => {
 const loadActData = async () => {
   isLoading.value = true
   try {
-    const response = await axios.get(BACKEND_URL + `/api/things/transfer-acts/edit/${actId}`)
+    const response = await axios.get(BACKEND_URL + `api/transfer-acts/${actId}`)
 
     if (response.data.success) {
       const actData = response.data.data
@@ -634,7 +634,7 @@ const submitForm = async () => {
     console.log('Отправка данных для редактирования:', payload)
 
     const response = await axios.put(
-        BACKEND_URL + `/api/things/transfer-acts/update/${actId}`,
+        BACKEND_URL + `/api/transfer-acts/${actId}`,
         payload
     )
 

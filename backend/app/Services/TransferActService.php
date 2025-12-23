@@ -25,7 +25,7 @@ class TransferActService
         $this->thingRepository = $thingRepository;
     }
 
-    public function index()
+    public function all()
     {
         $data = [];
         $transferActs = $this->transferActRepository->getAll();

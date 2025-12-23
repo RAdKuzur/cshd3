@@ -298,7 +298,7 @@ const selectAuditorium = (auditorium) => {
 const loadAuditoriums = async () => {
   try {
     loading.value.auditoriums = true
-    const response = await axios.get('/api/auditoriums/index')
+    const response = await axios.get('/api/auditoriums')
 
     if (response.data.success && response.data.data) {
       auditoriums.value = response.data.data
@@ -417,7 +417,7 @@ const generateAuditoriumReport = async () => {
     loading.value.single = true
 
     // Запрос на формирование отчета по конкретному кабинету
-    const response = await axios.get(`/api/reports/auditorium/${selectedAuditorium.value.id}`, {
+    const response = await axios.get(`/api/reports/auditoriums/${selectedAuditorium.value.id}`, {
       responseType: 'blob' // Важно для скачивания файлов
     })
 

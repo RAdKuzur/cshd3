@@ -3,7 +3,7 @@ import {BACKEND_URL} from "@/router.js";
 
 export const createSimpleThing = async (dataToSend) => {
     const response = await axios.post(
-        BACKEND_URL + '/api/things/store',
+        BACKEND_URL + '/api/things',
         dataToSend,
         {
             headers: {
@@ -16,7 +16,7 @@ export const createSimpleThing = async (dataToSend) => {
 
 export const createCompositeThing = async (dataToSend) => {
     const response = await axios.post(
-        BACKEND_URL + '/api/things/composite-store',
+        BACKEND_URL + '/api/things/composite',
         dataToSend,
         {
             headers: {
