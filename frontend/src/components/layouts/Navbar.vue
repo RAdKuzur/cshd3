@@ -221,15 +221,6 @@ const navigation = [
   { name: 'Панель администратора', href: '/admin', current: false, icon: CommandLineIcon },
 ]
 
-onMounted(async () => {
-  if (!authStore.initialized) {
-    try {
-      await authStore.refresh()
-    } catch (e) {
-      console.error('Ошибка при инициализации Navbar authStore:', e)
-    }
-  }
-})
 </script>
 
 <style scoped>
