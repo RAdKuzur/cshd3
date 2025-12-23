@@ -55,11 +55,11 @@ class People extends Model
         return $this->hasMany(PeoplePosition::class);
     }
     public function getPosition() : ?Position {
-        return $this->peoplePositions()->where('end_date', null)->first();
+        return $this->peoplePositions()->where('end_date', null)->first() ? $this->peoplePositions()->where('end_date', null)->first()->position : null;
     }
     public function getBranch() : ?Branch
     {
-        return  $this->peoplePositions()->where('end_date', null)->first();
+        return  $this->peoplePositions()->where('end_date', null)->first() ? $this->peoplePositions()->where('end_date', null)->first()->branch : null;
     }
     public function getEducation()
     {
