@@ -40,6 +40,8 @@ class TransferActController extends Controller
         ]);
     }
     public function update(TransferActRequest $request, $id){
+        $transferAct = $request->toTransferActDTO();
+        $this->transferActService->update($id, $transferAct);
         return response()->json([
             'success' => true
         ]);

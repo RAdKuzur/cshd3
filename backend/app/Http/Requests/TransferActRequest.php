@@ -26,7 +26,8 @@ class TransferActRequest extends FormRequest
             'from' => 'nullable',
             'to' => 'nullable',
             'type' => 'integer|required',
-            'things' => 'nullable|array'
+            'things' => 'nullable|array',
+            'deletedThings' => 'nullable|array'
         ];
     }
 
@@ -35,7 +36,8 @@ class TransferActRequest extends FormRequest
             from: $this->validated('from'),
             to: $this->validated('to'),
             type: $this->validated('type'),
-            things: $this->validated('things')
+            things: $this->validated('things'),
+            deletedThings: $this->validated('deletedThings')
         );
     }
 }

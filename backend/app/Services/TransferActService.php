@@ -65,4 +65,26 @@ class TransferActService
             DB::rollBack();
         }
     }
+    public function update($id, TransferActDTO $transferActDTO){
+        DB::beginTransaction();
+        try {
+            $this->transferActRepository->update($id, $transferActDTO->toArray());
+            foreach ($transferActDTO->things as $thingId) {
+                $thing = $this->thingRepository->get($thingId);
+                $this->transferActThingRepository->create([
+                    'thing_id' => $thing->id,
+                    'transfer_act_id' => $id
+                ]);
+            }
+            foreach ($transferActDTO->deletedThings as $deletedThingId) {
+                $thing = $this->thingRepository->get($deletedThingId);
+                $this->transferActThingRepository->delete($thing->id);
+            }
+            DB::commit();
+        }
+        catch (\Exception $exception){
+            Log::debug($exception->getMessage());
+            DB::rollBack();
+        }
+    }
 }
