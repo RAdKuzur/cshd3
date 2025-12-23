@@ -17,7 +17,7 @@ class PositionService
         $this->positionRepository = $positionRepository;
     }
 
-    public function all(){
+    public function all() : array {
         $data = [];
         $positions = $this->positionRepository->getAll();
         foreach($positions as $position){
@@ -28,7 +28,7 @@ class PositionService
         }
         return $data;
     }
-    public function get($id){
+    public function get($id) : array {
         $position = $this->positionRepository->get($id);
         return [
             'id' => $position->id,

@@ -54,10 +54,10 @@ class People extends Model
     {
         return $this->hasMany(PeoplePosition::class);
     }
-    public function getPosition(){
+    public function getPosition() : ?Position {
         return $this->peoplePositions()->where('end_date', null)->first();
     }
-    public function getBranch()
+    public function getBranch() : ?Branch
     {
         return  $this->peoplePositions()->where('end_date', null)->first();
     }

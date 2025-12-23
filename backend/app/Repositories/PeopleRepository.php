@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Hash;
 
 class PeopleRepository
 {
-    public function get($id){
+    public function get($id) : People {
         return People::find($id);
     }
     public function getAll(){

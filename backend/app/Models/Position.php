@@ -16,4 +16,7 @@ class Position extends Model
     protected $hidden = [
 
     ];
+    public function peoplePositions(){
+        return $this->hasMany(PeoplePosition::class);
+    }
 }

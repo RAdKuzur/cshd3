@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
 /** @property int $id
  * @property int $thing_id
  * @property int $auditorium_id
@@ -21,7 +23,7 @@ class ThingAuditorium extends Model
         'start_date',
         'end_date'
     ];
-    public function thing(){
+    public function thing() {
         return $this->belongsTo(Thing::class);
     }
     public function auditorium(){

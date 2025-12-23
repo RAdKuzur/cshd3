@@ -13,8 +13,8 @@ class AuditoriumRepository
         return Auditorium::all();
     }
 
-    public function get($id){
-        return Auditorium::where(['id' => $id])->first();
+    public function get($id) : Auditorium {
+        return Auditorium::where(['id' => $id])->get();
     }
     public function create($data){
         DB::table('logs')->insert([

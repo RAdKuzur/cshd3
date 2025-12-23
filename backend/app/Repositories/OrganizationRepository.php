@@ -6,7 +6,7 @@ use App\Models\Organization;
 
 class OrganizationRepository
 {
-    public function getMainOrganization(){
+    public function getMainOrganization() : Organization {
         return Organization::first();
     }
 }

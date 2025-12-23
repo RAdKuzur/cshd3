@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Hash;
 
 class UserRepository
 {
-    public function getById($id){
+    public function get($id)  : User {
         return User::where([
             'id' => $id
         ])->first();
@@ -20,7 +20,8 @@ class UserRepository
             'email' => $email
         ])->first();
     }
-    public function getByUsername($username){
+    public function getByUsername($username) : User
+    {
         return User::where([
             'username' => $username
         ])->first();

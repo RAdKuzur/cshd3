@@ -25,7 +25,7 @@ class TransferActService
         $this->thingRepository = $thingRepository;
     }
 
-    public function all()
+    public function all() : array
     {
         $data = [];
         $transferActs = $this->transferActRepository->getAll();
@@ -34,7 +34,7 @@ class TransferActService
         }
         return $data;
     }
-    public function get($id)
+    public function get($id) : TransferActDTO
     {
         $transferAct = $this->transferActRepository->get($id);
         return new TransferActDTO(

@@ -18,7 +18,7 @@ class AuditoriumService
         $this->auditoriumRepository = $auditoriumRepository;
     }
 
-    public function all()
+    public function all() : array
     {
         $data = [];
         $auditoriums = $this->auditoriumRepository->getAll();
@@ -35,7 +35,7 @@ class AuditoriumService
         }
         return $data;
     }
-    public function map(){
+    public function map() : array {
         $data = [];
         $auditoriums = $this->auditoriumRepository->getAll();
         foreach ($auditoriums as $auditorium) {
