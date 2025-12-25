@@ -11,21 +11,24 @@ class UpdateThingRequest extends FormRequest {
         return true;
     }
 
-    public function rules(): array {
+    public function rules(): array
+    {
         return [
+            'condition' => ['nullable', 'integer'],
+            'comment' => ['nullable', 'string'],
 
-            'condition' => 'required|integer',
-            'comment' => 'nullable|string',
+            'children' => ['nullable', 'array'],
 
-            'is_composite' =>  'required|boolean',
+            'children.create' => ['nullable', 'array'],
+            'children.create.*.name' => ['required', 'string'],
+            'children.create.*.thing_type_id' => ['required', 'integer'],
+            'children.create.*.serial_number' => ['nullable', 'string'],
+            'children.create.*.inv_number' => ['nullable', 'string'],
+            'children.create.*.price' => ['nullable', 'numeric'],
+            'children.create.*.condition' => ['nullable', 'integer'],
 
-            'children' => 'array',
-            'children.*.name' => 'required_with:children|string|max:255',
-            'children.*.serial_number' => 'nullable|string|max:255',
-            'children.*.inv_number' => 'nullable|string|max:255',
-            'children.*.thing_type_id' => 'required_with:children|integer',
-            'children.*.price' => 'nullable|numeric',
-            'children.*.condition' => 'nullable|integer'
+            'children.delete' => ['nullable', 'array'],
+            'children.delete.*' => ['integer'],
         ];
     }
 }

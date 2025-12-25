@@ -77,6 +77,8 @@ class ThingService
             'comment' => $model->comment,
             'auditorium_id' => $model->getCurrentLocation() ? $model->getCurrentLocation()->id : null,
             'balance' => $model->balance,
+            'is_composite' => $model->is_composite,
+            'children' => $model->children,
         ];
     }
 
@@ -85,6 +87,12 @@ class ThingService
         try {
             $thinId = $this->thingRepository->create($dto->toArray());
 
+            $this->thingAuditoriumRepository->create([
+                'auditorium_id' => $dto->auditorium_id,
+                'thing_id' => $thinId,
+                'start_date' => now(),
+                'end_date' => null
+            ]);
 
             if ($dto->is_composite && !empty($dto->children)) {
                 foreach ($dto->children as $childDTO) {
@@ -92,9 +100,16 @@ class ThingService
                     $childData = $childDTO->toArray();
                     $childData['thing_parent_id'] = $thinId;
 
-                    $this->thingRepository->create($childData);
+                    $childId = $this->thingRepository->create($childData);
+                    $this->thingAuditoriumRepository->create([
+                        'auditorium_id' => $dto->auditorium_id,
+                        'thing_id' => $childId,
+                        'start_date' => now(),
+                        'end_date' => null
+                    ]);
                 }
             }
+
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
@@ -201,8 +216,9 @@ class ThingService
     {
         DB::transaction(function () use ($id, $dto) {
 
-            $thing = Thing::lockForUpdate()->findOrFail($id);
+            $thing = $this->thingRepository->get($id);
 
+//            TODO edit
             $thing->update([
                 'condition' => $dto->condition,
                 'comment' => $dto->comment,
@@ -213,18 +229,15 @@ class ThingService
             }
 
             if (!empty($dto->childrenToDelete)) {
-                Thing::whereIn('id', $dto->childrenToDelete)
-                    ->where('parent_id', $thing->id)
-                    ->delete();
+                $this->thingAuditoriumRepository->deleteByListId($dto->childrenToDelete);
+                $this->thingRepository->deleteBylistId($dto->childrenToDelete);
             }
 
             foreach ($dto->childrenToCreate as $childDTO) {
-                Thing::create([
-                    'name' => $childDTO->name,
-                    'thing_type_id' => $childDTO->thing_type_id,
-                    'price' => $childDTO->price,
-                    'parent_id' => $thing->id,
-                ]);
+                $childData = $childDTO->toArray();
+                $childData['thing_parent_id'] = $id;
+
+                $this->thingRepository->create($childData);
             }
         });
     }

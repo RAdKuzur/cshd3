@@ -176,6 +176,7 @@
                   Родительский предмет (опционально)
                 </label>
                 <select
+                    disabled
                     v-model="formData.thing_parent_id"
                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
                 >
@@ -199,6 +200,7 @@
                   Кабинет размещения
                 </label>
                 <select
+                    disabled
                     v-model="formData.auditorium_id"
                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
                 >
@@ -222,6 +224,7 @@
                   Состояние
                 </label>
                 <select
+                    disabled
                     v-model="selectedCondition"
                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
                 >
@@ -246,6 +249,7 @@
                 </label>
                 <div class="relative">
                   <input
+                      disabled
                       v-model.number="formData.price"
                       type="number"
                       min="0"
@@ -260,6 +264,206 @@
                 </p>
               </div>
             </div>
+
+            <div v-if="formData.is_composite" class="mb-8">
+              <h2 class="text-xl font-semibold text-gray-900 mb-4">
+                Существующие составные элементы
+              </h2>
+
+              <div class="space-y-4">
+                <div
+                    v-for="(child, index) in formData.children"
+                    :key="index"
+                    class="border border-gray-200 rounded-xl p-4 bg-gray-50"
+                >
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                    <div>
+                      <label class="text-sm font-medium text-gray-700">Название *</label>
+                      <input
+                          v-model="child.name"
+                          type="text"
+                          class="w-full px-3 py-2 border rounded-lg"
+                      />
+                    </div>
+
+                    <div>
+                      <label class="text-sm font-medium text-gray-700">Тип *</label>
+                      <select
+                          v-model="child.thing_type_id"
+                          class="w-full px-3 py-2 border rounded-lg"
+                      >
+                        <option value="">Выберите тип</option>
+                        <option
+                            v-for="(name, id) in types"
+                            :key="id"
+                            :value="id"
+                        >
+                          {{ name }}
+                        </option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label class="text-sm font-medium text-gray-700">Серийный номер</label>
+                      <input
+                          v-model="child.serial_number"
+                          type="text"
+                          class="w-full px-3 py-2 border rounded-lg"
+                      />
+                    </div>
+
+                    <div>
+                      <label class="text-sm font-medium text-gray-700">Инвентарный номер</label>
+                      <input
+                          v-model="child.inv_number"
+                          type="text"
+                          class="w-full px-3 py-2 border rounded-lg"
+                      />
+                    </div>
+
+                    <div>
+                      <label class="text-sm font-medium text-gray-700">Цена</label>
+                      <input
+                          v-model.number="child.price"
+                          type="number"
+                          step="0.01"
+                          class="w-full px-3 py-2 border rounded-lg"
+                      />
+                    </div>
+
+                    <div>
+                      <label class="text-sm font-medium text-gray-700">Состояние</label>
+                      <select
+                          v-model="child.condition"
+                          class="w-full px-3 py-2 border rounded-lg"
+                      >
+                        <option value="">—</option>
+                        <option
+                            v-for="(label, key) in conditions"
+                            :key="key"
+                            :value="parseInt(key)"
+                        >
+                          {{ label }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <button
+                      type="button"
+                      @click="removeExistChild(index, child.id)"
+                      class="mt-4 text-red-600 text-sm hover:underline"
+                  >
+                    Удалить элемент
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div v-if="formData.is_composite" class="mb-8">
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">
+              Новые составные элементы
+            </h2>
+
+            <div class="space-y-4">
+              <div
+                  v-for="(child, index) in newChildren"
+                  :key="index"
+                  class="border border-gray-200 rounded-xl p-4 bg-gray-50"
+              >
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                  <div>
+                    <label class="text-sm font-medium text-gray-700">Название *</label>
+                    <input
+                        v-model="child.name"
+                        type="text"
+                        class="w-full px-3 py-2 border rounded-lg"
+                    />
+                  </div>
+
+                  <div>
+                    <label class="text-sm font-medium text-gray-700">Тип *</label>
+                    <select
+                        v-model="child.thing_type_id"
+                        class="w-full px-3 py-2 border rounded-lg"
+                    >
+                      <option value="">Выберите тип</option>
+                      <option
+                          v-for="(name, id) in types"
+                          :key="id"
+                          :value="id"
+                      >
+                        {{ name }}
+                      </option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label class="text-sm font-medium text-gray-700">Серийный номер</label>
+                    <input
+                        v-model="child.serial_number"
+                        type="text"
+                        class="w-full px-3 py-2 border rounded-lg"
+                    />
+                  </div>
+
+                  <div>
+                    <label class="text-sm font-medium text-gray-700">Инвентарный номер</label>
+                    <input
+                        v-model="child.inv_number"
+                        type="text"
+                        class="w-full px-3 py-2 border rounded-lg"
+                    />
+                  </div>
+
+                  <div>
+                    <label class="text-sm font-medium text-gray-700">Цена</label>
+                    <input
+                        v-model.number="child.price"
+                        type="number"
+                        step="0.01"
+                        class="w-full px-3 py-2 border rounded-lg"
+                    />
+                  </div>
+
+                  <div>
+                    <label class="text-sm font-medium text-gray-700">Состояние</label>
+                    <select
+                        v-model="child.condition"
+                        class="w-full px-3 py-2 border rounded-lg"
+                    >
+                      <option value="">—</option>
+                      <option
+                          v-for="(label, key) in conditions"
+                          :key="key"
+                          :value="parseInt(key)"
+                      >
+                        {{ label }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+
+                <button
+                    type="button"
+                    @click="removeTempChild(index)"
+                    class="mt-4 text-red-600 text-sm hover:underline"
+                >
+                  Удалить элемент
+                </button>
+              </div>
+            </div>
+
+            <button
+                type="button"
+                @click="addTempChild"
+                class="mt-4 px-4 py-2 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200"
+            >
+              ➕ Добавить элемент
+            </button>
           </div>
 
           <!-- Комментарий -->
@@ -336,6 +540,8 @@ const thingId = route.params.id
 // Данные формы
 const formData = ref(null)
 const originalData = ref(null)
+const deletedIds = []
+const newChildren = reactive([])
 
 // Состояние как число (ID из API)
 const conditionId = ref(null)
@@ -417,7 +623,9 @@ const loadThingData = async () => {
         thing_parent_id: data.thing_parent_id || '',
         auditorium_id: data.auditorium_id || '',
         price: data.price || 0,
-        comment: data.comment || ''
+        comment: data.comment || '',
+        is_composite: data.is_composite || 0,
+        children: data.children,
       }
 
       originalData.value = {
@@ -526,17 +734,21 @@ const handleSubmit = async () => {
 
     // Подготовка данных для отправки
     const dataToSend = {
-      name: formData.value.name,
-      serial_number: formData.value.serial_number,
-      inv_number: formData.value.inv_number,
-      operation_date: formData.value.operation_date,
-      thing_type_id: parseInt(formData.value.thing_type_id),
-      balance: formData.value.balance ? parseInt(formData.value.balance) : null, // Добавляем характеристику учёта
-      thing_parent_id: formData.value.thing_parent_id ? parseInt(formData.value.thing_parent_id) : null,
-      auditorium_id: formData.value.auditorium_id ? parseInt(formData.value.auditorium_id) : null,
       condition: conditionId.value,
-      price: parseFloat(formData.value.price),
-      comment: formData.value.comment || ''
+      comment: formData.value.comment || null,
+
+      children: {
+        create: newChildren.map(child => ({
+          name: child.name,
+          thing_type_id: parseInt(child.thing_type_id),
+          serial_number: child.serial_number || null,
+          inv_number: child.inv_number || null,
+          price: child.price ? parseFloat(child.price) : null,
+          condition: child.condition ?? null
+        })),
+
+        delete: deletedIds
+      }
     }
 
     console.log('Отправляемые данные для обновления:', dataToSend)
@@ -584,5 +796,26 @@ const handleSubmit = async () => {
   } finally {
     isSubmitting.value = false
   }
+}
+
+const removeExistChild = (index, id) => {
+  formData.value.children.splice(index, 1)
+  deletedIds.push(id)
+  console.log("deleted ids", deletedIds)
+}
+
+const removeTempChild = (index) => {
+  newChildren.splice(index, 1)
+}
+
+const addTempChild = () => {
+  newChildren.push({
+    name: '',
+    serial_number: '',
+    inv_number: '',
+    thing_type_id: '',
+    price: null,
+    condition: null
+  })
 }
 </script>

@@ -18,11 +18,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $balance
  * @property float $price
  * @property string $comment
+ * @property bool $is_composite
+ * @property Thing[] $children
+ *
  *
  * @property ThingAuditorium[] $thingAuditoriums
  * @property TransferActThing[] $transferActThings
 */
-
 
 
 class Thing extends Model
@@ -40,6 +42,7 @@ class Thing extends Model
         'balance',
         'price',
         'comment',
+        'is_composite',
     ];
 
     protected $casts = [

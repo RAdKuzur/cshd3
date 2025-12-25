@@ -55,4 +55,17 @@ class ThingRepository
         ]);
         return DB::table("things")->where('id', $id)->delete();
     }
+
+    public function deleteBylistId(array $ids) {
+        DB::table('logs')->insert([
+            'user_id' => Auth::user()->id,
+            'table' => Thing::class,
+            'type' => Log::DELETE,
+            'bindings' => null,
+            'extra_bindings' => json_encode(['id' => $ids]),
+            'time' => now()
+        ]);
+
+        return DB::table("things")->whereIn('id', $ids)->delete();
+    }
 }

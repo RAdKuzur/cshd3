@@ -66,9 +66,9 @@ class ThingController extends Controller
         );
     }
 
-    public function update(StoreThingRequest $request, $id) {
+    public function update(UpdateThingRequest $request, $id) {
         $dto = UpdateThingDTO::fromArray($request->validated());
-        $request = $this->thingService->update($id,$dto);
+        $this->thingService->update($id, $dto);
         return response()->json(
             [
                 'message' => $request,
