@@ -9,7 +9,7 @@ import StuffPage from "@/pages/StuffPage.vue"
 import SettingPage from "@/pages/SettingPage.vue"
 import DocPage from "@/pages/DocPage.vue"
 import MapPage from "@/pages/map/MapPage.vue"
-import ErrorPage from "@/pages/ErrorPage.vue"
+import ErrorPage from "@/pages/error/ErrorPage.vue"
 import TaskPage from "@/pages/TaskPage.vue"
 import AdminPage from "@/pages/admin/AdminPage.vue"
 import ReportPage from "@/pages/report/ReportPage.vue"
@@ -31,6 +31,9 @@ import TransferActPage from "@/pages/thing/transfer-act/TransferActPage.vue"
 import TransferActCreatePage from "@/pages/thing/transfer-act/TransferActCreatePage.vue"
 import TransferActViewPage from "@/pages/thing/transfer-act/TransferActViewPage.vue"
 import TransferActEditPage from "@/pages/thing/transfer-act/TransferActEditPage.vue"
+import ForbiddenErrorPage from "@/pages/error/ForbiddenErrorPage.vue";
+import AuthErrorPage from "@/pages/error/AuthErrorPage.vue";
+import FilePage from "@/pages/files/FilePage.vue";
 
 
 const BACKEND_URL = '';
@@ -38,6 +41,8 @@ const BACKEND_URL = '';
 const routes = [
     { path: '/', redirect: '/home' },
     { path: '/:pathMatch(.*)*', component: ErrorPage },
+    { path: '/not-auth', component:  AuthErrorPage  },
+    { path: '/forbidden', component: ForbiddenErrorPage  },
     { path: '/home', component: HomePage },
     { path: '/login', component: LoginPage },
     { path: '/logout' }, // special route for logout
@@ -68,6 +73,8 @@ const routes = [
     { path: '/things/transfer-acts/create', component: TransferActCreatePage, meta: { auth: true } },
     { path: '/things/transfer-acts/view/:id', component: TransferActViewPage, meta: { auth: true } },
     { path: '/things/transfer-acts/edit/:id', component: TransferActEditPage, meta: { auth: true } },
+
+    { path: '/files', component: FilePage , meta: { auth: true } }
 ]
 
 const router = createRouter({

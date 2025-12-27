@@ -189,7 +189,7 @@ import { computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import {
   ScaleIcon, Bars3Icon, XMarkIcon, ChevronDownIcon, UserIcon, Cog6ToothIcon, UserPlusIcon, BellIcon, ArrowRightOnRectangleIcon,
-  CalculatorIcon, CommandLineIcon, BuildingStorefrontIcon, UserGroupIcon, MapIcon
+  CalculatorIcon, CommandLineIcon, BuildingStorefrontIcon, UserGroupIcon, MapIcon, DocumentIcon
 } from '@heroicons/vue/24/outline'
 
 const router = useRouter()
@@ -219,6 +219,7 @@ const navigation = [
   { name: 'Отчёты', href: '/reports', current: false, icon: CalculatorIcon },
   { name: 'Интерактивная карта', href: '/map', current: false, icon: MapIcon },
   { name: 'Панель администратора', href: '/admin', current: false, icon: CommandLineIcon },
+  { name : 'Файловая система' , href: '/files', current: false, icon: DocumentIcon }
 ]
 
 </script>
