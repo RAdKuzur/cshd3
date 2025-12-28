@@ -73,6 +73,7 @@ class UserService
                     'birthdate' => $user->people->birthdate,
                     'auditorium_id' => $user->people->auditorium_id,
                     'bio' => $user->people->getBio(),
+                    'role' => $user->role
 //                'avatar' => $user->people->icon_link,
 //                'skills' => $user->people->getSkills(),
 //                'workExperience' => $user->people->getWorkExperience(),
@@ -96,6 +97,7 @@ class UserService
             'birthdate' => $user->people->birthdate,
             'auditorium_id' => $user->people->auditorium_id,
             'bio' => $user->people->getBio(),
+            'role' => $user->role
 //            'avatar' => $user->people->icon_link,
 //            'skills' => $user->people->getSkills(),
 //            'workExperience' => $user->people->getWorkExperience(),

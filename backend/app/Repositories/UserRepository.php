@@ -43,10 +43,11 @@ class UserRepository
             'extra_bindings' => null,
             'time' => now()
         ]);
-        return DB::table("users")->insertGetId([
+        return DB::table('users')->insertGetId([
             'username' => $data['username'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'role' => $data['role']
         ]);
     }
     public function update($id, $data){
@@ -64,10 +65,11 @@ class UserRepository
             'extra_bindings' => json_encode(['id' => $id]),
             'time' => now()
         ]);
-        return DB::table("users")->where('id', $id)->update(array_merge(
+        return DB::table('users')->where('id', $id)->update(array_merge(
             [
                 'username' => $data['username'],
                 'email' => $data['email'],
+                'role' => $data['role']
             ],
             !empty($data['password']) ? ['password' => Hash::make($data['password'])] : []
         ));

@@ -137,6 +137,37 @@
         </div>
       </div>
 
+      <!-- Роль пользователя -->
+      <div v-if="!isLoading && user && !error" class="bg-white shadow-lg border border-gray-200 p-6 mb-6">
+        <h2 class="text-xl font-semibold text-gray-900 mb-6 pb-2 border-b border-gray-200">
+          Роль в системе
+        </h2>
+
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-full flex items-center justify-center"
+               :class="getRoleColorClass(user?.role).bg">
+            <svg class="w-6 h-6" :class="getRoleColorClass(user?.role).text" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+          </div>
+          <div>
+            <div class="text-sm font-medium text-gray-500 mb-1">Роль</div>
+            <div class="flex items-center gap-3">
+              <span class="text-2xl font-bold" :class="getRoleColorClass(user?.role).text">
+                {{ getRoleName(user?.role) }}
+              </span>
+              <span class="text-sm px-3 py-1 rounded-full font-medium"
+                    :class="getRoleBadgeClass(user?.role)">
+                ID: {{ user?.role || 'Не указан' }}
+              </span>
+            </div>
+<!--            <div class="text-sm text-gray-500 mt-2">-->
+<!--              Определяет уровень доступа и возможности пользователя в системе-->
+<!--            </div>-->
+          </div>
+        </div>
+      </div>
+
       <!-- Расположение (кабинет и этаж) -->
       <div v-if="!isLoading && user && !error" class="bg-white shadow-lg border border-gray-200 p-6 mb-6">
         <h2 class="text-xl font-semibold text-gray-900 mb-6 pb-2 border-b border-gray-200">
@@ -252,6 +283,7 @@ const router = useRouter()
 // Данные
 const user = ref(null)
 const auditoriums = ref([])
+const roles = ref({})
 const isLoading = ref(true)
 const error = ref(null)
 
@@ -259,7 +291,8 @@ const error = ref(null)
 onMounted(async () => {
   await Promise.all([
     loadUserData(),
-    loadAuditoriums()
+    loadAuditoriums(),
+    loadRoles()
   ])
 })
 
@@ -316,6 +349,52 @@ const loadAuditoriums = async () => {
     console.error('Ошибка загрузки аудиторий:', err)
     auditoriums.value = []
   }
+}
+
+// Загрузка ролей
+const loadRoles = async () => {
+  try {
+    const response = await axios.get(`${BACKEND_URL}/api/info/roles`)
+    const data = response.data
+
+    if (data.success && data.data) {
+      roles.value = data.data
+      console.log('Загруженные роли:', roles.value)
+    }
+  } catch (err) {
+    console.error('Ошибка загрузки ролей:', err)
+    roles.value = {}
+  }
+}
+
+// Методы для работы с ролями
+const getRoleName = (roleId) => {
+  if (!roleId) return 'Не указана'
+  return roles.value[roleId] || `Роль ${roleId}`
+}
+
+const getRoleColorClass = (roleId) => {
+  const colorMap = {
+    1: { bg: 'bg-red-100', text: 'text-red-600' }, // Администратор
+    2: { bg: 'bg-purple-100', text: 'text-purple-600' }, // Директор
+    3: { bg: 'bg-blue-100', text: 'text-blue-600' }, // Сотрудник
+    4: { bg: 'bg-green-100', text: 'text-green-600' }, // Работник отдела кадров
+    5: { bg: 'bg-yellow-100', text: 'text-yellow-600' } // Бухгалтер
+  }
+
+  return colorMap[roleId] || { bg: 'bg-gray-100', text: 'text-gray-600' }
+}
+
+const getRoleBadgeClass = (roleId) => {
+  const colorMap = {
+    1: 'bg-red-100 text-red-800', // Администратор
+    2: 'bg-purple-100 text-purple-800', // Директор
+    3: 'bg-blue-100 text-blue-800', // Сотрудник
+    4: 'bg-green-100 text-green-800', // Работник отдел а кадров
+    5: 'bg-yellow-100 text-yellow-800' // Бухгалтер
+  }
+
+  return colorMap[roleId] || 'bg-gray-100 text-gray-800'
 }
 
 // Получение названия кабинета по ID

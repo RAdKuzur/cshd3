@@ -220,23 +220,46 @@
                 </p>
               </div>
 
-              <!-- Роли (опционально, если есть система ролей) -->
-              <!-- <div>
+              <!-- Роль пользователя -->
+              <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">
-                  Роль пользователя
+                  Роль пользователя *
                 </label>
                 <select
-                  v-model="formData.role_id"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                    v-model="formData.role"
+                    required
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
                 >
-                  <option value="">Обычный пользователь</option>
-                  <option value="1">Администратор</option>
-                  <option value="2">Редактор</option>
+                  <option value="">Выберите роль</option>
+                  <option
+                      v-for="(roleName, roleId) in roles"
+                      :key="roleId"
+                      :value="roleId"
+                      :class="getRoleColorClass(roleId)"
+                  >
+                    {{ roleName }}
+                  </option>
                 </select>
                 <p class="mt-1 text-sm text-gray-500">
-                  Уровень доступа пользователя
+                  Уровень доступа пользователя в системе
                 </p>
-              </div> -->
+              </div>
+
+              <!-- Подсказка роли -->
+<!--              <div v-if="formData.role" class="col-span-2">-->
+<!--                <div class="p-3 rounded-lg" :class="getRoleInfoClass(formData.role)">-->
+<!--                  <div class="flex items-start gap-2">-->
+<!--                    <svg class="w-5 h-5 flex-shrink-0 mt-0.5" :class="getRoleIconColor(formData.role)" fill="none" stroke="currentColor" viewBox="0 0 24 24">-->
+<!--                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />-->
+<!--                    </svg>-->
+<!--                    <div>-->
+<!--                      <div class="font-medium" :class="getRoleTextColor(formData.role)">-->
+<!--                        {{ getRoleDescription(formData.role) }}-->
+<!--                      </div>-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
             </div>
           </div>
 
@@ -304,6 +327,12 @@
                 <template v-else-if="key === 'password' || key === 'password_confirmation'">
                   ••••••••
                 </template>
+                <template v-else-if="key === 'role'">
+                  <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium"
+                        :class="getRoleBadgeClass(value)">
+                    {{ getRoleName(value) }}
+                  </span>
+                </template>
                 <template v-else>
                   {{ value || 'Не указано' }}
                 </template>
@@ -334,6 +363,7 @@ const formData = reactive({
   phone: '',
   birthdate: '',
   auditorium_id: '',
+  role: '',
   password: '',
   password_confirmation: '',
   bio: ''
@@ -341,6 +371,7 @@ const formData = reactive({
 
 // Данные с сервера
 const auditoriums = ref([])
+const roles = ref({})
 const isLoading = ref(false)
 const isSubmitting = ref(false)
 const showPreview = ref(false)
@@ -362,24 +393,36 @@ onMounted(async () => {
   await loadFormData()
 })
 
-// Загрузка аудиторий с сервера
+// Загрузка аудиторий и ролей с сервера
 const loadFormData = async () => {
   try {
     isLoading.value = true
 
-    const response = await axios.get(BACKEND_URL + '/api/auditoriums')
+    const [auditoriumsResponse, rolesResponse] = await Promise.all([
+      axios.get(BACKEND_URL + '/api/auditoriums'),
+      axios.get(BACKEND_URL + '/api/info/roles')
+    ])
 
-    if (response.data.success) {
-      auditoriums.value = response.data.data || []
+    if (auditoriumsResponse.data.success) {
+      auditoriums.value = auditoriumsResponse.data.data || []
       console.log('Загруженные аудитории:', auditoriums.value)
     } else {
-      console.error('Ошибка загрузки аудиторий:', response.data)
+      console.error('Ошибка загрузки аудиторий:', auditoriumsResponse.data)
       auditoriums.value = []
+    }
+
+    if (rolesResponse.data.success) {
+      roles.value = rolesResponse.data.data || {}
+      console.log('Загруженные роли:', roles.value)
+    } else {
+      console.error('Ошибка загрузки ролей:', rolesResponse.data)
+      roles.value = {}
     }
 
   } catch (error) {
     console.error('Ошибка при загрузке данных формы:', error)
     auditoriums.value = []
+    roles.value = {}
   } finally {
     isLoading.value = false
   }
@@ -390,6 +433,84 @@ const getAuditoriumName = (auditoriumId) => {
   if (!auditoriumId) return ''
   const auditorium = auditoriums.value.find(item => item.id == auditoriumId)
   return auditorium ? auditorium.name : ''
+}
+
+// Методы для работы с ролями
+const getRoleName = (roleId) => {
+  if (!roleId) return 'Не указана'
+  return roles.value[roleId] || `Роль ${roleId}`
+}
+
+const getRoleBadgeClass = (roleId) => {
+  const colorMap = {
+    1: 'bg-red-100 text-red-800', // Администратор
+    2: 'bg-purple-100 text-purple-800', // Директор
+    3: 'bg-blue-100 text-blue-800', // Сотрудник
+    4: 'bg-green-100 text-green-800', // Работник отдела кадров
+    5: 'bg-yellow-100 text-yellow-800' // Бухгалтер
+  }
+
+  return colorMap[roleId] || 'bg-gray-100 text-gray-800'
+}
+
+const getRoleColorClass = (roleId) => {
+  const colorMap = {
+    1: 'text-red-600', // Администратор
+    2: 'text-purple-600', // Директор
+    3: 'text-blue-600', // Сотрудник
+    4: 'text-green-600', // Работник отдела кадров
+    5: 'text-yellow-600' // Бухгалтер
+  }
+
+  return colorMap[roleId] || 'text-gray-600'
+}
+
+const getRoleInfoClass = (roleId) => {
+  const colorMap = {
+    1: 'bg-red-50 border border-red-100', // Администратор
+    2: 'bg-purple-50 border border-purple-100', // Директор
+    3: 'bg-blue-50 border border-blue-100', // Сотрудник
+    4: 'bg-green-50 border border-green-100', // Работник отдела кадров
+    5: 'bg-yellow-50 border border-yellow-100' // Бухгалтер
+  }
+
+  return colorMap[roleId] || 'bg-gray-50 border border-gray-100'
+}
+
+const getRoleIconColor = (roleId) => {
+  const colorMap = {
+    1: 'text-red-500', // Администратор
+    2: 'text-purple-500', // Директор
+    3: 'text-blue-500', // Сотрудник
+    4: 'text-green-500', // Работник отдела кадров
+    5: 'text-yellow-500' // Бухгалтер
+  }
+
+  return colorMap[roleId] || 'text-gray-500'
+}
+
+const getRoleTextColor = (roleId) => {
+  const colorMap = {
+    1: 'text-red-700', // Администратор
+    2: 'text-purple-700', // Директор
+    3: 'text-blue-700', // Сотрудник
+    4: 'text-green-700', // Работник отдела кадров
+    5: 'text-yellow-700' // Бухгалтер
+  }
+
+  return colorMap[roleId] || 'text-gray-700'
+}
+
+const getRoleDescription = (roleId) => {
+  const descriptions = {
+    1: 'Администратор имеет полный доступ ко всем функциям системы',
+    2: 'Директор имеет доступ к управлению сотрудниками и отчетности',
+    3: 'Сотрудник имеет базовый доступ к системе',
+    4: 'Работник отдела кадров имеет доступ к управлению персоналом',
+    5: 'Бухгалтер имеет доступ к финансовым данным и отчетности'
+  }
+
+  return descriptions[roleId] || 'Выберите роль для отображения описания'
 }
 
 // Валидация формы
@@ -403,6 +524,7 @@ const validateForm = () => {
   if (!formData.email) errors.push('Email обязателен')
   if (!formData.password) errors.push('Пароль обязателен')
   if (!formData.password_confirmation) errors.push('Подтверждение пароля обязательно')
+  if (!formData.role) errors.push('Роль пользователя обязательна')
 
   // Проверка email
   if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
@@ -444,6 +566,7 @@ const handleSubmit = async () => {
       phone_number: formData.phone ? formData.phone.trim() : null,
       birthdate: formData.birthdate || null,
       auditorium_id: formData.auditorium_id ? parseInt(formData.auditorium_id) : null,
+      role: formData.role,
       password: formData.password,
       password_confirmation: formData.password_confirmation,
       bio: formData.bio ? formData.bio.trim() : null
@@ -507,6 +630,7 @@ const formatKey = (key) => {
     phone: 'Телефон',
     birthdate: 'Дата рождения',
     auditorium_id: 'Кабинет',
+    role: 'Роль',
     bio: 'О пользователе'
   }
   return translations[key] || key

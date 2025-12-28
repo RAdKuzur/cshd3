@@ -22,7 +22,7 @@
               <input
                   v-model="searchQuery"
                   type="text"
-                  placeholder="Поиск по имени, фамилии, email, телефону, имени пользователя..."
+                  placeholder="Поиск по имени, фамилии, email, телефону, имени пользователя, роли..."
                   class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
               >
               <div class="absolute inset-y-0 left-0 pl-3 flex items-center">
@@ -44,6 +44,7 @@
               <option value="email">По email</option>
               <option value="birthdate">По дате рождения</option>
               <option value="auditorium_name">По аудитории</option>
+              <option value="role">По роли</option>
             </select>
           </div>
         </div>
@@ -155,6 +156,23 @@
               <td class="px-6 py-4 whitespace-nowrap">
                 <div class="text-sm text-gray-900 font-medium">{{ formatDate(user.birthdate) }}</div>
                 <div class="text-xs text-gray-500">{{ calculateAge(user.birthdate) }} лет</div>
+              </td>
+
+              <!-- Роль -->
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 h-8 w-8 bg-yellow-100 rounded-lg flex items-center justify-center mr-3">
+                    <svg class="h-4 w-4 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                          :class="getRoleColorClass(user.role)">
+                      {{ getRoleName(user.role) }}
+                    </span>
+                  </div>
+                </div>
               </td>
 
               <!-- Информация -->
@@ -321,12 +339,14 @@ const headers = ref([
   { key: 'email', label: 'Контактная информация' },
   { key: 'auditorium_name', label: 'Кабинет' },
   { key: 'birthdate', label: 'Дата рождения' },
+  { key: 'role', label: 'Роль' },
   { key: 'bio', label: 'Информация' },
   { key: 'actions', label: 'Действия' }
 ])
 
 const users = ref([])
 const auditoriums = ref([])
+const roles = ref({})
 const isLoading = ref(false)
 const error = ref(null)
 
@@ -350,14 +370,20 @@ const loadData = async () => {
     error.value = null
 
     // Загружаем данные параллельно
-    const [usersResponse, auditoriumsResponse] = await Promise.all([
+    const [usersResponse, auditoriumsResponse, rolesResponse] = await Promise.all([
       axios.get(BACKEND_URL + '/api/admin/users'),
-      axios.get(BACKEND_URL + '/api/auditoriums')
+      axios.get(BACKEND_URL + '/api/auditoriums'),
+      axios.get(BACKEND_URL + '/api/info/roles')
     ])
 
     // Сохраняем аудитории
     if (auditoriumsResponse.data.success) {
       auditoriums.value = auditoriumsResponse.data.data || []
+    }
+
+    // Сохраняем роли
+    if (rolesResponse.data.success) {
+      roles.value = rolesResponse.data.data || {}
     }
 
     if (usersResponse.data.success) {
@@ -366,6 +392,9 @@ const loadData = async () => {
         const auditorium = auditoriums.value.find(a => a.id === user.auditorium_id)
         const auditoriumName = auditorium ? auditorium.name : 'Не указана'
         const auditoriumFloor = auditorium ? getFloorText(auditorium.floor) : ''
+
+        // Получаем название роли
+        const roleName = roles.value[user.role] || `Роль ${user.role}`
 
         // Формируем полное имя
         const fullName = `${user.surname} ${user.firstname} ${user.patronymic || ''}`.trim()
@@ -380,6 +409,8 @@ const loadData = async () => {
           email: user.email,
           phone: user.phone,
           birthdate: user.birthdate,
+          role: user.role,
+          role_name: roleName,
           auditorium_id: user.auditorium_id,
           auditorium_name: auditoriumName,
           auditorium_floor: auditoriumFloor,
@@ -402,6 +433,23 @@ onMounted(() => {
   loadData()
 })
 
+// Методы для работы с ролями
+const getRoleName = (roleId) => {
+  return roles.value[roleId] || `Роль ${roleId}`
+}
+
+const getRoleColorClass = (roleId) => {
+  const colorMap = {
+    1: 'bg-red-100 text-red-800', // Администратор
+    2: 'bg-purple-100 text-purple-800', // Директор
+    3: 'bg-blue-100 text-blue-800', // Сотрудник
+    4: 'bg-green-100 text-green-800', // Работник отдела кадров
+    5: 'bg-yellow-100 text-yellow-800' // Бухгалтер
+  }
+
+  return colorMap[roleId] || 'bg-gray-100 text-gray-800'
+}
+
 // Вычисляемые свойства
 const filteredUsers = computed(() => {
   let filtered = users.value
@@ -418,6 +466,7 @@ const filteredUsers = computed(() => {
         (user.email && user.email.toLowerCase().includes(query)) ||
         (user.phone && user.phone.toLowerCase().includes(query)) ||
         (user.auditorium_name && user.auditorium_name.toLowerCase().includes(query)) ||
+        (user.role_name && user.role_name.toLowerCase().includes(query)) ||
         (user.bio && user.bio.toLowerCase().includes(query))
     )
   }
@@ -438,6 +487,10 @@ const filteredUsers = computed(() => {
       // Сортировка по полному имени
       aVal = a.fullName.toLowerCase()
       bVal = b.fullName.toLowerCase()
+    } else if (sortKey.value === 'role') {
+      // Сортировка по роли (по названию роли)
+      aVal = a.role_name.toLowerCase()
+      bVal = b.role_name.toLowerCase()
     }
 
     if (aVal < bVal) return sortOrder.value === 'asc' ? -1 : 1

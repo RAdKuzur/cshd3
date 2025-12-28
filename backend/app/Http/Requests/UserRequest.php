@@ -32,6 +32,7 @@ class UserRequest extends FormRequest
             'auditorium_id' => 'nullable',
             'bio' => 'nullable',
             'password' => 'string|nullable',
+            'role' => 'required'
         ];
     }
 }

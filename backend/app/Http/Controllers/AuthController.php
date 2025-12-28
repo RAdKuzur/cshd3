@@ -32,7 +32,7 @@ class AuthController extends Controller
                 'message' => 'Успешный вход',
                 'username' => $user->username,
                 'fio' => $user->people->getFullFio(),
-                'position' => $user->people->getPosition()->name,
+                'position' => $user->people->getPosition() ? $user->people->getPosition()->name : null,
                 'role' => $user->role,
             ])
                 ->cookie('refresh_token', $tokens['refreshToken'], (int)env('REFRESH_TOKEN_TIME'))

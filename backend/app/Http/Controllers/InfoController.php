@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Dictionaries\ConditionDictionary;
+use App\Dictionaries\RoleDictionary;
 use App\Dictionaries\ThingBalanceDictionary;
 use App\Dictionaries\ThingTypeDictionary;
 use App\Dictionaries\TransferActDictionary;
@@ -60,6 +61,15 @@ class InfoController extends Controller
     }
     public function transferActTypes(){
         $data = TransferActDictionary::type();
+        return response()->json([
+            'success' => true,
+            'code' => 200,
+            'data' => $data
+        ]);
+    }
+    public function roles()
+    {
+        $data = RoleDictionary::type();
         return response()->json([
             'success' => true,
             'code' => 200,
