@@ -645,13 +645,11 @@ const isImageFile = (filepath) => {
 }
 
 const getFileUrl = (filepath) => {
-  // Предполагаем, что файлы хранятся в public/uploads или подобной директории
-  return `${BACKEND_URL}/uploads/${filepath}`
+  const filename = filepath.split('/').pop();
+  return `${BACKEND_URL}/storage/uploads/${filename}`;
 }
 
 const getFileSize = (file) => {
-  // В реальном приложении нужно получать размер файла с сервера
-  // Здесь возвращаем заглушку
   return Math.floor(Math.random() * 1024) + 1
 }
 
@@ -729,10 +727,8 @@ const createFile = async () => {
     if (response.data.success) {
       // Добавляем новый файл в список
       const newFileData = {
-        id: response.data.data.id,
         table_name: newFile.value.table_name,
         row_id: newFile.value.row_id,
-        filepath: response.data.data.filepath || selectedFile.value.name,
         created_at: new Date().toISOString(),
         updated_at: null
       }
