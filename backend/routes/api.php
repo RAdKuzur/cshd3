@@ -22,7 +22,7 @@ Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::post('/refresh', [AuthController::class, 'refresh'])->name('refresh');
 
-Route::get('/info/roles', [InfoController::class, 'roles'])->name('info.roles');
+
 Route::middleware([CheckPermissionMiddleware::class])->group(function () {
 
     Route::get('/info/thing-types', [InfoController::class, 'types'])->name('info.types');
@@ -30,7 +30,7 @@ Route::middleware([CheckPermissionMiddleware::class])->group(function () {
     Route::get('/info/departments', [InfoController::class, 'departments'])->name('info.departments');
     Route::get('/info/branches', [InfoController::class, 'branches'])->name('info.branches');
     Route::get('/info/transfer-acts/types', [InfoController::class, 'transferActTypes'])->name('info.branches');
-
+    Route::get('/info/roles', [InfoController::class, 'roles'])->name('info.roles');
 
     Route::get('/auditoriums', [AuditoriumController::class, 'all'])->name('auditorium.all');
     Route::get('/things/simple-electronics', [ElectronicsController::class, 'simpleElectronics'])->name('things.simple-electronics');
