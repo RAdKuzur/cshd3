@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::post('/refresh', [AuthController::class, 'refresh'])->name('refresh');
-
+Route::post('/extend-block', [AuthController::class, 'extendBlock'])->name('extend-block');
 
 Route::middleware([CheckPermissionMiddleware::class])->group(function () {
 

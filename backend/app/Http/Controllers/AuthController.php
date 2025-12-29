@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Auth;
 use App\Http\Requests\LoginRequest;
 use App\Models\User;
 use App\Repositories\UserRepository;
 use App\Services\AuthService;
+use App\Services\RedisService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -13,12 +15,15 @@ class AuthController extends Controller
 {
     private UserRepository $userRepository;
     private AuthService $authService;
+    private RedisService $redisService;
     public function __construct(
         UserRepository $userRepository,
-        AuthService $authService
+        AuthService $authService,
+        RedisService $redisService
     ){
         $this->userRepository = $userRepository;
         $this->authService = $authService;
+        $this->redisService = $redisService;
     }
     /* @var User $user */
     public function login(LoginRequest $request)
@@ -49,7 +54,16 @@ class AuthController extends Controller
     {
 
     }
-
+    public function extendBlock(Request $request)
+    {
+        $this->redisService->set(
+            $request->validated(['url' => 'required']),
+            Auth::user()->id,
+            env('BLOCK_PAGE_TIME') * 60);
+        return response()->json([
+            'success' => true
+        ]);
+    }
     public function refresh(Request $request)
     {
         $refreshToken = $request->cookie('refresh_token');

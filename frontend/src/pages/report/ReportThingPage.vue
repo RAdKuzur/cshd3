@@ -291,7 +291,7 @@ const loadStatistics = async () => {
 // Инициализация
 onMounted(() => {
   // Загружаем статистику при монтировании компонента
-  loadStatistics()
+  // loadStatistics()
 })
 </script>
 
