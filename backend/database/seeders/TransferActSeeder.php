@@ -20,7 +20,7 @@ class TransferActSeeder extends Seeder
             DB::table('transfer_acts')->insertGetId([
                 'from' => null,
                 'to' => DB::table('people')->inRandomOrder()->first()->id,
-                'time' => now(),
+                'date' => date('Y-m-d'),
                 'confirmed' => 1,
                 'type' => TransferActDictionary::TRANSFER,
             ]);

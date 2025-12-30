@@ -80,7 +80,7 @@ class AuthService
             return false;
         }
     }
-    public function validateToken($refreshToken) : bool
+    public function validateRefreshToken($refreshToken) : bool
     {
         if (is_null($refreshToken) || !JWTAuth::setToken($refreshToken)->check()) {
             return false;

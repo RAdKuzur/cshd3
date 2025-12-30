@@ -9,9 +9,8 @@ class Auth
 {
     public static function user() : User|int {
         $accessToken = request()->cookie('access_token');
-        $refreshToken = request()->cookie('refresh_token');
-        if($refreshToken && JWTAuth::setToken($refreshToken)->check()){
-            $payload = JWTAuth::setToken($refreshToken)->getPayload();
+        if($accessToken && JWTAuth::setToken($accessToken)->check()){
+            $payload = JWTAuth::setToken($accessToken)->getPayload();
             $user = User::find($payload['user_id']);
             return $user;
         }
@@ -19,7 +18,15 @@ class Auth
     }
     public static function check() : bool {
         $accessToken = request()->cookie('access_token');
-        $refreshToken = request()->cookie('refresh_token');
-        return $refreshToken && JWTAuth::setToken($refreshToken)->check();
+        return $accessToken && JWTAuth::setToken($accessToken)->check();
+    }
+    public static function id() : int|null {
+        $accessToken = request()->cookie('access_token');
+        if($accessToken && JWTAuth::setToken($accessToken)->check()){
+            $payload = JWTAuth::setToken($accessToken)->getPayload();
+            $user = User::find($payload['user_id']);
+            return $user->id;
+        }
+        return null;
     }
 }

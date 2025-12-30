@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('from')->nullable()->constrained('people');
             $table->foreignId('to')->nullable()->constrained('people');
-            $table->dateTime('time');
+            $table->date('date');
             $table->integer('confirmed')->nullable(false);
             $table->integer('type')->nullable(false);
             $table->timestamps();

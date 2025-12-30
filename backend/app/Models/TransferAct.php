@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 /** @property int $id
  * @property int $from
  * @property int $to
- * @property $time
+ * @property $date
  * @property int $confirmed
  * @property int $type
  *
@@ -20,7 +20,7 @@ class TransferAct extends Model
     protected $fillable = [
         'from',
         'to',
-        'time',
+        'date',
         'confirmed',
         'type'
     ];

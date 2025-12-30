@@ -26,7 +26,9 @@ class AuthMiddleware
         $this->authService = $authService;
         $this->visitService = $visitService;
     }
-
+    /**
+     * на данный момент этот посредник не используется
+     */
     public function handle(Request $request, Closure $next): Response
     {
         $accessToken = $request->cookie('access_token');

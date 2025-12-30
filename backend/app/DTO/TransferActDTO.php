@@ -9,7 +9,7 @@ class TransferActDTO implements DTO
     public ?int $id;
     public ?int $from;
     public ?int $to;
-    public $time;
+    public $date;
     public ?int $type;
     public ?int $confirmed;
     public ?array $things;
@@ -19,7 +19,7 @@ class TransferActDTO implements DTO
         ?int $id = null,
         ?int $from = null,
         ?int $to = null,
-             $time = null,
+             $date = null,
         ?int $type = null,
         ?int $confirmed = null,
         ?array $things = null,
@@ -28,7 +28,7 @@ class TransferActDTO implements DTO
         $this->id = $id;
         $this->from = $from;
         $this->to = $to;
-        $this->time = $time;
+        $this->date = $date;
         $this->type = $type;
         $this->confirmed = $confirmed;
         $this->things = $things;
@@ -41,7 +41,7 @@ class TransferActDTO implements DTO
             $array['id'] ?? null,
             isset($array['from']) ? (int)$array['from'] : null,
             isset($array['to']) ? (int)$array['to'] : null,
-            $array['time'] ?? null,
+            $array['date'] ?? null,
             isset($array['type']) ? (int)$array['type'] : null,
             isset($array['confirmed']) ? (int)$array['confirmed'] : null,
             isset($array['things']) ? (int)$array['things'] : null,
@@ -54,7 +54,7 @@ class TransferActDTO implements DTO
             $transferAct->id,
             $transferAct->from,
             $transferAct->to,
-            $transferAct->time,
+            $transferAct->date,
             $transferAct->type,
             $transferAct->confirmed,
             $transferAct->transferActThings()->pluck('thing_id')->toArray() // что-то страшное :(
@@ -65,7 +65,7 @@ class TransferActDTO implements DTO
         return [
             'from' => $this->from,
             'to' => $this->to,
-            'time' => $this->time,
+            'date' => $this->date,
             'type' => $this->type,
             'confirmed' => $this->confirmed
         ];

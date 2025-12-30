@@ -26,6 +26,7 @@ class TransferActRequest extends FormRequest
             'from' => 'nullable',
             'to' => 'nullable',
             'type' => 'integer|required',
+            'date' => 'required',
             'things' => 'nullable|array',
             'deletedThings' => 'nullable|array'
         ];
@@ -35,6 +36,7 @@ class TransferActRequest extends FormRequest
         return new TransferActDTO(
             from: $this->validated('from'),
             to: $this->validated('to'),
+            date: $this->validated('date'),
             type: $this->validated('type'),
             things: $this->validated('things'),
             deletedThings: $this->validated('deletedThings')

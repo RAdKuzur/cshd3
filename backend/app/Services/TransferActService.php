@@ -41,7 +41,7 @@ class TransferActService
             id: $transferAct->id,
             from: $transferAct->from,
             to: $transferAct->to,
-            time: $transferAct->time,
+            date: $transferAct->date,
             type: $transferAct->type,
             confirmed: $transferAct->confirmed,
             things: $transferAct->transferActThings()->pluck('thing_id')->toArray()

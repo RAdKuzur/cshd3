@@ -76,7 +76,7 @@ class AuthController extends Controller
     public function refresh(Request $request)
     {
         $refreshToken = $request->cookie('refresh_token');
-        if ($this->authService->validateToken($refreshToken)) {
+        if ($this->authService->validateRefreshToken($refreshToken)) {
             $refreshData = $this->authService->refresh($refreshToken);
             return response()->json([
                 'success' => true,
