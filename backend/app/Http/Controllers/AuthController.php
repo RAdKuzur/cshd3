@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\Auth;
+use App\Http\Requests\BlockRequest;
 use App\Http\Requests\LoginRequest;
 use App\Models\User;
 use App\Repositories\UserRepository;
@@ -54,12 +55,20 @@ class AuthController extends Controller
     {
 
     }
-    public function extendBlock(Request $request)
+    public function block(BlockRequest $request)
     {
+        $dto = $request->toDTO();
         $this->redisService->set(
-            $request->validated(['url' => 'required']),
+            $dto->url,
             Auth::user()->id,
             env('BLOCK_PAGE_TIME') * 60);
+        return response()->json([
+            'success' => true
+        ]);
+    }
+    public function unblock(BlockRequest $request){
+        $dto = $request->toDTO();
+        $this->redisService->del($dto->url);
         return response()->json([
             'success' => true
         ]);

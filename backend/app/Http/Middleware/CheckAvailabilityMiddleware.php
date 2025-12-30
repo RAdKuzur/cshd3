@@ -22,8 +22,7 @@ class CheckAvailabilityMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         $isBlocked = $this->redisService->get($request->url());
-        if (!$isBlocked){
-            // должна быть проверка вида: Auth::user()->id == $isBlocked
+        if (!$isBlocked || Auth::user()->id == $isBlocked){
             $this->redisService->set($request->url(), Auth::user()->id, env('BLOCK_PAGE_TIME') * 60);
             return $next($request);
         }

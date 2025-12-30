@@ -15,16 +15,21 @@ use App\Http\Controllers\ThingController;
 use App\Http\Controllers\TransferActController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\AuthMiddleware;
+use App\Http\Middleware\CheckAvailabilityMiddleware;
 use App\Http\Middleware\CheckPermissionMiddleware;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::post('/refresh', [AuthController::class, 'refresh'])->name('refresh');
-Route::post('/extend-block', [AuthController::class, 'extendBlock'])->name('extend-block');
+Route::post('/block', [AuthController::class, 'block'])->name('block');
+Route::post('/unblock', [AuthController::class, 'unblock'])->name('unblock');
 
 Route::middleware([CheckPermissionMiddleware::class])->group(function () {
 
+    Route::middleware([CheckAvailabilityMiddleware::class])->group(function () {
+        //routes...
+    });
     Route::get('/info/thing-types', [InfoController::class, 'types'])->name('info.types');
     Route::get('/info/balance', [InfoController::class, 'balance'])->name('info.balance');
     Route::get('/info/departments', [InfoController::class, 'departments'])->name('info.departments');
@@ -81,13 +86,13 @@ Route::middleware([CheckPermissionMiddleware::class])->group(function () {
     Route::get('/transfer-acts/things/{id}', [ThingController::class, 'transferActThings'])->name('things.transferActThings');
 
     Route::get('/people', [PeopleController::class, 'all'])->name('people.all');
-});
 
-Route::get('/files', [FileController::class, 'all'])->name('files.all');
-Route::get('/files/{id}', [FileController::class, 'getOne'])->name('files.get-one');
-Route::get('/files/download/{id}', [FileController::class, 'download'])->name('files.download');
-Route::post('/files', [FileController::class, 'upload'])->name('files.upload');
-Route::delete('/files/{id}', [FileController::class, 'delete'])->name('files.delete');
+    Route::get('/files', [FileController::class, 'all'])->name('files.all');
+    Route::get('/files/{id}', [FileController::class, 'getOne'])->name('files.get-one');
+    Route::get('/files/download/{id}', [FileController::class, 'download'])->name('files.download');
+    Route::post('/files', [FileController::class, 'upload'])->name('files.upload');
+    Route::delete('/files/{id}', [FileController::class, 'delete'])->name('files.delete');
+});
 
 Route::post('/test' , [TestController::class, 'test'])->name('test');
 Route::post('/tests' , [TestController::class, 'tests'])->name('tests');
