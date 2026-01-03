@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('transfer_acts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('from')->nullable()->constrained('people');
-            $table->foreignId('to')->nullable()->constrained('people');
+            $table->foreignId('from')->nullable()->constrained('people_positions');
+            $table->foreignId('to')->nullable()->constrained('people_positions');
             $table->date('date');
             $table->integer('confirmed')->nullable(false);
             $table->integer('type')->nullable(false);

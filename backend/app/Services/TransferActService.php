@@ -2,8 +2,11 @@
 
 namespace App\Services;
 
+use App\Dictionaries\TransferActStatusDictionary;
 use App\DTO\TransferActDTO;
+use App\Repositories\PeopleRepository;
 use App\Repositories\ThingRepository;
+use App\Repositories\TransferActConfirmRepository;
 use App\Repositories\TransferActRepository;
 use App\Repositories\TransferActThingRepository;
 use Illuminate\Support\Facades\DB;
@@ -14,15 +17,21 @@ class TransferActService
     public TransferActRepository $transferActRepository;
     public TransferActThingRepository $transferActThingRepository;
     private ThingRepository $thingRepository;
+    private PeopleRepository $peopleRepository;
+    private TransferActConfirmRepository $transferActConfirmRepository;
     public function __construct(
         TransferActRepository $transferActRepository,
         TransferActThingRepository $transferActThingRepository,
         ThingRepository $thingRepository,
+        PeopleRepository $peopleRepository,
+        TransferActConfirmRepository $transferActConfirmRepository
     )
     {
         $this->transferActRepository = $transferActRepository;
         $this->transferActThingRepository = $transferActThingRepository;
         $this->thingRepository = $thingRepository;
+        $this->peopleRepository = $peopleRepository;
+        $this->transferActConfirmRepository = $transferActConfirmRepository;
     }
 
     public function all() : array
@@ -30,7 +39,15 @@ class TransferActService
         $data = [];
         $transferActs = $this->transferActRepository->getAll();
         foreach ($transferActs as $transferAct) {
-            $data[] = TransferActDTO::fromModel($transferAct);
+            $data[] = new TransferActDTO(
+                id: $transferAct->id,
+                from: $transferAct->fromPerson->people_id,
+                to: $transferAct->toPerson->people_id,
+                date: $transferAct->date,
+                type: $transferAct->type,
+                confirmed: $transferAct->confirmed,
+                things: $transferAct->transferActThings()->pluck('thing_id')->toArray()
+            );
         }
         return $data;
     }
@@ -39,8 +56,8 @@ class TransferActService
         $transferAct = $this->transferActRepository->get($id);
         return new TransferActDTO(
             id: $transferAct->id,
-            from: $transferAct->from,
-            to: $transferAct->to,
+            from: $transferAct->fromPerson->people_id,
+            to: $transferAct->toPerson->people_id,
             date: $transferAct->date,
             type: $transferAct->type,
             confirmed: $transferAct->confirmed,
@@ -50,7 +67,27 @@ class TransferActService
     public function create(TransferActDTO $transferActDTO){
         DB::beginTransaction();
         try {
-            $transferActDTOId = $this->transferActRepository->create($transferActDTO->toArray());
+            $peopleFrom = $this->peopleRepository->get($transferActDTO->from);
+            $peopleTo = $this->peopleRepository->get($transferActDTO->to);
+            $transferActDTOId = $this->transferActRepository->create([
+                'from' => $peopleFrom->getPosition()->id,
+                'to' => $peopleTo->getPosition()->id,
+                'date' => $transferActDTO->date,
+                'type' => $transferActDTO->type,
+                'confirmed' => TransferActStatusDictionary::NOT_CONFIRMED
+            ]);
+
+            $this->transferActConfirmRepository->create([
+                'transfer_act_id' => $transferActDTOId,
+                'people_position_id' => $peopleFrom->getPosition()->id,
+                'status' => TransferActStatusDictionary::NOT_CONFIRMED
+            ]);
+            $this->transferActConfirmRepository->create([
+                'transfer_act_id' => $transferActDTOId,
+                'people_position_id' => $peopleTo->getPosition()->id,
+                'status' => TransferActStatusDictionary::NOT_CONFIRMED
+            ]);
+
             foreach ($transferActDTO->things as $thingId) {
                 $thing = $this->thingRepository->get($thingId);
                 $this->transferActThingRepository->create([
@@ -68,7 +105,15 @@ class TransferActService
     public function update($id, TransferActDTO $transferActDTO){
         DB::beginTransaction();
         try {
-            $this->transferActRepository->update($id, $transferActDTO->toArray());
+            $peopleFrom = $this->peopleRepository->get($transferActDTO->from);
+            $peopleTo = $this->peopleRepository->get($transferActDTO->to);
+            $this->transferActRepository->update($id, [
+                'from' => $peopleFrom->getPosition()->id,
+                'to' => $peopleTo->getPosition()->id,
+                'date' => $transferActDTO->date,
+                'type' => $transferActDTO->type,
+                'confirmed' => $transferActDTO->confirmed
+            ]);
             foreach ($transferActDTO->things as $thingId) {
                 $thing = $this->thingRepository->get($thingId);
                 $this->transferActThingRepository->create([

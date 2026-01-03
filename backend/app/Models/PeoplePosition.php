@@ -14,10 +14,12 @@ use Illuminate\Database\Eloquent\Model;
  * @property People $people
  * @property Position $position
  * @property Branch $branch
+ * @property TransferActConfirm[] $transferActConfirms
 */
 class PeoplePosition extends Model
 {
     protected $table = 'people_positions';
+
     protected $fillable = [
         'people_id',
         'position_id',
@@ -36,5 +38,8 @@ class PeoplePosition extends Model
     }
     public function branch(){
         return $this->belongsTo(Branch::class);
+    }
+    public function transferActConfirms(){
+        return $this->hasMany(TransferActConfirm::class, 'people_position_id');
     }
 }

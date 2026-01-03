@@ -10,9 +10,10 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $confirmed
  * @property int $type
  *
- * @property People $fromPerson
- * @property People $toPerson
+ * @property PeoplePosition $fromPerson
+ * @property PeoplePosition $toPerson
  * @property TransferActThing[] $transferActThings
+ * @property TransferActConfirm[] $transferActConfirms
 */
 class TransferAct extends Model
 {
@@ -27,12 +28,15 @@ class TransferAct extends Model
 
     public function fromPerson()
     {
-        return $this->belongsTo(People::class, 'from');
+        return $this->belongsTo(PeoplePosition::class, 'from');
     }
     public function toPerson(){
-        return $this->belongsTo(People::class, 'to');
+        return $this->belongsTo(PeoplePosition::class, 'to');
     }
     public function transferActThings(){
         return $this->hasMany(TransferActThing::class, 'transfer_act_id');
+    }
+    public function transferActConfirms(){
+        return $this->hasMany(TransferActConfirm::class, 'transfer_act_id');
     }
 }
