@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TransferActConfirmRequest;
 use App\Http\Requests\TransferActRequest;
 use App\Models\TransferAct;
 use App\Services\TransferActService;
@@ -47,6 +48,22 @@ class TransferActController extends Controller
         ]);
     }
     public function delete($id){
+        return response()->json([
+            'success' => true
+        ]);
+    }
+    public function confirm(TransferActConfirmRequest $request)
+    {
+        $dto = $request->toDTO();
+        $this->transferActService->confirm($dto);
+        return response()->json([
+            'success' => true
+        ]);
+    }
+
+    public function cancelConfirm(TransferActConfirmRequest $request){
+        $dto = $request->toDTO();
+        $this->transferActService->cancelConfirm($dto);
         return response()->json([
             'success' => true
         ]);

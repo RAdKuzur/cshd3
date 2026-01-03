@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Dictionaries\TransferActStatusDictionary;
+use App\DTO\TransferActConfirmDTO;
 use App\DTO\TransferActDTO;
 use App\Repositories\PeopleRepository;
 use App\Repositories\ThingRepository;
@@ -112,7 +113,7 @@ class TransferActService
                 'to' => $peopleTo->getPosition()->id,
                 'date' => $transferActDTO->date,
                 'type' => $transferActDTO->type,
-                'confirmed' => $transferActDTO->confirmed
+                //'confirmed' => $transferActDTO->confirmed
             ]);
             foreach ($transferActDTO->things as $thingId) {
                 $thing = $this->thingRepository->get($thingId);
@@ -124,6 +125,72 @@ class TransferActService
             foreach ($transferActDTO->deletedThings as $deletedThingId) {
                 $thing = $this->thingRepository->get($deletedThingId);
                 $this->transferActThingRepository->delete($thing->id);
+            }
+            DB::commit();
+        }
+        catch (\Exception $exception){
+            Log::debug($exception->getMessage());
+            DB::rollBack();
+        }
+    }
+
+    public function confirm(TransferActConfirmDTO $transferActConfirmDTO)
+    {
+        DB::beginTransaction();
+        try {
+            $isConfirmed = true;
+            $transferAct = $this->transferActRepository->get($transferActConfirmDTO->transfer_act_id);
+            $person = $this->peopleRepository->get($transferActConfirmDTO->people_id);
+            $confirmation = $this->transferActConfirmRepository->getByTransferActIdAndPeoplePositionId(
+                $transferAct->id,
+                $person->getPosition()->id,
+            );
+            $this->transferActConfirmRepository->update($confirmation->id, [
+                'status' => TransferActStatusDictionary::CONFIRMED
+            ]);
+            $transferActConfirms = $this->transferActConfirmRepository->getByTransferActId($transferAct->id);
+            foreach ($transferActConfirms as $transferActConfirm) {
+                if (!$transferActConfirm->status == TransferActStatusDictionary::CONFIRMED) {
+                    $isConfirmed = false;
+                    break;
+                }
+            }
+            if ($isConfirmed) {
+                $this->transferActRepository->update($transferAct->id, [
+                    'confirmed' => TransferActStatusDictionary::CONFIRMED
+                ]);
+            }
+            DB::commit();
+        }
+        catch (\Exception $exception){
+            Log::debug($exception->getMessage());
+            DB::rollBack();
+        }
+    }
+    public function cancelConfirm(TransferActConfirmDTO $transferActConfirmDTO){
+        DB::beginTransaction();
+        try {
+            $isConfirmed = false;
+            $transferAct = $this->transferActRepository->get($transferActConfirmDTO->transfer_act_id);
+            $person = $this->peopleRepository->get($transferActConfirmDTO->people_id);
+            $confirmation = $this->transferActConfirmRepository->getByTransferActIdAndPeoplePositionId(
+                $transferActConfirmDTO->transfer_act_id,
+                $person->getPosition()->id,
+            );
+            $this->transferActConfirmRepository->update($confirmation->id, [
+                'status' => TransferActStatusDictionary::NOT_CONFIRMED
+            ]);
+            $transferActConfirms = $this->transferActConfirmRepository->getByTransferActId($transferAct->id);
+            foreach ($transferActConfirms as $transferActConfirm) {
+                if (!$transferActConfirm->status == TransferActStatusDictionary::CONFIRMED) {
+                    $isConfirmed = true;
+                    break;
+                }
+            }
+            if ($isConfirmed) {
+                $this->transferActRepository->update($transferAct->id, [
+                    'confirmed' => TransferActStatusDictionary::NOT_CONFIRMED
+                ]);
             }
             DB::commit();
         }

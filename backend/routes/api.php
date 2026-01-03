@@ -84,6 +84,8 @@ Route::middleware([CheckPermissionMiddleware::class])->group(function () {
     Route::put('/transfer-acts/{id}', [TransferActController::class, 'update'])->name('transfer-acts.update');
     Route::delete('/transfer-acts/{id}', [TransferActController::class, 'delete'])->name('transfer-acts.delete');
     Route::get('/transfer-acts/things/{id}', [ThingController::class, 'transferActThings'])->name('things.transferActThings');
+    Route::post('/transfer-acts/confirm', [TransferActController::class, 'confirm'])->name('transfer-acts.confirm');
+    Route::post('/transfer-acts/cancel-confirm', [TransferActController::class, 'cancelConfirm'])->name('transfer-acts.cancel-confirm');
 
     Route::get('/people', [PeopleController::class, 'all'])->name('people.all');
 
