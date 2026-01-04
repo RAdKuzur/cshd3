@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Dictionaries\ConditionDictionary;
 use App\DTO\Thing\ThingDTO;
 use App\DTO\Thing\UpdateThingDTO;
+use App\Models\Thing;
 use App\Repositories\ThingAuditoriumRepository;
 use App\Repositories\ThingRepository;
 use App\Repositories\TransferActRepository;
@@ -44,6 +45,7 @@ class ThingService
                 'price' => $electronic->price,
                 'auditorium_id' => $electronic->getCurrentLocation() ? $electronic->getCurrentLocation()->id : null,
                 'balance' => $electronic->balance,
+                'is_blocked' => $electronic->is_blocked,
             ];
         }
         return $data;
@@ -78,6 +80,7 @@ class ThingService
             'auditorium_id' => $model->getCurrentLocation() ? $model->getCurrentLocation()->id : null,
             'balance' => $model->balance,
             'is_composite' => $model->is_composite,
+            'is_blocked' => $model->is_blocked,
             'children' => $model->children,
         ];
     }
@@ -85,11 +88,13 @@ class ThingService
     public function compositeCreate(ThingDTO $dto) {
         DB::beginTransaction();
         try {
-            $thinId = $this->thingRepository->create($dto->toArray());
+            $thingId = $this->thingRepository->create(array_merge($dto->toArray(), [
+                'is_blocked' => Thing::NOT_BLOCKED
+            ]));
 
             $this->thingAuditoriumRepository->create([
                 'auditorium_id' => $dto->auditorium_id,
-                'thing_id' => $thinId,
+                'thing_id' => $thingId,
                 'start_date' => now(),
                 'end_date' => null
             ]);
@@ -98,7 +103,7 @@ class ThingService
                 foreach ($dto->children as $childDTO) {
 
                     $childData = $childDTO->toArray();
-                    $childData['thing_parent_id'] = $thinId;
+                    $childData['thing_parent_id'] = $thingId;
 
                     $childId = $this->thingRepository->create($childData);
                     $this->thingAuditoriumRepository->create([
@@ -113,7 +118,6 @@ class ThingService
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            return $e->getMessage();
         }
     }
     public function getActualAll() : array
@@ -139,7 +143,8 @@ class ThingService
         $data = [];
         $things = $this->thingRepository->getAll();
         foreach ($things as $thing){
-            if(!$thing->getActualMaster() && $thing->balance == ConditionDictionary::NONE_BALANCE) {
+            if(!$thing->getActualMaster() && $thing->balance == ConditionDictionary::NONE_BALANCE
+                && $thing->is_blocked == Thing::NOT_BLOCKED) {
                 $data[] = new ThingDTO(
                     id: $thing->id,
                     name: $thing->name,
@@ -159,7 +164,8 @@ class ThingService
         $data = [];
         $things = $this->thingRepository->getAll();
         foreach ($things as $thing){
-            if($thing->getActualMaster() && $thing->getActualMaster()->id == $id){
+            if($thing->getActualMaster() && $thing->getActualMaster()->id == $id
+            && $thing->is_blocked == Thing::NOT_BLOCKED){
                 $data[] = new ThingDTO(
                     id: $thing->id,
                     name: $thing->name,
@@ -198,7 +204,9 @@ class ThingService
     {
         DB::beginTransaction();
         try {
-            $thingId = $this->thingRepository->create($thing->toArray());
+            $thingId = $this->thingRepository->create(array_merge($thing->toArray(), [
+                'is_blocked' => Thing::NOT_BLOCKED
+            ]));
             $this->thingAuditoriumRepository->create([
                 'auditorium_id' => $thing->auditorium_id,
                 'thing_id' => $thingId,

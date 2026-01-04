@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property float $price
  * @property string $comment
  * @property bool $is_composite
+ * @property int $is_blocked
  * @property Thing[] $children
  *
  *
@@ -30,6 +31,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Thing extends Model
 {
     use HasFactory;
+
+    public const NOT_BLOCKED = 1;
+    public const BLOCKED = 2;
+
     protected $table = 'things';
     protected $fillable = [
         'name',
@@ -43,6 +48,7 @@ class Thing extends Model
         'price',
         'comment',
         'is_composite',
+        'is_blocked'
     ];
 
     protected $casts = [

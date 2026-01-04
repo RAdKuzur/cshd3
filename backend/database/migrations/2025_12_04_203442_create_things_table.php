@@ -27,6 +27,7 @@ return new class extends Migration
             $table->float('price')->nullable()->default(0);
             $table->string('comment')->nullable();
             $table->boolean('is_composite')->nullable()->default(false);
+            $table->integer('is_blocked')->nullable(false);
             $table->timestamps();
         });
     }

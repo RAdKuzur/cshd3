@@ -6,6 +6,7 @@ use App\Dictionaries\ConditionDictionary;
 use App\Dictionaries\ThingBalanceDictionary;
 use App\Dictionaries\ThingTypeDictionary;
 use App\Dictionaries\TransferActDictionary;
+use App\Models\Thing;
 use Carbon\Carbon;
 use DateTime;
 use Exception;
@@ -42,7 +43,8 @@ class ThingSeeder extends Seeder
                 'price' => rand(1, 100000),
                 'comment' => null,
                 'balance' => array_rand(array_keys(ThingBalanceDictionary::type())),
-                'is_composite' => false
+                'is_composite' => false,
+                'is_blocked' => Thing::NOT_BLOCKED
             ]);
         }
         //thing_auditoriums

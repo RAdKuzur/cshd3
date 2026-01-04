@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Dictionaries\TransferActStatusDictionary;
 use App\DTO\TransferActConfirmDTO;
 use App\DTO\TransferActDTO;
+use App\Models\Thing;
 use App\Repositories\PeopleRepository;
 use App\Repositories\ThingRepository;
 use App\Repositories\TransferActConfirmRepository;
@@ -101,6 +102,9 @@ class TransferActService
                     'thing_id' => $thing->id,
                     'transfer_act_id' => $transferActDTOId
                 ]);
+                $this->thingRepository->update($thing->id, [
+                    'is_blocked' => Thing::BLOCKED
+                ]);
             }
             DB::commit();
         }
@@ -112,26 +116,24 @@ class TransferActService
     public function update($id, TransferActDTO $transferActDTO){
         DB::beginTransaction();
         try {
-            /*
-             * Поля самого акта менять - нельзя!!!!
-            */
-//            $this->transferActRepository->update($id, [
-//                'from' => $peopleFrom->getActualPeoplePosition()->id,
-//                'to' => $peopleTo->getActualPeoplePosition()->id,
-//                'date' => $transferActDTO->date,
-//                'type' => $transferActDTO->type,
-//                //'confirmed' => $transferActDTO->confirmed
-//            ]);
+
             foreach ($transferActDTO->things as $thingId) {
                 $thing = $this->thingRepository->get($thingId);
                 $this->transferActThingRepository->create([
                     'thing_id' => $thing->id,
                     'transfer_act_id' => $id
                 ]);
+                $this->thingRepository->update($thing->id, [
+                    'is_blocked' => Thing::BLOCKED
+                ]);
             }
+
             foreach ($transferActDTO->deletedThings as $deletedThingId) {
                 $thing = $this->thingRepository->get($deletedThingId);
                 $this->transferActThingRepository->deleteByTransferActIdAndThingId($id, $thing->id);
+                $this->thingRepository->update($thing->id, [
+                    'is_blocked' => Thing::NOT_BLOCKED
+                ]);
             }
             DB::commit();
         }
@@ -166,6 +168,11 @@ class TransferActService
                 $this->transferActRepository->update($transferAct->id, [
                     'confirmed' => TransferActStatusDictionary::CONFIRMED
                 ]);
+                foreach($transferAct->transferActThings as $transferActThing) {
+                    $this->thingRepository->update($transferActThing->thing->id, [
+                        'is_blocked' => Thing::NOT_BLOCKED
+                    ]);
+                }
             }
             DB::commit();
         }
@@ -198,6 +205,11 @@ class TransferActService
                 $this->transferActRepository->update($transferAct->id, [
                     'confirmed' => TransferActStatusDictionary::NOT_CONFIRMED
                 ]);
+                foreach($transferAct->transferActThings as $transferActThing) {
+                    $this->thingRepository->update($transferActThing->thing->id, [
+                        'is_blocked' => Thing::BLOCKED
+                    ]);
+                }
             }
             DB::commit();
         }

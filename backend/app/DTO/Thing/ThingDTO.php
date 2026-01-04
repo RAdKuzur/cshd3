@@ -23,6 +23,7 @@ class ThingDTO implements DTO
         public readonly ?float $price = null,
         public readonly ?string $comment = null,
         public readonly ?bool $is_composite = null,
+        public readonly ?bool $is_blocked = null,
         public readonly ?array $children = [],
     ) {}
 
@@ -40,6 +41,7 @@ class ThingDTO implements DTO
             price: isset($data['price']) ? (float)$data['price'] : null,
             comment: $data['comment'] ?? null,
             is_composite: (bool) $data['is_composite'],
+            is_blocked:  isset($data['is_blocked']) ? (int)$data['is_blocked'] : null,
             children: self::mapChildren($data['children'] ?? []),
         );
     }
@@ -68,6 +70,7 @@ class ThingDTO implements DTO
             'price' => $this->price,
             'comment' => $this->comment,
             'is_composite' => $this->is_composite,
+            'is_blocked' => $this->is_blocked,
         ];
     }
 }

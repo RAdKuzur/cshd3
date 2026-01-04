@@ -31,7 +31,7 @@ class ThingRepository
             'extra_bindings' => null,
             'time' => now()
         ]);
-        return DB::table("things")->insertGetId($data);
+        return DB::table('things')->insertGetId($data);
     }
     public function update($id, $data){
         DB::table('logs')->insert([
@@ -42,7 +42,7 @@ class ThingRepository
             'extra_bindings' => json_encode(['id' => $id]),
             'time' => now()
         ]);
-        return DB::table("things")->where('id', $id)->update($data);
+        return DB::table('things')->where('id', $id)->update($data);
     }
     public function delete($id){
         DB::table('logs')->insert([
@@ -53,7 +53,7 @@ class ThingRepository
             'extra_bindings' => json_encode(['id' => $id]),
             'time' => now()
         ]);
-        return DB::table("things")->where('id', $id)->delete();
+        return DB::table('things')->where('id', $id)->delete();
     }
 
     public function deleteBylistId(array $ids) {
@@ -66,6 +66,6 @@ class ThingRepository
             'time' => now()
         ]);
 
-        return DB::table("things")->whereIn('id', $ids)->delete();
+        return DB::table('things')->whereIn('id', $ids)->delete();
     }
 }
