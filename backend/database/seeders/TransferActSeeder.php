@@ -19,7 +19,7 @@ class TransferActSeeder extends Seeder
         for ($i = 0; $i < 10; $i++) {
             DB::table('transfer_acts')->insertGetId([
                 'from' => null,
-                'to' => DB::table('people')->inRandomOrder()->first()->id,
+                'to' => DB::table('people_positions')->inRandomOrder()->first()->id,
                 'date' => date('Y-m-d'),
                 'confirmed' => 1,
                 'type' => TransferActDictionary::TRANSFER,

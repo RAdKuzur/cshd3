@@ -42,4 +42,22 @@ class TransferActThingRepository
         ]);
         return DB::table('transfer_act_things')->where('id', $id)->delete();
     }
+    public function deleteByTransferActIdAndThingId($transferActId, $thingId)
+    {
+        DB::table('logs')->insert([
+            'user_id' => Auth::user()->id,
+            'table' => TransferActThing::class,
+            'type' => Log::DELETE,
+            'bindings' => null,
+            'extra_bindings' => json_encode([
+                'thing_id' => $thingId,
+                'transfer_act_id' => $transferActId
+            ]),
+            'time' => now()
+        ]);
+        return DB::table('transfer_act_things')
+            ->where('transfer_act_id', $transferActId)
+            ->where('thing_id', $thingId)
+            ->delete();
+    }
 }

@@ -139,7 +139,7 @@ class ThingService
         $data = [];
         $things = $this->thingRepository->getAll();
         foreach ($things as $thing){
-            if(!$thing->getActualMaster() && $thing->condition == ConditionDictionary::NONE_BALANCE) {
+            if(!$thing->getActualMaster() && $thing->balance == ConditionDictionary::NONE_BALANCE) {
                 $data[] = new ThingDTO(
                     id: $thing->id,
                     name: $thing->name,

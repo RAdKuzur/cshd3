@@ -61,6 +61,10 @@ class People extends Model
     {
         return  $this->peoplePositions()->where('end_date', null)->first() ? $this->peoplePositions()->where('end_date', null)->first()->branch : null;
     }
+    public function getActualPeoplePosition() : ?PeoplePosition
+    {
+        return $this->peoplePositions()->where('end_date', null)->first() ? $this->peoplePositions()->where('end_date', null)->first() : null;
+    }
     public function getEducation()
     {
         $data = json_decode($this->about);

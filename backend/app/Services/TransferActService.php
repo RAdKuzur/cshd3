@@ -42,8 +42,8 @@ class TransferActService
         foreach ($transferActs as $transferAct) {
             $data[] = new TransferActDTO(
                 id: $transferAct->id,
-                from: $transferAct->fromPerson->people_id,
-                to: $transferAct->toPerson->people_id,
+                from: $transferAct->from ? $transferAct->fromPerson->people->id : null,
+                to: $transferAct->to ? $transferAct->toPerson->people->id : null,
                 date: $transferAct->date,
                 type: $transferAct->type,
                 confirmed: $transferAct->confirmed,
@@ -57,8 +57,8 @@ class TransferActService
         $transferAct = $this->transferActRepository->get($id);
         return new TransferActDTO(
             id: $transferAct->id,
-            from: $transferAct->fromPerson->people_id,
-            to: $transferAct->toPerson->people_id,
+            from: $transferAct->from ? $transferAct->fromPerson->people->id : null,
+            to: $transferAct->to ? $transferAct->toPerson->people->id : null,
             date: $transferAct->date,
             type: $transferAct->type,
             confirmed: $transferAct->confirmed,
@@ -68,27 +68,33 @@ class TransferActService
     public function create(TransferActDTO $transferActDTO){
         DB::beginTransaction();
         try {
-            $peopleFrom = $this->peopleRepository->get($transferActDTO->from);
-            $peopleTo = $this->peopleRepository->get($transferActDTO->to);
+            if($transferActDTO->from){
+                $peopleFrom = $this->peopleRepository->get($transferActDTO->from);
+            }
+            if($transferActDTO->to){
+                $peopleTo = $this->peopleRepository->get($transferActDTO->to);
+            }
             $transferActDTOId = $this->transferActRepository->create([
-                'from' => $peopleFrom->getPosition()->id,
-                'to' => $peopleTo->getPosition()->id,
+                'from' => isset($peopleFrom) ? $peopleFrom->getActualPeoplePosition()->id : null,
+                'to' => isset($peopleTo) ? $peopleTo->getActualPeoplePosition()->id : null,
                 'date' => $transferActDTO->date,
                 'type' => $transferActDTO->type,
                 'confirmed' => TransferActStatusDictionary::NOT_CONFIRMED
             ]);
-
-            $this->transferActConfirmRepository->create([
-                'transfer_act_id' => $transferActDTOId,
-                'people_position_id' => $peopleFrom->getPosition()->id,
-                'status' => TransferActStatusDictionary::NOT_CONFIRMED
-            ]);
-            $this->transferActConfirmRepository->create([
-                'transfer_act_id' => $transferActDTOId,
-                'people_position_id' => $peopleTo->getPosition()->id,
-                'status' => TransferActStatusDictionary::NOT_CONFIRMED
-            ]);
-
+            if (isset($peopleFrom)){
+                $this->transferActConfirmRepository->create([
+                    'transfer_act_id' => $transferActDTOId,
+                    'people_position_id' => $peopleFrom->getActualPeoplePosition()->id,
+                    'status' => TransferActStatusDictionary::NOT_CONFIRMED
+                ]);
+            }
+            if(isset($peopleTo)){
+                $this->transferActConfirmRepository->create([
+                    'transfer_act_id' => $transferActDTOId,
+                    'people_position_id' => $peopleTo->getActualPeoplePosition()->id,
+                    'status' => TransferActStatusDictionary::NOT_CONFIRMED
+                ]);
+            }
             foreach ($transferActDTO->things as $thingId) {
                 $thing = $this->thingRepository->get($thingId);
                 $this->transferActThingRepository->create([
@@ -106,15 +112,16 @@ class TransferActService
     public function update($id, TransferActDTO $transferActDTO){
         DB::beginTransaction();
         try {
-            $peopleFrom = $this->peopleRepository->get($transferActDTO->from);
-            $peopleTo = $this->peopleRepository->get($transferActDTO->to);
-            $this->transferActRepository->update($id, [
-                'from' => $peopleFrom->getPosition()->id,
-                'to' => $peopleTo->getPosition()->id,
-                'date' => $transferActDTO->date,
-                'type' => $transferActDTO->type,
-                //'confirmed' => $transferActDTO->confirmed
-            ]);
+            /*
+             * Поля самого акта менять - нельзя!!!!
+            */
+//            $this->transferActRepository->update($id, [
+//                'from' => $peopleFrom->getActualPeoplePosition()->id,
+//                'to' => $peopleTo->getActualPeoplePosition()->id,
+//                'date' => $transferActDTO->date,
+//                'type' => $transferActDTO->type,
+//                //'confirmed' => $transferActDTO->confirmed
+//            ]);
             foreach ($transferActDTO->things as $thingId) {
                 $thing = $this->thingRepository->get($thingId);
                 $this->transferActThingRepository->create([
@@ -124,7 +131,7 @@ class TransferActService
             }
             foreach ($transferActDTO->deletedThings as $deletedThingId) {
                 $thing = $this->thingRepository->get($deletedThingId);
-                $this->transferActThingRepository->delete($thing->id);
+                $this->transferActThingRepository->deleteByTransferActIdAndThingId($id, $thing->id);
             }
             DB::commit();
         }
@@ -143,7 +150,7 @@ class TransferActService
             $person = $this->peopleRepository->get($transferActConfirmDTO->people_id);
             $confirmation = $this->transferActConfirmRepository->getByTransferActIdAndPeoplePositionId(
                 $transferAct->id,
-                $person->getPosition()->id,
+                $person->getActualPeoplePosition()->id,
             );
             $this->transferActConfirmRepository->update($confirmation->id, [
                 'status' => TransferActStatusDictionary::CONFIRMED
@@ -175,7 +182,7 @@ class TransferActService
             $person = $this->peopleRepository->get($transferActConfirmDTO->people_id);
             $confirmation = $this->transferActConfirmRepository->getByTransferActIdAndPeoplePositionId(
                 $transferActConfirmDTO->transfer_act_id,
-                $person->getPosition()->id,
+                $person->getActualPeoplePosition()->id,
             );
             $this->transferActConfirmRepository->update($confirmation->id, [
                 'status' => TransferActStatusDictionary::NOT_CONFIRMED

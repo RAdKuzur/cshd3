@@ -24,7 +24,7 @@ class DatabaseSeeder extends Seeder
             PositionSeeder::class,
             PeopleSeeder::class,
             AuditoriumResponsibilitySeeder::class,
-            //ThingSeeder::class,
+            ThingSeeder::class,
             //TransferActSeeder::class
         ]);
     }

@@ -62,9 +62,11 @@ class Thing extends Model
         return $this->transferActThings()
             ->join('transfer_acts', 'transfer_act_things.transfer_act_id', '=', 'transfer_acts.id')
             ->orderBy('transfer_acts.date', 'desc')
+            ->orderBy('transfer_acts.id', 'desc')
             ->first()
             ?->transferAct
-            ?->toPerson ;
+            ?->toPerson
+            ?->people;
     }
     public function getCurrentLocation() : ?Auditorium {
         return $this->thingAuditoriums()->where([

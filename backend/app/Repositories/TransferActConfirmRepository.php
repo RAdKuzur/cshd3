@@ -34,7 +34,7 @@ class TransferActConfirmRepository
             'extra_bindings' => null,
             'time' => now()
         ]);
-        return DB::table('transfer_act_confirm')->insert($data);
+        return DB::table('transfer_act_confirms')->insert($data);
     }
     public function update($id, $data){
         DB::table('logs')->insert([
@@ -45,7 +45,7 @@ class TransferActConfirmRepository
             'extra_bindings' => json_encode(['id' => $id]),
             'time' => now()
         ]);
-        return DB::table('transfer_act_confirm')->where('id', $id)->update($data);
+        return DB::table('transfer_act_confirms')->where('id', $id)->update($data);
     }
     public function delete($id){
         DB::table('logs')->insert([
@@ -56,6 +56,6 @@ class TransferActConfirmRepository
             'extra_bindings' => json_encode(['id' => $id]),
             'time' => now()
         ]);
-        return DB::table('transfer_act_confirm')->where('id', $id)->delete();
+        return DB::table('transfer_act_confirms')->where('id', $id)->delete();
     }
 }
