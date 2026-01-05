@@ -14,6 +14,7 @@ class TransferActDTO implements DTO
     public ?int $confirmed;
     public ?array $things;
     public ?array $deletedThings;
+    public ?array $confirmations;
 
     public function __construct(
         ?int $id = null,
@@ -23,7 +24,8 @@ class TransferActDTO implements DTO
         ?int $type = null,
         ?int $confirmed = null,
         ?array $things = null,
-        ?array $deletedThings = null
+        ?array $deletedThings = null,
+        ?array $confirmations = null
     ){
         $this->id = $id;
         $this->from = $from;
@@ -33,6 +35,7 @@ class TransferActDTO implements DTO
         $this->confirmed = $confirmed;
         $this->things = $things;
         $this->deletedThings = $deletedThings;
+        $this->confirmations = $confirmations;
     }
 
     public static function fromArray(array $array)
@@ -46,6 +49,7 @@ class TransferActDTO implements DTO
             isset($array['confirmed']) ? (int)$array['confirmed'] : null,
             isset($array['things']) ? (int)$array['things'] : null,
             isset($array['deletedThings']) ? (int)$array['deletedThings'] : null,
+            isset($array['confirmations']) ? (int)$array['confirmations'] : null,
         );
     }
     public static function fromModel(TransferAct $transferAct)

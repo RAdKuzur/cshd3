@@ -19,7 +19,7 @@ class TransferActConfirmRepository
     }
     public function getByTransferActId($transferActId)
     {
-        return TransferActConfirm::where('transfer_act_id', $transferActId)->all();
+        return TransferActConfirm::where('transfer_act_id', $transferActId)->get();
     }
     public function getAll()
     {

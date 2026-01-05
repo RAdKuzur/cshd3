@@ -23,15 +23,14 @@ class TransferActConfirmRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => 'integer|required',
             'transfer_act_id' => 'integer|required',
-            'people_id' => 'integer|required',
+            'username' => 'string|required',
         ];
     }
     public function toDTO() {
         return new TransferActConfirmDTO(
             transfer_act_id: $this->validated('transfer_act_id'),
-            people_id: $this->validated('people_id'),
+            username: $this->validated('username'),
         );
     }
 }

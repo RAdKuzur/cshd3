@@ -26,7 +26,7 @@ class TransferActRepository
             'extra_bindings' => null,
             'time' => now()
         ]);
-        return DB::table('transfer_acts')->insertGetId(array_merge($data, ['confirmed' => 0]));
+        return DB::table('transfer_acts')->insertGetId($data);
     }
     public function update($id, $data){
         DB::table('logs')->insert([

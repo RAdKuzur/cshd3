@@ -11,6 +11,7 @@ use App\Repositories\ThingRepository;
 use App\Repositories\TransferActConfirmRepository;
 use App\Repositories\TransferActRepository;
 use App\Repositories\TransferActThingRepository;
+use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -21,12 +22,14 @@ class TransferActService
     private ThingRepository $thingRepository;
     private PeopleRepository $peopleRepository;
     private TransferActConfirmRepository $transferActConfirmRepository;
+    private UserRepository $userRepository;
     public function __construct(
         TransferActRepository $transferActRepository,
         TransferActThingRepository $transferActThingRepository,
         ThingRepository $thingRepository,
         PeopleRepository $peopleRepository,
-        TransferActConfirmRepository $transferActConfirmRepository
+        TransferActConfirmRepository $transferActConfirmRepository,
+        UserRepository $userRepository
     )
     {
         $this->transferActRepository = $transferActRepository;
@@ -34,6 +37,7 @@ class TransferActService
         $this->thingRepository = $thingRepository;
         $this->peopleRepository = $peopleRepository;
         $this->transferActConfirmRepository = $transferActConfirmRepository;
+        $this->userRepository = $userRepository;
     }
 
     public function all() : array
@@ -41,6 +45,13 @@ class TransferActService
         $data = [];
         $transferActs = $this->transferActRepository->getAll();
         foreach ($transferActs as $transferAct) {
+            $confirmations = [];
+            foreach ($transferAct->transferActConfirms as $transferActConfirm) {
+                $confirmations[] = [
+                    'username' => $transferActConfirm->peoplePosition->people->user->username,
+                    'status' => $transferActConfirm->status,
+                ];
+            }
             $data[] = new TransferActDTO(
                 id: $transferAct->id,
                 from: $transferAct->from ? $transferAct->fromPerson->people->id : null,
@@ -48,14 +59,22 @@ class TransferActService
                 date: $transferAct->date,
                 type: $transferAct->type,
                 confirmed: $transferAct->confirmed,
-                things: $transferAct->transferActThings()->pluck('thing_id')->toArray()
+                things: $transferAct->transferActThings()->pluck('thing_id')->toArray(),
+                confirmations: $confirmations
             );
         }
         return $data;
     }
     public function get($id) : TransferActDTO
     {
+        $confirmations = [];
         $transferAct = $this->transferActRepository->get($id);
+        foreach ($transferAct->transferActConfirms as $transferActConfirm) {
+            $confirmations[] = [
+                'username' => $transferActConfirm->peoplePosition->people->user->username,
+                'status' => $transferActConfirm->status,
+            ];
+        }
         return new TransferActDTO(
             id: $transferAct->id,
             from: $transferAct->from ? $transferAct->fromPerson->people->id : null,
@@ -63,7 +82,8 @@ class TransferActService
             date: $transferAct->date,
             type: $transferAct->type,
             confirmed: $transferAct->confirmed,
-            things: $transferAct->transferActThings()->pluck('thing_id')->toArray()
+            things: $transferAct->transferActThings()->pluck('thing_id')->toArray(),
+            confirmations: $confirmations
         );
     }
     public function create(TransferActDTO $transferActDTO){
@@ -149,7 +169,8 @@ class TransferActService
         try {
             $isConfirmed = true;
             $transferAct = $this->transferActRepository->get($transferActConfirmDTO->transfer_act_id);
-            $person = $this->peopleRepository->get($transferActConfirmDTO->people_id);
+            $user = $this->userRepository->getByUsername($transferActConfirmDTO->username);
+            $person = $this->peopleRepository->get($user->people->id);
             $confirmation = $this->transferActConfirmRepository->getByTransferActIdAndPeoplePositionId(
                 $transferAct->id,
                 $person->getActualPeoplePosition()->id,
@@ -159,7 +180,7 @@ class TransferActService
             ]);
             $transferActConfirms = $this->transferActConfirmRepository->getByTransferActId($transferAct->id);
             foreach ($transferActConfirms as $transferActConfirm) {
-                if (!$transferActConfirm->status == TransferActStatusDictionary::CONFIRMED) {
+                if ($transferActConfirm->status != TransferActStatusDictionary::CONFIRMED) {
                     $isConfirmed = false;
                     break;
                 }
@@ -186,7 +207,8 @@ class TransferActService
         try {
             $isConfirmed = false;
             $transferAct = $this->transferActRepository->get($transferActConfirmDTO->transfer_act_id);
-            $person = $this->peopleRepository->get($transferActConfirmDTO->people_id);
+            $user = $this->userRepository->getByUsername($transferActConfirmDTO->username);
+            $person = $this->peopleRepository->get($user->people->id);
             $confirmation = $this->transferActConfirmRepository->getByTransferActIdAndPeoplePositionId(
                 $transferActConfirmDTO->transfer_act_id,
                 $person->getActualPeoplePosition()->id,
@@ -196,7 +218,7 @@ class TransferActService
             ]);
             $transferActConfirms = $this->transferActConfirmRepository->getByTransferActId($transferAct->id);
             foreach ($transferActConfirms as $transferActConfirm) {
-                if (!$transferActConfirm->status == TransferActStatusDictionary::CONFIRMED) {
+                if ($transferActConfirm->status != TransferActStatusDictionary::CONFIRMED) {
                     $isConfirmed = true;
                     break;
                 }

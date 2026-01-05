@@ -10,20 +10,20 @@ class TransferActConfirmDTO implements DTO
     public ?int $transfer_act_id;
     public ?int $people_position_id;
     public ?int $status;
-    public ?int $people_id;
+    public ?string $username;
 
     public function __construct(
         ?int $id = null,
         ?int $transfer_act_id = null,
         ?int $people_position_id = null,
         ?int $status = null,
-        ?int $people_id = null,
+        ?string $username = null,
     ){
         $this->id = $id;
         $this->transfer_act_id = $transfer_act_id;
         $this->people_position_id = $people_position_id;
         $this->status = $status;
-        $this->people_id = $people_id;
+        $this->username = $username;
     }
     public static function fromArray(array $array)
     {
@@ -33,7 +33,7 @@ class TransferActConfirmDTO implements DTO
             isset($array['transfer_act_id']) ? (int)$array['transfer_act_id'] : null,
             isset($array['people_position_id']) ? (int)$array['people_position_id'] : null,
             isset($array['status']) ? (int)$array['status'] : null,
-            isset($array['people_id']) ? (int)$array['people_id'] : null,
+            isset($array['username']) ? (int)$array['username'] : null,
         );
     }
     public static function fromModel(TransferActConfirm $model): self{

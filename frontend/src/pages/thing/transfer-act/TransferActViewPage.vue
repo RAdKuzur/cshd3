@@ -39,12 +39,10 @@
           <!-- Статус -->
           <div class="flex items-center gap-4">
             <span
-                :class="act.confirmed
-                ? 'bg-green-100 text-green-700'
-                : 'bg-yellow-100 text-yellow-700'"
+                :class="getStatusClass(act.confirmed)"
                 class="px-4 py-2 rounded-full text-sm font-medium"
             >
-              {{ act.confirmed ? 'Подтверждён' : 'Не подтверждён' }}
+              {{ getStatusText(act.confirmed) }}
             </span>
 
             <button
@@ -85,20 +83,6 @@
                     <span v-if="!act.from" class="text-gray-400 text-sm ml-2">(ID не указан)</span>
                   </p>
                 </div>
-
-                <!-- Если есть ID, можно добавить кнопку просмотра сотрудника -->
-                <div v-if="act.from">
-                  <router-link
-                      :to="`/people/view/${act.from}`"
-                      class="inline-flex items-center text-indigo-600 hover:text-indigo-800"
-                  >
-                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                    </svg>
-                    Просмотреть сотрудника
-                  </router-link>
-                </div>
               </div>
 
               <!-- Сторона "Кому" -->
@@ -109,19 +93,6 @@
                     {{ act.toName || 'Не указано' }}
                     <span v-if="!act.to" class="text-gray-400 text-sm ml-2">(ID не указан)</span>
                   </p>
-                </div>
-
-                <div v-if="act.to">
-                  <router-link
-                      :to="`/people/view/${act.to}`"
-                      class="inline-flex items-center text-indigo-600 hover:text-indigo-800"
-                  >
-                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                    </svg>
-                    Просмотреть сотрудника
-                  </router-link>
                 </div>
               </div>
             </div>
@@ -141,7 +112,7 @@
               <!-- Дата создания -->
               <div>
                 <h3 class="text-sm font-medium text-gray-500 mb-1">Дата создания</h3>
-                <p class="text-lg">{{ formatDateTime(act.time) }}</p>
+                <p class="text-lg">{{ formatDateTime(act.date) }}</p>
               </div>
 
               <!-- ID акта -->
@@ -151,10 +122,29 @@
               </div>
             </div>
 
-            <!-- Место для дополнительных деталей -->
-            <div v-if="additionalData" class="mt-8">
-              <h3 class="text-lg font-semibold text-gray-900 mb-4">Дополнительные данные</h3>
-              <pre class="bg-gray-50 p-4 rounded-lg text-sm">{{ JSON.stringify(additionalData, null, 2) }}</pre>
+            <!-- Список подтверждений -->
+            <div v-if="act.confirmations && act.confirmations.length > 0" class="mt-8">
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">Подтверждения</h3>
+              <div class="bg-gray-50 p-4 rounded-lg">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div v-for="(confirmation, index) in act.confirmations" :key="index"
+                       class="flex items-center justify-between p-3 bg-white rounded border">
+                    <div>
+                      <span class="font-medium text-gray-900">{{ confirmation.username }}</span>
+                      <span :class="getConfirmationStatusClass(confirmation.status)"
+                            class="ml-2 px-2 py-1 text-xs rounded-full">
+                        {{ getConfirmationStatusText(confirmation.status) }}
+                      </span>
+                    </div>
+                    <div class="text-sm text-gray-500">
+                      <template v-if="isCurrentUser(confirmation.username)">
+                        <span v-if="confirmation.status === 1">(можете подтвердить)</span>
+                        <span v-else-if="confirmation.status === 2">(можете отозвать)</span>
+                      </template>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -176,28 +166,33 @@
                 Печать
               </button>
 
-              <!-- Кнопка подтверждения/отмены -->
-              <!--            <button-->
-              <!--                v-if="!act.confirmed"-->
-              <!--                @click="confirmAct"-->
-              <!--                class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center"-->
-              <!--            >-->
-              <!--              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">-->
-              <!--                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>-->
-              <!--              </svg>-->
-              <!--              Подтвердить акт-->
-              <!--            </button>-->
+              <!-- Кнопка подтверждения для текущего пользователя -->
+              <button
+                  v-if="showConfirmButton"
+                  @click="confirmAct"
+                  :disabled="isConfirming"
+                  class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+                <span v-if="isConfirming">Подтверждается...</span>
+                <span v-else>Подтвердить акт</span>
+              </button>
 
-              <!--            <button-->
-              <!--                v-else-->
-              <!--                @click="unconfirmAct"-->
-              <!--                class="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 flex items-center"-->
-              <!--            >-->
-              <!--              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">-->
-              <!--                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>-->
-              <!--              </svg>-->
-              <!--              Отменить подтверждение-->
-              <!--            </button>-->
+              <!-- Кнопка отмены подтверждения для текущего пользователя -->
+              <button
+                  v-if="showCancelButton"
+                  @click="unconfirmAct"
+                  :disabled="isUnconfirming"
+                  class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+                <span v-if="isUnconfirming">Отменяется...</span>
+                <span v-else>Отозвать подтверждение</span>
+              </button>
             </div>
           </div>
         </div>
@@ -242,9 +237,6 @@
                   <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Стоимость
                   </th>
-                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Действия
-                  </th>
                 </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
@@ -269,14 +261,6 @@
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap">
                     <span class="font-medium text-gray-900">{{ formatCurrency(thing.price) }}</span>
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <router-link
-                        :to="`/things/view/${thing.id}`"
-                        class="text-indigo-600 hover:text-indigo-900"
-                    >
-                      Просмотр
-                    </router-link>
                   </td>
                 </tr>
                 </tbody>
@@ -315,6 +299,16 @@
           <span class="text-red-700">{{ error }}</span>
         </div>
       </div>
+
+      <!-- Сообщение об успехе -->
+      <div v-if="successMessage" class="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+        <div class="flex items-center">
+          <svg class="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+          </svg>
+          <span class="text-green-700">{{ successMessage }}</span>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -324,12 +318,17 @@ import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios'
 import { BACKEND_URL } from '@/router.js'
+import { useAuthContextStore } from "@/services/AuthContext.js"
 
 const route = useRoute()
 const router = useRouter()
+const authStore = useAuthContextStore()
 
 const isLoading = ref(false)
+const isConfirming = ref(false)
+const isUnconfirming = ref(false)
 const error = ref('')
+const successMessage = ref('')
 const act = ref({
   id: '',
   from: null,
@@ -338,14 +337,92 @@ const act = ref({
   toName: '',
   type: '',
   typeLabel: '',
-  confirmed: false,
-  time: ''
+  confirmed: 0,
+  date: '',
+  confirmations: [] // Массив подтверждений
 })
 const things = ref([])
 const people = ref({})
 const actTypes = ref({})
 const thingTypes = ref({})
 const additionalData = ref(null)
+
+// Получение текущего пользователя
+const currentUser = computed(() => {
+  return authStore.user?.username || ''
+})
+
+// Проверка, является ли пользователь текущим
+const isCurrentUser = (username) => {
+  return username === currentUser.value
+}
+
+// Получение статуса подтверждения для текущего пользователя
+const getUserConfirmationStatus = computed(() => {
+  if (!act.value.confirmations || !currentUser.value) return null
+  const userConfirmation = act.value.confirmations.find(
+      conf => conf.username === currentUser.value
+  )
+  return userConfirmation ? userConfirmation.status : null
+})
+
+// Показывать ли кнопку подтверждения
+const showConfirmButton = computed(() => {
+  return getUserConfirmationStatus.value === 1
+})
+
+// Показывать ли кнопку отмены подтверждения
+const showCancelButton = computed(() => {
+  return getUserConfirmationStatus.value === 2
+})
+
+// Классы для статуса акта
+const getStatusClass = (status) => {
+  switch (status) {
+    case 2:
+      return 'bg-green-100 text-green-700'
+    case 1:
+      return 'bg-red-100 text-red-700'
+    default:
+      return 'bg-gray-100 text-gray-700'
+  }
+}
+
+// Текст для статуса акта
+const getStatusText = (status) => {
+  switch (status) {
+    case 2:
+      return 'Подтверждён'
+    case 1:
+      return 'Не подтверждён'
+    default:
+      return 'Статус неизвестен'
+  }
+}
+
+// Классы для статуса подтверждения пользователя
+const getConfirmationStatusClass = (status) => {
+  switch (status) {
+    case 2:
+      return 'bg-green-100 text-green-800'
+    case 1:
+      return 'bg-red-100 text-red-800'
+    default:
+      return 'bg-gray-100 text-gray-800'
+  }
+}
+
+// Текст для статуса подтверждения пользователя
+const getConfirmationStatusText = (status) => {
+  switch (status) {
+    case 2:
+      return 'Подтверждено'
+    case 1:
+      return 'Не подтверждено'
+    default:
+      return 'Неизвестно'
+  }
+}
 
 // Вычисляем суммарную стоимость
 const totalValue = computed(() => {
@@ -363,6 +440,7 @@ const loadActData = async () => {
 
   isLoading.value = true
   error.value = ''
+  successMessage.value = ''
 
   try {
     // Сначала загружаем основные данные акта
@@ -421,8 +499,9 @@ const loadActData = async () => {
       toName: actData.to ? (people.value[actData.to] || 'Неизвестно') : 'Не указано',
       type: actData.type || '',
       typeLabel: actTypes.value[actData.type] || `Тип ${actData.type || 'неизвестен'}`,
-      confirmed: Boolean(actData.confirmed),
-      time: actData.time || ''
+      confirmed: Number(actData.confirmed) || 0,
+      date: actData.date || '',
+      confirmations: Array.isArray(actData.confirmations) ? actData.confirmations : []
     }
 
   } catch (err) {
@@ -438,37 +517,77 @@ const loadActData = async () => {
 const confirmAct = async () => {
   if (!confirm('Вы уверены, что хотите подтвердить этот акт?')) return
 
+  isConfirming.value = true
+  error.value = ''
+  successMessage.value = ''
+
   try {
+    const username = currentUser.value
+    if (!username) {
+      throw new Error('Не удалось получить имя пользователя')
+    }
+
     const response = await axios.post(
-        BACKEND_URL + `/api/things/transfer-acts/confirm/${act.value.id}`,
-        { confirmed: 1 }
+        BACKEND_URL + `/api/transfer-acts/confirm`,
+        {
+          username: username,
+          transfer_act_id: act.value.id
+        }
     )
 
     if (response.data.success) {
-      act.value.confirmed = true
-      alert('Акт успешно подтверждён')
+      successMessage.value = 'Акт успешно подтверждён'
+      // Обновляем данные
+      setTimeout(() => {
+        loadActData()
+      }, 1000)
+    } else {
+      throw new Error(response.data.message || 'Ошибка подтверждения акта')
     }
   } catch (err) {
-    error.value = err.response?.data?.message || 'Ошибка подтверждения акта'
+    console.error('Ошибка подтверждения акта:', err)
+    error.value = err.response?.data?.message || err.message || 'Ошибка подтверждения акта'
+  } finally {
+    isConfirming.value = false
   }
 }
 
 // Отмена подтверждения
 const unconfirmAct = async () => {
-  if (!confirm('Вы уверены, что хотите отменить подтверждение акта?')) return
+  if (!confirm('Вы уверены, что хотите отозвать подтверждение акта?')) return
+
+  isUnconfirming.value = true
+  error.value = ''
+  successMessage.value = ''
 
   try {
+    const username = currentUser.value
+    if (!username) {
+      throw new Error('Не удалось получить имя пользователя')
+    }
+
     const response = await axios.post(
-        BACKEND_URL + `/api/things/transfer-acts/confirm/${act.value.id}`,
-        { confirmed: 0 }
+        BACKEND_URL + `/api/transfer-acts/cancel-confirm`,
+        {
+          username: username,
+          transfer_act_id: act.value.id
+        }
     )
 
     if (response.data.success) {
-      act.value.confirmed = false
-      alert('Подтверждение акта отменено')
+      successMessage.value = 'Подтверждение акта отозвано'
+      // Обновляем данные
+      setTimeout(() => {
+        loadActData()
+      }, 1000)
+    } else {
+      throw new Error(response.data.message || 'Ошибка отзыва подтверждения')
     }
   } catch (err) {
-    error.value = err.response?.data?.message || 'Ошибка отмены подтверждения'
+    console.error('Ошибка отзыва подтверждения:', err)
+    error.value = err.response?.data?.message || err.message || 'Ошибка отзыва подтверждения'
+  } finally {
+    isUnconfirming.value = false
   }
 }
 
@@ -491,8 +610,6 @@ const formatDateTime = (dateString) => {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
     })
   } catch {
     return '—'
