@@ -14,6 +14,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 * @property int $role
 * @property Token[] $tokens
 * @property People $people
+* @property Notification[] $notifications
 */
 
 class User extends Authenticatable implements JWTSubject
@@ -54,5 +55,8 @@ class User extends Authenticatable implements JWTSubject
     }
     public function people(){
         return $this->hasOne(People::class);
+    }
+    public function notifications(){
+        return $this->hasMany(Notification::class);
     }
 }

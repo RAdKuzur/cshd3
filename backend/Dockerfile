@@ -1,5 +1,6 @@
 FROM php:8.4-fpm
 
+RUN docker-php-ext-install pcntl
 # Устанавливаем зависимости
 RUN apt-get update && apt-get install -y \
     git curl zip unzip libpq-dev libpng-dev libonig-dev libzip-dev \
