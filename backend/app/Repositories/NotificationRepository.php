@@ -10,7 +10,7 @@ class NotificationRepository
     public function getAll(){
         return Notification::all();
     }
-    public function get($id){
+    public function get($id) : Notification {
         return Notification::find($id);
     }
     public function getByUserId($userId)

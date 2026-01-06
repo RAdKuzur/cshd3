@@ -8,6 +8,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ElectronicsController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\InfoController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PeopleController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\TestController;
@@ -94,6 +95,10 @@ Route::middleware([CheckPermissionMiddleware::class])->group(function () {
     Route::get('/files/download/{id}', [FileController::class, 'download'])->name('files.download');
     Route::post('/files', [FileController::class, 'upload'])->name('files.upload');
     Route::delete('/files/{id}', [FileController::class, 'delete'])->name('files.delete');
+
+    Route::get('/notifications/{username}', [NotificationController::class, 'getUserNotifications'])->name('notifications.get-user-notifications');
+    Route::post('/notifications/{username}', [NotificationController::class, 'readAllUserNotifications'])->name('notifications.read-all-user-notifications');
+    Route::post('/notifications/{notificationId}/read', [NotificationController::class, 'readUserNotification'])->name('notifications.read-user-notification');
 });
 
 Route::post('/test' , [TestController::class, 'test'])->name('test');

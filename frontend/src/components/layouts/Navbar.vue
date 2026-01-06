@@ -42,16 +42,149 @@
         <!-- Блок для авторизованных пользователей -->
         <div v-else class="hidden md:block">
           <div class="ml-4 flex items-center md:ml-6">
-            <!-- Кнопка уведомлений -->
-            <button
-                class="relative rounded-full p-1 text-indigo-200 hover:text-white hover:bg-white/10 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-white"
-            >
-              <span class="sr-only">Просмотреть уведомления</span>
-              <BellIcon class="h-6 w-6" aria-hidden="true" />
-              <span class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">
-                3
-              </span>
-            </button>
+            <!-- Компонент уведомлений -->
+            <Menu as="div" class="relative">
+              <!-- Кнопка уведомлений -->
+              <MenuButton
+                  class="relative rounded-full p-1 text-indigo-200 hover:text-white hover:bg-white/10 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-white"
+                  @click="fetchNotifications"
+              >
+                <span class="sr-only">Просмотреть уведомления</span>
+                <BellIcon class="h-6 w-6" aria-hidden="true" />
+                <!-- Бейдж с количеством непрочитанных -->
+                <span
+                    v-if="unreadCount > 0"
+                    class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white"
+                >
+                  {{ unreadCount }}
+                </span>
+              </MenuButton>
+
+              <!-- Выпадающее меню уведомлений -->
+              <transition
+                  enter-active-class="transition ease-out duration-100"
+                  enter-from-class="transform opacity-0 scale-95"
+                  enter-to-class="transform opacity-100 scale-100"
+                  leave-active-class="transition ease-in duration-75"
+                  leave-from-class="transform opacity-100 scale-100"
+                  leave-to-class="transform opacity-0 scale-95"
+              >
+                <MenuItems
+                    class="absolute right-0 z-50 mt-2 w-96 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                >
+                  <div class="py-1">
+                    <!-- Заголовок с кнопкой прочитать все -->
+                    <div class="flex items-center justify-between px-4 py-2 border-b">
+                      <span class="text-sm font-semibold text-gray-900">Уведомления</span>
+                      <button
+                          v-if="unreadCount > 0"
+                          @click.stop="markAllAsRead"
+                          class="text-xs text-indigo-600 hover:text-indigo-800 font-medium"
+                          :disabled="isMarkingAllAsRead"
+                      >
+                        <ArrowPathIcon v-if="isMarkingAllAsRead" class="w-3 h-3 animate-spin inline mr-1" />
+                        <span v-else>Прочитать все</span>
+                      </button>
+                    </div>
+
+                    <!-- Список уведомлений -->
+                    <div class="max-h-96 overflow-y-auto">
+                      <!-- Состояние загрузки -->
+                      <div v-if="isLoading" class="p-4 text-center">
+                        <ArrowPathIcon class="w-6 h-6 animate-spin mx-auto text-gray-400" />
+                        <p class="text-sm text-gray-500 mt-2">Загрузка уведомлений...</p>
+                      </div>
+
+                      <!-- Уведомления -->
+                      <div v-else-if="notifications.length > 0">
+                        <MenuItem
+                            v-for="notification in notifications"
+                            :key="notification.id"
+                            v-slot="{ active }"
+                        >
+                          <div
+                              :class="[
+                              active ? 'bg-gray-50' : '',
+                              'px-4 py-3 cursor-pointer',
+                              notification.is_read === 1 ? 'bg-indigo-50 border-l-4 border-indigo-500' : ''
+                            ]"
+                              @click="markAsRead(notification.id)"
+                          >
+                            <div class="flex items-start">
+                              <!-- Иконка типа уведомления -->
+                              <div class="flex-shrink-0">
+                                <div
+                                    :class="[
+                                    'rounded-full p-2',
+                                    notification.is_read === 1 ? 'bg-indigo-100 text-indigo-600' : 'bg-gray-100 text-gray-600'
+                                  ]"
+                                >
+                                  <BellIcon class="w-4 h-4" />
+                                </div>
+                              </div>
+
+                              <div class="ml-3 w-0 flex-1">
+                                <!-- Текст уведомления -->
+                                <p
+                                    :class="[
+                                    'text-sm font-medium',
+                                    notification.is_read === 1 ? 'text-gray-900' : 'text-gray-500'
+                                  ]"
+                                >
+                                  {{ notification.message }}
+                                </p>
+
+                                <!-- Время уведомления -->
+                                <p
+                                    v-if="notification.created_at"
+                                    class="text-xs text-gray-400 mt-1"
+                                >
+                                  {{ formatDate(notification.created_at) }}
+                                </p>
+
+                                <!-- Кнопка прочитать -->
+                                <button
+                                    v-if="notification.is_read === 1"
+                                    @click.stop="markAsRead(notification.id)"
+                                    class="text-xs text-indigo-600 hover:text-indigo-800 mt-1"
+                                    :disabled="isMarkingAsRead === notification.id"
+                                >
+                                  <span v-if="isMarkingAsRead === notification.id">
+                                    <ArrowPathIcon class="w-3 h-3 animate-spin inline mr-1" />
+                                  </span>
+                                  Отметить как прочитанное
+                                </button>
+                              </div>
+
+                              <!-- Индикатор непрочитанного -->
+                              <div v-if="notification.is_read === 1" class="ml-2">
+                                <div class="w-2 h-2 rounded-full bg-indigo-500"></div>
+                              </div>
+                            </div>
+                          </div>
+                        </MenuItem>
+                      </div>
+
+                      <!-- Нет уведомлений -->
+                      <div v-else class="p-4 text-center">
+                        <BellIcon class="w-12 h-12 mx-auto text-gray-300" />
+                        <p class="text-sm text-gray-500 mt-2">У вас нет уведомлений</p>
+                      </div>
+                    </div>
+
+                    <!-- Футер с ссылкой на все уведомления -->
+                    <div class="border-t px-4 py-2">
+                      <router-link
+                          to="/notifications"
+                          class="block text-center text-sm text-indigo-600 hover:text-indigo-800 font-medium"
+                      >
+                        Посмотреть все уведомления
+                      </router-link>
+                    </div>
+                  </div>
+                </MenuItems>
+              </transition>
+            </Menu>
 
             <!-- Профиль -->
             <Menu as="div" class="relative ml-3">
@@ -153,11 +286,85 @@
             <div class="text-base font-medium text-white">{{ profileBar.fio }}</div>
             <div class="text-sm font-medium text-indigo-200">{{ profileBar.position }}</div>
           </div>
-          <button class="relative ml-auto flex-shrink-0 rounded-full p-1 text-indigo-200 hover:text-white hover:bg-white/10">
+
+          <!-- Мобильная версия кнопки уведомлений -->
+          <button
+              class="relative ml-auto flex-shrink-0 rounded-full p-1 text-indigo-200 hover:text-white hover:bg-white/10"
+              @click="showMobileNotifications = !showMobileNotifications"
+          >
             <span class="sr-only">Уведомления</span>
             <BellIcon class="h-6 w-6" aria-hidden="true" />
-            <span class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">3</span>
+            <span
+                v-if="mobileUnreadCount > 0"
+                class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white"
+            >
+              {{ mobileUnreadCount }}
+            </span>
           </button>
+        </div>
+
+        <!-- Мобильные уведомления -->
+        <div v-if="showMobileNotifications" class="mt-3 px-2">
+          <div class="bg-white/10 rounded-lg p-3 max-h-64 overflow-y-auto">
+            <div class="flex items-center justify-between mb-2">
+              <h4 class="text-white font-medium">Уведомления</h4>
+              <button
+                  v-if="mobileUnreadCount > 0"
+                  @click="markAllAsRead"
+                  class="text-xs text-white hover:text-indigo-200 font-medium"
+                  :disabled="isMarkingAllAsRead"
+              >
+                <ArrowPathIcon v-if="isMarkingAllAsRead" class="w-3 h-3 animate-spin inline mr-1" />
+                <span v-else>Прочитать все</span>
+              </button>
+            </div>
+
+            <!-- Состояние загрузки -->
+            <div v-if="isLoading" class="text-center py-4">
+              <ArrowPathIcon class="w-6 h-6 animate-spin mx-auto text-white/50" />
+              <p class="text-sm text-white/70 mt-2">Загрузка...</p>
+            </div>
+
+            <!-- Уведомления -->
+            <div v-else-if="notifications.length > 0">
+              <div
+                  v-for="notification in notifications"
+                  :key="notification.id"
+                  :class="[
+                  'text-sm text-white p-3 mb-2 rounded transition-colors duration-150',
+                  notification.is_read === 1 ? 'bg-white/20' : 'bg-white/10'
+                ]"
+                  @click="markAsRead(notification.id)"
+              >
+                <div class="flex items-start">
+                  <BellIcon class="w-4 h-4 mt-0.5 mr-2 flex-shrink-0" />
+                  <div class="flex-1">
+                    <p>{{ notification.message }}</p>
+                    <p v-if="notification.created_at" class="text-xs text-white/70 mt-1">
+                      {{ formatDate(notification.created_at) }}
+                    </p>
+                    <button
+                        v-if="notification.is_read === 1"
+                        @click.stop="markAsRead(notification.id)"
+                        class="text-xs text-indigo-200 hover:text-white mt-1"
+                        :disabled="isMarkingAsRead === notification.id"
+                    >
+                      <ArrowPathIcon v-if="isMarkingAsRead === notification.id" class="w-3 h-3 animate-spin inline mr-1" />
+                      Отметить как прочитанное
+                    </button>
+                  </div>
+                  <div v-if="notification.is_read === 1" class="ml-2">
+                    <div class="w-2 h-2 rounded-full bg-indigo-300"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Нет уведомлений -->
+            <div v-else class="text-center py-4">
+              <p class="text-sm text-white/70">У вас нет уведомлений</p>
+            </div>
+          </div>
         </div>
 
         <div class="mt-3 space-y-1 px-2">
@@ -185,16 +392,27 @@
 <script setup>
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { useAuthContextStore } from '@/services/AuthContext.js'
-import { computed, onMounted } from 'vue'
+import { computed, ref, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import axios from 'axios'
+import {BACKEND_URL} from "@/router.js";
 import {
-  ScaleIcon, Bars3Icon, XMarkIcon, ChevronDownIcon, UserIcon, Cog6ToothIcon, UserPlusIcon, BellIcon, ArrowRightOnRectangleIcon,
+  ScaleIcon, Bars3Icon, XMarkIcon, ChevronDownIcon, UserIcon, BellIcon,
+  ArrowRightOnRectangleIcon, ArrowPathIcon,
   CalculatorIcon, CommandLineIcon, BuildingStorefrontIcon, UserGroupIcon, MapIcon, DocumentIcon
 } from '@heroicons/vue/24/outline'
 
 const router = useRouter()
 const authStore = useAuthContextStore()
 
+// Реактивные переменные для уведомлений
+const notifications = ref([])
+const isLoading = ref(false)
+const isMarkingAsRead = ref(null)
+const isMarkingAllAsRead = ref(false)
+const showMobileNotifications = ref(false)
+
+// Вычисляемые свойства
 const isAuth = computed(() => !!authStore.user)
 const profileBar = computed(() => ({
   username: authStore.user?.username || '',
@@ -203,6 +421,98 @@ const profileBar = computed(() => ({
   position: authStore.user?.position || ''
 }))
 const profileUrl = computed(() => `/profile/${profileBar.value.username}`)
+
+const currentUser = computed(() => {
+  return authStore.user?.username || ''
+})
+
+const unreadCount = computed(() => {
+  return notifications.value.filter(n => n.is_read === 1).length
+})
+
+const mobileUnreadCount = computed(() => unreadCount.value)
+
+const navigation = [
+  { name: 'Материальные ценности', href: '/things', current: false, icon: BuildingStorefrontIcon },
+  { name: 'Кадры', href: '/stuff', current: false, icon: UserGroupIcon },
+  { name: 'Отчёты', href: '/reports', current: false, icon: CalculatorIcon },
+  { name: 'Интерактивная карта', href: '/map', current: false, icon: MapIcon },
+  { name: 'Панель администратора', href: '/admin', current: false, icon: CommandLineIcon },
+  { name: 'Файловая система', href: '/files', current: false, icon: DocumentIcon }
+]
+
+// Методы для уведомлений
+const fetchNotifications = async () => {
+  if (!currentUser.value) return
+
+  try {
+    isLoading.value = true
+    const response = await axios.get(
+        `${BACKEND_URL}/api/notifications/${currentUser.value}`
+    )
+
+    if (response.data.success) {
+      notifications.value = response.data.data
+    }
+  } catch (error) {
+    console.error('Ошибка загрузки уведомлений:', error)
+  } finally {
+    isLoading.value = false
+  }
+}
+
+const markAsRead = async (notificationId) => {
+  try {
+    isMarkingAsRead.value = notificationId
+
+    await axios.post(
+        `${BACKEND_URL}/api/notifications/${notificationId}/read`
+    )
+
+    // Обновляем локальное состояние
+    const notificationIndex = notifications.value.findIndex(n => n.id === notificationId)
+    if (notificationIndex !== -1) {
+      notifications.value[notificationIndex].is_read = 2
+    }
+  } catch (error) {
+    console.error('Ошибка при отметке уведомления как прочитанного:', error)
+  } finally {
+    isMarkingAsRead.value = null
+  }
+}
+
+const markAllAsRead = async () => {
+  if (!currentUser.value || unreadCount.value === 0) return
+
+  try {
+    isMarkingAllAsRead.value = true
+
+    await axios.post(
+        `${BACKEND_URL}/api/notifications/${currentUser.value}`
+    )
+
+    // Обновляем все уведомления как прочитанные
+    notifications.value = notifications.value.map(n => ({
+      ...n,
+      is_read: 2
+    }))
+  } catch (error) {
+    console.error('Ошибка при отметке всех уведомлений как прочитанных:', error)
+  } finally {
+    isMarkingAllAsRead.value = false
+  }
+}
+
+const formatDate = (dateString) => {
+  if (!dateString) return ''
+  const date = new Date(dateString)
+  return new Intl.DateTimeFormat('ru-RU', {
+    day: 'numeric',
+    month: 'short',
+    hour: '2-digit',
+    minute: '2-digit'
+  }).format(date)
+}
 
 const logout = async () => {
   try {
@@ -213,17 +523,60 @@ const logout = async () => {
   }
 }
 
-const navigation = [
-  { name: 'Материальные ценности', href: '/things', current: false, icon: BuildingStorefrontIcon },
-  { name: 'Кадры', href: '/stuff', current: false, icon: UserGroupIcon },
-  { name: 'Отчёты', href: '/reports', current: false, icon: CalculatorIcon },
-  { name: 'Интерактивная карта', href: '/map', current: false, icon: MapIcon },
-  { name: 'Панель администратора', href: '/admin', current: false, icon: CommandLineIcon },
-  { name : 'Файловая система' , href: '/files', current: false, icon: DocumentIcon }
-]
+// Хуки жизненного цикла
+onMounted(() => {
+  if (authStore.user) {
+    fetchNotifications()
+  }
+})
 
+// Следим за изменением пользователя
+watch(() => authStore.user, (newUser) => {
+  if (newUser) {
+    fetchNotifications()
+  }
+})
 </script>
 
 <style scoped>
-/* можно оставить пустым или добавить свои стили */
+/* Прокрутка для уведомлений */
+.max-h-96 {
+  max-height: 24rem;
+}
+
+.max-h-64 {
+  max-height: 16rem;
+}
+
+/* Стилизация скроллбара */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Стилизация скроллбара для темного фона */
+.bg-white\/10 ::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.bg-white\/10 ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.bg-white\/10 ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
 </style>
