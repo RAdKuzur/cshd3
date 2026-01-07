@@ -27,6 +27,34 @@ class ThingController extends Controller
             'data' => $data,
         ]);
     }
+    public function simpleThings()
+    {
+        $electronics = $this->thingService->simpleThings();
+        return response()->json([
+            'success' => true,
+            'code' => 200,
+            'data' => $electronics,
+        ]);
+    }
+    public function electronics()
+    {
+        $electronics = $this->thingService->electronics();
+        return response()->json([
+            'success' => true,
+            'code' => 200,
+            'data' => $electronics,
+        ]);
+    }
+
+    public function furniture()
+    {
+        $electronics = $this->thingService->furniture();
+        return response()->json([
+            'success' => true,
+            'code' => 200,
+            'data' => $electronics,
+        ]);
+    }
 
     public function personThings($id)
     {

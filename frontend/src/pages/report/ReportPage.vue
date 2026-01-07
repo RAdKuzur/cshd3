@@ -149,7 +149,7 @@
           <!-- Отчет по АРМ -->
           <div
               class="report-card group bg-gradient-to-br from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700"
-              @click="navigateTo('/reports/workstations')"
+              @click="navigateTo('/reports/arms')"
           >
             <div class="absolute top-6 right-6">
               <div class="bg-white/20 backdrop-blur-sm p-3 rounded-xl">

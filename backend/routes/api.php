@@ -5,7 +5,6 @@ use App\Http\Controllers\AdminPositionController;
 use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\AuditoriumController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ElectronicsController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\InfoController;
 use App\Http\Controllers\NotificationController;
@@ -39,7 +38,7 @@ Route::middleware([CheckPermissionMiddleware::class])->group(function () {
     Route::get('/info/roles', [InfoController::class, 'roles'])->name('info.roles');
 
     Route::get('/auditoriums', [AuditoriumController::class, 'all'])->name('auditorium.all');
-    Route::get('/things/simple-electronics', [ElectronicsController::class, 'simpleElectronics'])->name('things.simple-electronics');
+    Route::get('/things/simple-things', [ThingController::class, 'simpleThings'])->name('things.simple-things');
 
     Route::post('/things/composite', [ThingController::class, 'compositeCreate'])->name('things.composite-create');
     Route::get('/things', [ThingController::class, 'all'])->name('things.all');
@@ -50,7 +49,8 @@ Route::middleware([CheckPermissionMiddleware::class])->group(function () {
 
     Route::get('/stuff', [PeopleController::class, 'stuff'])->name('stuff');
 
-    Route::get('/things/electronics', [ElectronicsController::class, 'electronics'])->name('things.electronics');
+    Route::get('/things/electronics', [ThingController::class, 'electronics'])->name('things.electronics');
+    Route::get('/things/furniture', [ThingController::class, 'furniture'])->name('things.furniture');
     Route::get('/things/{id}', [ThingController::class, 'getOne'])->name('things.get-one');
     Route::post('/things', [ThingController::class, 'create'])->name('things.create');
     Route::put('/things/{id}', [ThingController::class, 'update'])->name('things.update');

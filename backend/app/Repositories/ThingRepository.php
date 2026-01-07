@@ -21,6 +21,10 @@ class ThingRepository
     {
         return Thing::whereIn('thing_type_id', ThingTypeDictionary::ELECTRONICS)->get();
     }
+    public function getFurniture()
+    {
+        return Thing::whereIn('thing_type_id', ThingTypeDictionary::FURNITURE)->get();
+    }
     public function create($data)
     {
         DB::table('logs')->insert([

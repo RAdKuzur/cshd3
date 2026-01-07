@@ -49,11 +49,33 @@ class ThingService
             ];
         }
         return $data;
-
     }
-    public function simpleElectronics(): array
+
+    public function furniture() : array
     {
-        $electronics = $this->thingRepository->getElectronics();
+        $electronics = $this->thingRepository->getFurniture();
+        $data = [];
+        foreach ($electronics as $electronic){
+            $data[] = [
+                'id' => $electronic->id,
+                'name' => $electronic->name,
+                'inv_number' => $electronic->inv_number,
+                'serial_number' => $electronic->serial_number,
+                'type' => $electronic->thing_type_id ? $electronic->thing_type_id : null,
+                'condition' => $electronic->condition,
+                'parent' => $electronic->parent ? $electronic->parent->inv_number : null,
+                'operation_date' => $electronic->operation_date,
+                'price' => $electronic->price,
+                'auditorium_id' => $electronic->getCurrentLocation() ? $electronic->getCurrentLocation()->id : null,
+                'balance' => $electronic->balance,
+                'is_blocked' => $electronic->is_blocked,
+            ];
+        }
+        return $data;
+    }
+    public function simpleThings(): array
+    {
+        $electronics = $this->thingRepository->getAll();
         $data = [];
         foreach ($electronics as $electronic){
             $data[] = [

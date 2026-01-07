@@ -32,6 +32,11 @@ class ThingTypeDictionary implements BaseDictionary
     public const BATTERY = 24;
     public const HEADSET = 25;
     public const OTHER = 26;
+    public const TABLE = 27;
+    public const CHAIR = 28;
+    public const SHELF = 29;
+    public const SOFA = 30;
+
     public const ELECTRONICS = [
         self::PC,               // 1
         self::MONITOR,          // 2
@@ -59,7 +64,13 @@ class ThingTypeDictionary implements BaseDictionary
         self::BATTERY,          // 24
         self::HEADSET,          // 25
         self::OTHER             // 26
-     ];
+    ];
+    public const FURNITURE = [
+        self::TABLE,
+        self::CHAIR,
+        self::SHELF,
+        self::SOFA,
+    ];
     public static function type(){
         return [
             self::PC => 'Системный блок',
@@ -87,7 +98,11 @@ class ThingTypeDictionary implements BaseDictionary
             self::SOUNDBAR => 'Саундбар',
             self::BATTERY => 'Аккумулятор',
             self::HEADSET => 'Гарнитура',
-            self::OTHER => 'Другое'
+            self::OTHER => 'Другое',
+            self::TABLE => 'Стол',
+            self::CHAIR => 'Стул/кресло',
+            self::SHELF => 'Шкаф',
+            self::SOFA => 'Диван',
         ];
     }
     public static function get($index){

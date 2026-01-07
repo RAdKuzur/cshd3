@@ -22,9 +22,9 @@ class ThingSeeder extends Seeder
      */
     public function run(): void
     {
-        //things
+        //things-electronics
         DB::table('things')->truncate();
-        for($i = 1; $i <= 5000; $i++){
+        for($i = 1; $i <= 1000; $i++){
             DB::table('things')->insert([
                 'name' => 'THING #' . $i,
                 'serial_number' => $i,
@@ -38,6 +38,30 @@ class ThingSeeder extends Seeder
                     rand(0, 59)
                 )->toDateTimeString(),
                 'thing_type_id' => rand(ThingTypeDictionary::PC, ThingTypeDictionary::OTHER),
+                'thing_parent_id' => null,
+                'condition' => ConditionDictionary::NONE_BALANCE,
+                'price' => rand(1, 100000),
+                'comment' => null,
+                'balance' => array_rand(array_keys(ThingBalanceDictionary::type())),
+                'is_composite' => false,
+                'is_blocked' => Thing::NOT_BLOCKED
+            ]);
+        }
+        //things-furniture
+        for($i = 1001; $i <= 2000; $i++){
+            DB::table('things')->insert([
+                'name' => 'THING #' . $i,
+                'serial_number' => $i,
+                'inv_number' => $i,
+                'operation_date' => Carbon::create(
+                    rand(2000, 2025),
+                    rand(1, 12),
+                    rand(1, 28),
+                    rand(0, 23),
+                    rand(0, 59),
+                    rand(0, 59)
+                )->toDateTimeString(),
+                'thing_type_id' => rand(ThingTypeDictionary::TABLE, ThingTypeDictionary::SOFA),
                 'thing_parent_id' => null,
                 'condition' => ConditionDictionary::NONE_BALANCE,
                 'price' => rand(1, 100000),

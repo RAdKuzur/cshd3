@@ -715,7 +715,7 @@ const getBalanceLabel = (balanceId) => {
 }
 
 const viewThing = (thingId) => {
-  // router.push(`/things/electronics/view/${thingId}`)
+  // router.push(`/things/things/view/${thingId}`)
 }
 </script>
 

@@ -6,7 +6,7 @@
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-4">
             <router-link
-                to="/things/electronics"
+                to="/things"
                 class="text-gray-600 hover:text-gray-900 flex items-center gap-2 px-3 py-2 hover:bg-gray-100 transition-colors"
             >
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -606,7 +606,7 @@ const getTypeColor = (typeId) => {
 
 // Обработчики действий
 const handleEdit = () => {
-  router.push(`/things/electronics/edit/${route.params.id}`)
+  router.push(`/things/edit/${route.params.id}`)
 }
 
 const handlePrint = () => {
@@ -629,7 +629,7 @@ const handleDelete = async () => {
     const data = response.data
     if (data.success) {
       alert('Предмет успешно удален')
-      router.push('/things/electronics')
+      router.push('/things/things')
     } else {
       throw new Error(data.message || 'Ошибка при удалении')
     }

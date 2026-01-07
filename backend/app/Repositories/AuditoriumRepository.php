@@ -14,7 +14,7 @@ class AuditoriumRepository
     }
 
     public function get($id) : Auditorium {
-        return Auditorium::where(['id' => $id])->get();
+        return Auditorium::find($id);
     }
     public function create($data){
         DB::table('logs')->insert([

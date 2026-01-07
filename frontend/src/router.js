@@ -14,10 +14,10 @@ import TaskPage from "@/pages/TaskPage.vue"
 import AdminPage from "@/pages/admin/AdminPage.vue"
 import ReportPage from "@/pages/report/ReportPage.vue"
 import MainThingPage from "@/pages/thing/MainThingPage.vue"
-import ElectronicsPage from "@/pages/thing/electronics/ElectronicsPage.vue"
-import ElectronicsCreatePage from "@/pages/thing/electronics/ElectronicsCreatePage.vue"
-import ElectronicsViewPage from "@/pages/thing/electronics/ElectronicsViewPage.vue"
-import ElectronicsEditPage from "@/pages/thing/electronics/ElectronicsEditPage.vue"
+import ElectronicsPage from "@/pages/thing/things/ElectronicsPage.vue"
+import ThingCreatePage from "@/pages/thing/things/ThingCreatePage.vue"
+import ThingViewPage from "@/pages/thing/things/ThingViewPage.vue"
+import ThingEditPage from "@/pages/thing/things/ThingEditPage.vue"
 import GeneralMapPage from "@/pages/map/GeneralMapPage.vue"
 import AdminPositionPage from "@/pages/admin/position/AdminPositionPage.vue"
 import AdminAuditoriumPage from "@/pages/admin/auditorium/AdminAuditoriumPage.vue"
@@ -34,6 +34,7 @@ import TransferActEditPage from "@/pages/thing/transfer-act/TransferActEditPage.
 import ForbiddenErrorPage from "@/pages/error/ForbiddenErrorPage.vue";
 import AuthErrorPage from "@/pages/error/AuthErrorPage.vue";
 import FilePage from "@/pages/files/FilePage.vue";
+import FurniturePage from "@/pages/thing/things/FurniturePage.vue";
 
 
 const BACKEND_URL = '';
@@ -65,9 +66,10 @@ const routes = [
 
     { path: '/things', component: MainThingPage, meta: { auth: true } },
     { path: '/things/electronics', component: ElectronicsPage, meta: { auth: true } },
-    { path: '/things/electronics/create', component: ElectronicsCreatePage, meta: { auth: true } },
-    { path: '/things/electronics/view/:id', component: ElectronicsViewPage, meta: { auth: true } },
-    { path: '/things/electronics/edit/:id', component: ElectronicsEditPage, meta: { auth: true } },
+    { path: '/things/furniture', component: FurniturePage, meta: { auth: true } },
+    { path: '/things/create', component: ThingCreatePage, meta: { auth: true } },
+    { path: '/things/view/:id', component: ThingViewPage, meta: { auth: true } },
+    { path: '/things/edit/:id', component: ThingEditPage, meta: { auth: true } },
 
     { path: '/things/transfer-acts', component: TransferActPage, meta: { auth: true } },
     { path: '/things/transfer-acts/create', component: TransferActCreatePage, meta: { auth: true } },

@@ -518,7 +518,7 @@ const loadFormData = async () => {
     const [typesResponse, balanceResponse, parentsResponse, auditoriumsResponse] = await Promise.all([
       axios.get(BACKEND_URL + '/api/info/thing-types'),
       axios.get(BACKEND_URL + '/api/info/balance'), // Запрос характеристик учёта
-      axios.get(BACKEND_URL + '/api/things/simple-electronics'),
+      axios.get(BACKEND_URL + '/api/things/simple-things'),
       axios.get(BACKEND_URL + '/api/auditoriums')
     ])
 

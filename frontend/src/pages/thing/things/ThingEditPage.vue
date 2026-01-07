@@ -9,7 +9,7 @@
             <p class="text-gray-600 mt-2">Редактирование основного средства #{{ thingId }}</p>
           </div>
           <router-link
-              to="/things/electronics"
+              to="/things"
               class="text-gray-600 hover:text-gray-900 flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -656,7 +656,7 @@ const loadFormData = async () => {
     const [typesResponse, balanceResponse, parentsResponse, auditoriumsResponse] = await Promise.all([
       axios.get(BACKEND_URL + '/api/info/thing-types'),
       axios.get(BACKEND_URL + '/api/info/balance'), // Добавляем запрос характеристик учёта
-      axios.get(BACKEND_URL + '/api/things/simple-electronics'),
+      axios.get(BACKEND_URL + '/api/things/simple-things'),
       axios.get(BACKEND_URL + '/api/auditoriums')
     ])
 
