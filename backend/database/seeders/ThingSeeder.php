@@ -42,7 +42,7 @@ class ThingSeeder extends Seeder
                 'condition' => ConditionDictionary::NONE_BALANCE,
                 'price' => rand(1, 100000),
                 'comment' => null,
-                'balance' => array_rand(array_keys(ThingBalanceDictionary::type())),
+                'balance' => rand(ThingBalanceDictionary::OS, ThingBalanceDictionary::RESOURCE),
                 'is_composite' => false,
                 'is_blocked' => Thing::NOT_BLOCKED
             ]);
@@ -66,7 +66,7 @@ class ThingSeeder extends Seeder
                 'condition' => ConditionDictionary::NONE_BALANCE,
                 'price' => rand(1, 100000),
                 'comment' => null,
-                'balance' => array_rand(array_keys(ThingBalanceDictionary::type())),
+                'balance' => rand(ThingBalanceDictionary::OS, ThingBalanceDictionary::RESOURCE),
                 'is_composite' => false,
                 'is_blocked' => Thing::NOT_BLOCKED
             ]);
