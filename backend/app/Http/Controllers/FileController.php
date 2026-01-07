@@ -11,43 +11,55 @@ class FileController extends Controller
     private FileService $fileService;
     public function __construct(
         FileService $fileService
-    )
-    {
+    ) {
         $this->fileService = $fileService;
     }
 
-    public function all(){
+    public function all()
+    {
         $files = $this->fileService->all();
         return response()->json([
             'success' => true,
             'data' => $files
         ]);
     }
-    public function getOne($id){
+    public function getOne($id)
+    {
         $file = $this->fileService->get($id);
         return response()->json([
             'success' => true,
             'data' => $file
         ]);
     }
-    public function upload(FileRequest $request){
-        if ($request->hasFile('file')){
-            $fileDTO = $request->toFileDTO();
-            $file = $request->file('file');
-            $this->fileService->upload($file, $fileDTO);
+    public function upload(FileRequest $request)
+    {
+        $fileDTO = $request->toFileDTO();
+
+        if ($request->hasFile('file')) {
+            $this->fileService->upload(
+                $request->file('file'),
+                $fileDTO
+            );
         }
-        return response()->json([
-            'success' => true,
-        ]);
+
+        if ($request->hasFile('files')) {
+            foreach ($request->file('files') as $file) {
+                $this->fileService->upload($file, $fileDTO);
+            }
+        }
+
+        return response()->json(['success' => true]);
     }
-    public function download($id){
+    public function download($id)
+    {
         $this->fileService->download($id);
         return response()->json([
             'success' => true
         ]);
     }
 
-    public function delete($id){
+    public function delete($id)
+    {
         $this->fileService->delete($id);
         return response()->json([
             'success' => true

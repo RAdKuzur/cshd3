@@ -21,18 +21,17 @@ class ThingService
         ThingRepository $thingRepository,
         TransferActRepository $transferActRepository,
         ThingAuditoriumRepository $thingAuditoriumRepository
-    )
-    {
+    ) {
         $this->thingRepository = $thingRepository;
         $this->transferActRepository = $transferActRepository;
         $this->thingAuditoriumRepository = $thingAuditoriumRepository;
     }
 
-    public function electronics() : array
+    public function electronics(): array
     {
         $electronics = $this->thingRepository->getElectronics();
         $data = [];
-        foreach ($electronics as $electronic){
+        foreach ($electronics as $electronic) {
             $data[] = [
                 'id' => $electronic->id,
                 'name' => $electronic->name,
@@ -77,7 +76,7 @@ class ThingService
     {
         $electronics = $this->thingRepository->getAll();
         $data = [];
-        foreach ($electronics as $electronic){
+        foreach ($electronics as $electronic) {
             $data[] = [
                 'id' => $electronic->id,
                 'inv_number' => $electronic->inv_number,
@@ -85,7 +84,7 @@ class ThingService
         }
         return $data;
     }
-    public function get($id) : array
+    public function get($id): array
     {
         $model = $this->thingRepository->get($id);
         return [
@@ -107,7 +106,8 @@ class ThingService
         ];
     }
 
-    public function compositeCreate(ThingDTO $dto) {
+    public function compositeCreate(ThingDTO $dto)
+    {
         DB::beginTransaction();
         try {
             $thingId = $this->thingRepository->create(array_merge($dto->toArray(), [
@@ -121,11 +121,13 @@ class ThingService
                 'end_date' => null
             ]);
 
+            $childIds = [];
             if ($dto->is_composite && !empty($dto->children)) {
                 foreach ($dto->children as $childDTO) {
 
                     $childData = $childDTO->toArray();
                     $childData['thing_parent_id'] = $thingId;
+                    $childData['is_blocked'] = Thing::NOT_BLOCKED;
 
                     $childId = $this->thingRepository->create($childData);
                     $this->thingAuditoriumRepository->create([
@@ -134,19 +136,29 @@ class ThingService
                         'start_date' => now(),
                         'end_date' => null
                     ]);
+                    $childIds[] = $childId;
                 }
             }
 
             DB::commit();
+            return [
+                'id' => $thingId,
+                'children' => $childIds,
+            ];
         } catch (\Exception $e) {
             DB::rollBack();
+            logger()->error('Composite create failed', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            throw $e;
         }
     }
-    public function getActualAll() : array
+    public function getActualAll(): array
     {
         $data = [];
         $things = $this->thingRepository->getAll();
-        foreach ($things as $thing){
+        foreach ($things as $thing) {
             $data[] = new ThingDTO(
                 id: $thing->id,
                 name: $thing->name,
@@ -160,13 +172,15 @@ class ThingService
         return $data;
     }
 
-    public function getFreeThings() : array
+    public function getFreeThings(): array
     {
         $data = [];
         $things = $this->thingRepository->getAll();
-        foreach ($things as $thing){
-            if(!$thing->getActualMaster() && $thing->balance == ConditionDictionary::NONE_BALANCE
-                && $thing->is_blocked == Thing::NOT_BLOCKED) {
+        foreach ($things as $thing) {
+            if (
+                !$thing->getActualMaster() && $thing->balance == ConditionDictionary::NONE_BALANCE
+                && $thing->is_blocked == Thing::NOT_BLOCKED
+            ) {
                 $data[] = new ThingDTO(
                     id: $thing->id,
                     name: $thing->name,
@@ -181,13 +195,15 @@ class ThingService
         return $data;
     }
 
-    public function getPersonThings($id) : array
+    public function getPersonThings($id): array
     {
         $data = [];
         $things = $this->thingRepository->getAll();
-        foreach ($things as $thing){
-            if($thing->getActualMaster() && $thing->getActualMaster()->id == $id
-            && $thing->is_blocked == Thing::NOT_BLOCKED){
+        foreach ($things as $thing) {
+            if (
+                $thing->getActualMaster() && $thing->getActualMaster()->id == $id
+                && $thing->is_blocked == Thing::NOT_BLOCKED
+            ) {
                 $data[] = new ThingDTO(
                     id: $thing->id,
                     name: $thing->name,
@@ -201,13 +217,13 @@ class ThingService
         }
         return $data;
     }
-    public function getTransferActThings($id) : array
+    public function getTransferActThings($id): array
     {
         $data = [];
         $transferAct = $this->transferActRepository->get($id);
-        if($transferAct){
-            foreach ($transferAct->transferActThings as $transferActThing){
-                if($transferActThing->thing) {
+        if ($transferAct) {
+            foreach ($transferAct->transferActThings as $transferActThing) {
+                if ($transferActThing->thing) {
                     $data[] = new ThingDTO(
                         id: $transferActThing->thing->id,
                         name: $transferActThing->thing->name,
@@ -248,7 +264,7 @@ class ThingService
 
             $thing = $this->thingRepository->get($id);
 
-//            TODO edit
+            //            TODO edit
             $thing->update([
                 'condition' => $dto->condition,
                 'comment' => $dto->comment,

@@ -87,8 +87,8 @@ class ThingController extends Controller
 
         return response()->json(
             [
-                'message' => $result,
                 'success' => true,
+                'data' => $result,
                 'code' => 200,
             ]
         );
