@@ -6,6 +6,7 @@ use App\Dictionaries\ConditionDictionary;
 use App\DTO\Thing\ThingDTO;
 use App\DTO\Thing\UpdateThingDTO;
 use App\Models\Thing;
+use App\Repositories\BranchRepository;
 use App\Repositories\ThingAuditoriumRepository;
 use App\Repositories\ThingRepository;
 use App\Repositories\TransferActRepository;
@@ -17,14 +18,17 @@ class ThingService
     private ThingRepository $thingRepository;
     private TransferActRepository $transferActRepository;
     private ThingAuditoriumRepository $thingAuditoriumRepository;
+    private BranchRepository $branchRepository;
     public function __construct(
         ThingRepository $thingRepository,
         TransferActRepository $transferActRepository,
-        ThingAuditoriumRepository $thingAuditoriumRepository
+        ThingAuditoriumRepository $thingAuditoriumRepository,
+        BranchRepository $branchRepository
     ) {
         $this->thingRepository = $thingRepository;
         $this->transferActRepository = $transferActRepository;
         $this->thingAuditoriumRepository = $thingAuditoriumRepository;
+        $this->branchRepository = $branchRepository;
     }
 
     public function electronics(): array
@@ -52,22 +56,22 @@ class ThingService
 
     public function furniture() : array
     {
-        $electronics = $this->thingRepository->getFurniture();
+        $furnitures = $this->thingRepository->getFurniture();
         $data = [];
-        foreach ($electronics as $electronic){
+        foreach ($furnitures as $furniture){
             $data[] = [
-                'id' => $electronic->id,
-                'name' => $electronic->name,
-                'inv_number' => $electronic->inv_number,
-                'serial_number' => $electronic->serial_number,
-                'type' => $electronic->thing_type_id ? $electronic->thing_type_id : null,
-                'condition' => $electronic->condition,
-                'parent' => $electronic->parent ? $electronic->parent->inv_number : null,
-                'operation_date' => $electronic->operation_date,
-                'price' => $electronic->price,
-                'auditorium_id' => $electronic->getCurrentLocation() ? $electronic->getCurrentLocation()->id : null,
-                'balance' => $electronic->balance,
-                'is_blocked' => $electronic->is_blocked,
+                'id' => $furniture->id,
+                'name' => $furniture->name,
+                'inv_number' => $furniture->inv_number,
+                'serial_number' => $furniture->serial_number,
+                'type' => $furniture->thing_type_id ? $furniture->thing_type_id : null,
+                'condition' => $furniture->condition,
+                'parent' => $furniture->parent ? $furniture->parent->inv_number : null,
+                'operation_date' => $furniture->operation_date,
+                'price' => $furniture->price,
+                'auditorium_id' => $furniture->getCurrentLocation() ? $furniture->getCurrentLocation()->id : null,
+                'balance' => $furniture->balance,
+                'is_blocked' => $furniture->is_blocked,
             ];
         }
         return $data;
@@ -287,7 +291,33 @@ class ThingService
             }
         });
     }
-
+    public function filter($branchId, $startDate, $endDate)
+    {
+        $data = [];
+        $branch = $this->branchRepository->get($branchId);
+        foreach ($branch->auditoriums as $auditorium) {
+            foreach($auditorium->getActualThings() as $thingAuditorium) {
+                if($thingAuditorium->thing->operation_date > $startDate && $thingAuditorium->thing->operation_date < $endDate) {
+                    $thing = $thingAuditorium->thing;
+                    $data[] = [
+                        'id' => $thing->id,
+                        'name' => $thing->name,
+                        'inv_number' => $thing->inv_number,
+                        'serial_number' => $thing->serial_number,
+                        'type' => $thing->thing_type_id ? $thing->thing_type_id : null,
+                        'condition' => $thing->condition,
+                        'parent' => $thing->parent ? $thing->parent->inv_number : null,
+                        'operation_date' => $thing->operation_date,
+                        'price' => $thing->price,
+                        'auditorium_id' => $thing->getCurrentLocation() ? $thing->getCurrentLocation()->id : null,
+                        'balance' => $thing->balance,
+                        'is_blocked' => $thing->is_blocked,
+                    ];
+                }
+            }
+        }
+        return $data;
+    }
     public function delete($id)
     {
         DB::beginTransaction();

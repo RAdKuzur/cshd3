@@ -49,6 +49,7 @@ Route::middleware([CheckPermissionMiddleware::class])->group(function () {
 
     Route::get('/stuff', [PeopleController::class, 'stuff'])->name('stuff');
 
+    Route::get('/things/filter', [ThingController::class, 'filter'])->name('things.filter');
     Route::get('/things/electronics', [ThingController::class, 'electronics'])->name('things.electronics');
     Route::get('/things/furniture', [ThingController::class, 'furniture'])->name('things.furniture');
     Route::get('/things/{id}', [ThingController::class, 'getOne'])->name('things.get-one');

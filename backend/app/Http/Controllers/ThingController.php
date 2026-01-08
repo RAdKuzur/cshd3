@@ -9,6 +9,7 @@ use App\Http\Requests\ThingRequest\StoreThingRequest;
 use App\Http\Requests\ThingRequest\UpdateThingRequest;
 
 use App\Services\ThingService;
+use Illuminate\Support\Facades\Request;
 
 class ThingController extends Controller
 {
@@ -138,6 +139,18 @@ class ThingController extends Controller
         return response()->json([
             'success' => true,
             'code' => 200,
+        ]);
+    }
+
+    public function filter()
+    {
+        $branchId = Request::query('branchId');
+        $startDate = Request::query('startDate');
+        $endDate = Request::query('endDate');
+        $data = $this->thingService->filter($branchId, $startDate, $endDate);
+        return response()->json([
+            'success' => true,
+            'data' => $data,
         ]);
     }
 }

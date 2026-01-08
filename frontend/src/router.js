@@ -35,6 +35,7 @@ import ForbiddenErrorPage from "@/pages/error/ForbiddenErrorPage.vue";
 import AuthErrorPage from "@/pages/error/AuthErrorPage.vue";
 import FilePage from "@/pages/files/FilePage.vue";
 import FurniturePage from "@/pages/thing/things/FurniturePage.vue";
+import ReportArmPage from "@/pages/report/ReportArmPage.vue";
 
 
 const BACKEND_URL = '';
@@ -55,6 +56,7 @@ const routes = [
     { path: '/reports', component: ReportPage, meta: { auth: true }},
     { path: '/reports/auditoriums', component: ReportAuditoriumPage, meta: { auth: true }},
     { path: '/reports/things', component: ReportThingPage, meta: { auth: true }},
+    { path: '/reports/arms', component: ReportArmPage, meta: { auth: true }},
 
     { path: '/admin', component: AdminPage, meta: { auth: true } },
     { path: '/admin/positions', component: AdminPositionPage, meta: { auth: true } },
