@@ -111,11 +111,30 @@ services:
       - redis_data:/data
     networks:
       - network
+  rabbitmq:
+    image: rabbitmq:management  # или rabbitmq:latest с переменными среды
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - network
+    healthcheck:
+      test: [ "CMD", "rabbitmq-diagnostics", "ping" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
 volumes:
   db_data:
   pgadmin_data:
   redis_data:
+  rabbitmq_data:
 
 networks:
   network:
