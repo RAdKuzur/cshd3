@@ -3,7 +3,7 @@
     <div class="max-w-8xl mx-auto">
       <!-- Заголовок -->
       <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900">Фильтр материальных ценностей</h1>
+        <h1 class="text-3xl font-bold text-gray-900">Фильтр АРМ</h1>
         <p class="text-gray-600 mt-2">Поиск по отделу и дате</p>
       </div>
 
@@ -94,7 +94,7 @@
                 Результаты поиска
               </h2>
               <p class="text-sm text-gray-600">
-                Найдено мат.ценностей: {{ things.length }}
+                Найдено АРМ: {{ things.length }}
                 <span v-if="searchPerformed" class="ml-4">
                   За период: {{ formatDate(startDate) }} - {{ formatDate(endDate) }}
                 </span>
@@ -532,7 +532,7 @@ const searchThings = async () => {
     params.append('endDate', endDate.value)
 
     // Отправляем GET запрос
-    const url = `/api/things/filter?${params.toString()}`
+    const url = `/api/things/filter-arm?${params.toString()}`
     const response = await fetch(url)
 
     if (!response.ok) {

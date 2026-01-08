@@ -142,12 +142,12 @@ class ThingController extends Controller
         ]);
     }
 
-    public function filter()
+    public function filterArm()
     {
         $branchId = Request::query('branchId');
         $startDate = Request::query('startDate');
         $endDate = Request::query('endDate');
-        $data = $this->thingService->filter($branchId, $startDate, $endDate);
+        $data = $this->thingService->filterArm($branchId, $startDate, $endDate);
         return response()->json([
             'success' => true,
             'data' => $data,

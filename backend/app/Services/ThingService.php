@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Dictionaries\ConditionDictionary;
+use App\Dictionaries\ThingTypeDictionary;
 use App\DTO\Thing\ThingDTO;
 use App\DTO\Thing\UpdateThingDTO;
 use App\Models\Thing;
@@ -291,13 +292,14 @@ class ThingService
             }
         });
     }
-    public function filter($branchId, $startDate, $endDate)
+    public function filterArm($branchId, $startDate, $endDate)
     {
         $data = [];
         $branch = $this->branchRepository->get($branchId);
         foreach ($branch->auditoriums as $auditorium) {
             foreach($auditorium->getActualThings() as $thingAuditorium) {
-                if($thingAuditorium->thing->operation_date > $startDate && $thingAuditorium->thing->operation_date < $endDate) {
+                if($thingAuditorium->thing->operation_date > $startDate && $thingAuditorium->thing->operation_date < $endDate &&
+                    $thingAuditorium->thing->thing_type_id == ThingTypeDictionary::ARM) {
                     $thing = $thingAuditorium->thing;
                     $data[] = [
                         'id' => $thing->id,
