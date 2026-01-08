@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Token;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class ClearExpiredTokensCommand extends Command
@@ -27,10 +28,11 @@ class ClearExpiredTokensCommand extends Command
      */
     public function handle()
     {
-        $deleted = Token::where('expires_at', '<', now())->delete();
-        $this->info("Удалено просроченных токенов: {$deleted}");
-
-        // Логирование для мониторинга
-        Log::info("ClearExpiredTokens: удалено {$deleted} токенов");
+        if (DB::table('tokens')->exists()) {
+            $deleted = Token::where('expires_at', '<', now())->delete();
+            $this->info("Удалено просроченных токенов: {$deleted}");
+            // Логирование для мониторинга
+            Log::info("ClearExpiredTokens: удалено {$deleted} токенов");
+        }
     }
 }

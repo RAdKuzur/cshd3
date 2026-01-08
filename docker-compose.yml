@@ -65,6 +65,34 @@ services:
     depends_on:
       - db
 
+  schedule:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: schedule
+    command: php artisan schedule:work
+    volumes:
+      - ./backend:/var/www/html
+    networks:
+      - network
+    depends_on:
+      - backend
+      - redis
+
+  queue-worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: queue-worker
+    command: php artisan queue:work rabbitmq --queue=test-queue
+    volumes:
+      - ./backend:/var/www/html
+    networks:
+      - network
+    depends_on:
+      - backend
+      - redis
+
   frontend:
     build:
       context: ./frontend
@@ -111,6 +139,7 @@ services:
       - redis_data:/data
     networks:
       - network
+
   rabbitmq:
     image: rabbitmq:management  # или rabbitmq:latest с переменными среды
     container_name: rabbitmq

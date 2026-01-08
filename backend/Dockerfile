@@ -1,11 +1,10 @@
 FROM php:8.4-fpm
 
-RUN docker-php-ext-install pcntl
 # Устанавливаем зависимости
 RUN apt-get update && apt-get install -y \
     git curl zip unzip libpq-dev libpng-dev libonig-dev libzip-dev \
     && docker-php-ext-configure zip \
-    && docker-php-ext-install zip pdo pdo_pgsql gd opcache
+    && docker-php-ext-install zip pdo pdo_pgsql gd opcache sockets pcntl
 
 # Настройка OPcache для dev (hot reload)
 RUN echo "opcache.enable=1" >> /usr/local/etc/php/conf.d/opcache.ini \
