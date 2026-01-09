@@ -4,6 +4,7 @@ namespace App\Services;
 
 
 
+use App\DTO\PositionDTO;
 use App\Repositories\PositionRepository;
 use Illuminate\Support\Facades\DB;
 
@@ -21,19 +22,19 @@ class PositionService
         $data = [];
         $positions = $this->positionRepository->getAll();
         foreach($positions as $position){
-            $data[] = [
-                'id' => $position->id,
-                'name' => $position->name,
-            ];
+            $data[] = new PositionDTO(
+                id: $position->id,
+                name: $position->name,
+            );
         }
         return $data;
     }
-    public function get($id) : array {
+    public function get($id) : PositionDTO {
         $position = $this->positionRepository->get($id);
-        return [
-            'id' => $position->id,
-            'name' => $position->name,
-        ];
+        return new PositionDTO(
+            id: $position->id,
+            name: $position->name,
+        );
     }
     public function create($data)
     {

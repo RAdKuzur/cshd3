@@ -4,25 +4,31 @@ namespace App\DTO;
 
 class AuditoriumDTO implements DTO
 {
-    public string $name;
-    public string $number;
-    public int  $floor;
-    public string $department_id;
-    public string $branch_id;
+    public ?int $id;
+    public ?string $name;
+    public ?string $number;
+    public ?int  $floor;
+    public ?int $department_id;
+    public ?int $branch_id;
+    public ?string $comment;
 
     public function __construct(
-        string $name,
-        string $number,
-        int $floor,
-        string $department_id,
-        string $branch_id
+        ?int $id = null,
+        ?string $name = null,
+        ?string $number = null,
+        ?int $floor = null,
+        ?int $department_id = null,
+        ?int $branch_id = null,
+        ?string $comment = null
     )
     {
+        $this->id = $id;
         $this->name = $name;
         $this->number = $number;
         $this->floor = $floor;
         $this->department_id = $department_id;
-        $this->branch_id=$branch_id;
+        $this->branch_id = $branch_id;
+        $this->comment = $comment;
     }
 
     public static function fromArray(array $array) : self {
@@ -31,7 +37,8 @@ class AuditoriumDTO implements DTO
           $array['number'],
           $array['floor'],
           $array['department_id'],
-          $array['branch_id']
+          $array['branch_id'],
+          $array['comment']
         );
     }
 
@@ -42,7 +49,8 @@ class AuditoriumDTO implements DTO
             'number' => $this->number,
             'floor' => $this->floor,
             'department_id' => $this->department_id,
-            'branch_id' => $this->branch_id
+            'branch_id' => $this->branch_id,
+            'comment' => $this->comment
         ];
     }
 

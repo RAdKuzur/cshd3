@@ -37,20 +37,20 @@ class ThingService
         $electronics = $this->thingRepository->getElectronics();
         $data = [];
         foreach ($electronics as $electronic) {
-            $data[] = [
-                'id' => $electronic->id,
-                'name' => $electronic->name,
-                'inv_number' => $electronic->inv_number,
-                'serial_number' => $electronic->serial_number,
-                'type' => $electronic->thing_type_id ? $electronic->thing_type_id : null,
-                'condition' => $electronic->condition,
-                'parent' => $electronic->parent ? $electronic->parent->inv_number : null,
-                'operation_date' => $electronic->operation_date,
-                'price' => $electronic->price,
-                'auditorium_id' => $electronic->getCurrentLocation() ? $electronic->getCurrentLocation()->id : null,
-                'balance' => $electronic->balance,
-                'is_blocked' => $electronic->is_blocked,
-            ];
+            $data[] = new ThingDTO(
+                id: $electronic->id,
+                name: $electronic->name,
+                serial_number: $electronic->serial_number,
+                inv_number: $electronic->inv_number,
+                operation_date: $electronic->operation_date,
+                thing_type_id: $electronic->thing_type_id ? $electronic->thing_type_id : null,
+                thing_parent_id: $electronic->parent ? $electronic->parent->inv_number : null,
+                condition: $electronic->condition,
+                balance: $electronic->balance,
+                auditorium_id: $electronic->getCurrentLocation() ? $electronic->getCurrentLocation()->id : null,
+                price: $electronic->price,
+                is_blocked: $electronic->is_blocked,
+            );
         }
         return $data;
     }
@@ -60,20 +60,20 @@ class ThingService
         $furnitures = $this->thingRepository->getFurniture();
         $data = [];
         foreach ($furnitures as $furniture){
-            $data[] = [
-                'id' => $furniture->id,
-                'name' => $furniture->name,
-                'inv_number' => $furniture->inv_number,
-                'serial_number' => $furniture->serial_number,
-                'type' => $furniture->thing_type_id ? $furniture->thing_type_id : null,
-                'condition' => $furniture->condition,
-                'parent' => $furniture->parent ? $furniture->parent->inv_number : null,
-                'operation_date' => $furniture->operation_date,
-                'price' => $furniture->price,
-                'auditorium_id' => $furniture->getCurrentLocation() ? $furniture->getCurrentLocation()->id : null,
-                'balance' => $furniture->balance,
-                'is_blocked' => $furniture->is_blocked,
-            ];
+            $data[] = new ThingDTO(
+                id: $furniture->id,
+                name: $furniture->name,
+                serial_number: $furniture->serial_number,
+                inv_number: $furniture->inv_number,
+                operation_date: $furniture->operation_date,
+                thing_type_id: $furniture->thing_type_id ? $furniture->thing_type_id : null,
+                thing_parent_id: $furniture->parent ? $furniture->parent->inv_number : null,
+                condition: $furniture->condition,
+                balance: $furniture->balance,
+                auditorium_id: $furniture->getCurrentLocation() ? $furniture->getCurrentLocation()->id : null,
+                price: $furniture->price,
+                is_blocked: $furniture->is_blocked,
+            );
         }
         return $data;
     }
@@ -89,26 +89,26 @@ class ThingService
         }
         return $data;
     }
-    public function get($id): array
+    public function get($id)
     {
         $model = $this->thingRepository->get($id);
-        return [
-            'id' => $model->id,
-            'name' => $model->name,
-            'inv_number' => $model->inv_number,
-            'serial_number' => $model->serial_number,
-            'type' => $model->thing_type_id,
-            'condition' => $model->condition,
-            'thing_parent_id' => $model->thing_parent_id,
-            'operation_date' => $model->operation_date,
-            'price' => $model->price,
-            'comment' => $model->comment,
-            'auditorium_id' => $model->getCurrentLocation() ? $model->getCurrentLocation()->id : null,
-            'balance' => $model->balance,
-            'is_composite' => $model->is_composite,
-            'is_blocked' => $model->is_blocked,
-            'children' => $model->children,
-        ];
+        return new ThingDTO(
+            id: $model->id,
+            name: $model->name,
+            serial_number: $model->serial_number,
+            inv_number: $model->inv_number,
+            operation_date: $model->operation_date,
+            thing_type_id: $model->thing_type_id,
+            thing_parent_id: $model->thing_parent_id,
+            condition: $model->condition,
+            balance: $model->balance,
+            auditorium_id: $model->getCurrentLocation() ? $model->getCurrentLocation()->id : null,
+            price: $model->price,
+            comment: $model->comment,
+            is_composite: $model->is_composite,
+            is_blocked: $model->is_blocked,
+            //children: $model->children,
+        );
     }
 
     public function compositeCreate(ThingDTO $dto)
@@ -301,20 +301,20 @@ class ThingService
                 if($thingAuditorium->thing->operation_date > $startDate && $thingAuditorium->thing->operation_date < $endDate &&
                     $thingAuditorium->thing->thing_type_id == ThingTypeDictionary::ARM) {
                     $thing = $thingAuditorium->thing;
-                    $data[] = [
-                        'id' => $thing->id,
-                        'name' => $thing->name,
-                        'inv_number' => $thing->inv_number,
-                        'serial_number' => $thing->serial_number,
-                        'type' => $thing->thing_type_id ? $thing->thing_type_id : null,
-                        'condition' => $thing->condition,
-                        'parent' => $thing->parent ? $thing->parent->inv_number : null,
-                        'operation_date' => $thing->operation_date,
-                        'price' => $thing->price,
-                        'auditorium_id' => $thing->getCurrentLocation() ? $thing->getCurrentLocation()->id : null,
-                        'balance' => $thing->balance,
-                        'is_blocked' => $thing->is_blocked,
-                    ];
+                    $data[] = new ThingDTO(
+                        id: $thing->id,
+                        name: $thing->name,
+                        inv_number: $thing->inv_number,
+                        operation_date: $thing->operation_date,
+                        thing_type_id: $thing->thing_type_id,
+                        thing_parent_id: $thing->parent ? $thing->parent->inv_number : null,
+                        condition: $thing->condition,
+                        balance: $thing->balance,
+                        auditorium_id: $thing->getCurrentLocation() ? $thing->getCurrentLocation()->id : null,
+                        price: $thing->price,
+                        comment: $thing->comment,
+                        is_blocked: $thing->is_blocked,
+                    );
                 }
             }
         }

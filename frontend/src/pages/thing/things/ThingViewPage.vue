@@ -88,12 +88,12 @@
           <div>
             <div class="text-sm font-medium text-gray-500 mb-1">Тип предмета</div>
             <div class="flex items-center gap-2">
-              <div :class="getTypeColor(thing?.type)" class="w-8 h-8 rounded-full flex items-center justify-center text-white">
+              <div :class="getTypeColor(thing?.thing_type_id)" class="w-8 h-8 rounded-full flex items-center justify-center text-white">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" />
                 </svg>
               </div>
-              <div class="text-lg text-gray-900">{{ getTypeLabel(thing?.type) || 'Не указан' }}</div>
+              <div class="text-lg text-gray-900">{{ getTypeLabel(thing?.thing_type_id) || 'Не указан' }}</div>
             </div>
           </div>
 

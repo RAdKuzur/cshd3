@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\DTO\PeopleDTO;
+use App\DTO\StuffDTO;
 use App\Repositories\BranchRepository;
 use App\Repositories\PeoplePositionRepository;
 use App\Repositories\PeopleRepository;
@@ -30,14 +31,14 @@ class PeopleService
             $stuff = [];
             $branchStuff = $this->peoplePositionRepository->getByActiveBranchStuff($branch->id);
             foreach ($branchStuff as $person) {
-                $stuff[] = [
-                    'id' => $person->id,
-                    'fio' => $person->people->getFullFio(),
-                    'position' => $person->position->name,
-                    'auditorium' => $person->people->auditorium->name,
-                    'start_date' => $person->start_date,
-                    'icon_link' => $person->people->icon_link,
-                ];
+                $stuff[] = new StuffDTO(
+                    id: $person->id,
+                    fio:$person->people->getFullFio(),
+                    position: $person->position->name,
+                    auditorium: $person->people->auditorium->name,
+                    start_date: $person->start_date,
+                    icon_link: $person->people->icon_link
+                );
             }
             $data[] = [
                 'branch_id' => $branch->id,

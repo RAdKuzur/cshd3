@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\DTO\BranchDTO;
 use App\Repositories\BranchRepository;
 
 class BranchService
@@ -18,10 +19,10 @@ class BranchService
         $data = [];
         $branches = $this->branchRepository->getAll();
         foreach ($branches as $branch){
-            $data[] = [
-                'id' => $branch->id,
-                'name' => $branch->name,
-            ];
+            $data[] = new BranchDTO(
+                id: $branch->id,
+                name: $branch->name
+            );
         }
         return $data;
     }

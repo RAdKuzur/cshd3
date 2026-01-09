@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\DTO\DepartmentDTO;
 use App\Repositories\DepartmentRepository;
 
 class DepartmentService
@@ -18,10 +19,10 @@ class DepartmentService
         $data = [];
         $departments = $this->departmentRepository->getAll();
         foreach($departments as $department){
-            $data[] = [
-                'id' => $department->id,
-                'name' => $department->name,
-            ];
+            $data[] = new DepartmentDTO(
+                id: $department->id,
+                name: $department->name,
+            );
         }
         return $data;
     }

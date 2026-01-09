@@ -23,15 +23,15 @@ class AuditoriumService
         $data = [];
         $auditoriums = $this->auditoriumRepository->getAll();
         foreach ($auditoriums as $auditorium) {
-            $data[] = [
-                'id' => $auditorium->id,
-                'name' => $auditorium->name,
-                'floor' => $auditorium->floor,
-                'number' => $auditorium->number,
-                'department_id' => $auditorium->department_id,
-                'branch_id' => $auditorium->branch_id,
-                'comment' => $auditorium->comment,
-            ];
+            $data[] = new AuditoriumDTO(
+                id: $auditorium->id,
+                name: $auditorium->name,
+                number: $auditorium->number,
+                floor: $auditorium->floor,
+                department_id: $auditorium->department_id,
+                branch_id: $auditorium->branch_id,
+                comment: $auditorium->comment,
+            );
         }
         return $data;
     }

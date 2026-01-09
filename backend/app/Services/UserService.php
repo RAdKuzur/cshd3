@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\DTO\User\UserDTO;
 use App\Models\User;
 use App\Repositories\PeopleRepository;
 use App\Repositories\UserRepository;
@@ -62,47 +63,39 @@ class UserService
         $data = [];
         foreach ($users as $user){
             if($user){
-                $data[] = [
-                    'id' => $user->id,
-                    'firstname' => $user->people->firstname,
-                    'surname' => $user->people->surname,
-                    'patronymic' => $user->people->patronymic,
-                    'username' => $user->username,
-                    'email' => $user->email,
-                    'phone' => $user->people->phone_number,
-                    'birthdate' => $user->people->birthdate,
-                    'auditorium_id' => $user->people->auditorium_id,
-                    'bio' => $user->people->getBio(),
-                    'role' => $user->role
-//                'avatar' => $user->people->icon_link,
-//                'skills' => $user->people->getSkills(),
-//                'workExperience' => $user->people->getWorkExperience(),
-//                'education' => $user->people->getEducation(),
-                ];
+                $data[] = new UserDTO(
+                    id: $user->id,
+                    firstname: $user->people->firstname,
+                    surname: $user->people->surname,
+                    patronymic: $user->people->patronymic,
+                    username: $user->username,
+                    email: $user->email,
+                    phone: $user->people->phone_number,
+                    birthdate: $user->people->birthdate,
+                    auditorium_id: $user->people->auditorium_id,
+                    bio: $user->people->getBio(),
+                    role: $user->role
+                );
             }
         }
         return $data;
     }
-    public function getUserInfo($id) : array
+    public function getUserInfo($id)
     {
         $user = $this->userRepository->get($id);
-        $data = $user ? [
-            'id' => $user->id,
-            'firstname' => $user->people->firstname,
-            'surname' => $user->people->surname,
-            'patronymic' => $user->people->patronymic,
-            'username' => $user->username,
-            'email' => $user->email,
-            'phone' => $user->people->phone_number,
-            'birthdate' => $user->people->birthdate,
-            'auditorium_id' => $user->people->auditorium_id,
-            'bio' => $user->people->getBio(),
-            'role' => $user->role
-//            'avatar' => $user->people->icon_link,
-//            'skills' => $user->people->getSkills(),
-//            'workExperience' => $user->people->getWorkExperience(),
-//            'education' => $user->people->getEducation(),
-        ] : null;
+        $data = $user ? new UserDTO(
+            id: $user->id,
+            firstname: $user->people->firstname,
+            surname: $user->people->surname,
+            patronymic: $user->people->patronymic,
+            username: $user->username,
+            email: $user->email,
+            phone: $user->people->phone_number,
+            birthdate: $user->people->birthdate,
+            auditorium_id: $user->people->auditorium_id,
+            bio: $user->people->getBio(),
+            role: $user->role
+        ) : null;
         return $data;
     }
     public function create($data)

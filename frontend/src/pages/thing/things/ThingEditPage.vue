@@ -618,7 +618,7 @@ const loadThingData = async () => {
         serial_number: data.serial_number || '',
         inv_number: data.inv_number || '',
         operation_date: operationDate,
-        thing_type_id: data.type || '',
+        thing_type_id: data.thing_type_id || '',
         balance: data.balance || '', // Добавляем поле характеристики учёта
         thing_parent_id: data.thing_parent_id || '',
         auditorium_id: data.auditorium_id || '',
