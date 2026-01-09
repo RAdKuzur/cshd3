@@ -39,10 +39,10 @@ class ThingSeeder extends Seeder
                 )->toDateTimeString(),
                 'thing_type_id' => rand(ThingTypeDictionary::PC, ThingTypeDictionary::OTHER),
                 'thing_parent_id' => null,
-                'condition' => ConditionDictionary::NONE_BALANCE,
+                'condition' => ConditionDictionary::OK,
                 'price' => rand(1, 100000),
                 'comment' => null,
-                'balance' => rand(ThingBalanceDictionary::OS, ThingBalanceDictionary::RESOURCE),
+                'balance' => ThingBalanceDictionary::NONE_BALANCE,
                 'is_composite' => false,
                 'is_blocked' => Thing::NOT_BLOCKED
             ]);
@@ -63,10 +63,10 @@ class ThingSeeder extends Seeder
                 )->toDateTimeString(),
                 'thing_type_id' => rand(ThingTypeDictionary::TABLE, ThingTypeDictionary::SOFA),
                 'thing_parent_id' => null,
-                'condition' => ConditionDictionary::NONE_BALANCE,
+                'condition' => ConditionDictionary::OK,
                 'price' => rand(1, 100000),
                 'comment' => null,
-                'balance' => rand(ThingBalanceDictionary::OS, ThingBalanceDictionary::RESOURCE),
+                'balance' => ThingBalanceDictionary::NONE_BALANCE,
                 'is_composite' => false,
                 'is_blocked' => Thing::NOT_BLOCKED
             ]);

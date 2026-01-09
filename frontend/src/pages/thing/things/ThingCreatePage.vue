@@ -604,7 +604,7 @@ const handleSubmit = async () => {
     // )
 
 
-    if (response.data && response.data.success) {
+    if (response.data.success) {
       alert('Предмет успешно создан!')
       router.push('/things')
     } else {
@@ -632,7 +632,8 @@ const handleSubmit = async () => {
       errorMessage = 'Не удалось получить ответ от сервера. Проверьте подключение к интернету.'
     }
 
-    alert(errorMessage)
+    //alert(errorMessage)
+    router.push('/things')
   } finally {
     isSubmitting.value = false
   }

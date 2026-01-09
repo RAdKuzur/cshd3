@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Dictionaries\ConditionDictionary;
+use App\Dictionaries\ThingBalanceDictionary;
 use App\Dictionaries\ThingTypeDictionary;
 use App\DTO\Thing\ThingDTO;
 use App\DTO\Thing\UpdateThingDTO;
@@ -183,7 +184,7 @@ class ThingService
         $things = $this->thingRepository->getAll();
         foreach ($things as $thing) {
             if (
-                !$thing->getActualMaster() && $thing->balance == ConditionDictionary::NONE_BALANCE
+                !$thing->getActualMaster() && $thing->balance == ThingBalanceDictionary::NONE_BALANCE
                 && $thing->is_blocked == Thing::NOT_BLOCKED
             ) {
                 $data[] = new ThingDTO(
@@ -248,7 +249,8 @@ class ThingService
         DB::beginTransaction();
         try {
             $thingId = $this->thingRepository->create(array_merge($thing->toArray(), [
-                'is_blocked' => Thing::NOT_BLOCKED
+                'is_blocked' => Thing::NOT_BLOCKED,
+                'balance' => ThingBalanceDictionary::NONE_BALANCE,
             ]));
             $this->thingAuditoriumRepository->create([
                 'auditorium_id' => $thing->auditorium_id,
@@ -288,7 +290,10 @@ class ThingService
                 $childData = $childDTO->toArray();
                 $childData['thing_parent_id'] = $id;
 
-                $this->thingRepository->create($childData);
+                $this->thingRepository->create(array_merge($childData, [
+                    'is_blocked' => Thing::NOT_BLOCKED,
+                    'balance' => ThingBalanceDictionary::NONE_BALANCE,
+                ]));
             }
         });
     }
