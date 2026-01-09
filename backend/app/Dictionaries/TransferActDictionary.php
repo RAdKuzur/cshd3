@@ -2,8 +2,6 @@
 
 namespace App\Dictionaries;
 
-use function Symfony\Component\String\s;
-
 class TransferActDictionary implements BaseDictionary
 {
     public const ENROLL = 1;
@@ -11,7 +9,6 @@ class TransferActDictionary implements BaseDictionary
     public const DESTROY = 3;
     public const ENROLL_BALANCE = 4;
     public const ENROLL_RESOURCE = 5;
-
 
     public static function type(){
         return [
