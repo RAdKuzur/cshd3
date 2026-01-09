@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Dictionaries\TransferActDictionary;
 use App\Dictionaries\TransferActStatusDictionary;
 use App\DTO\TransferActConfirmDTO;
 use App\DTO\TransferActDTO;
@@ -193,6 +194,11 @@ class TransferActService
                     $this->thingRepository->update($transferActThing->thing->id, [
                         'is_blocked' => Thing::NOT_BLOCKED
                     ]);
+                    if (TransferActDictionary::transferToBalanceType($transferAct->type)) {
+                        $this->thingRepository->update($transferActThing->thing->id, [
+                            'balance' => TransferActDictionary::transferToBalanceType($transferAct->type)
+                        ]);
+                    }
                 }
             }
             DB::commit();
@@ -213,9 +219,11 @@ class TransferActService
                 $transferActConfirmDTO->transfer_act_id,
                 $person->getActualPeoplePosition()->id,
             );
-            $this->transferActConfirmRepository->update($confirmation->id, [
-                'status' => TransferActStatusDictionary::NOT_CONFIRMED
-            ]);
+            if ($transferAct->type != TransferActDictionary::DESTROY) {
+                $this->transferActConfirmRepository->update($confirmation->id, [
+                    'status' => TransferActStatusDictionary::NOT_CONFIRMED
+                ]);
+            }
             $transferActConfirms = $this->transferActConfirmRepository->getByTransferActId($transferAct->id);
             foreach ($transferActConfirms as $transferActConfirm) {
                 if ($transferActConfirm->status != TransferActStatusDictionary::CONFIRMED) {
@@ -223,7 +231,7 @@ class TransferActService
                     break;
                 }
             }
-            if ($isConfirmed) {
+            if ($isConfirmed && $transferAct->type != TransferActDictionary::DESTROY) {
                 $this->transferActRepository->update($transferAct->id, [
                     'confirmed' => TransferActStatusDictionary::NOT_CONFIRMED
                 ]);
@@ -231,6 +239,11 @@ class TransferActService
                     $this->thingRepository->update($transferActThing->thing->id, [
                         'is_blocked' => Thing::BLOCKED
                     ]);
+                    if (TransferActDictionary::revertToBalanceType($transferAct->type)) {
+                        $this->thingRepository->update($transferActThing->thing->id, [
+                            'balance' => TransferActDictionary::revertToBalanceType($transferAct->type)
+                        ]);
+                    }
                 }
             }
             DB::commit();

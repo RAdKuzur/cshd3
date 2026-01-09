@@ -113,13 +113,13 @@
               </div>
 
               <!-- Кому (для типов 1 и 2) -->
-              <div v-if="formData.type === 1 || formData.type === 2">
+              <div v-if="(formData.type === 1 || formData.type === 4 || formData.type === 5 ) || formData.type === 2">
                 <label class="block text-sm font-medium text-gray-700 mb-2">
                   Кому (принимает) *
                 </label>
                 <select
                     v-model.number="formData.to"
-                    :required="formData.type === 1 || formData.type === 2"
+                    :required="(formData.type === 1 || formData.type === 4 || formData.type === 5 ) || formData.type === 2"
                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
                 >
                   <option value="">Выберите сотрудника</option>
@@ -132,7 +132,7 @@
                   </option>
                 </select>
                 <p class="mt-1 text-sm text-gray-500">
-                  <template v-if="formData.type === 1">
+                  <template v-if="(formData.type === 1 || formData.type === 4 || formData.type === 5 )">
                     Сотрудник, принимающий средства от учётного отдела
                   </template>
                   <template v-else-if="formData.type === 2">
@@ -242,7 +242,7 @@
               </svg>
               <h3 class="text-lg font-medium text-gray-900 mb-2">Нет доступных средств</h3>
               <p class="text-gray-600 max-w-md mx-auto">
-                <template v-if="formData.type === 1">
+                <template v-if="(formData.type === 1 || formData.type === 4 || formData.type === 5 )">
                   Все материальные средства уже закреплены за сотрудниками
                 </template>
                 <template v-else-if="formData.type === 2">
@@ -444,7 +444,7 @@
             </button>
             <button
                 type="submit"
-                :disabled="isSubmitting || isLoading || !formData.type || !formData.date || (formData.type === 1 && !formData.to) || (formData.type === 2 && (!formData.from || !formData.to)) || (formData.type === 3 && !formData.from)"
+                :disabled="isSubmitting || isLoading || !formData.type || !formData.date || ((formData.type === 1 || formData.type === 4 || formData.type === 5 ) && !formData.to) || (formData.type === 2 && (!formData.from || !formData.to)) || (formData.type === 3 && !formData.from)"
                 class="px-6 py-3 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               <span v-if="isSubmitting">
@@ -506,7 +506,7 @@ const typeFilter = ref('')
 
 // Вычисляемые свойства
 const shouldShowThingsSection = computed(() => {
-  if (formData.type === 1) {
+  if ((formData.type === 1 || formData.type === 4 || formData.type === 5 )) {
     return true
   } else if (formData.type === 2 || formData.type === 3) {
     return formData.from
@@ -730,7 +730,7 @@ const loadAvailableThings = async () => {
     let url = ''
     let thingsFromServer = []
 
-    if (formData.type === 1) {
+    if ((formData.type === 1 || formData.type === 4 || formData.type === 5 )) {
       // Тип 1: свободные средства
       url = BACKEND_URL + '/api/things/free'
     } else if (formData.type === 2 || formData.type === 3) {
@@ -795,7 +795,7 @@ const loadThingTypes = async () => {
 
 // Получение описания секции средств
 const getThingsSectionDescription = () => {
-  if (formData.type === 1) {
+  if ((formData.type === 1 || formData.type === 4 || formData.type === 5 )) {
     return 'Свободные средства для передачи сотруднику'
   } else if (formData.type === 2) {
     return 'Средства сотрудника для передачи другому сотруднику'
@@ -951,7 +951,7 @@ const handleSubmit = async () => {
     if (!formData.date || !formData.type) {
       isValid = false
       errorMessage = 'Пожалуйста, укажите дату и тип акта'
-    } else if (formData.type === 1 && !formData.to) {
+    } else if ((formData.type === 1 || formData.type === 4 || formData.type === 5 ) && !formData.to) {
       isValid = false
       errorMessage = 'Пожалуйста, укажите сотрудника, принимающего средства'
     } else if (formData.type === 2 && (!formData.from || !formData.to)) {
@@ -985,7 +985,7 @@ const handleSubmit = async () => {
     const dataToSend = {
       date: formData.date,
       type: parseInt(formData.type),
-      from: formData.type === 1 ? null : parseInt(formData.from),
+      from: (formData.type === 1 || formData.type === 4 || formData.type === 5 ) ? null : parseInt(formData.from),
       to: formData.type === 3 ? null : parseInt(formData.to),
       things: newThings, // Новые выбранные средства
       deletedThings: deletedThings // Средства для удаления

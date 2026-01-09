@@ -110,7 +110,7 @@
               </div>
 
               <!-- Кому (для типов 1 и 2) -->
-              <div v-if="formData.type === 1 || formData.type === 2">
+              <div v-if="formData.type === 1  || formData.type === 4 || formData.type === 5 || formData.type === 2">
                 <label class="block text-sm font-medium text-gray-700 mb-2">
                   Кому (принимает) *
                 </label>
@@ -130,7 +130,7 @@
                   </option>
                 </select>
                 <p class="mt-1 text-sm text-gray-500">
-                  <template v-if="formData.type === 1">
+                  <template v-if="(formData.type === 1 || formData.type === 4 || formData.type === 5 )">
                     Сотрудник, принимающий средства от учётного отдела
                   </template>
                   <template v-else-if="formData.type === 2">
@@ -250,7 +250,7 @@
               </svg>
               <h3 class="text-lg font-medium text-gray-900 mb-2">Нет доступных средств</h3>
               <p class="text-gray-600 max-w-md mx-auto">
-                <template v-if="formData.type === 1">
+                <template v-if="(formData.type === 1 || formData.type === 4 || formData.type === 5)">
                   Все материальные средства уже закреплены за сотрудниками
                 </template>
                 <template v-else-if="formData.type === 2">
@@ -396,7 +396,7 @@
             </router-link>
             <button
                 type="submit"
-                :disabled="isSubmitting || isLoading || selectedThingsCount === 0 || !formData.type || !formData.date || (formData.type === 1 && !formData.to) || (formData.type === 2 && (!formData.from || !formData.to)) || (formData.type === 3 && !formData.from)"
+                :disabled="isSubmitting || isLoading || selectedThingsCount === 0 || !formData.type || !formData.date || ((formData.type === 1  || formData.type === 4 || formData.type === 5) && !formData.to) || (formData.type === 2 && (!formData.from || !formData.to)) || (formData.type === 3 && !formData.from)"
                 class="px-6 py-3 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               <span v-if="isSubmitting">
@@ -458,7 +458,7 @@ const shouldShowThingsSection = computed(() => {
   // Для типа 1: показываем если выбран тип
   // Для типа 2: показываем если выбран тип и сотрудник "от кого"
   // Для типа 3: показываем если выбран тип и сотрудник "от кого"
-  if (formData.type === 1) {
+  if (formData.type === 1 || formData.type === 4 ||formData.type === 5) {
     return true
   } else if (formData.type === 2 || formData.type === 3) {
     return formData.from
@@ -548,7 +548,7 @@ const loadAvailableThings = async () => {
 
     let url = ''
 
-    if (formData.type === 1) {
+    if (formData.type === 1 || formData.type === 4 || formData.type === 5) {
       // Тип 1: свободные средства
       url = BACKEND_URL + '/api/things/free'
     } else if (formData.type === 2 || formData.type === 3) {
@@ -614,7 +614,7 @@ const onFromChange = () => {
 
 // Получение описания секции средств
 const getThingsSectionDescription = () => {
-  if (formData.type === 1) {
+  if (formData.type === 1 || formData.type === 4 || formData.type === 5) {
     return 'Свободные средства для передачи сотруднику'
   } else if (formData.type === 2) {
     return 'Средства сотрудника для передачи другому сотруднику'
@@ -723,14 +723,14 @@ const clearAllSelections = () => {
 
 // Наблюдатели
 watch(() => formData.type, (newType) => {
-  if (newType === 1 && people.value.length > 0) {
+  if ((newType === 1 || newType === 4 || newType === 5 ) && people.value.length > 0) {
     // Для типа 1 загружаем средства сразу
     loadAvailableThings()
   }
 })
 
 watch(() => people.value, (newPeople) => {
-  if (newPeople.length > 0 && formData.type === 1) {
+  if (newPeople.length > 0 && (formData.type === 1 || formData.type === 4 || formData.type === 5 )) {
     // Для типа 1 загружаем средства после загрузки людей
     loadAvailableThings()
   }
@@ -748,7 +748,7 @@ const handleSubmit = async () => {
     if (!formData.date || !formData.type || formData.things.length === 0) {
       isValid = false
       errorMessage = 'Пожалуйста, заполните все обязательные поля'
-    } else if (formData.type === 1 && !formData.to) {
+    } else if ((formData.type === 1  || formData.type === 4 || formData.type === 5 ) && !formData.to) {
       isValid = false
       errorMessage = 'Пожалуйста, укажите сотрудника, принимающего средства'
     } else if (formData.type === 2 && (!formData.from || !formData.to)) {
@@ -768,7 +768,7 @@ const handleSubmit = async () => {
     const dataToSend = {
       date: formData.date,
       type: parseInt(formData.type),
-      from: formData.type === 1 ? null : parseInt(formData.from),
+      from: (formData.type === 1 || formData.type === 4 || formData.type === 5) ? null : parseInt(formData.from),
       to: formData.type === 3 ? null : parseInt(formData.to), // Для типа 3 to = null
       things: formData.things // Просто массив ID
     }
