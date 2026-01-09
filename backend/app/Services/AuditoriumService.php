@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\DTO\AuditoriumDTO;
+use App\DTO\AuditoriumMapDTO;
 use App\Models\Auditorium;
 use App\Models\ThingAuditorium;
 use App\Repositories\AuditoriumRepository;
@@ -58,15 +59,15 @@ class AuditoriumService
                     'position' => $person->getPosition() ? $person->getPosition()->name : null,
                 ];
             }
-            $data[] = [
-                'auditorium_id' => $auditorium->id,
-                'auditorium_name' => $auditorium->name,
-                'comment' => $auditorium->comment,
-                'floor' => $auditorium->floor,
-                'branch_id' => $auditorium->branch_id,
-                'things' => $things,
-                'employees' => $employees
-            ];
+            $data[] = new AuditoriumMapDTO(
+                auditorium_id: $auditorium->id,
+                auditorium_name: $auditorium->name,
+                comment: $auditorium->comment,
+                floor: $auditorium->floor,
+                branch_id: $auditorium->branch_id,
+                things: $things,
+                employees: $employees
+            );
         }
         return $data;
     }

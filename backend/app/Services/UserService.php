@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\DTO\User\ProfileDTO;
 use App\DTO\User\UserDTO;
 use App\Models\User;
 use App\Repositories\PeopleRepository;
@@ -22,15 +23,11 @@ class UserService
         $this->peopleRepository = $peopleRepository;
     }
 
-    /**
-     * @return array
-     * @var  User $user
-     */
-    public function getProfileInfo($username) : array
+    public function getProfileInfo($username) : ProfileDTO
     {
         $user = $this->userRepository->getByUsername($username);
-        return [
-            'user' => [
+        return new ProfileDTO(
+            user: [
                 'id' => $user->id,
                 'name' => $user->people->getFullFio(),
                 'position' => $user->people->getPosition()->name,
@@ -41,7 +38,7 @@ class UserService
                 'avatar' => $user->people->icon_link,
                 'skills' => $user->people->getSkills()
             ],
-            'contacts' => [
+            contacts: [
                 [
                     'type' => 'email',
                     'value' => $user->email,
@@ -53,9 +50,9 @@ class UserService
                     'icon' => '📱'
                 ]
             ],
-            'workExperience' => $user->people->getWorkExperience(),
-            'education' => $user->people->getEducation(),
-        ];
+            workExperience: $user->people->getWorkExperience(),
+            education: $user->people->getEducation(),
+        );
     }
     public function getUserInfoAll() : array
     {

@@ -2,6 +2,7 @@
 import {onMounted, ref} from 'vue'
 import axios from 'axios'
 import { useRoute } from 'vue-router'
+import {BACKEND_URL} from "@/router.js";
 
 const user = ref({})
 const workExperience = ref({})
@@ -11,8 +12,7 @@ const fetchUserData = async () => {
   try {
     const route = useRoute()
     const username = route.params.username
-    console.log("http://localhost:8000/api/profile/" + username)
-    const response = await axios.get("http://localhost:8000/api/profile/" + username)
+    const response = await axios.get(BACKEND_URL + "/api/profile/" + username)
     user.value = response.data.data.user;
     contacts.value = response.data.data.contacts
     workExperience.value = response.data.data.workExperience
