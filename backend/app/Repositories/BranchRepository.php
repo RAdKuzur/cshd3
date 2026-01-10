@@ -13,4 +13,13 @@ class BranchRepository
     public function getAll(){
         return Branch::all();
     }
+    public function create($data) {
+        return DB::table('branches')->insert($data);
+    }
+    public function update($id, $data) {
+        return DB::table('branches')->where('id', $id)->update($data);
+    }
+    public function delete($id) {
+        DB::table('branches')->where('id', $id)->delete();
+    }
 }

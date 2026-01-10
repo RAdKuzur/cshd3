@@ -27,8 +27,7 @@ class AdminAuditoriumController extends Controller
     }
 
     public function create(AuditoriumRequest $request){
-        $data = $request->validated();
-        $auditoriumDTO = AuditoriumDTO::fromArray($data);
+        $auditoriumDTO = $request->toDTO();
         $this->auditoriumService->create($auditoriumDTO);
         return response()->json([
             'success' => true,
@@ -36,8 +35,7 @@ class AdminAuditoriumController extends Controller
         ]);
     }
     public function update(AuditoriumRequest $request, $id){
-        $data = $request->validated();
-        $auditoriumDTO = AuditoriumDTO::fromArray($data);
+        $auditoriumDTO = $request->toDTO();
         $this->auditoriumService->update($id, $auditoriumDTO);
         return response()->json([
             'success' => true,

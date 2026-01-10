@@ -20,7 +20,7 @@
         </div>
 
         <!-- Карточки управления -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <!-- Должности -->
           <div
               class="admin-card group bg-gradient-to-br from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700"
@@ -89,6 +89,40 @@
             </div>
           </div>
 
+          <!-- Отделы -->
+          <div
+              class="admin-card group bg-gradient-to-br from-purple-500 to-violet-600 hover:from-purple-600 hover:to-violet-700"
+              @click="navigateTo('/admin/branches')"
+          >
+            <div class="absolute top-6 right-6">
+              <div class="bg-white/20 backdrop-blur-sm p-3">
+                <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                </svg>
+              </div>
+            </div>
+
+            <div class="flex-1 flex flex-col justify-end">
+              <h3 class="text-2xl font-bold text-white mb-3">
+                Отделы
+              </h3>
+              <p class="text-purple-100/90 text-sm leading-relaxed">
+                Управление структурными подразделениями компании и организационной иерархией
+              </p>
+            </div>
+
+            <div class="mt-8 flex items-center justify-between">
+              <span class="text-white text-sm font-medium px-3 py-1 bg-white/20 rounded-full">
+                Управление
+              </span>
+              <div class="bg-white/20 p-2 group-hover:bg-white/30 transition-colors">
+                <svg class="w-5 h-5 text-white transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
           <!-- Помещения -->
           <div
               class="admin-card group bg-gradient-to-br from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700"
@@ -139,6 +173,7 @@ const stats = ref({
   positions: 15,
   users: 42,
   auditoriums: 28,
+  branches: 10,
   activeSessions: 8,
   dailyActivity: '142',
   lastUpdate: '2 мин назад'
@@ -222,6 +257,22 @@ const navigateTo = (path) => {
   .admin-card {
     min-height: 240px;
     padding: 1.25rem;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1025px) {
+  .grid {
+    grid-template-columns: repeat(4, 1fr);
   }
 }
 </style>

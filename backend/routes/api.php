@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminAuditoriumController;
+use App\Http\Controllers\AdminBranchController;
 use App\Http\Controllers\AdminPositionController;
 use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\AuditoriumController;
@@ -68,6 +69,11 @@ Route::middleware([CheckPermissionMiddleware::class])->group(function () {
     Route::post('/admin/auditoriums' , [AdminAuditoriumController::class, 'create'])->name('admin.positions.create');
     Route::put('/admin/auditoriums/{id}' , [AdminAuditoriumController::class, 'update'])->name('admin.positions.update');
     Route::delete('/admin/auditoriums/{id}' , [AdminAuditoriumController::class, 'delete'])->name('admin.positions.delete');
+
+    Route::get('/admin/branches' , [AdminBranchController::class, 'all'])->name('admin.branches.all');
+    Route::post('/admin/branches' , [AdminBranchController::class, 'create'])->name('admin.branches.create');
+    Route::put('/admin/branches/{id}' , [AdminBranchController::class, 'update'])->name('admin.branches.update');
+    Route::delete('/admin/branches/{id}' , [AdminBranchController::class, 'delete'])->name('admin.branches.delete');
 
     Route::get('/admin/users' , [AdminUserController::class, 'all'])->name('admin.users.all');
     Route::get('/admin/users/{id}' , [AdminUserController::class, 'getOne'])->name('admin.users.get-one');

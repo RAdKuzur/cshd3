@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\DTO\AuditoriumDTO;
 use Illuminate\Foundation\Http\FormRequest;
 
 class AuditoriumRequest extends FormRequest
@@ -28,5 +29,14 @@ class AuditoriumRequest extends FormRequest
             'department_id' => 'required',
             'branch_id' => 'required'
         ];
+    }
+    public function toDTO(){
+        return new AuditoriumDTO(
+            name: $this->validated('name'),
+            number: $this->validated('number'),
+            floor: $this->validated('floor'),
+            department_id: $this->validated('department_id'),
+            branch_id: $this->validated('branch_id')
+        );
     }
 }

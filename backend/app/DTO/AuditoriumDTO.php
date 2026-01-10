@@ -33,12 +33,12 @@ class AuditoriumDTO implements DTO
 
     public static function fromArray(array $array) : self {
         return new self(
-          $array['name'],
-          $array['number'],
-          $array['floor'],
-          $array['department_id'],
-          $array['branch_id'],
-          $array['comment']
+          $array['name'] ?? null,
+            $array['number'] ?? null,
+            $array['floor'] ?? null,
+            $array['department_id'] ?? null,
+            $array['branch_id'] ?? null,
+            $array['comment'] ?? null
         );
     }
 
