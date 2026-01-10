@@ -5,7 +5,14 @@ namespace App\Services;
 use App\DTO\User\ProfileDTO;
 use App\DTO\User\UserDTO;
 use App\Models\User;
+use App\Repositories\AuditoriumResponsibilityRepository;
+use App\Repositories\NotificationRepository;
+use App\Repositories\PeoplePositionRepository;
 use App\Repositories\PeopleRepository;
+use App\Repositories\TokenRepository;
+use App\Repositories\TransferActConfirmRepository;
+use App\Repositories\TransferActRepository;
+use App\Repositories\TransferActThingRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\DB;
 
@@ -13,14 +20,34 @@ class UserService
 {
     private UserRepository $userRepository;
     private PeopleRepository $peopleRepository;
+    private NotificationRepository $notificationRepository;
+    private TokenRepository $tokenRepository;
+    private PeoplePositionRepository $peoplePositionRepository;
+    private AuditoriumResponsibilityRepository $auditoriumResponsibilityRepository;
+    private TransferActRepository $transferActRepository;
+    private TransferActThingRepository $transferActThingRepository;
+    private TransferActConfirmRepository $transferActConfirmRepository;
     public function __construct(
         UserRepository $userRepository,
-        PeopleRepository $peopleRepository
-
+        PeopleRepository $peopleRepository,
+        NotificationRepository $notificationRepository,
+        TokenRepository $tokenRepository,
+        PeoplePositionRepository $peoplePositionRepository,
+        AuditoriumResponsibilityRepository $auditoriumResponsibilityRepository,
+        TransferActRepository $transferActRepository,
+        TransferActThingRepository $transferActThingRepository,
+        TransferActConfirmRepository $transferActConfirmRepository
     )
     {
         $this->userRepository = $userRepository;
         $this->peopleRepository = $peopleRepository;
+        $this->notificationRepository = $notificationRepository;
+        $this->tokenRepository = $tokenRepository;
+        $this->peoplePositionRepository = $peoplePositionRepository;
+        $this->auditoriumResponsibilityRepository = $auditoriumResponsibilityRepository;
+        $this->transferActRepository = $transferActRepository;
+        $this->transferActThingRepository = $transferActThingRepository;
+        $this->transferActConfirmRepository = $transferActConfirmRepository;
     }
 
     public function getProfileInfo($username) : ProfileDTO
@@ -123,7 +150,37 @@ class UserService
         DB::beginTransaction();
         try {
             $user = $this->userRepository->get($id);
-            $this->peopleRepository->deleteByUserId($user->id);
+            foreach ($user->notifications as $notification){
+                $this->notificationRepository->delete($notification->id);
+            }
+            foreach ($user->tokens as $token) {
+                $this->tokenRepository->deleteByUserId($token->id);
+            }
+            foreach ($user->people->auditoriumResponsibilities as $auditoriumResponsibility) {
+                $this->auditoriumResponsibilityRepository->delete($auditoriumResponsibility->id);
+            }
+            foreach($user->people->peoplePositions as $peoplePosition){
+                foreach($peoplePosition->fromTransferActs as $fromTransferAct){
+                    foreach($fromTransferAct->transferActThings as $transferActThing){
+                        $this->transferActThingRepository->delete($transferActThing->id);
+                    }
+                    foreach($fromTransferAct->transferActConfirms as $transferActConfirm){
+                        $this->transferActConfirmRepository->delete($transferActConfirm->id);
+                    }
+                    $this->transferActRepository->delete($fromTransferAct->id);
+                }
+                foreach($peoplePosition->toTransferActs as $toTransferAct){
+                    foreach($toTransferAct->transferActThings as $transferActThing){
+                        $this->transferActThingRepository->delete($transferActThing->id);
+                    }
+                    foreach($toTransferAct->transferActConfirms as $transferActConfirm){
+                        $this->transferActConfirmRepository->delete($transferActConfirm->id);
+                    }
+                    $this->transferActRepository->delete($toTransferAct->id);
+                }
+                $this->peoplePositionRepository->delete($peoplePosition->id);
+            }
+            $this->peopleRepository->delete($user->people->id);
             $this->userRepository->delete($id);
             DB::commit();
         }

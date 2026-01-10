@@ -48,6 +48,7 @@ class TransferActController extends Controller
         ]);
     }
     public function delete($id){
+        $this->transferActService->delete($id);
         return response()->json([
             'success' => true
         ]);

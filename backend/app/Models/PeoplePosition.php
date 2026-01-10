@@ -15,6 +15,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property Position $position
  * @property Branch $branch
  * @property TransferActConfirm[] $transferActConfirms
+ *
+ * @property TransferAct[] $fromTransferActs
+ * @property TransferAct[] $toTransferActs
 */
 class PeoplePosition extends Model
 {
@@ -41,5 +44,11 @@ class PeoplePosition extends Model
     }
     public function transferActConfirms(){
         return $this->hasMany(TransferActConfirm::class, 'people_position_id');
+    }
+    public function fromTransferActs(){
+        return $this->hasMany(TransferAct::class, 'from');
+    }
+    public function toTransferActs(){
+        return $this->hasMany(TransferAct::class, 'to');
     }
 }

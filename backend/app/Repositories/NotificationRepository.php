@@ -32,5 +32,7 @@ class NotificationRepository
     public function create($data){
         return DB::table('notifications')->insert($data);
     }
-
+    public function delete($id){
+        return DB::table('notifications')->where('id', $id)->delete();
+    }
 }

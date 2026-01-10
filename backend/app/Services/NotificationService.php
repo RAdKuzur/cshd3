@@ -70,4 +70,33 @@ class NotificationService
             DB::rollBack();
         }
     }
+
+    public function delete($id)
+    {
+        DB::beginTransaction();
+        try {
+            $this->notificationRepository->delete($id);
+            DB::commit();
+        }
+        catch(\Exception $e){
+            DB::rollBack();
+        }
+
+    }
+
+    public function deleteAllUserNotifications($username)
+    {
+        DB::beginTransaction();
+        try {
+            $user = $this->userRepository->getByUsername($username);
+            $notifications = $this->notificationRepository->getByUserId($user->id);
+            foreach ($notifications as $notification) {
+                $this->notificationRepository->delete($notification->id);
+            }
+            DB::commit();
+        }
+        catch(\Exception $e){
+            DB::rollBack();
+        }
+    }
 }

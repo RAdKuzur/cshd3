@@ -253,4 +253,22 @@ class TransferActService
             DB::rollBack();
         }
     }
+    public function delete($id)
+    {
+        DB::beginTransaction();
+        try {
+            $transferAct = $this->transferActRepository->get($id);
+            foreach ($transferAct->transferActConfirms as $transferActConfirm) {
+                $this->transferActConfirmRepository->delete($transferActConfirm->id);
+            }
+            foreach ($transferAct->transferActThings as $transferActThing) {
+                $this->transferActThingRepository->delete($transferActThing->id);
+            }
+            $this->transferActRepository->delete($transferAct->id);
+            DB::commit();
+        }
+        catch (\Exception $exception){
+            DB::rollBack();
+        }
+    }
 }

@@ -12,6 +12,7 @@ use App\Repositories\BranchRepository;
 use App\Repositories\ThingAuditoriumRepository;
 use App\Repositories\ThingRepository;
 use App\Repositories\TransferActRepository;
+use App\Repositories\TransferActThingRepository;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -21,16 +22,19 @@ class ThingService
     private TransferActRepository $transferActRepository;
     private ThingAuditoriumRepository $thingAuditoriumRepository;
     private BranchRepository $branchRepository;
+    private TransferActThingRepository $transferActThingRepository;
     public function __construct(
         ThingRepository $thingRepository,
         TransferActRepository $transferActRepository,
         ThingAuditoriumRepository $thingAuditoriumRepository,
-        BranchRepository $branchRepository
+        BranchRepository $branchRepository,
+        TransferActThingRepository $transferActThingRepository
     ) {
         $this->thingRepository = $thingRepository;
         $this->transferActRepository = $transferActRepository;
         $this->thingAuditoriumRepository = $thingAuditoriumRepository;
         $this->branchRepository = $branchRepository;
+        $this->transferActThingRepository = $transferActThingRepository;
     }
 
     public function electronics(): array
@@ -329,6 +333,13 @@ class ThingService
     {
         DB::beginTransaction();
         try {
+            $thing = $this->thingRepository->get($id);
+            foreach ($thing->thingAuditoriums as $thingAuditorium) {
+                $this->thingAuditoriumRepository->delete($thingAuditorium->id);
+            }
+            foreach ($thing->transferActThings as $transferActThing) {
+                $this->transferActThingRepository->delete($transferActThing->id);
+            }
             $this->thingRepository->delete($id);
             DB::commit();
         } catch (\Exception $e) {

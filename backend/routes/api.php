@@ -100,6 +100,8 @@ Route::middleware([CheckPermissionMiddleware::class])->group(function () {
     Route::get('/notifications/{username}', [NotificationController::class, 'getUserNotifications'])->name('notifications.get-user-notifications');
     Route::post('/notifications/{username}', [NotificationController::class, 'readAllUserNotifications'])->name('notifications.read-all-user-notifications');
     Route::post('/notifications/{notificationId}/read', [NotificationController::class, 'readUserNotification'])->name('notifications.read-user-notification');
+    Route::delete('/notifications/{notificationId}', [NotificationController::class, 'delete'])->name('notifications.delete');
+    Route::delete('/notifications/{username}', [NotificationController::class, 'deleteAllUserNotifications'])->name('notifications.delete-all-user-notifications');
 });
 
 Route::post('/test' , [TestController::class, 'test'])->name('test');

@@ -48,6 +48,6 @@ class TransferActRepository
             'extra_bindings' => json_encode(['id' => $id]),
             'time' => now()
         ]);
-        return DB::table("transfer_acts")->where('id',$id)->delete();
+        return DB::table('transfer_acts')->where('id', $id)->delete();
     }
 }

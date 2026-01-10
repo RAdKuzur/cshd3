@@ -37,6 +37,11 @@ class TokenRepository
             'user_id' => $user->id,
         ])->delete();
     }
+    public function deleteByUserId($userId){
+        return DB::table('tokens')->where([
+            'user_id' => $userId,
+        ])->delete();
+    }
     public function deleteByToken($token)
     {
         return DB::table('tokens')->where([

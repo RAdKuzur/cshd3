@@ -7,16 +7,24 @@ use App\DTO\AuditoriumMapDTO;
 use App\Models\Auditorium;
 use App\Models\ThingAuditorium;
 use App\Repositories\AuditoriumRepository;
+use App\Repositories\AuditoriumResponsibilityRepository;
+use App\Repositories\ThingAuditoriumRepository;
 use Illuminate\Support\Facades\DB;
 
 class AuditoriumService
 {
     public AuditoriumRepository $auditoriumRepository;
+    private AuditoriumResponsibilityRepository $auditoriumResponsibilityRepository;
+    private ThingAuditoriumRepository $thingAuditoriumRepository;
     public function __construct(
-        AuditoriumRepository $auditoriumRepository
+        AuditoriumRepository $auditoriumRepository,
+        AuditoriumResponsibilityRepository $auditoriumResponsibilityRepository,
+        ThingAuditoriumRepository $thingAuditoriumRepository
     )
     {
         $this->auditoriumRepository = $auditoriumRepository;
+        $this->auditoriumResponsibilityRepository = $auditoriumResponsibilityRepository;
+        $this->thingAuditoriumRepository = $thingAuditoriumRepository;
     }
 
     public function all() : array
@@ -94,6 +102,13 @@ class AuditoriumService
     public function delete($id){
         DB::beginTransaction();
         try {
+            $auditorium = $this->auditoriumRepository->get($id);
+            foreach($auditorium->auditoriumResponsibilities as $auditoriumResponsibility){
+                $this->auditoriumResponsibilityRepository->delete($auditoriumResponsibility->id);
+            }
+            foreach ($auditorium->thingAuditoriums as $thingAuditorium) {
+                $this->thingAuditoriumRepository->delete($thingAuditorium->id);
+            }
             $this->auditoriumRepository->delete($id);
             DB::commit();
         }

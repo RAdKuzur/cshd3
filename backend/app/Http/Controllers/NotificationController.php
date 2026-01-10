@@ -36,4 +36,17 @@ class NotificationController extends Controller
             'success' => true,
         ]);
     }
+    public function delete($notificationId){
+        $this->notificationService->delete($notificationId);
+        return response()->json([
+            'success' => true,
+        ]);
+    }
+
+    public function deleteAllUserNotifications($username){
+        $this->notificationService->deleteAllUserNotifications($username);
+        return response()->json([
+            'success' => true,
+        ]);
+    }
 }
