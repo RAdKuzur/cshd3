@@ -4,8 +4,11 @@ namespace App\Services;
 
 use App\Dictionaries\ThingBalanceDictionary;
 use App\Dictionaries\ThingTypeDictionary;
+use App\DTO\Thing\ThingBranchDTO;
+use App\DTO\Thing\ThingDTO;
 use App\Repositories\AuditoriumRepository;
 use App\Repositories\OrganizationRepository;
+use App\Repositories\ThingRepository;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpWord\IOFactory;
@@ -17,13 +20,16 @@ class ReportService
 {
     public AuditoriumRepository $auditoriumRepository;
     public OrganizationRepository $organizationRepository;
+    public ThingRepository $thingRepository;
     public function __construct(
         AuditoriumRepository $auditoriumRepository,
-        OrganizationRepository $organizationRepository
+        OrganizationRepository $organizationRepository,
+        ThingRepository $thingRepository
     )
     {
         $this->auditoriumRepository = $auditoriumRepository;
         $this->organizationRepository = $organizationRepository;
+        $this->thingRepository = $thingRepository;
     }
 
     public function auditoriumReport($id)
@@ -210,5 +216,29 @@ class ReportService
         header('Cache-Control: max-age=0');
         $writer->save('php://output');
         exit;
+    }
+
+    public function generalReport()
+    {
+        $data = [];
+        $things = $this->thingRepository->getAll();
+        foreach ($things as $thing) {
+            $data[] = new ThingBranchDTO(
+                id: $thing->id,
+                name: $thing->name,
+                serial_number: $thing->serial_number,
+                inv_number: $thing->inv_number,
+                operation_date: $thing->operation_date,
+                thing_type_id: $thing->thing_type_id ? $thing->thing_type_id : null,
+                thing_parent_id: $thing->parent ? $thing->parent->inv_number : null,
+                condition: $thing->condition,
+                balance: $thing->balance,
+                auditorium_id: $thing->getCurrentLocation() ? $thing->getCurrentLocation()->id : null,
+                price: $thing->price,
+                is_blocked: $thing->is_blocked,
+                branch_id: $thing->getCurrentLocation() ? $thing->getCurrentLocation()->branch->id : null,
+            );
+        }
+        return $data;
     }
 }

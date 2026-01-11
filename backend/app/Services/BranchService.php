@@ -25,7 +25,8 @@ class BranchService
         foreach ($branches as $branch){
             $data[] = new BranchDTO(
                 id: $branch->id,
-                name: $branch->name
+                name: $branch->name,
+                organization_id: $branch->organization_id
             );
         }
         return $data;
@@ -34,7 +35,8 @@ class BranchService
         $branch = $this->branchRepository->get($id);
         return new BranchDTO(
             id: $branch->id,
-            name: $branch->name
+            name: $branch->name,
+            organization_id: $branch->organization_id
         );
     }
     public function create($data){

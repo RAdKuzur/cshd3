@@ -1,5 +1,4 @@
 <template>
-  <!-- Тот же template остаётся без изменений -->
   <div class="p-6 bg-gradient-to-br from-gray-50 to-blue-50 min-h-screen">
     <div class="max-w-7xl mx-auto">
 
@@ -9,100 +8,132 @@
         <p class="text-gray-600 mt-2">Структура компании по отделам</p>
       </div>
 
-      <!-- Табы -->
-      <div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden mb-8">
-        <!-- Навигация табов -->
-        <div class="bg-gradient-to-r from-indigo-500 to-purple-600 px-6">
-          <div class="flex space-x-8 overflow-x-auto">
-            <button
-                v-for="(branch, index) in branches"
-                :key="branch.branch_id"
-                class="px-6 py-4 text-white font-semibold border-b-2 transition-all duration-200 tab-button relative whitespace-nowrap"
-                :class="{
-                'border-white text-white': activeTab === branch.branch_id,
-                'border-transparent text-indigo-100 hover:text-white': activeTab !== branch.branch_id
-              }"
-                @click="setActiveTab(branch.branch_id)"
-            >
-              <div class="flex items-center">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <!-- Основной контейнер с боковыми табами -->
+      <div class="flex flex-col lg:flex-row gap-6">
+        <!-- Боковая панель с табами -->
+        <div class="lg:w-1/4">
+          <div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+            <div class="bg-gradient-to-b from-indigo-500 to-purple-600 p-4">
+              <h3 class="text-white font-semibold text-lg mb-4">Отделы</h3>
+            </div>
+
+            <div class="p-4 space-y-1">
+              <button
+                  v-for="(branch, index) in branches"
+                  :key="branch.branch_id"
+                  class="w-full px-4 py-3 text-left rounded-xl transition-all duration-200 tab-button flex items-center justify-between group"
+                  :class="{
+                    'bg-indigo-50 text-indigo-700 border border-indigo-100 shadow-sm': activeTab === branch.branch_id,
+                    'text-gray-700 hover:bg-gray-50 hover:text-gray-900': activeTab !== branch.branch_id
+                  }"
+                  @click="setActiveTab(branch.branch_id)"
+              >
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 h-10 w-10 rounded-lg flex items-center justify-center mr-3"
+                       :class="{
+                         'bg-indigo-100 text-indigo-600': activeTab === branch.branch_id,
+                         'bg-gray-100 text-gray-600 group-hover:bg-gray-200': activeTab !== branch.branch_id
+                       }">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div class="font-medium">{{ branch.branch_name }}</div>
+                    <div class="text-sm opacity-75">{{ getBranchStats(branch.branch_id).total }} сотрудников</div>
+                  </div>
+                </div>
+
+                <svg v-if="activeTab === branch.branch_id"
+                     class="w-5 h-5 text-indigo-500"
+                     fill="none"
+                     stroke="currentColor"
+                     viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Статистика в боковой панели -->
+          <div class="mt-6 bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+            <h3 class="font-semibold text-gray-900 mb-4">Общая статистика</h3>
+            <div class="space-y-4">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                  <div class="h-10 w-10 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+                    <svg class="h-5 w-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p class="text-sm font-medium text-gray-600">Всего сотрудников</p>
+                    <p class="text-xl font-bold text-gray-900">{{ totalEmployees }}</p>
+                  </div>
+                </div>
+              </div>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                  <div class="h-10 w-10 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
+                    <svg class="h-5 w-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p class="text-sm font-medium text-gray-600">Отделов</p>
+                    <p class="text-xl font-bold text-gray-900">{{ branches.length }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Основной контент -->
+        <div class="lg:w-3/4">
+          <div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden h-full">
+            <div class="p-6 border-b border-gray-200">
+              <div class="flex justify-between items-center">
+                <div>
+                  <h2 class="text-2xl font-bold text-gray-900">
+                    {{ activeBranch ? activeBranch.branch_name : 'Выберите отдел' }}
+                  </h2>
+                  <p class="text-gray-600 mt-2">Информация о сотрудниках отдела</p>
+                </div>
+                <div v-if="activeBranch" class="text-sm text-gray-500">
+                  Всего сотрудников: {{ getBranchStats(activeTab).total }}
+                </div>
+              </div>
+            </div>
+
+            <div class="p-6">
+              <div v-if="!activeTab" class="text-center py-12">
+                <svg class="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                 </svg>
-                {{ branch.branch_name }}
+                <p class="text-gray-500">Выберите отдел для просмотра сотрудников</p>
               </div>
-              <div
-                  v-if="activeTab === branch.branch_id"
-                  class="absolute bottom-0 left-0 right-0 h-0.5 bg-white transform transition-transform duration-200"
-              ></div>
-            </button>
-          </div>
-        </div>
 
-        <!-- Контент табов -->
-        <div class="p-8">
-          <!-- Контент для каждого отдела -->
-          <div
-              v-for="branch in branches"
-              :key="branch.branch_id"
-              class="tab-content space-y-6"
-              v-show="activeTab === branch.branch_id"
-          >
-            <div class="flex justify-between items-center mb-6">
-              <div>
-                <h2 class="text-2xl font-bold text-gray-900">{{ branch.branch_name }}</h2>
-                <p class="text-gray-600 mt-2">Информация о сотрудниках отдела</p>
+              <div v-else>
+                <div class="grid gap-6">
+                  <Record
+                      v-for="employee in activeBranch.stuff"
+                      :key="employee.id"
+                      :employee="formatEmployee(employee)"
+                  />
+                </div>
+
+                <div
+                    v-if="activeBranch.stuff.length === 0"
+                    class="text-center py-12 text-gray-500"
+                >
+                  <svg class="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+                  </svg>
+                  <p class="text-lg font-medium mb-2">В этом отделе пока нет сотрудников</p>
+                  <p class="text-sm">Добавьте сотрудников в этот отдел</p>
+                </div>
               </div>
-              <div class="text-sm text-gray-500">
-                Всего сотрудников: {{ getBranchStats(branch.branch_id).total }}
-              </div>
-            </div>
-
-            <div class="grid gap-6">
-              <Record
-                  v-for="employee in branch.stuff"
-                  :key="employee.id"
-                  :employee="formatEmployee(employee)"
-              />
-            </div>
-
-            <div
-                v-if="branch.stuff.length === 0"
-                class="text-center py-8 text-gray-500"
-            >
-              <svg class="w-12 h-12 mx-auto text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
-              </svg>
-              <p class="mt-2">В этом отделе пока нет сотрудников</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Статистика -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-          <div class="flex items-center">
-            <div class="flex-shrink-0 h-12 w-12 bg-blue-100 rounded-lg flex items-center justify-center">
-              <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
-              </svg>
-            </div>
-            <div class="ml-4">
-              <p class="text-sm font-medium text-gray-600">Всего сотрудников</p>
-              <p class="text-2xl font-bold text-gray-900">{{ totalEmployees }}</p>
-            </div>
-          </div>
-        </div>
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-          <div class="flex items-center">
-            <div class="flex-shrink-0 h-12 w-12 bg-purple-100 rounded-lg flex items-center justify-center">
-              <svg class="h-6 w-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-              </svg>
-            </div>
-            <div class="ml-4">
-              <p class="text-sm font-medium text-gray-600">Отделов</p>
-              <p class="text-2xl font-bold text-gray-900">{{ branches.length }}</p>
             </div>
           </div>
         </div>
@@ -113,7 +144,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import axios from 'axios' // Импортируем axios
+import axios from 'axios'
 import Record from "@/components/layouts/Record.vue";
 import {BACKEND_URL} from "@/router.js";
 
@@ -147,15 +178,20 @@ const setActiveTab = (branchId) => {
   activeTab.value = branchId
 }
 
+// Получаем активный отдел
+const activeBranch = computed(() => {
+  return branches.value.find(b => b.branch_id === activeTab.value)
+})
+
 // Форматирование сотрудника для компонента Record
 const formatEmployee = (employee) => {
   return {
     id: employee.id,
     name: employee.fio,
     position: employee.position,
-    status: 'active', // Все сотрудники из API считаются активными
-    email: '', // Email не приходит из API
-    avatar: '', // Аватар не приходит из API
+    status: 'active',
+    email: '',
+    avatar: '',
     auditorium: employee.auditorium,
     start_date: employee.start_date,
     icon_link: employee.icon_link
@@ -177,7 +213,6 @@ const totalEmployees = computed(() => {
   return branches.value.reduce((total, branch) => total + branch.stuff.length, 0)
 })
 
-
 onMounted(() => {
   loadStuffData()
 })
@@ -185,15 +220,11 @@ onMounted(() => {
 
 <style scoped>
 .tab-button {
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
 }
 
 .tab-button:hover {
-  transform: translateY(-1px);
-}
-
-.tab-content {
-  animation: fadeIn 0.3s ease-in-out;
+  transform: translateX(4px);
 }
 
 @keyframes fadeIn {

@@ -125,15 +125,6 @@ class ThingController extends Controller
         ]);
     }
 
-//    public function update(ThingRequest $request, $id)
-//    {
-//        $data = $request->validated();
-//        $this->thingService->update($id, $data);
-//        return response()->json([
-//            'success' => true,
-//            'code' => 200,
-//        ]);
-//    }
     public function delete($id){
         $this->thingService->delete($id);
         return response()->json([

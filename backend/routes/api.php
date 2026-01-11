@@ -85,6 +85,7 @@ Route::middleware([CheckPermissionMiddleware::class])->group(function () {
     Route::get('/reports/auditoriums', [ReportController::class, 'auditoriums'])->name('reports.auditoriums');
     Route::get('/reports/things', [ReportController::class, 'things'])->name('reports.positions');
     Route::get('/reports/workstations', [ReportController::class, 'workstations'])->name('reports.workstations');
+    Route::get('/reports/general', [ReportController::class, 'general'])->name('reports.general');
 
     Route::get('/transfer-acts', [TransferActController::class, 'all'])->name('transfer-acts.all');
     Route::get('/transfer-acts/{id}', [TransferActController::class, 'getOne'])->name('transfer-acts.get-one');

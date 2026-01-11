@@ -27,4 +27,11 @@ class ReportController extends Controller
     {
 
     }
+    public function general(){
+        $data = $this->reportService->generalReport();
+        return response()->json([
+            'success' => true,
+            'data' => $data
+        ]);
+    }
 }

@@ -37,6 +37,7 @@ import FilePage from "@/pages/files/FilePage.vue";
 import FurniturePage from "@/pages/thing/things/FurniturePage.vue";
 import ReportArmPage from "@/pages/report/ReportArmPage.vue";
 import AdminBranchPage from "@/pages/admin/branch/AdminBranchPage.vue";
+import ReportGeneralPage from "@/pages/report/ReportGeneralPage.vue";
 
 
 const BACKEND_URL = '';
@@ -58,6 +59,7 @@ const routes = [
     { path: '/reports/auditoriums', component: ReportAuditoriumPage, meta: { auth: true }},
     { path: '/reports/things', component: ReportThingPage, meta: { auth: true }},
     { path: '/reports/arms', component: ReportArmPage, meta: { auth: true }},
+    { path: '/reports/general', component: ReportGeneralPage, meta: { auth: true }},
 
     { path: '/admin', component: AdminPage, meta: { auth: true } },
     { path: '/admin/positions', component: AdminPositionPage, meta: { auth: true } },
