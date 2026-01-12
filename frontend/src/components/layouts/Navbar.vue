@@ -171,16 +171,6 @@
                         <p class="text-sm text-gray-500 mt-2">У вас нет уведомлений</p>
                       </div>
                     </div>
-
-                    <!-- Футер с ссылкой на все уведомления -->
-<!--                    <div class="border-t px-4 py-2">-->
-<!--                      <router-link-->
-<!--                          to="/notifications"-->
-<!--                          class="block text-center text-sm text-indigo-600 hover:text-indigo-800 font-medium"-->
-<!--                      >-->
-<!--                        Посмотреть все уведомления-->
-<!--                      </router-link>-->
-<!--                    </div>-->
                   </div>
                 </MenuItems>
               </transition>
@@ -387,20 +377,28 @@
       </div>
     </DisclosurePanel>
   </Disclosure>
+
+  <!-- Компонент всплывающих уведомлений -->
+  <ToastNotification ref="toastNotification" />
 </template>
 
 <script setup>
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { useAuthContextStore } from '@/services/AuthContext.js'
-import { computed, ref, onMounted, watch } from 'vue'
+import { computed, ref, onMounted, watch, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
-import {BACKEND_URL} from "@/router.js";
+import Echo from 'laravel-echo'
+import Pusher from 'pusher-js'
+import { BACKEND_URL } from "@/router.js";
 import {
   ScaleIcon, Bars3Icon, XMarkIcon, ChevronDownIcon, UserIcon, BellIcon,
   ArrowRightOnRectangleIcon, ArrowPathIcon,
   CalculatorIcon, CommandLineIcon, BuildingStorefrontIcon, UserGroupIcon, MapIcon, DocumentIcon
 } from '@heroicons/vue/24/outline'
+
+// Импортируем компонент всплывающих уведомлений
+import ToastNotification from './ToastNotification.vue'
 
 const router = useRouter()
 const authStore = useAuthContextStore()
@@ -411,6 +409,12 @@ const isLoading = ref(false)
 const isMarkingAsRead = ref(null)
 const isMarkingAllAsRead = ref(false)
 const showMobileNotifications = ref(false)
+
+// Ref для компонента всплывающих уведомлений
+const toastNotification = ref(null)
+
+// Echo instance для вебсокетов
+let echo = null
 
 // Вычисляемые свойства
 const isAuth = computed(() => !!authStore.user)
@@ -440,6 +444,110 @@ const navigation = [
   { name: 'Панель администратора', href: '/admin', current: false, icon: CommandLineIcon },
   { name: 'Файловая система', href: '/files', current: false, icon: DocumentIcon }
 ]
+// Инициализация Echo для вебсокетов с публичным каналом
+const initializeEcho = () => {
+  if (!currentUser.value) {
+    console.log('Пользователь не авторизован')
+    return
+  }
+
+  // Если уже есть инстанс, отключаем его
+  if (echo) {
+    echo.disconnect()
+  }
+
+  try {
+    // Создаем новый инстанс Echo для публичного канала
+    echo = new Echo({
+      broadcaster: 'reverb',
+      key: import.meta.env.VITE_REVERB_APP_KEY || 'ng9sslvez4endivrctww',
+      wsHost: import.meta.env.VITE_REVERB_HOST || 'localhost',
+      wsPort: import.meta.env.VITE_REVERB_PORT || 5000,
+      wssPort: import.meta.env.VITE_REVERB_PORT || 5000,
+      forceTLS: false,
+      enabledTransports: ['ws', 'wss'],
+      disableStats: true,
+    })
+
+    // Подписываемся на ПУБЛИЧНЫЙ канал уведомлений
+    const channelName = `Notification.${currentUser.value}`
+
+    console.log('Подписываюсь на публичный канал уведомлений:', channelName)
+
+    // Используем .channel() вместо .private() для публичного канала
+    echo.channel(channelName)
+        .listen('.TransferActCreated', (data) => {
+          console.log('Получено уведомление через вебсокет:', data)
+
+          // Создаем объект уведомления из полученных данных
+          const notificationData = {
+            id: Date.now(), // Временный ID
+            message: data.message,
+            is_read: 1,
+            created_at: new Date().toISOString()
+          }
+          notifications.value.unshift(notificationData)
+          if (toastNotification.value) {
+            toastNotification.value.addToast({
+              message: data.message,
+              time: new Date().toISOString()
+            })
+          }
+          playNotificationSound()
+        })
+    // echo.channel(`Notification.${currentUser.value}`)
+    //     .listen('.TransferActCreated', (data) => {
+    //       console.log(data)
+    //     })
+    // Обработчики событий подключения
+    echo.connector.pusher.connection.bind('connected', () => {
+      console.log('Подключение к вебсокету установлено (публичный канал)')
+    })
+
+    echo.connector.pusher.connection.bind('disconnected', () => {
+      console.log('Отключено от вебсокета')
+    })
+
+    echo.connector.pusher.connection.bind('error', (error) => {
+      console.error('Ошибка подключения к вебсокету:', error)
+    })
+
+  } catch (error) {
+    console.error('Ошибка инициализации Echo для публичного канала:', error)
+  }
+}
+
+// Воспроизведение звука уведомления
+const playNotificationSound = () => {
+  try {
+    // Создаем простой звук уведомления
+    const audio = new Audio('data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEAQB8AAEAfAAABAAgAZGF0YQ')
+
+    // Альтернативный метод с использованием Web Audio API
+    if (window.AudioContext || window.webkitAudioContext) {
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)()
+      const oscillator = audioContext.createOscillator()
+      const gainNode = audioContext.createGain()
+
+      oscillator.connect(gainNode)
+      gainNode.connect(audioContext.destination)
+
+      oscillator.frequency.value = 800
+      oscillator.type = 'sine'
+
+      gainNode.gain.setValueAtTime(0.3, audioContext.currentTime)
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3)
+
+      oscillator.start(audioContext.currentTime)
+      oscillator.stop(audioContext.currentTime + 0.3)
+    } else {
+      // Простой beep для старых браузеров
+      console.log('\x07')
+    }
+  } catch (e) {
+    console.log('Не удалось воспроизвести звук уведомления:', e)
+  }
+}
 
 // Методы для уведомлений
 const fetchNotifications = async () => {
@@ -516,6 +624,12 @@ const formatDate = (dateString) => {
 
 const logout = async () => {
   try {
+    // Отключаем вебсокет при выходе
+    if (echo) {
+      echo.disconnect()
+      echo = null
+    }
+
     await authStore.logout()
     router.push('/login')
   } catch (e) {
@@ -527,6 +641,10 @@ const logout = async () => {
 onMounted(() => {
   if (authStore.user) {
     fetchNotifications()
+    // Даем немного времени на загрузку страницы перед инициализацией вебсокета
+    setTimeout(() => {
+      initializeEcho()
+    }, 500)
   }
 })
 
@@ -534,6 +652,24 @@ onMounted(() => {
 watch(() => authStore.user, (newUser) => {
   if (newUser) {
     fetchNotifications()
+    // Ждем обновления username
+    setTimeout(() => {
+      initializeEcho()
+    }, 100)
+  } else {
+    // Отключаем вебсокет при выходе
+    if (echo) {
+      echo.disconnect()
+      echo = null
+    }
+  }
+})
+
+// Отключаем вебсокет при размонтировании компонента
+onUnmounted(() => {
+  if (echo) {
+    echo.disconnect()
+    echo = null
   }
 })
 </script>

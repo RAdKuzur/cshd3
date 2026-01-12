@@ -42,4 +42,8 @@ class TransferActConfirmChanged implements ShouldBroadcastNow
             'message' => NotificationTypeDictionary::get(NotificationTypeDictionary::TRANSFER_ACT_CONFIRM),
         ];
     }
+    public function broadcastAs(): string
+    {
+        return 'TransferActConfirmChanged';
+    }
 }

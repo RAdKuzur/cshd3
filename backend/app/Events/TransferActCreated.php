@@ -44,4 +44,8 @@ class TransferActCreated implements ShouldBroadcastNow
             'message' => NotificationTypeDictionary::get(NotificationTypeDictionary::TRANSFER_ACT),
         ];
     }
+    public function broadcastAs(): string
+    {
+        return 'TransferActCreated';
+    }
 }
