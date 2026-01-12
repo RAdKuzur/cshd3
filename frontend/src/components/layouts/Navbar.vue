@@ -173,14 +173,14 @@
                     </div>
 
                     <!-- Футер с ссылкой на все уведомления -->
-                    <div class="border-t px-4 py-2">
-                      <router-link
-                          to="/notifications"
-                          class="block text-center text-sm text-indigo-600 hover:text-indigo-800 font-medium"
-                      >
-                        Посмотреть все уведомления
-                      </router-link>
-                    </div>
+<!--                    <div class="border-t px-4 py-2">-->
+<!--                      <router-link-->
+<!--                          to="/notifications"-->
+<!--                          class="block text-center text-sm text-indigo-600 hover:text-indigo-800 font-medium"-->
+<!--                      >-->
+<!--                        Посмотреть все уведомления-->
+<!--                      </router-link>-->
+<!--                    </div>-->
                   </div>
                 </MenuItems>
               </transition>
