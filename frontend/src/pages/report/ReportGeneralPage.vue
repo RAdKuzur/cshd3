@@ -53,7 +53,7 @@
                   </div>
                   <div>
                     <div class="font-medium">{{ branch.name }}</div>
-                    <div class="text-sm opacity-75">{{ getBranchStats(branch.id).total }} вещей</div>
+                    <div class="text-sm opacity-75">{{ getBranchStats(branch.id).total }} объектов материальной ценностей</div>
                   </div>
                 </div>
 
@@ -80,7 +80,7 @@
                     </svg>
                   </div>
                   <div>
-                    <p class="text-sm font-medium text-gray-600">Всего вещей</p>
+                    <p class="text-sm font-medium text-gray-600">Всего объектов материальной ценностей</p>
                     <p class="text-xl font-bold text-gray-900">{{ totalThings }}</p>
                   </div>
                 </div>
@@ -173,7 +173,7 @@
                           </svg>
                         </div>
                         <div>
-                          <p class="text-sm text-blue-600 font-medium">Всего вещей в отделе</p>
+                          <p class="text-sm text-blue-600 font-medium">Всего объектов материальной ценностей в отделе</p>
                           <p class="text-2xl font-bold text-gray-900">{{ filteredThings.length }}</p>
                         </div>
                       </div>
@@ -212,11 +212,11 @@
                   <div class="bg-white p-6 rounded-2xl border border-gray-200">
                     <div class="flex justify-between items-center mb-6">
                       <div>
-                        <h3 class="text-xl font-bold text-gray-900">Распределение вещей по годам эксплуатации</h3>
-                        <p class="text-gray-600 mt-1">Количество вещей в зависимости от срока использования</p>
+                        <h3 class="text-xl font-bold text-gray-900">Распределение объектов материальной ценностей по годам эксплуатации</h3>
+                        <p class="text-gray-600 mt-1">Количество объектов материальной ценностей в зависимости от срока использования</p>
                       </div>
                       <div class="text-sm text-gray-500">
-                        Всего: {{ filteredThings.length }} вещей
+                        Всего: {{ filteredThings.length }} объектов материальной ценностей
                       </div>
                     </div>
 
@@ -254,7 +254,7 @@
                               <div
                                   class="w-16 bg-gradient-to-t from-blue-400 to-blue-500 rounded-t-lg transition-all duration-300 hover:opacity-90 cursor-pointer"
                                   :style="{ height: getBarHeight(yearData['0-5']) + 'px' }"
-                                  :title="`Менее 5 лет: ${yearData['0-5']} вещей`"
+                                  :title="`Менее 5 лет: ${yearData['0-5']} объектов материальной ценностей`"
                               ></div>
                             </div>
                             <div class="mt-4 text-center">
@@ -270,7 +270,7 @@
                               <div
                                   class="w-16 bg-gradient-to-t from-yellow-400 to-yellow-500 rounded-t-lg transition-all duration-300 hover:opacity-90 cursor-pointer"
                                   :style="{ height: getBarHeight(yearData['5-10']) + 'px' }"
-                                  :title="`5-10 лет: ${yearData['5-10']} вещей`"
+                                  :title="`5-10 лет: ${yearData['5-10']} объектов материальной ценностей`"
                               ></div>
                             </div>
                             <div class="mt-4 text-center">
@@ -286,7 +286,7 @@
                               <div
                                   class="w-16 bg-gradient-to-t from-red-400 to-red-500 rounded-t-lg transition-all duration-300 hover:opacity-90 cursor-pointer"
                                   :style="{ height: getBarHeight(yearData['10+']) + 'px' }"
-                                  :title="`Более 10 лет: ${yearData['10+']} вещей`"
+                                  :title="`Более 10 лет: ${yearData['10+']} объектов материальной ценностей`"
                               ></div>
                             </div>
                             <div class="mt-4 text-center">
@@ -305,7 +305,7 @@
                         <div class="flex justify-between items-center">
                           <div>
                             <p class="text-sm font-medium text-blue-600">Менее 5 лет</p>
-                            <p class="text-lg font-bold text-gray-900">{{ yearData['0-5'] }} вещей</p>
+                            <p class="text-lg font-bold text-gray-900">{{ yearData['0-5'] }} объектов материальной ценностей</p>
                           </div>
                           <div class="text-right">
                             <p class="text-sm text-blue-500">{{ getPercentage('0-5') }}%</p>
@@ -320,7 +320,7 @@
                         <div class="flex justify-between items-center">
                           <div>
                             <p class="text-sm font-medium text-yellow-600">5-10 лет</p>
-                            <p class="text-lg font-bold text-gray-900">{{ yearData['5-10'] }} вещей</p>
+                            <p class="text-lg font-bold text-gray-900">{{ yearData['5-10'] }} объектов материальной ценностей</p>
                           </div>
                           <div class="text-right">
                             <p class="text-sm text-yellow-500">{{ getPercentage('5-10') }}%</p>
@@ -335,7 +335,7 @@
                         <div class="flex justify-between items-center">
                           <div>
                             <p class="text-sm font-medium text-red-600">Более 10 лет</p>
-                            <p class="text-lg font-bold text-gray-900">{{ yearData['10+'] }} вещей</p>
+                            <p class="text-lg font-bold text-gray-900">{{ yearData['10+'] }} объектов материальной ценностей</p>
                           </div>
                           <div class="text-right">
                             <p class="text-sm text-red-500">{{ getPercentage('10+') }}%</p>
@@ -351,7 +351,7 @@
                   <!-- Дополнительная статистика -->
                   <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <div class="bg-white p-6 rounded-2xl border border-gray-200">
-                      <h4 class="text-lg font-semibold text-gray-900 mb-4">Средний возраст вещей</h4>
+                      <h4 class="text-lg font-semibold text-gray-900 mb-4">Средний возраст объектов материальной ценностей</h4>
                       <div class="text-center py-4">
                         <div class="text-5xl font-bold text-indigo-600 mb-2">{{ averageYears }}</div>
                         <p class="text-gray-600">лет эксплуатации в среднем</p>
@@ -459,7 +459,7 @@
                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                             </svg>
                             <div class="flex-1">
-                              <div class="text-sm text-gray-500 mb-1">Типы вещей</div>
+                              <div class="text-sm text-gray-500 mb-1">Типы объектов материальной ценностей</div>
                               <div class="flex flex-wrap gap-2 max-h-20 overflow-y-auto">
                                 <label v-for="type in availableTypes" :key="type.id" class="inline-flex items-center">
                                   <input
@@ -481,8 +481,8 @@
                   <!-- Отладочная информация -->
                   <div v-if="debugMode" class="mb-4 p-3 bg-yellow-50 rounded-lg text-sm">
                     <p><strong>Debug Info:</strong></p>
-                    <p>Всего вещей в отделе: {{ thingsForActiveBranch.length }}</p>
-                    <p>Отфильтровано вещей: {{ filteredThings.length }}</p>
+                    <p>Всего объектов материальной ценностей в отделе: {{ thingsForActiveBranch.length }}</p>
+                    <p>Отфильтровано объектов материальной ценностей: {{ filteredThings.length }}</p>
                     <p>Активный отдел: {{ activeTab }}</p>
                   </div>
 
@@ -533,7 +533,7 @@
                             <div class="ml-4">
                               <router-link :to="`/things/view/${item.id}`" class="block">
                                 <div class="text-sm font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors hover:underline">
-                                  {{ item.name || `Вещь ${item.id}` }}
+                                  {{ item.name || `Объект ${item.id}` }}
                                 </div>
                               </router-link>
                               <div class="text-sm text-gray-500">
@@ -648,7 +648,7 @@
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                     </svg>
                     <p class="text-lg font-medium mb-2">В этом отделе пока нет материальных ценностей</p>
-                    <p class="text-sm">На данный момент нет вещей, привязанных к этому отделу</p>
+                    <p class="text-sm">На данный момент нет объектов материальной ценностей, привязанных к этому отделу</p>
                   </div>
 
                   <!-- Пагинация -->

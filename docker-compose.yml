@@ -54,12 +54,6 @@ services:
     container_name: backend
     volumes:
       - ./backend:/var/www/html
-    environment:
-      - DB_HOST=${DB_HOST}
-      - DB_PORT=${DB_PORT}
-      - DB_DATABASE=${DB_DATABASE}
-      - DB_USERNAME=${DB_USERNAME}
-      - DB_PASSWORD=${DB_PASSWORD}
     networks:
       - network
     depends_on:
@@ -78,6 +72,7 @@ services:
     depends_on:
       - backend
       - redis
+    restart: always
 
   queue-worker:
     build:
@@ -92,6 +87,22 @@ services:
     depends_on:
       - backend
       - redis
+    restart: always
+
+  migrator:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: migrator
+    command: sh -c "php artisan migrate && php artisan jwt:secret"
+    volumes:
+      - ./backend:/var/www/html
+    networks:
+      - network
+    depends_on:
+      - backend
+      - redis
+    restart: on-failure
 
   frontend:
     build:
@@ -99,17 +110,13 @@ services:
       dockerfile: Dockerfile
     container_name: frontend
     restart: unless-stopped
-
     ports:
       - "5173:5173"
-
     volumes:
       - ./frontend:/app
       - /app/node_modules
-
     environment:
       - CHOKIDAR_USEPOLLING=true
-
     networks:
       - network
 
@@ -128,6 +135,7 @@ services:
     depends_on:
       - backend
       - redis
+    restart: always
 
   redis:
     image: redis:latest
