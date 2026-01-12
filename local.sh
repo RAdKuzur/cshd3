@@ -4,6 +4,7 @@ cp .env.example .env
 
 echo "Устанавливаем бэкенд окружение..."
 cd backend && cp .env.example .env
+cd ../frontend && cp .env.example .env
 
 echo "Устанавливаем фронтенд зависимости"
 cd .. && docker compose up --build -d
