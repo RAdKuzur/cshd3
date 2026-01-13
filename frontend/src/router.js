@@ -38,6 +38,7 @@ import FurniturePage from "@/pages/thing/things/FurniturePage.vue";
 import ReportArmPage from "@/pages/report/ReportArmPage.vue";
 import AdminBranchPage from "@/pages/admin/branch/AdminBranchPage.vue";
 import ReportGeneralPage from "@/pages/report/ReportGeneralPage.vue";
+import LicenceErrorPage from "@/pages/error/LicenceErrorPage.vue";
 
 
 const BACKEND_URL = '';
@@ -47,6 +48,7 @@ const routes = [
     { path: '/:pathMatch(.*)*', component: ErrorPage },
     { path: '/not-auth', component:  AuthErrorPage  },
     { path: '/forbidden', component: ForbiddenErrorPage  },
+    { path: '/licence-error', component: LicenceErrorPage },
     { path: '/home', component: HomePage },
     { path: '/login', component: LoginPage },
     { path: '/logout' }, // special route for logout

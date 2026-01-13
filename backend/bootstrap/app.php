@@ -18,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $schedule->command('app:clear-expired-tokens')->everyMinute();
         $schedule->command('app:clear-old-logs')->everyMinute();
         $schedule->command('app:clear-old-visits')->everyMinute();
+        $schedule->command('app:licence-check')->everyMinute();
     })
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->api(prepend: [

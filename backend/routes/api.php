@@ -18,6 +18,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Middleware\AuthMiddleware;
 use App\Http\Middleware\CheckAvailabilityMiddleware;
 use App\Http\Middleware\CheckPermissionMiddleware;
+use App\Http\Middleware\LicenceMiddleware;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/login', [AuthController::class, 'login'])->name('login');
@@ -26,7 +27,7 @@ Route::post('/refresh', [AuthController::class, 'refresh'])->name('refresh');
 Route::post('/block', [AuthController::class, 'block'])->name('block');
 Route::post('/unblock', [AuthController::class, 'unblock'])->name('unblock');
 
-Route::middleware([CheckPermissionMiddleware::class])->group(function () {
+Route::middleware([LicenceMiddleware::class, CheckPermissionMiddleware::class])->group(function () {
 
     Route::middleware([CheckAvailabilityMiddleware::class])->group(function () {
         //routes...

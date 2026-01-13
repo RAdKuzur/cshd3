@@ -25,7 +25,8 @@ class DatabaseSeeder extends Seeder
             PeopleSeeder::class,
             AuditoriumResponsibilitySeeder::class,
             ThingSeeder::class,
-            //TransferActSeeder::class
+            //TransferActSeeder::class,
+            LicenceSeeder::class,
         ]);
     }
 }
