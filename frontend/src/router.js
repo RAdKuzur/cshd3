@@ -39,6 +39,7 @@ import ReportArmPage from "@/pages/report/ReportArmPage.vue";
 import AdminBranchPage from "@/pages/admin/branch/AdminBranchPage.vue";
 import ReportGeneralPage from "@/pages/report/ReportGeneralPage.vue";
 import LicenceErrorPage from "@/pages/error/LicenceErrorPage.vue";
+import TechWorkErrorPage from "@/pages/error/TechWorkErrorPage.vue";
 
 
 const BACKEND_URL = '';
@@ -49,6 +50,7 @@ const routes = [
     { path: '/not-auth', component:  AuthErrorPage  },
     { path: '/forbidden', component: ForbiddenErrorPage  },
     { path: '/licence-error', component: LicenceErrorPage },
+    { path: '/tech-work', component: TechWorkErrorPage },
     { path: '/home', component: HomePage },
     { path: '/login', component: LoginPage },
     { path: '/logout' }, // special route for logout

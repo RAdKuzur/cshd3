@@ -79,7 +79,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     container_name: queue-worker
-    command: php artisan queue:work rabbitmq --queue=test-queue
+    command: php artisan queue:work rabbitmq --queue=email
     volumes:
       - ./backend:/var/www/html
     networks:
