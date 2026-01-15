@@ -29,20 +29,42 @@ class LicenceCheckCommand extends Command
      */
     public function handle()
     {
-        $url = env('LICENCE_URL_APP');
-        $key = env('APP_KEY');
-        if ($url) {
-            $response = Http::post($url, [
-                'key' => $key
-            ]);
-            if ($response->status() == 200) {
-                DB::table('licences')->truncate();
-                DB::table('licences')->insert([
-                    'code' => $response->json()['code'],
-                    'expires_at' => $response->json()['expires_at'],
-                    'is_revoked' => $response->json()['is_revoked'],
+        DB::beginTransaction();
+        try {
+            $url = env('LICENCE_URL_APP');
+            $licenceKey = DB::table('licences')->where([
+                ['is_revoked', '=', LicenceDictionary::ACTIVE],
+                ['expires_at', '>', now()]
+            ])->first();
+            $key = env('APP_KEY');
+            if ($licenceKey && $url) {
+                $response = Http::post($url, [
+                    'app_key' => $key,
+                    'licence_key' => $licenceKey->code,
                 ]);
+                switch ($response->status()) {
+                    case 200:
+                    case 403:
+                        DB::table('licences')->where(['id' => $licenceKey->id])->update(
+                            [
+                                'is_revoked' => $response->json()['data']['is_revoked'],
+                                'expires_at' => $response->json()['data']['expires_at']
+                            ]
+                        );
+                        break;
+                    case 404:
+                        DB::table('licences')->where(['id' => $licenceKey->id])->update(
+                            [
+                                'is_revoked' => LicenceDictionary::REVOKED,
+                            ]
+                        );
+                        break;
+                }
             }
+            DB::commit();
+        }
+        catch (\Exception $e) {
+            DB::rollBack();
         }
     }
 }
