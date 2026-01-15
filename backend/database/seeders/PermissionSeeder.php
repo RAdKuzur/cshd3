@@ -28,10 +28,44 @@ class PermissionSeeder extends Seeder
         }
         //permissions
         DB::table('permissions')->truncate();
-        foreach (DB::table('rules')->get() as $rule) {
+        foreach (RoleDictionary::rules(RoleDictionary::ADMIN) as $path) {
+            $rule = DB::table('rules')->where('path', $path)->first();
             DB::table('permissions')->insert([
-               'rule_id' => $rule->id,
-               'role' => RoleDictionary::ADMIN,
+                'rule_id' => $rule->id,
+                'role' => RoleDictionary::ADMIN,
+            ]);
+        }
+
+        foreach (RoleDictionary::rules(RoleDictionary::DIRECTOR) as $path) {
+            $rule = DB::table('rules')->where('path', $path)->first();
+            DB::table('permissions')->insert([
+                'rule_id' => $rule->id,
+                'role' => RoleDictionary::DIRECTOR,
+            ]);
+        }
+
+        foreach (RoleDictionary::rules(RoleDictionary::WORKER) as $path) {
+            $rule = DB::table('rules')->where('path', $path)->first();
+            DB::table('permissions')->insert([
+                'rule_id' => $rule->id,
+                'role' => RoleDictionary::WORKER,
+            ]);
+        }
+
+
+        foreach (RoleDictionary::rules(RoleDictionary::STUFF_MANAGER) as $path) {
+            $rule = DB::table('rules')->where('path', $path)->first();
+            DB::table('permissions')->insert([
+                'rule_id' => $rule->id,
+                'role' => RoleDictionary::STUFF_MANAGER,
+            ]);
+        }
+
+        foreach (RoleDictionary::rules(RoleDictionary::ACCOUNTANT) as $path) {
+            $rule = DB::table('rules')->where('path', $path)->first();
+            DB::table('permissions')->insert([
+                'rule_id' => $rule->id,
+                'role' => RoleDictionary::ACCOUNTANT,
             ]);
         }
     }

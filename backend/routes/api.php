@@ -36,7 +36,7 @@ Route::middleware([LicenceMiddleware::class, CheckPermissionMiddleware::class])-
     Route::get('/info/balance', [InfoController::class, 'balance'])->name('info.balance');
     Route::get('/info/departments', [InfoController::class, 'departments'])->name('info.departments');
     Route::get('/info/branches', [InfoController::class, 'branches'])->name('info.branches');
-    Route::get('/info/transfer-acts/types', [InfoController::class, 'transferActTypes'])->name('info.branches');
+    Route::get('/info/transfer-acts/types', [InfoController::class, 'transferActTypes'])->name('info.transfer-acts.types');
     Route::get('/info/roles', [InfoController::class, 'roles'])->name('info.roles');
 
     Route::get('/auditoriums', [AuditoriumController::class, 'all'])->name('auditorium.all');
@@ -93,7 +93,7 @@ Route::middleware([LicenceMiddleware::class, CheckPermissionMiddleware::class])-
     Route::post('/transfer-acts', [TransferActController::class, 'create'])->name('transfer-acts.create');
     Route::put('/transfer-acts/{id}', [TransferActController::class, 'update'])->name('transfer-acts.update');
     Route::delete('/transfer-acts/{id}', [TransferActController::class, 'delete'])->name('transfer-acts.delete');
-    Route::get('/transfer-acts/things/{id}', [ThingController::class, 'transferActThings'])->name('things.transferActThings');
+    Route::get('/transfer-acts/things/{id}', [ThingController::class, 'transferActThings'])->name('things.transfer-act-things');
     Route::post('/transfer-acts/confirm', [TransferActController::class, 'confirm'])->name('transfer-acts.confirm');
     Route::post('/transfer-acts/cancel-confirm', [TransferActController::class, 'cancelConfirm'])->name('transfer-acts.cancel-confirm');
 
