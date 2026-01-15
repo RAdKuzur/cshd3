@@ -5,6 +5,7 @@ namespace App\Services;
 use App\DTO\BranchDTO;
 use App\Repositories\BranchRepository;
 use App\Repositories\OrganizationRepository;
+use Illuminate\Support\Facades\DB;
 
 class BranchService
 {
@@ -40,14 +41,36 @@ class BranchService
         );
     }
     public function create($data){
-        $this->branchRepository->create(array_merge($data, [
-            'organization_id' => $this->organizationRepository->getMainOrganization()->id
-        ]));
+        DB::beginTransaction();
+        try {
+            $this->branchRepository->create(array_merge($data, [
+                'organization_id' => $this->organizationRepository->getMainOrganization()->id
+            ]));
+            DB::commit();
+        }
+        catch (\Exception $e) {
+            DB::rollBack();
+        }
     }
     public function update($id, $data){
-        $this->branchRepository->update($id, $data);
+        DB::beginTransaction();
+        try {
+            $this->branchRepository->update($id, $data);
+            DB::commit();
+        }
+        catch (\Exception $e) {
+            DB::rollBack();
+        }
     }
     public function delete($id) {
-        $this->branchRepository->delete($id);
+        DB::beginTransaction();
+        try {
+            $this->branchRepository->delete($id);
+            DB::commit();
+        }
+        catch (\Exception $e) {
+            DB::rollBack();
+        }
+
     }
 }
