@@ -100,25 +100,25 @@ const subscribeToNewsletter = (event) => {
           </p>
 
           <!-- Контакты -->
-          <div class="space-y-3">
-            <h4 class="text-lg font-semibold text-white mb-4">Контакты</h4>
-            <div
-                v-for="contact in contacts"
-                :key="contact.text"
-                class="flex items-start space-x-3 group cursor-pointer"
-            >
-              <component
-                  :is="contact.icon"
-                  class="w-5 h-5 text-indigo-400 mt-0.5 flex-shrink-0 group-hover:text-indigo-300 transition-colors"
-              />
-              <a
-                  :href="contact.href"
-                  class="text-gray-300 hover:text-white transition-colors text-sm leading-relaxed"
-              >
-                {{ contact.text }}
-              </a>
-            </div>
-          </div>
+<!--          <div class="space-y-3">-->
+<!--            <h4 class="text-lg font-semibold text-white mb-4">Контакты</h4>-->
+<!--            <div-->
+<!--                v-for="contact in contacts"-->
+<!--                :key="contact.text"-->
+<!--                class="flex items-start space-x-3 group cursor-pointer"-->
+<!--            >-->
+<!--              <component-->
+<!--                  :is="contact.icon"-->
+<!--                  class="w-5 h-5 text-indigo-400 mt-0.5 flex-shrink-0 group-hover:text-indigo-300 transition-colors"-->
+<!--              />-->
+<!--              <a-->
+<!--                  :href="contact.href"-->
+<!--                  class="text-gray-300 hover:text-white transition-colors text-sm leading-relaxed"-->
+<!--              >-->
+<!--                {{ contact.text }}-->
+<!--              </a>-->
+<!--            </div>-->
+<!--          </div>-->
         </div>
 
         <!-- Центральная колонка - Быстрые ссылки -->
@@ -153,14 +153,9 @@ const subscribeToNewsletter = (event) => {
             <div class="mt-12 md:mt-0">
               <h4 class="text-lg font-semibold text-white mb-6 flex items-center">
                 <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
-                Поддержка
+                Работа с системой
               </h4>
               <ul class="space-y-3">
-                <li>
-                  <button class="text-gray-300 hover:text-white transition-colors text-sm">
-                    Техническая поддержка
-                  </button>
-                </li>
                 <li>
                   <button class="text-gray-300 hover:text-white transition-colors text-sm">
                     Документация
@@ -171,11 +166,6 @@ const subscribeToNewsletter = (event) => {
                     Частые вопросы
                   </button>
                 </li>
-                <li>
-                  <button class="text-gray-300 hover:text-white transition-colors text-sm">
-                    Обучение
-                  </button>
-                </li>
               </ul>
             </div>
           </div>
@@ -183,35 +173,35 @@ const subscribeToNewsletter = (event) => {
           <!-- Правая колонка - Рассылка -->
           <div class="md:grid md:grid-cols-1 md:gap-8">
             <div>
-              <h4 class="text-lg font-semibold text-white mb-6 flex items-center">
-                <span class="w-2 h-2 bg-purple-500 rounded-full mr-2"></span>
-                Рассылка новостей
-              </h4>
-              <p class="text-gray-300 text-sm mb-4 leading-relaxed">
-                Подпишитесь на рассылку, чтобы получать актуальные новости
-                о работе системы и обновлениях.
-              </p>
+<!--              <h4 class="text-lg font-semibold text-white mb-6 flex items-center">-->
+<!--                <span class="w-2 h-2 bg-purple-500 rounded-full mr-2"></span>-->
+<!--                Рассылка новостей-->
+<!--              </h4>-->
+<!--              <p class="text-gray-300 text-sm mb-4 leading-relaxed">-->
+<!--                Подпишитесь на рассылку, чтобы получать актуальные новости-->
+<!--                о работе системы и обновлениях.-->
+<!--              </p>-->
 
-              <form @submit="subscribeToNewsletter" class="space-y-3">
-                <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
-                  <input
-                      name="email"
-                      type="email"
-                      required
-                      placeholder="your.email@example.com"
-                      class="flex-1 px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
-                  >
-                  <button
-                      type="submit"
-                      class="px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-medium rounded-lg shadow-sm transition-all duration-200 transform hover:scale-105"
-                  >
-                    Подписаться
-                  </button>
-                </div>
-                <p class="text-gray-400 text-xs">
-                  Подписываясь, вы соглашаетесь с нашей политикой конфиденциальности
-                </p>
-              </form>
+<!--              <form @submit="subscribeToNewsletter" class="space-y-3">-->
+<!--                <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">-->
+<!--                  <input-->
+<!--                      name="email"-->
+<!--                      type="email"-->
+<!--                      required-->
+<!--                      placeholder="your.email@example.com"-->
+<!--                      class="flex-1 px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"-->
+<!--                  >-->
+<!--                  <button-->
+<!--                      type="submit"-->
+<!--                      class="px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-medium rounded-lg shadow-sm transition-all duration-200 transform hover:scale-105"-->
+<!--                  >-->
+<!--                    Подписаться-->
+<!--                  </button>-->
+<!--                </div>-->
+<!--                <p class="text-gray-400 text-xs">-->
+<!--                  Подписываясь, вы соглашаетесь с нашей политикой конфиденциальности-->
+<!--                </p>-->
+<!--              </form>-->
 
               <!-- Социальные сети -->
               <div class="mt-8">
@@ -252,9 +242,6 @@ const subscribeToNewsletter = (event) => {
             </button>
             <button class="text-gray-400 hover:text-white transition-colors text-sm">
               Условия использования
-            </button>
-            <button class="text-gray-400 hover:text-white transition-colors text-sm">
-              Карта сайта
             </button>
           </div>
         </div>

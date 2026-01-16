@@ -44,22 +44,6 @@
       </div>
     </div>
 
-    <!-- Статистика -->
-    <div class="bg-white py-16">
-      <div class="mx-auto max-w-7xl px-6 lg:px-8">
-        <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-          <div
-              v-for="stat in statistics"
-              :key="stat.name"
-              class="text-center"
-          >
-            <div class="text-3xl font-bold text-indigo-600">{{ stat.value }}</div>
-            <div class="text-sm text-gray-600 mt-2">{{ stat.name }}</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- Основные модули -->
     <div id="features" class="py-24 sm:py-32">
       <div class="mx-auto max-w-7xl px-6 lg:px-8">
@@ -90,29 +74,6 @@
               <dd class="mt-2 text-base/7 text-gray-600">{{ feature.description }}</dd>
             </div>
           </dl>
-        </div>
-      </div>
-    </div>
-
-    <!-- Баннер документооборота -->
-    <div class="bg-gradient-to-r from-indigo-600 to-purple-700">
-      <div class="mx-auto max-w-7xl px-6 py-16 lg:px-8">
-        <div class="mx-auto max-w-2xl text-center">
-          <h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-            Электронный документооборот
-          </h2>
-          <p class="mx-auto mt-6 max-w-xl text-lg leading-8 text-indigo-100">
-            Полностью автоматизированная система обработки судебных документов
-            с соблюдением требований законодательства
-          </p>
-          <div class="mt-10 flex items-center justify-center gap-x-6">
-            <button
-                @click="navigateToDocuments"
-                class="rounded-md bg-white px-6 py-3 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-gray-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-            >
-              Перейти к документам
-            </button>
-          </div>
         </div>
       </div>
     </div>
@@ -164,12 +125,6 @@
                 class="rounded-md bg-indigo-600 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
               Войти в систему
-            </button>
-            <button
-                @click="contactSupport"
-                class="text-sm font-semibold leading-6 text-gray-900"
-            >
-              Связаться с поддержкой <span aria-hidden="true">→</span>
             </button>
           </div>
         </div>

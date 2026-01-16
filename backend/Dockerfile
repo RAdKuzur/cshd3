@@ -22,8 +22,18 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 
-# Настройка php-fpm
-RUN echo "listen = 9000" >> /usr/local/etc/php-fpm.d/zz-docker.conf
+# Настройка php-fpm - ИСПРАВЛЕННАЯ ЧАСТЬ
+RUN echo '[www]\n\
+user = www-data\n\
+group = www-data\n\
+listen = 9000\n\
+listen.owner = www-data\n\
+listen.group = www-data\n\
+pm = dynamic\n\
+pm.max_children = 5\n\
+pm.start_servers = 2\n\
+pm.min_spare_servers = 1\n\
+pm.max_spare_servers = 3\n' > /usr/local/etc/php-fpm.d/zz-docker.conf
 
 EXPOSE 9000
 

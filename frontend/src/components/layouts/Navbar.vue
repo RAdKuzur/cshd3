@@ -1,10 +1,12 @@
 <template>
-  <Disclosure as="nav" class="bg-gradient-to-r from-indigo-600 to-purple-600 shadow-lg" v-slot="{ open }">
+  <Disclosure as="nav" class="bg-gradient-to-r from-indigo-600 to-purple-600 shadow-lg sticky top-0 z-50" v-slot="{ open }">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div class="flex h-16 items-center justify-between">
         <div class="flex items-center">
           <div class="flex-shrink-0">
-            <ScaleIcon class="w-7 h-7 text-white" />
+            <a href="/home" class="inline-block">
+              <ScaleIcon class="w-7 h-7 text-white hover:text-gray-300 cursor-pointer" />
+            </a>
           </div>
           <div class="hidden md:block">
             <div class="ml-10 flex items-baseline space-x-4">
