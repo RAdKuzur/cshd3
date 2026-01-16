@@ -167,8 +167,6 @@ class TransferActService
                 ]);
             }
             DB::commit();
-            Log::debug($transferAct->from);
-            Log::debug($transferAct->to);
             if($transferAct->from){
                 $peopleFrom = $this->peopleRepository->get($transferAct->fromPerson->people->id);
                 TransferActUpdated::dispatch($peopleFrom->user);
@@ -203,7 +201,6 @@ class TransferActService
             foreach ($transferActConfirms as $transferActConfirm) {
                 TransferActConfirmChanged::dispatch($transferActConfirm->peoplePosition->people->user);
                 if ($transferActConfirm->status != TransferActStatusDictionary::CONFIRMED) {
-
                     $isConfirmed = false;
                     break;
                 }
