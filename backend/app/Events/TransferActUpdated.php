@@ -13,7 +13,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class TransferActCreated implements ShouldBroadcastNow
+class TransferActUpdated implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -41,7 +41,7 @@ class TransferActCreated implements ShouldBroadcastNow
     public function broadcastWith(): array
     {
         return [
-            'message' => NotificationTypeDictionary::get(NotificationTypeDictionary::TRANSFER_ACT_CREATE),
+            'message' => NotificationTypeDictionary::get(NotificationTypeDictionary::TRANSFER_ACT_UPDATE),
         ];
     }
     public function broadcastAs(): string

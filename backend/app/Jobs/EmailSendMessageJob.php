@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Dictionaries\EmailDictionary;
 use App\Services\EmailService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
@@ -33,7 +34,6 @@ class EmailSendMessageJob implements ShouldQueue
      */
     public function handle(): void
     {
-
-        (new EmailService())->send($this->email, $this->text, $this->html);
+        (new EmailService())->send($this->email, $this->text, EmailDictionary::get($this->html));
     }
 }

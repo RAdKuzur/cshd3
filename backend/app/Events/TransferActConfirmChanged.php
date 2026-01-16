@@ -44,6 +44,6 @@ class TransferActConfirmChanged implements ShouldBroadcastNow
     }
     public function broadcastAs(): string
     {
-        return 'TransferActConfirmChanged';
+        return 'Notification';
     }
 }

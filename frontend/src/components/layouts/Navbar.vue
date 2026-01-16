@@ -478,7 +478,7 @@ const initializeEcho = () => {
 
     // Используем .channel() вместо .private() для публичного канала
     echo.channel(channelName)
-        .listen('.TransferActCreated', (data) => {
+        .listen('.Notification', (data) => {
           console.log('Получено уведомление через вебсокет:', data)
 
           // Создаем объект уведомления из полученных данных

@@ -6,7 +6,11 @@ use App\Dictionaries\TransferActDictionary;
 use App\Dictionaries\TransferActStatusDictionary;
 use App\DTO\TransferActConfirmDTO;
 use App\DTO\TransferActDTO;
+use App\Events\TransferActConfirmChanged;
+use App\Events\TransferActCreated;
+use App\Events\TransferActUpdated;
 use App\Models\Thing;
+use App\Models\TransferActConfirm;
 use App\Repositories\PeopleRepository;
 use App\Repositories\ThingRepository;
 use App\Repositories\TransferActConfirmRepository;
@@ -128,6 +132,12 @@ class TransferActService
                 ]);
             }
             DB::commit();
+            if (isset($peopleTo)) {
+                TransferActCreated::dispatch($peopleTo->user);
+            }
+            if (isset($peopleFrom)) {
+                TransferActCreated::dispatch($peopleFrom->user);
+            }
         }
         catch (\Exception $exception){
             Log::debug($exception->getMessage());
@@ -137,7 +147,7 @@ class TransferActService
     public function update($id, TransferActDTO $transferActDTO){
         DB::beginTransaction();
         try {
-
+            $transferAct = $this->transferActRepository->get($id);
             foreach ($transferActDTO->things as $thingId) {
                 $thing = $this->thingRepository->get($thingId);
                 $this->transferActThingRepository->create([
@@ -157,6 +167,16 @@ class TransferActService
                 ]);
             }
             DB::commit();
+            Log::debug($transferAct->from);
+            Log::debug($transferAct->to);
+            if($transferAct->from){
+                $peopleFrom = $this->peopleRepository->get($transferAct->fromPerson->people->id);
+                TransferActUpdated::dispatch($peopleFrom->user);
+            }
+            if($transferAct->to){
+                $peopleTo = $this->peopleRepository->get($transferAct->toPerson->people->id);
+                TransferActUpdated::dispatch($peopleTo->user);
+            }
         }
         catch (\Exception $exception){
             Log::debug($exception->getMessage());
@@ -181,7 +201,9 @@ class TransferActService
             ]);
             $transferActConfirms = $this->transferActConfirmRepository->getByTransferActId($transferAct->id);
             foreach ($transferActConfirms as $transferActConfirm) {
+                TransferActConfirmChanged::dispatch($transferActConfirm->peoplePosition->people->user);
                 if ($transferActConfirm->status != TransferActStatusDictionary::CONFIRMED) {
+
                     $isConfirmed = false;
                     break;
                 }
@@ -226,6 +248,7 @@ class TransferActService
             }
             $transferActConfirms = $this->transferActConfirmRepository->getByTransferActId($transferAct->id);
             foreach ($transferActConfirms as $transferActConfirm) {
+                TransferActConfirmChanged::dispatch($transferActConfirm->peoplePosition->people->user);
                 if ($transferActConfirm->status != TransferActStatusDictionary::CONFIRMED) {
                     $isConfirmed = true;
                     break;

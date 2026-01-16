@@ -4,13 +4,13 @@ namespace App\Listeners;
 
 use App\Dictionaries\EmailDictionary;
 use App\Dictionaries\NotificationTypeDictionary;
-use App\Events\TransferActConfirmChanged;
+use App\Events\TransferActUpdated;
 use App\Jobs\EmailSendMessageJob;
 use App\Services\NotificationService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
-class TransferActConfirmListener
+class TransferActUpdateListener
 {
     /**
      * Create the event listener.
@@ -26,10 +26,10 @@ class TransferActConfirmListener
     /**
      * Handle the event.
      */
-    public function handle(TransferActConfirmChanged $event): void
+    public function handle(TransferActUpdated $event): void
     {
-        EmailSendMessageJob::dispatch($event->user->email, 'Акт материального перемещения', EmailDictionary::TRANSFER_ACT_CONFIRM_CHANGED_EMAIL)
+        EmailSendMessageJob::dispatch($event->user->email, 'Акт материального перемещения', EmailDictionary::TRANSFER_ACT_UPDATE_EMAIL)
             ->onConnection('rabbitmq')->onQueue('email');
-        $this->notificationService->createNotification($event->user->id, NotificationTypeDictionary::TRANSFER_ACT_CONFIRM);
+        $this->notificationService->createNotification($event->user->id, NotificationTypeDictionary::TRANSFER_ACT_UPDATE);
     }
 }
