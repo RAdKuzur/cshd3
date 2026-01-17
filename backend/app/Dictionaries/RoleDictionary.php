@@ -79,6 +79,11 @@ class RoleDictionary implements BaseDictionary
         "notifications.read-user-notification",
         "notifications.delete",
         "notifications.delete-all-user-notifications",
+        "network-things.all",
+        "network-things.get-one",
+        "network-things.create",
+        "network-things.update",
+        "network-things.delete",
         "test",
         "tests"
     ];

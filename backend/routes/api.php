@@ -8,6 +8,7 @@ use App\Http\Controllers\AuditoriumController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\InfoController;
+use App\Http\Controllers\NetworkThingController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PeopleController;
 use App\Http\Controllers\ReportController;
@@ -110,6 +111,12 @@ Route::middleware([LicenceMiddleware::class, CheckPermissionMiddleware::class])-
     Route::post('/notifications/{notificationId}/read', [NotificationController::class, 'readUserNotification'])->name('notifications.read-user-notification');
     Route::delete('/notifications/{notificationId}', [NotificationController::class, 'delete'])->name('notifications.delete');
     Route::delete('/notifications/{username}', [NotificationController::class, 'deleteAllUserNotifications'])->name('notifications.delete-all-user-notifications');
+
+    Route::get('/network-things', [NetworkThingController::class, 'all'])->name('network-things.all');
+    Route::get('/network-things/{id}', [NetworkThingController::class, 'getOne'])->name('network-things.get-one');
+    Route::post('/network-things', [NetworkThingController::class, 'create'])->name('network-things.create');
+    Route::put('/network-things/{id}', [NetworkThingController::class, 'update'])->name('network-things.update');
+    Route::delete('/network-things/{id}', [NetworkThingController::class, 'delete'])->name('network-things.delete');
 });
 
 Route::post('/test' , [TestController::class, 'test'])->name('test');

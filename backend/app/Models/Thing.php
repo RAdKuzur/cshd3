@@ -25,6 +25,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  *
  * @property ThingAuditorium[] $thingAuditoriums
  * @property TransferActThing[] $transferActThings
+ * @property NetworkThing[] $networkThings
 */
 
 
@@ -93,5 +94,8 @@ class Thing extends Model
     }
     public function transferActThings(){
         return $this->hasMany(TransferActThing::class);
+    }
+    public function networkThings(){
+        return $this->hasMany(NetworkThing::class);
     }
 }

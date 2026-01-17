@@ -9,6 +9,7 @@ use App\DTO\Thing\ThingDTO;
 use App\DTO\Thing\UpdateThingDTO;
 use App\Models\Thing;
 use App\Repositories\BranchRepository;
+use App\Repositories\NetworkThingRepository;
 use App\Repositories\ThingAuditoriumRepository;
 use App\Repositories\ThingRepository;
 use App\Repositories\TransferActRepository;
@@ -18,23 +19,26 @@ use Illuminate\Support\Facades\Log;
 
 class ThingService
 {
-    private ThingRepository $thingRepository;
-    private TransferActRepository $transferActRepository;
-    private ThingAuditoriumRepository $thingAuditoriumRepository;
-    private BranchRepository $branchRepository;
-    private TransferActThingRepository $transferActThingRepository;
+    public ThingRepository $thingRepository;
+    public TransferActRepository $transferActRepository;
+    public ThingAuditoriumRepository $thingAuditoriumRepository;
+    public BranchRepository $branchRepository;
+    public TransferActThingRepository $transferActThingRepository;
+    public NetworkThingRepository $networkThingRepository;
     public function __construct(
         ThingRepository $thingRepository,
         TransferActRepository $transferActRepository,
         ThingAuditoriumRepository $thingAuditoriumRepository,
         BranchRepository $branchRepository,
-        TransferActThingRepository $transferActThingRepository
+        TransferActThingRepository $transferActThingRepository,
+        NetworkThingRepository $networkThingRepository
     ) {
         $this->thingRepository = $thingRepository;
         $this->transferActRepository = $transferActRepository;
         $this->thingAuditoriumRepository = $thingAuditoriumRepository;
         $this->branchRepository = $branchRepository;
         $this->transferActThingRepository = $transferActThingRepository;
+        $this->networkThingRepository = $networkThingRepository;
     }
 
     public function electronics(): array
@@ -339,6 +343,9 @@ class ThingService
             }
             foreach ($thing->transferActThings as $transferActThing) {
                 $this->transferActThingRepository->delete($transferActThing->id);
+            }
+            foreach($thing->networkThings as $networkThing) {
+                $this->networkThingRepository->delete($networkThing->id);
             }
             $this->thingRepository->delete($id);
             DB::commit();
