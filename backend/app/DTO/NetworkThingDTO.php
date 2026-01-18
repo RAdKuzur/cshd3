@@ -10,18 +10,27 @@ class NetworkThingDTO implements DTO
     public ?string $ip_address;
     public ?string $phone_number;
     public ?string $comment;
+    public ?string $inv_number;
+    public ?int $type;
+    public ?int $auditorium_id;
     public function __construct(
         ?int $id = null,
         ?int $thing_id = null,
         ?string $ip_address = null,
         ?string $phone_number = null,
-        ?string $comment = null
+        ?string $comment = null,
+        ?string $inv_number = null,
+        ?int $type = null,
+        ?int $auditorium_id = null
     ){
         $this->id = $id;
         $this->thing_id = $thing_id;
         $this->ip_address = $ip_address;
         $this->phone_number = $phone_number;
         $this->comment = $comment;
+        $this->inv_number = $inv_number;
+        $this->type = $type;
+        $this->auditorium_id = $auditorium_id;
     }
     public static function fromArray(array $array)
     {
@@ -31,7 +40,10 @@ class NetworkThingDTO implements DTO
             $array['thing_id'],
             $array['ip_address'],
             $array['phone_number'],
-            $array['comment']
+            $array['comment'],
+            $array['inv_number'],
+            $array['type'],
+            $array['auditorium_id'],
         );
     }
     public function toArray() : array {

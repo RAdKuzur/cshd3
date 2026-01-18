@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('network_things', function (Blueprint $table) {
             $table->id();
             $table->foreignId('thing_id')->constrained('things');
-            $table->string('ip_address')->nullable(false);
-            $table->string('phone_number')->nullable(false);
+            $table->string('ip_address')->nullable();
+            $table->string('phone_number')->nullable();
             $table->string('comment')->nullable();
             $table->timestamps();
         });

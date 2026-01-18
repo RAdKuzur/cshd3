@@ -26,8 +26,10 @@ class NetworkThingController extends Controller
     }
 
     public function getOne($id){
+        $data = $this->networkThingService->getOne($id);
         return response()->json([
-            'success' => true
+            'success' => true,
+            'data' => $data
         ]);
     }
 

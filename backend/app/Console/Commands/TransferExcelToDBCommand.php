@@ -54,7 +54,7 @@ class TransferExcelToDBCommand extends Command
                         'serial_number' => $sheet->getCell('C' . $index)->getValue() ?: 'б/н',
                         'inv_number' => $sheet->getCell('D' . $index)->getValue() ?: 'б/н',
                         'operation_date' => $sheet->getCell('E' . $index)->getValue() ? $sheet->getCell('E' . $index)->getValue() . '-01-01 00:00:00' : null,
-                        'thing_type_id' => ThingTypeDictionary::indexElectronics($cellValue),
+                        'thing_type_id' => ThingTypeDictionary::index($cellValue),
                         'thing_parent_id' => null,
                         'condition' => rand(ConditionDictionary::OK, ConditionDictionary::BROKEN),
                         'auditorium_id' => $auditorium->id,

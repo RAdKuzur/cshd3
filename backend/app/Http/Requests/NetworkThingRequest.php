@@ -24,8 +24,8 @@ class NetworkThingRequest extends FormRequest
     {
         return [
             'thing_id' => 'required|integer',
-            'ip_address' => 'required|string',
-            'phone_number' => 'required|string',
+            'ip_address' => 'nullable|string',
+            'phone_number' => 'nullable|string',
             'comment' => 'nullable|string',
         ];
     }

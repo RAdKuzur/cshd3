@@ -108,7 +108,7 @@ class ThingTypeDictionary implements BaseDictionary
     public static function get($index){
         return self::type()[$index];
     }
-    public static function indexElectronics($index){
+    public static function index($index){
         return array_search($index, self::type());
     }
 }

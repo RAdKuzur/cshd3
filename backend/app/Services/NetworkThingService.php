@@ -17,7 +17,7 @@ class NetworkThingService
         $this->networkThingRepository = $networkThingRepository;
     }
 
-    public function all()
+    public function all() : array
     {
         $data = [];
         $networkThings = $this->networkThingRepository->getAll();
@@ -27,20 +27,26 @@ class NetworkThingService
                 thing_id: $networkThing->thing_id,
                 ip_address: $networkThing->ip_address,
                 phone_number: $networkThing->phone_number,
-                comment: $networkThing->comment
+                comment: $networkThing->comment,
+                inv_number: $networkThing->thing->inv_number,
+                type: $networkThing->thing->thing_type_id,
+                auditorium_id: $networkThing->thing->getCurrentLocation() ? $networkThing->thing->getCurrentLocation()->id : null,
             );
         }
         return $data;
     }
 
-    public function getOne($id) {
+    public function getOne($id) : NetworkThingDTO {
         $networkThing = $this->networkThingRepository->get($id);
         return new NetworkThingDTO(
             id: $networkThing->id,
             thing_id: $networkThing->thing_id,
             ip_address: $networkThing->ip_address,
             phone_number: $networkThing->phone_number,
-            comment: $networkThing->comment
+            comment: $networkThing->comment,
+            inv_number: $networkThing->thing->inv_number,
+            type: $networkThing->thing->thing_type_id,
+            auditorium_id: $networkThing->thing->getCurrentLocation() ? $networkThing->thing->getCurrentLocation()->id : null,
         );
     }
 

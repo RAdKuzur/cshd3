@@ -40,6 +40,10 @@ import AdminBranchPage from "@/pages/admin/branch/AdminBranchPage.vue";
 import ReportGeneralPage from "@/pages/report/ReportGeneralPage.vue";
 import LicenceErrorPage from "@/pages/error/LicenceErrorPage.vue";
 import TechWorkErrorPage from "@/pages/error/TechWorkErrorPage.vue";
+import NetworkThingPage from "@/pages/thing/network-things/NetworkThingPage.vue";
+import NetworkThingCreatePage from "@/pages/thing/network-things/NetworkThingCreatePage.vue";
+import NetworkThingViewPage from "@/pages/thing/network-things/NetworkThingViewPage.vue";
+import NetworkThingEditPage from "@/pages/thing/network-things/NetworkThingEditPage.vue";
 
 
 const BACKEND_URL = '';
@@ -85,6 +89,12 @@ const routes = [
     { path: '/things/transfer-acts/create', component: TransferActCreatePage, meta: { auth: true } },
     { path: '/things/transfer-acts/view/:id', component: TransferActViewPage, meta: { auth: true } },
     { path: '/things/transfer-acts/edit/:id', component: TransferActEditPage, meta: { auth: true } },
+
+    { path: '/things/network', component: NetworkThingPage, meta: { auth: true } },
+    { path: '/things/network/create', component: NetworkThingCreatePage, meta: { auth: true } },
+    { path: '/things/network/view/:id', component: NetworkThingViewPage, meta: { auth: true } },
+    { path: '/things/network/edit/:id', component: NetworkThingEditPage, meta: { auth: true } },
+
 
     { path: '/files', component: FilePage , meta: { auth: true } }
 ]

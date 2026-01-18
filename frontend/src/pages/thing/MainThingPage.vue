@@ -44,6 +44,37 @@
           </div>
         </div>
 
+        <!-- Сетевые устройства -->
+        <div
+            class="category-card group bg-gradient-to-br from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600"
+            @click="navigateTo('/things/network')"
+        >
+          <div class="absolute top-6 right-6">
+            <div class="bg-white/20 backdrop-blur-sm p-3">
+              <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+          </div>
+
+          <div class="flex-1 flex flex-col justify-end">
+            <h3 class="text-2xl font-bold text-white mb-3">
+              Сетевые устройства
+            </h3>
+            <p class="text-cyan-100/90 text-sm leading-relaxed">
+              Маршрутизаторы, коммутаторы, точки доступа, серверы и другое сетевое оборудование
+            </p>
+          </div>
+
+          <div class="mt-8 flex items-center justify-between">
+            <div class="bg-white/20 p-2 group-hover:bg-white/30 transition-colors">
+              <svg class="w-5 h-5 text-white transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
         <!-- Акты -->
         <div
             class="category-card group bg-gradient-to-br from-rose-500 to-red-600 hover:from-rose-600 hover:to-red-700"
@@ -184,7 +215,8 @@ const categories = ref({
   furniture: 28,
   consumables: 156,
   other: 19,
-  acts: 15
+  acts: 15,
+  network: 25 // Добавлено для сетевых устройств
 })
 
 // Методы
