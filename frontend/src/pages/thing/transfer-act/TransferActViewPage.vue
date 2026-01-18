@@ -80,7 +80,6 @@
                   <h3 class="text-sm font-medium text-gray-500 mb-1">От кого</h3>
                   <p class="text-lg">
                     {{ act.fromName || 'Не указано' }}
-                    <span v-if="!act.from" class="text-gray-400 text-sm ml-2">(ID не указан)</span>
                   </p>
                 </div>
               </div>
@@ -91,7 +90,6 @@
                   <h3 class="text-sm font-medium text-gray-500 mb-1">Кому</h3>
                   <p class="text-lg">
                     {{ act.toName || 'Не указано' }}
-                    <span v-if="!act.to" class="text-gray-400 text-sm ml-2">(ID не указан)</span>
                   </p>
                 </div>
               </div>
@@ -106,7 +104,7 @@
               <div>
                 <h3 class="text-sm font-medium text-gray-500 mb-1">Тип акта</h3>
                 <p class="text-lg font-medium">{{ act.typeLabel }}</p>
-                <p class="text-sm text-gray-500 mt-1">Код: {{ act.type }}</p>
+<!--                <p class="text-sm text-gray-500 mt-1">Код: {{ act.type }}</p>-->
               </div>
 
               <!-- Дата создания -->
@@ -151,20 +149,20 @@
           <!-- Нижняя панель с действиями -->
           <div class="px-8 py-4 bg-gray-50 border-t flex justify-between items-center">
             <div class="text-sm text-gray-500">
-              ID: {{ act.id }}
+<!--              ID: {{ act.id }}-->
             </div>
 
             <div class="flex gap-3">
               <!-- Кнопка печати -->
-              <button
-                  @click="printAct"
-                  class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 flex items-center"
-              >
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
-                </svg>
-                Печать
-              </button>
+<!--              <button-->
+<!--                  @click="printAct"-->
+<!--                  class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 flex items-center"-->
+<!--              >-->
+<!--                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">-->
+<!--                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>-->
+<!--                </svg>-->
+<!--                Печать-->
+<!--              </button>-->
 
               <!-- Кнопка подтверждения для текущего пользователя -->
               <button
@@ -226,12 +224,6 @@
                     Инвентарный №
                   </th>
                   <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Серийный №
-                  </th>
-                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Тип
-                  </th>
-                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Дата ввода
                   </th>
                   <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -251,12 +243,6 @@
                     <span class="text-gray-900">{{ thing.inv_number || '—' }}</span>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap">
-                    <span class="text-gray-900">{{ thing.serial_number || '—' }}</span>
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap">
-                    <span class="text-gray-900">{{ thingTypes[thing.thing_type_id] || `Тип ${thing.thing_type_id}` }}</span>
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap">
                     <span class="text-gray-900">{{ formatDate(thing.operation_date) }}</span>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap">
@@ -266,18 +252,16 @@
                 </tbody>
                 <tfoot v-if="things && things.length > 0" class="bg-gray-50">
                 <tr>
-                  <td colspan="5" class="px-6 py-4 text-right font-medium text-gray-900">
+                  <td colspan="3" class="px-6 py-4 text-right font-medium text-gray-900">
                     Итого:
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap font-bold text-gray-900">
                     {{ formatCurrency(totalValue) }}
                   </td>
-                  <td class="px-6 py-4"></td>
                 </tr>
                 </tfoot>
               </table>
             </div>
-
             <!-- Сообщение об отсутствии материальных ценностей -->
             <div v-else class="text-center py-12">
               <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -505,7 +489,6 @@ const loadActData = async () => {
     }
 
   } catch (err) {
-    console.error('Ошибка загрузки акта:', err)
     error.value = err.response?.data?.message || err.message || 'Ошибка загрузки данных'
     things.value = []
   } finally {
@@ -545,7 +528,6 @@ const confirmAct = async () => {
       throw new Error(response.data.message || 'Ошибка подтверждения акта')
     }
   } catch (err) {
-    console.error('Ошибка подтверждения акта:', err)
     error.value = err.response?.data?.message || err.message || 'Ошибка подтверждения акта'
   } finally {
     isConfirming.value = false
@@ -584,7 +566,6 @@ const unconfirmAct = async () => {
       throw new Error(response.data.message || 'Ошибка отзыва подтверждения')
     }
   } catch (err) {
-    console.error('Ошибка отзыва подтверждения:', err)
     error.value = err.response?.data?.message || err.message || 'Ошибка отзыва подтверждения'
   } finally {
     isUnconfirming.value = false

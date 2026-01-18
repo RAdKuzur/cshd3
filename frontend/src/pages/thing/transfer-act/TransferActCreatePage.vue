@@ -520,7 +520,6 @@ const loadActTypes = async () => {
       actTypes.value = response.data.data || {}
     }
   } catch (error) {
-    console.error('Ошибка при загрузке типов актов:', error)
   }
 }
 
@@ -533,7 +532,6 @@ const loadPeople = async () => {
       people.value = response.data.data || []
     }
   } catch (error) {
-    console.error('Ошибка при загрузке сотрудников:', error)
   } finally {
     isLoadingPeople.value = false
   }
@@ -554,7 +552,6 @@ const loadAvailableThings = async () => {
     } else if (formData.type === 2 || formData.type === 3) {
       // Типы 2 и 3: средства сотрудника "от кого"
       if (!formData.from) {
-        console.log('Не выбран сотрудник "От кого"')
         return
       }
       url = BACKEND_URL + `/api/things/person/${formData.from}`
@@ -570,7 +567,6 @@ const loadAvailableThings = async () => {
     }
 
   } catch (error) {
-    console.error('Ошибка при загрузке материальных средств:', error)
     availableThings.value = []
   } finally {
     isLoadingThings.value = false
@@ -585,7 +581,6 @@ const loadThingTypes = async () => {
       thingTypes.value = response.data.types || {}
     }
   } catch (error) {
-    console.error('Ошибка при загрузке типов средств:', error)
   }
 }
 
@@ -773,7 +768,6 @@ const handleSubmit = async () => {
       things: formData.things // Просто массив ID
     }
 
-    console.log('Отправляемые данные:', dataToSend)
 
     // Отправка данных на сервер
     const response = await axios.post(
@@ -794,7 +788,6 @@ const handleSubmit = async () => {
     }
 
   } catch (error) {
-    console.error('Ошибка при создании акта:', error)
 
     let errorMessage = 'Произошла ошибка при создании акта'
 

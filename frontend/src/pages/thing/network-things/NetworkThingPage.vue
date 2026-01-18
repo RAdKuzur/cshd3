@@ -373,7 +373,6 @@ const loadData = async () => {
     // Сохраняем аудитории
     if (auditoriumsResponse.data.success) {
       auditoriums.value = auditoriumsResponse.data.data || []
-      console.log('Загруженные аудитории:', auditoriums.value)
     }
 
     if (networkResponse.data.success) {
@@ -396,18 +395,15 @@ const loadData = async () => {
           auditorium_floor: auditoriumFloor
         }
       })
-      console.log('Загруженные сетевые устройства:', networkThings.value)
     } else {
       throw new Error('Не удалось загрузить список сетевых устройств')
     }
 
     if (typesResponse.data.success) {
       networkTypes.value = typesResponse.data.types || {}
-      console.log('Загруженные типы:', networkTypes.value)
     }
 
   } catch (err) {
-    console.error('Ошибка при загрузке данных:', err)
     error.value = err.message
   } finally {
     isLoading.value = false
@@ -596,7 +592,6 @@ const confirmDelete = async (item) => {
         networkThings.value.splice(index, 1)
       }
     } catch (err) {
-      console.error('Ошибка при удалении:', err)
       alert('Не удалось удалить устройство')
     }
   }

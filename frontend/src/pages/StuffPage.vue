@@ -165,7 +165,6 @@ const loadStuffData = async () => {
       }
     }
   } catch (error) {
-    console.error('Ошибка при загрузке данных:', error)
     if (branches.value.length > 0) {
       activeTab.value = branches.value[0].branch_id
     }

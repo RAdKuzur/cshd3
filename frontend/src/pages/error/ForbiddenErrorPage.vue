@@ -194,7 +194,6 @@ const requestAccess = () => {
     requestedResource: window.location.pathname,
     timestamp: new Date().toISOString()
   }
-  console.log('Access request:', requestData)
   alert('Запрос на получение доступа отправлен администратору. Вы получите уведомление по почте.')
 }
 
@@ -225,7 +224,7 @@ const reportForbiddenAttempt = () => {
     userRole: 'User', // В реальном приложении это будет из контекста авторизации
     requiredRole: 'Admin'
   }
-  console.log('Forbidden access attempt:', accessInfo)
+
   // Здесь можно отправить информацию на сервер для логирования
 }
 

@@ -328,12 +328,10 @@ const generateQuickReport = (type) => {
     depreciation: 'Амортизация'
   }
 
-  console.log(`Генерация отчета: ${reports[type]}`)
   alert(`Начинается генерация отчета "${reports[type]}"...`)
 }
 
 const exportAllReports = () => {
-  console.log('Экспорт всех отчетов...')
   alert('Запущен экспорт всех отчетов в выбранном формате')
 }
 </script>

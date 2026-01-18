@@ -6,7 +6,8 @@ import {
   EnvelopeIcon,
   DocumentTextIcon,
   UserGroupIcon,
-  BuildingOfficeIcon
+  BuildingOfficeIcon,
+  ChartBarIcon
 } from '@heroicons/vue/24/outline'
 
 // Данные контактов
@@ -28,27 +29,27 @@ const contacts = [
   }
 ]
 
-// Быстрые ссылки по модулям
+// Быстрые ссылки по модулям - ОБНОВЛЕНО
 const quickLinks = [
   {
     name: 'Основные средства',
-    href: '/assets',
+    href: '/things', // Обновлено
     icon: BuildingOfficeIcon
   },
   {
     name: 'Сотрудники',
-    href: '/employees',
+    href: '/stuff', // Обновлено
     icon: UserGroupIcon
   },
   {
     name: 'Документооборот',
-    href: '/documents',
+    href: '/things/transfer-acts',
     icon: DocumentTextIcon
   },
   {
     name: 'Отчеты',
-    href: '/reports',
-    icon: DocumentTextIcon
+    href: '/reports', // Обновлено
+    icon: ChartBarIcon // Изменена иконка для отчетов
   }
 ]
 
@@ -63,13 +64,14 @@ const socialLinks = [
 
 const navigateTo = (route) => {
   // Навигация по маршруту
-  console.log('Переход по:', route)
+  window.location.href = route
+  // Или если используете Vue Router:
+  // router.push(route)
 }
 
 const subscribeToNewsletter = (event) => {
   event.preventDefault()
   const email = event.target.email.value
-  console.log('Подписка на рассылку:', email)
   // Здесь можно добавить логику подписки
   event.target.reset()
 }
@@ -99,26 +101,26 @@ const subscribeToNewsletter = (event) => {
             Московского областного суда.
           </p>
 
-          <!-- Контакты -->
-<!--          <div class="space-y-3">-->
-<!--            <h4 class="text-lg font-semibold text-white mb-4">Контакты</h4>-->
-<!--            <div-->
-<!--                v-for="contact in contacts"-->
-<!--                :key="contact.text"-->
-<!--                class="flex items-start space-x-3 group cursor-pointer"-->
-<!--            >-->
-<!--              <component-->
-<!--                  :is="contact.icon"-->
-<!--                  class="w-5 h-5 text-indigo-400 mt-0.5 flex-shrink-0 group-hover:text-indigo-300 transition-colors"-->
-<!--              />-->
-<!--              <a-->
-<!--                  :href="contact.href"-->
-<!--                  class="text-gray-300 hover:text-white transition-colors text-sm leading-relaxed"-->
-<!--              >-->
-<!--                {{ contact.text }}-->
-<!--              </a>-->
-<!--            </div>-->
-<!--          </div>-->
+          <!-- Контакты (закомментировано) -->
+          <!-- <div class="space-y-3">
+            <h4 class="text-lg font-semibold text-white mb-4">Контакты</h4>
+            <div
+                v-for="contact in contacts"
+                :key="contact.text"
+                class="flex items-start space-x-3 group cursor-pointer"
+            >
+              <component
+                  :is="contact.icon"
+                  class="w-5 h-5 text-indigo-400 mt-0.5 flex-shrink-0 group-hover:text-indigo-300 transition-colors"
+              />
+              <a
+                  :href="contact.href"
+                  class="text-gray-300 hover:text-white transition-colors text-sm leading-relaxed"
+              >
+                {{ contact.text }}
+              </a>
+            </div>
+          </div> -->
         </div>
 
         <!-- Центральная колонка - Быстрые ссылки -->
@@ -135,8 +137,9 @@ const subscribeToNewsletter = (event) => {
                     v-for="link in quickLinks"
                     :key="link.name"
                 >
-                  <button
-                      @click="navigateTo(link.href)"
+                  <a
+                      :href="link.href"
+                      @click.prevent="navigateTo(link.href)"
                       class="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors group"
                   >
                     <component
@@ -144,64 +147,65 @@ const subscribeToNewsletter = (event) => {
                         class="w-4 h-4 text-indigo-400 group-hover:text-indigo-300 transition-colors"
                     />
                     <span class="text-sm">{{ link.name }}</span>
-                  </button>
+                  </a>
                 </li>
               </ul>
             </div>
 
             <!-- Поддержка -->
-            <div class="mt-12 md:mt-0">
-              <h4 class="text-lg font-semibold text-white mb-6 flex items-center">
-                <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
-                Работа с системой
-              </h4>
-              <ul class="space-y-3">
-                <li>
-                  <button class="text-gray-300 hover:text-white transition-colors text-sm">
-                    Документация
-                  </button>
-                </li>
-                <li>
-                  <button class="text-gray-300 hover:text-white transition-colors text-sm">
-                    Частые вопросы
-                  </button>
-                </li>
-              </ul>
-            </div>
+<!--            <div class="mt-12 md:mt-0">-->
+<!--              <h4 class="text-lg font-semibold text-white mb-6 flex items-center">-->
+<!--                <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>-->
+<!--                Работа с системой-->
+<!--              </h4>-->
+<!--              <ul class="space-y-3">-->
+<!--                <li>-->
+<!--                  <a href="#" class="text-gray-300 hover:text-white transition-colors text-sm">-->
+<!--                    Документация-->
+<!--                  </a>-->
+<!--                </li>-->
+<!--                <li>-->
+<!--                  <a href="#" class="text-gray-300 hover:text-white transition-colors text-sm">-->
+<!--                    Частые вопросы-->
+<!--                  </a>-->
+<!--                </li>-->
+<!--              </ul>-->
+<!--            </div>-->
           </div>
 
           <!-- Правая колонка - Рассылка -->
           <div class="md:grid md:grid-cols-1 md:gap-8">
             <div>
-<!--              <h4 class="text-lg font-semibold text-white mb-6 flex items-center">-->
-<!--                <span class="w-2 h-2 bg-purple-500 rounded-full mr-2"></span>-->
-<!--                Рассылка новостей-->
-<!--              </h4>-->
-<!--              <p class="text-gray-300 text-sm mb-4 leading-relaxed">-->
-<!--                Подпишитесь на рассылку, чтобы получать актуальные новости-->
-<!--                о работе системы и обновлениях.-->
-<!--              </p>-->
+              <!-- Рассылка новостей (закомментировано) -->
+              <!-- <h4 class="text-lg font-semibold text-white mb-6 flex items-center">
+                <span class="w-2 h-2 bg-purple-500 rounded-full mr-2"></span>
+                Рассылка новостей
+              </h4>
+              <p class="text-gray-300 text-sm mb-4 leading-relaxed">
+                Подпишитесь на рассылку, чтобы получать актуальные новости
+                о работе системы и обновлениях.
+              </p>
 
-<!--              <form @submit="subscribeToNewsletter" class="space-y-3">-->
-<!--                <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">-->
-<!--                  <input-->
-<!--                      name="email"-->
-<!--                      type="email"-->
-<!--                      required-->
-<!--                      placeholder="your.email@example.com"-->
-<!--                      class="flex-1 px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"-->
-<!--                  >-->
-<!--                  <button-->
-<!--                      type="submit"-->
-<!--                      class="px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-medium rounded-lg shadow-sm transition-all duration-200 transform hover:scale-105"-->
-<!--                  >-->
-<!--                    Подписаться-->
-<!--                  </button>-->
-<!--                </div>-->
-<!--                <p class="text-gray-400 text-xs">-->
-<!--                  Подписываясь, вы соглашаетесь с нашей политикой конфиденциальности-->
-<!--                </p>-->
-<!--              </form>-->
+              <form @submit="subscribeToNewsletter" class="space-y-3">
+                <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
+                  <input
+                      name="email"
+                      type="email"
+                      required
+                      placeholder="your.email@example.com"
+                      class="flex-1 px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                  >
+                  <button
+                      type="submit"
+                      class="px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-medium rounded-lg shadow-sm transition-all duration-200 transform hover:scale-105"
+                  >
+                    Подписаться
+                  </button>
+                </div>
+                <p class="text-gray-400 text-xs">
+                  Подписываясь, вы соглашаетесь с нашей политикой конфиденциальности
+                </p>
+              </form> -->
 
               <!-- Социальные сети -->
               <div class="mt-8">
@@ -212,6 +216,7 @@ const subscribeToNewsletter = (event) => {
                       :key="social.name"
                       :href="social.href"
                       target="_blank"
+                      rel="noopener noreferrer"
                       class="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors group"
                   >
                     <component
@@ -236,14 +241,14 @@ const subscribeToNewsletter = (event) => {
             </p>
           </div>
 
-          <div class="flex space-x-6">
-            <button class="text-gray-400 hover:text-white transition-colors text-sm">
-              Политика конфиденциальности
-            </button>
-            <button class="text-gray-400 hover:text-white transition-colors text-sm">
-              Условия использования
-            </button>
-          </div>
+<!--          <div class="flex space-x-6">-->
+<!--            <a href="#" class="text-gray-400 hover:text-white transition-colors text-sm">-->
+<!--              Политика конфиденциальности-->
+<!--            </a>-->
+<!--            <a href="#" class="text-gray-400 hover:text-white transition-colors text-sm">-->
+<!--              Условия использования-->
+<!--            </a>-->
+<!--          </div>-->
         </div>
       </div>
     </div>

@@ -489,7 +489,6 @@ const loadData = async () => {
     }
 
   } catch (err) {
-    console.error('Ошибка при загрузке файлов:', err)
     error.value = err.message
   } finally {
     isLoading.value = false
@@ -683,7 +682,6 @@ const deleteFile = async () => {
 
     alert('Файл успешно удален')
   } catch (err) {
-    console.error('Ошибка при удалении файла:', err)
     alert('Ошибка при удалении файла')
   } finally {
     isLoading.value = false
@@ -745,7 +743,6 @@ const createFile = async () => {
       throw new Error(response.data.message || 'Ошибка при создании файла')
     }
   } catch (err) {
-    console.error('Ошибка при создании файла:', err)
     alert(err.response?.data?.message || 'Ошибка при создании файла')
   } finally {
     isCreating.value = false
@@ -775,7 +772,6 @@ const downloadFile = async (file) => {
     document.body.removeChild(link)
     window.URL.revokeObjectURL(url)
   } catch (err) {
-    console.error('Ошибка при скачивании файла:', err)
     alert('Ошибка при скачивании файла')
   } finally {
     isLoading.value = false

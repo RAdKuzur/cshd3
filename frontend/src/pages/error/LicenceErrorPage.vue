@@ -247,7 +247,6 @@ const reportLicenseError = () => {
     // licenseId: getLicenseIdFromStorage()
   }
 
-  console.log('License error report:', errorInfo)
   // Здесь можно отправить информацию на сервер
 }
 

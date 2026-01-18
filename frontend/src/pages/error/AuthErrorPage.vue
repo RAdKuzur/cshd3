@@ -175,7 +175,6 @@ const reportAccessAttempt = () => {
     errorCode: 401,
     errorType: 'Unauthorized'
   }
-  console.log('Access attempt report:', accessInfo)
   // Здесь можно отправить информацию на сервер
 }
 

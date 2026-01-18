@@ -303,11 +303,9 @@ const loadAuditoriums = async () => {
     if (response.data.success && response.data.data) {
       auditoriums.value = response.data.data
     } else {
-      console.error('Ошибка загрузки кабинетов:', response.data)
       throw new Error('Не удалось загрузить кабинеты')
     }
   } catch (error) {
-    console.error('Ошибка загрузки кабинетов:', error)
 
     // Мокаем данные для демонстрации, если API недоступно
     auditoriums.value = [
@@ -376,7 +374,6 @@ const generateAllAuditoriumsReport = async () => {
     }, 100)
 
   } catch (error) {
-    console.error('Ошибка формирования отчета:', error)
 
     // Показываем более информативное сообщение об ошибке
     let errorMessage = 'Ошибка при формировании отчета'
@@ -441,7 +438,6 @@ const generateAuditoriumReport = async () => {
     closeModal()
 
   } catch (error) {
-    console.error('Ошибка формирования отчета:', error)
 
     // Обработка разных типов ошибок
     if (error.response) {

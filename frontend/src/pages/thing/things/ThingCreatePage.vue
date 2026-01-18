@@ -392,7 +392,6 @@ const showPreview = ref(false)
 
 // Наблюдатель для предпросмотра
 watch(formData, (newValue) => {
-  console.log('Form data updated:', newValue)
   showPreview.value = Object.values(newValue).some(value => value !== '' && value !== 0)
 }, { deep: true })
 
@@ -422,10 +421,7 @@ const loadFormData = async () => {
     if (typesResponse.data.success) {
       types.value = typesResponse.data.types || {}
       conditions.value = typesResponse.data.conditions || {}
-      console.log('Загруженные типы:', types.value)
-      console.log('Загруженные условия:', conditions.value)
     } else {
-      console.error('Ошибка загрузки типов и условий:', typesResponse.data)
       types.value = {}
       conditions.value = {}
     }
@@ -433,32 +429,25 @@ const loadFormData = async () => {
     // Обработка характеристик учёта
     if (balanceResponse.data.success) {
       balanceTypes.value = balanceResponse.data.types || {}
-      console.log('Загруженные характеристики учёта:', balanceTypes.value)
     } else {
-      console.error('Ошибка загрузки характеристик учёта:', balanceResponse.data)
       balanceTypes.value = {}
     }
 
     // Обработка родительских предметов
     if (parentsResponse.data.success) {
       parentThings.value = parentsResponse.data.data || []
-      console.log('Загруженные родительские предметы:', parentThings.value)
     } else {
-      console.error('Ошибка загрузки родительских предметов:', parentsResponse.data)
       parentThings.value = []
     }
 
     // Обработка аудиторий
     if (auditoriumsResponse.data.success) {
       auditoriums.value = auditoriumsResponse.data.data || []
-      console.log('Загруженные аудитории:', auditoriums.value)
     } else {
-      console.error('Ошибка загрузки аудиторий:', auditoriumsResponse.data)
       auditoriums.value = []
     }
 
   } catch (error) {
-    console.error('Ошибка при загрузке данных формы:', error)
     types.value = {}
     conditions.value = {}
     balanceTypes.value = {}
@@ -491,7 +480,6 @@ const uploadImages = async ({ file, files, table, rowId }) => {
     }
   })
 
-  console.log("file-upload-response", response)
 
   return response;
 }
@@ -562,7 +550,6 @@ const handleSubmit = async () => {
         : []
     }
 
-    console.log('Отправляемые данные:', dataToSend)
 
     const response = (formData.is_composite) ? await createCompositeThing(dataToSend) : await createSimpleThing(dataToSend)
 
@@ -612,7 +599,6 @@ const handleSubmit = async () => {
     }
 
   } catch (error) {
-    console.error('Ошибка при создании предмета:', error)
 
     let errorMessage = 'Произошла ошибка при создании предмета'
 

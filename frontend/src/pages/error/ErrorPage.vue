@@ -134,7 +134,6 @@ const reportError = () => {
     userAgent: navigator.userAgent,
     timestamp: new Date().toISOString()
   }
-  console.log('Error report:', errorInfo)
   // Здесь можно отправить информацию на сервер
 }
 

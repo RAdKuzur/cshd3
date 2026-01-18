@@ -315,7 +315,6 @@ onUnmounted(() => {
 // Функция получения статуса (заглушка)
 const fetchMaintenanceStatus = () => {
   // В реальном приложении здесь запрос к API
-  console.log('Fetching maintenance status...')
 
   // Демо-данные
   setTimeout(() => {

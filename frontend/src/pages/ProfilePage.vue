@@ -18,7 +18,6 @@ const fetchUserData = async () => {
     workExperience.value = response.data.data.workExperience
     education.value = response.data.data.education
   } catch (err) {
-    console.error('Ошибка при загрузке данных:', err)
   }
 }
 onMounted(() => {

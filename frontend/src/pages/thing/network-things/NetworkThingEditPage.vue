@@ -330,13 +330,11 @@ const loadNetworkThingData = async () => {
       // Загружаем информацию об основном устройстве
       await loadThingData(data.data.thing_id)
 
-      console.log('Данные сетевого устройства загружены:', networkThingData.value)
     } else {
       throw new Error(data.message || 'Данные не найдены')
     }
 
   } catch (err) {
-    console.error('Ошибка загрузки данных:', err)
 
     if (err.response) {
       if (err.response.status === 404) {
@@ -363,7 +361,6 @@ const loadThingData = async (thingId) => {
       selectedThing.value = response.data.data
     }
   } catch (err) {
-    console.error('Ошибка загрузки основного устройства:', err)
     // Не показываем ошибку пользователю, просто оставляем selectedThing как null
   }
 }
@@ -377,7 +374,6 @@ const loadThingTypes = async () => {
       thingTypes.value = response.data.types || {}
     }
   } catch (err) {
-    console.error('Ошибка загрузки типов:', err)
   }
 }
 
@@ -498,7 +494,6 @@ const handleSubmit = async () => {
     }
 
   } catch (err) {
-    console.error('Ошибка обновления:', err)
 
     if (err.response) {
       // Ошибки валидации от сервера

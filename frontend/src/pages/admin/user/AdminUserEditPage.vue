@@ -428,13 +428,11 @@ const loadUserData = async () => {
       formData.password = ''
       formData.password_confirmation = ''
 
-      console.log('Загруженные данные пользователя:', user.value)
     } else {
       throw new Error(data.message || 'Данные не найдены')
     }
 
   } catch (err) {
-    console.error('Ошибка загрузки данных пользователя:', err)
     error.value = err.message || 'Не удалось загрузить данные пользователя'
   } finally {
     isLoading.value = false
@@ -448,14 +446,11 @@ const loadAuditoriums = async () => {
 
     if (response.data.success) {
       auditoriums.value = response.data.data || []
-      console.log('Загруженные аудитории:', auditoriums.value)
     } else {
-      console.error('Ошибка загрузки аудиторий:', response.data)
       auditoriums.value = []
     }
 
   } catch (error) {
-    console.error('Ошибка при загрузке аудиторий:', error)
     auditoriums.value = []
   }
 }
@@ -468,10 +463,8 @@ const loadRoles = async () => {
 
     if (data.success && data.data) {
       roles.value = data.data
-      console.log('Загруженные роли:', roles.value)
     }
   } catch (err) {
-    console.error('Ошибка загрузки ролей:', err)
     roles.value = {}
   }
 }
@@ -605,7 +598,6 @@ const handleSubmit = async () => {
       dataToSend.password_confirmation = formData.password_confirmation
     }
 
-    console.log('Отправляемые данные:', dataToSend)
 
     // Отправка данных на сервер
     const response = await axios.put(
@@ -626,7 +618,6 @@ const handleSubmit = async () => {
     }
 
   } catch (error) {
-    console.error('Ошибка при обновлении пользователя:', error)
 
     let errorMessage = 'Произошла ошибка при обновлении пользователя'
 
@@ -669,7 +660,6 @@ const handleDelete = async () => {
       throw new Error(data.message || 'Ошибка при удалении')
     }
   } catch (err) {
-    console.error('Ошибка удаления:', err)
 
     let errorMessage = 'Не удалось удалить пользователя'
     if (err.response) {

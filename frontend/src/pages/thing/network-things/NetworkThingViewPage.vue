@@ -174,47 +174,47 @@
       </div>
 
       <!-- Системная информация -->
-      <div v-if="!isLoading && networkThing && !error" class="bg-white shadow-lg border border-gray-200 p-6">
-        <h2 class="text-xl font-semibold text-gray-900 mb-4">Системная информация</h2>
+<!--      <div v-if="!isLoading && networkThing && !error" class="bg-white shadow-lg border border-gray-200 p-6">-->
+<!--        <h2 class="text-xl font-semibold text-gray-900 mb-4">Системная информация</h2>-->
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <div class="text-sm font-medium text-gray-500 mb-1">ID сетевого устройства</div>
-            <div class="text-lg font-mono text-gray-900">{{ networkThing?.id || 'Не указан' }}</div>
-          </div>
+<!--        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">-->
+<!--          <div>-->
+<!--            <div class="text-sm font-medium text-gray-500 mb-1">ID сетевого устройства</div>-->
+<!--            <div class="text-lg font-mono text-gray-900">{{ networkThing?.id || 'Не указан' }}</div>-->
+<!--          </div>-->
 
-          <div>
-            <div class="text-sm font-medium text-gray-500 mb-1">ID связанного предмета</div>
-            <div class="text-lg font-mono text-gray-900">
-              <router-link
-                  v-if="networkThing?.thing_id"
-                  :to="`/things/view/${networkThing.thing_id}`"
-                  class="text-indigo-600 hover:text-indigo-800 hover:underline"
-              >
-                {{ networkThing.thing_id }}
-              </router-link>
-              <span v-else>Не указан</span>
-            </div>
-          </div>
-        </div>
-      </div>
+<!--          <div>-->
+<!--            <div class="text-sm font-medium text-gray-500 mb-1">ID связанного предмета</div>-->
+<!--            <div class="text-lg font-mono text-gray-900">-->
+<!--              <router-link-->
+<!--                  v-if="networkThing?.thing_id"-->
+<!--                  :to="`/things/view/${networkThing.thing_id}`"-->
+<!--                  class="text-indigo-600 hover:text-indigo-800 hover:underline"-->
+<!--              >-->
+<!--                {{ networkThing.thing_id }}-->
+<!--              </router-link>-->
+<!--              <span v-else>Не указан</span>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
 
       <!-- Действия -->
       <div v-if="!isLoading && networkThing && !error" class="mt-8 flex items-center justify-between bg-white shadow-lg border border-gray-200 p-6">
         <div class="text-sm text-gray-500">
-          Статус: <span class="font-medium text-green-600">Активный</span>
+<!--          Статус: <span class="font-medium text-green-600">Активный</span>-->
         </div>
 
         <div class="flex items-center gap-3">
-          <button
-              @click="handlePrint"
-              class="px-4 py-2 border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors flex items-center gap-2"
-          >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-            </svg>
-            Печать
-          </button>
+<!--          <button-->
+<!--              @click="handlePrint"-->
+<!--              class="px-4 py-2 border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors flex items-center gap-2"-->
+<!--          >-->
+<!--            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">-->
+<!--              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />-->
+<!--            </svg>-->
+<!--            Печать-->
+<!--          </button>-->
 
           <button
               @click="handleDelete"
@@ -276,13 +276,11 @@ const loadNetworkThingData = async () => {
 
     if (data.success && data.data) {
       networkThing.value = data.data
-      console.log('Полученные данные сетевого устройства:', networkThing.value)
     } else {
       throw new Error(data.message || 'Данные не найдены')
     }
 
   } catch (err) {
-    console.error('Ошибка загрузки данных:', err)
 
     if (err.response) {
       if (err.response.status === 404) {
@@ -308,10 +306,8 @@ const loadAuditoriums = async () => {
 
     if (data.success && data.data) {
       auditoriums.value = data.data
-      console.log('Загруженные аудитории:', auditoriums.value)
     }
   } catch (err) {
-    console.error('Ошибка загрузки аудиторий:', err)
     auditoriums.value = []
   }
 }
@@ -328,10 +324,8 @@ const loadBranches = async () => {
         branchesData[branch.id] = branch.name
       })
       branches.value = branchesData
-      console.log('Загруженные отделы:', branches.value)
     }
   } catch (err) {
-    console.error('Ошибка загрузки отделов:', err)
     branches.value = {}
   }
 }
@@ -344,10 +338,9 @@ const loadNetworkTypes = async () => {
 
     if (data.success) {
       networkTypes.value = data.types || {}
-      console.log('Загруженные типы сетевых устройств:', networkTypes.value)
+
     }
   } catch (err) {
-    console.error('Ошибка загрузки типов:', err)
     networkTypes.value = {}
   }
 }
@@ -498,7 +491,6 @@ const handleDelete = async () => {
       throw new Error(data.message || 'Ошибка при удалении')
     }
   } catch (err) {
-    console.error('Ошибка удаления:', err)
 
     let errorMessage = 'Не удалось удалить сетевое устройство'
     if (err.response) {

@@ -626,7 +626,6 @@ const loadInitialData = async () => {
     await loadAvailableThings()
 
   } catch (error) {
-    console.error('Ошибка при загрузке данных:', error)
     alert('Не удалось загрузить данные')
     router.push('/things/transfer-acts')
   } finally {
@@ -668,7 +667,6 @@ const loadActData = async () => {
       throw new Error('Не удалось загрузить данные акта')
     }
   } catch (error) {
-    console.error('Ошибка при загрузке данных акта:', error)
     alert('Не удалось загрузить данные акта')
     router.push('/things/transfer-acts')
   }
@@ -685,12 +683,10 @@ const loadActThings = async () => {
       // Заполняем formData.things ID вещей из акта
       formData.things = actThings.value.map(thing => parseInt(thing.id))
 
-      console.log('Загружены вещи акта:', actThings.value.length, 'шт.')
     } else {
       actThings.value = []
     }
   } catch (error) {
-    console.error('Ошибка при загрузке вещей акта:', error)
     actThings.value = []
   }
 }
@@ -703,7 +699,6 @@ const loadActTypes = async () => {
       actTypes.value = response.data.data || {}
     }
   } catch (error) {
-    console.error('Ошибка при загрузке типов актов:', error)
   }
 }
 
@@ -716,7 +711,6 @@ const loadPeople = async () => {
       people.value = response.data.data || []
     }
   } catch (error) {
-    console.error('Ошибка при загрузке сотрудников:', error)
   } finally {
     isLoadingPeople.value = false
   }
@@ -736,7 +730,6 @@ const loadAvailableThings = async () => {
     } else if (formData.type === 2 || formData.type === 3) {
       // Типы 2 и 3: средства сотрудника "от кого"
       if (!formData.from) {
-        console.log('Не выбран сотрудник "От кого"')
         availableThings.value = []
         return
       }
@@ -769,11 +762,7 @@ const loadAvailableThings = async () => {
 
     availableThings.value = Array.from(allThingsMap.values())
 
-    console.log('Доступные вещи:', availableThings.value.length, 'шт.')
-    console.log('Из них в акте:', actThings.value.length, 'шт.')
-
   } catch (error) {
-    console.error('Ошибка при загрузке материальных средств:', error)
     // В случае ошибки показываем хотя бы вещи из акта
     availableThings.value = [...actThings.value]
   } finally {
@@ -789,7 +778,6 @@ const loadThingTypes = async () => {
       thingTypes.value = response.data.types || {}
     }
   } catch (error) {
-    console.error('Ошибка при загрузке типов средств:', error)
   }
 }
 
@@ -991,11 +979,6 @@ const handleSubmit = async () => {
       deletedThings: deletedThings // Средства для удаления
     }
 
-    console.log('Отправляемые данные:', dataToSend)
-    console.log('Текущие выбранные ID:', Array.from(selectedThingIds.value))
-    console.log('Были в акте ID:', Array.from(originalActThingIds.value))
-    console.log('Новые вещи:', newThings)
-    console.log('Удаляемые вещи:', deletedThings)
 
     // Отправка PUT запроса
     const response = await axios.put(
@@ -1016,7 +999,6 @@ const handleSubmit = async () => {
     }
 
   } catch (error) {
-    console.error('Ошибка при обновлении акта:', error)
 
     let errorMessage = 'Произошла ошибка при обновлении акта'
 

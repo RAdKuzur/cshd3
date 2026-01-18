@@ -21,7 +21,6 @@ export const useAuthContextStore = defineStore('auth', {
                 this.initialized = true
                 return true
             } catch (e) {
-                console.error('login error:', e)
                 this.user = null
                 this.initialized = true
                 return false

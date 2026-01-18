@@ -444,7 +444,6 @@ const loadBranches = async () => {
       throw new Error('Не удалось загрузить список отделов')
     }
   } catch (error) {
-    console.error('Ошибка при загрузке отделов:', error)
     validationError.value = 'Не удалось загрузить список отделов'
   }
 }
@@ -483,7 +482,6 @@ const loadReferenceData = async () => {
       }
     }
   } catch (error) {
-    console.error('Ошибка при загрузке справочных данных:', error)
   }
 }
 
@@ -572,7 +570,6 @@ const searchThings = async () => {
       throw new Error(data.message || 'Не удалось выполнить поиск')
     }
   } catch (error) {
-    console.error('Ошибка при поиске вещей:', error)
     validationError.value = error.message || 'Произошла ошибка при поиске вещей'
   } finally {
     isLoading.value = false

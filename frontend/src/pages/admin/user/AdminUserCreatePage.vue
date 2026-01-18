@@ -384,7 +384,6 @@ const previewData = computed(() => {
 
 // Наблюдатель для предпросмотра
 watch(formData, (newValue) => {
-  console.log('Form data updated:', newValue)
   showPreview.value = Object.values(newValue).some(value => value !== '' && value !== 0)
 }, { deep: true })
 
@@ -405,22 +404,17 @@ const loadFormData = async () => {
 
     if (auditoriumsResponse.data.success) {
       auditoriums.value = auditoriumsResponse.data.data || []
-      console.log('Загруженные аудитории:', auditoriums.value)
     } else {
-      console.error('Ошибка загрузки аудиторий:', auditoriumsResponse.data)
       auditoriums.value = []
     }
 
     if (rolesResponse.data.success) {
       roles.value = rolesResponse.data.data || {}
-      console.log('Загруженные роли:', roles.value)
     } else {
-      console.error('Ошибка загрузки ролей:', rolesResponse.data)
       roles.value = {}
     }
 
   } catch (error) {
-    console.error('Ошибка при загрузке данных формы:', error)
     auditoriums.value = []
     roles.value = {}
   } finally {
@@ -572,8 +566,6 @@ const handleSubmit = async () => {
       bio: formData.bio ? formData.bio.trim() : null
     }
 
-    console.log('Отправляемые данные:', dataToSend)
-
     // Отправка данных на сервер
     const response = await axios.post(
         BACKEND_URL + '/api/admin/users',
@@ -593,8 +585,6 @@ const handleSubmit = async () => {
     }
 
   } catch (error) {
-    console.error('Ошибка при создании пользователя:', error)
-
     let errorMessage = 'Произошла ошибка при создании пользователя'
 
     if (error.response) {

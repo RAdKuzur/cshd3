@@ -524,7 +524,6 @@ const tabs = ref([
 // Методы
 const saveProfile = () => {
   // Логика сохранения профиля
-  console.log('Сохранение профиля:', user.value)
 }
 
 const toggle2FA = () => {
@@ -533,7 +532,6 @@ const toggle2FA = () => {
 
 const changePassword = () => {
   // Логика смены пароля
-  console.log('Смена пароля:', password.value)
   password.value = { current: '', new: '', confirm: '' }
 }
 

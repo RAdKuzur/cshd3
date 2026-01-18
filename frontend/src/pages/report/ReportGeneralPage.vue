@@ -886,7 +886,6 @@ const loadAllData = async () => {
 
     if (auditoriumsResponse.data.success) {
       auditoriums.value = auditoriumsResponse.data.data || []
-      console.log('Загруженные аудитории:', auditoriums.value.length)
     }
 
     if (balanceResponse.data.success) {
@@ -927,7 +926,6 @@ const loadAllData = async () => {
     }
 
   } catch (error) {
-    console.error('Ошибка при загрузке данных:', error)
   } finally {
     loading.value = false
     loadingThings.value = false

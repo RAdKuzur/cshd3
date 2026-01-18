@@ -122,7 +122,6 @@ let authStore
 
         // если уже знаем, что пользователь не авторизован
         if (authStore.initialized && !authStore.user) {
-            console.log("ТУТА")
             if (to.path !== '/login') {
                 return next('/login')
             }

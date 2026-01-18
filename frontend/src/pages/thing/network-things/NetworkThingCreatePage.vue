@@ -334,10 +334,8 @@ const loadThings = async () => {
 
     if (response.data.success && response.data.data) {
       things.value = response.data.data
-      console.log('Загружено устройств:', things.value.length)
     }
   } catch (err) {
-    console.error('Ошибка загрузки устройств:', err)
     submitError.value = 'Не удалось загрузить список устройств'
   } finally {
     isLoadingThings.value = false
@@ -353,7 +351,6 @@ const loadThingTypes = async () => {
       thingTypes.value = response.data.types || {}
     }
   } catch (err) {
-    console.error('Ошибка загрузки типов:', err)
   }
 }
 
@@ -463,7 +460,6 @@ const handleSubmit = async () => {
     }
 
   } catch (err) {
-    console.error('Ошибка создания:', err)
 
     if (err.response) {
       // Ошибки валидации от сервера

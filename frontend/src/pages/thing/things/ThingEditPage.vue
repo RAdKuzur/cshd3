@@ -595,7 +595,6 @@ const loadThingData = async () => {
     if (response.data.success && response.data.data) {
       const data = response.data.data
 
-      console.log('Полученные данные от API:', data)
 
       // Сохраняем оригинальный ID состояния
       conditionId.value = data.condition
@@ -607,7 +606,6 @@ const loadThingData = async () => {
           const date = new Date(data.operation_date)
           operationDate = date.toISOString().split('T')[0]
         } catch (e) {
-          console.error('Ошибка форматирования даты:', e)
           operationDate = data.operation_date
         }
       }
@@ -632,17 +630,11 @@ const loadThingData = async () => {
         ...JSON.parse(JSON.stringify(formData.value)),
         condition: conditionId.value
       }
-
-      console.log('Данные для формы:', formData.value)
-      console.log('ID состояния:', conditionId.value)
-      console.log('ID характеристики учёта:', formData.value.balance)
-      console.log('ID аудитории:', formData.value.auditorium_id)
     } else {
       throw new Error('Данные предмета не найдены')
     }
 
   } catch (err) {
-    console.error('Ошибка загрузки данных предмета:', err)
     error.value = 'Не удалось загрузить данные предмета. Проверьте соединение с сервером.'
   } finally {
     isLoading.value = false
@@ -664,14 +656,9 @@ const loadFormData = async () => {
     if (typesResponse.data.success) {
       types.value = typesResponse.data.types || {}
       conditions.value = typesResponse.data.conditions || {}
-      console.log('Загруженные типы:', types.value)
-      console.log('Загруженные условия:', conditions.value)
 
       // После загрузки условий, обновляем вычисляемое свойство
-      console.log('Текущее состояние предмета (ID):', conditionId.value)
-      console.log('Соответствующая метка:', conditions.value[conditionId.value])
     } else {
-      console.error('Ошибка загрузки типов и условий:', typesResponse.data)
       types.value = {}
       conditions.value = {}
     }
@@ -679,32 +666,25 @@ const loadFormData = async () => {
     // Обработка характеристик учёта
     if (balanceResponse.data.success) {
       balanceTypes.value = balanceResponse.data.types || {}
-      console.log('Загруженные характеристики учёта:', balanceTypes.value)
     } else {
-      console.error('Ошибка загрузки характеристик учёта:', balanceResponse.data)
       balanceTypes.value = {}
     }
 
     // Обработка родительских предметов
     if (parentsResponse.data.success) {
       parentThings.value = parentsResponse.data.data || []
-      console.log('Загруженные родительские предметы:', parentThings.value)
     } else {
-      console.error('Ошибка загрузки родительских предметов:', parentsResponse.data)
       parentThings.value = []
     }
 
     // Обработка аудиторий
     if (auditoriumsResponse.data.success) {
       auditoriums.value = auditoriumsResponse.data.data || []
-      console.log('Загруженные аудитории:', auditoriums.value)
     } else {
-      console.error('Ошибка загрузки аудиторий:', auditoriumsResponse.data)
       auditoriums.value = []
     }
 
   } catch (error) {
-    console.error('Ошибка при загрузке данных формы:', error)
     types.value = {}
     conditions.value = {}
     balanceTypes.value = {}
@@ -751,7 +731,6 @@ const handleSubmit = async () => {
       }
     }
 
-    console.log('Отправляемые данные для обновления:', dataToSend)
 
     // Отправка данных на сервер
     const response = await axios.put(
@@ -772,7 +751,6 @@ const handleSubmit = async () => {
     }
 
   } catch (error) {
-    console.error('Ошибка при обновлении предмета:', error)
 
     let errorMessage = 'Произошла ошибка при обновлении предмета'
 
@@ -801,7 +779,6 @@ const handleSubmit = async () => {
 const removeExistChild = (index, id) => {
   formData.value.children.splice(index, 1)
   deletedIds.push(id)
-  console.log("deleted ids", deletedIds)
 }
 
 const removeTempChild = (index) => {

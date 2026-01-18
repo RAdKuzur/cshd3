@@ -443,7 +443,6 @@ const loadData = async () => {
       throw new Error(response.data.message || 'Не удалось загрузить список должностей')
     }
   } catch (err) {
-    console.error('Ошибка при загрузке данных:', err)
     error.value = err.response?.data?.message || err.message || 'Ошибка соединения'
   } finally {
     isLoading.value = false
@@ -608,7 +607,6 @@ const savePosition = async () => {
       throw new Error(response.data.message || 'Ошибка сохранения')
     }
   } catch (err) {
-    console.error('Ошибка при сохранении должности:', err)
 
     if (err.response?.data?.errors) {
       formErrors.value = err.response.data.errors
@@ -656,7 +654,6 @@ const confirmDelete = async () => {
       throw new Error(response.data.message || 'Ошибка удаления')
     }
   } catch (err) {
-    console.error('Ошибка при удалении должности:', err)
 
     // Показываем уведомление об ошибке
     showNotification(

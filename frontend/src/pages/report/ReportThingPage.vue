@@ -223,7 +223,6 @@ const generateThingsReport = async () => {
     showNotification('Отчет успешно сформирован и начал скачиваться', 'success')
 
   } catch (error) {
-    console.error('Ошибка формирования отчета:', error)
 
     let errorMessage = 'Ошибка при формировании отчета'
 
@@ -283,7 +282,6 @@ const loadStatistics = async () => {
       stats.value = response.data.data
     }
   } catch (error) {
-    console.error('Ошибка загрузки статистики:', error)
     // Можно не показывать ошибку, так как это не критично
   }
 }

@@ -366,13 +366,11 @@ const loadData = async () => {
     // Сохраняем аудитории
     if (auditoriumsResponse.data.success) {
       auditoriums.value = auditoriumsResponse.data.data || []
-      console.log('Загруженные аудитории:', auditoriums.value)
     }
 
     // Сохраняем характеристики учёта
     if (balanceResponse.data.success) {
       balanceTypes.value = balanceResponse.data.types || {}
-      console.log('Загруженные характеристики учёта:', balanceTypes.value)
     }
 
     if (furnitureResponse.data.success) {
@@ -398,7 +396,6 @@ const loadData = async () => {
           auditorium_floor: auditoriumFloor
         }
       })
-      console.log('Загруженные элементы:', items.value)
     } else {
       throw new Error('Не удалось загрузить список элементов')
     }
@@ -406,12 +403,9 @@ const loadData = async () => {
     if (typesResponse.data.success) {
       types.value = typesResponse.data.types || {}
       conditions.value = typesResponse.data.conditions || {}
-      console.log('Загруженные типы:', types.value)
-      console.log('Загруженные условия:', conditions.value)
     }
 
   } catch (err) {
-    console.error('Ошибка при загрузке данных:', err)
     error.value = err.message
   } finally {
     isLoading.value = false

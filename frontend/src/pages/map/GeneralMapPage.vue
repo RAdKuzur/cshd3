@@ -523,7 +523,6 @@ const loadData = async () => {
 
     if (mapResponse.data.success) {
       auditoriums.value = mapResponse.data.data
-      console.log('Данные кабинетов:', mapResponse.data.data)
     } else {
       throw new Error('Ошибка загрузки данных кабинетов')
     }
@@ -545,7 +544,6 @@ const loadData = async () => {
     }
 
   } catch (err) {
-    console.error('Ошибка при загрузке данных:', err)
     error.value = 'Не удалось загрузить данные. Проверьте соединение с сервером.'
   } finally {
     isLoading.value = false

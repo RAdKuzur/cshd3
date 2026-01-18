@@ -111,7 +111,7 @@
 
             <!-- Дата -->
             <td class="px-6 py-4">
-              {{ formatDate(act.time) }}
+              {{ formatDate(act.date) }}
             </td>
 
             <!-- Статус -->
@@ -262,11 +262,10 @@ const loadData = async () => {
         type: a.type,
         typeLabel: actTypes.value[a.type] || `Тип ${a.type}`,
         confirmed: a.confirmed,
-        time: a.time
+        date: a.date
       }))
     }
   } catch (error) {
-    console.error('Ошибка загрузки данных:', error)
   } finally {
     isLoading.value = false
   }
@@ -328,6 +327,15 @@ watch([searchQuery, typeFilter], () => {
 })
 
 // utils
-const formatDate = (date) =>
-    date ? new Date(date).toLocaleString('ru-RU') : '—'
+const formatDate = (date) => {
+  if (!date) return '-';
+  const dateObj = new Date(date);
+  return dateObj.toLocaleDateString('ru-RU');
+  // Или если нужен конкретный формат:
+  // return new Intl.DateTimeFormat('ru-RU', {
+  //   year: 'numeric',
+  //   month: '2-digit',
+  //   day: '2-digit'
+  // }).format(dateObj);
+}
 </script>

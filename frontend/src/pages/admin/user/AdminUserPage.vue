@@ -422,7 +422,6 @@ const loadData = async () => {
     }
 
   } catch (err) {
-    console.error('Ошибка при загрузке данных:', err)
     error.value = err.message
   } finally {
     isLoading.value = false
@@ -629,7 +628,6 @@ const deleteUser = async () => {
     // Показываем уведомление об успехе
     alert('Пользователь успешно удален')
   } catch (err) {
-    console.error('Ошибка при удалении пользователя:', err)
     alert('Ошибка при удалении пользователя')
   } finally {
     isLoading.value = false

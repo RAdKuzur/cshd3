@@ -25,12 +25,11 @@
               управления кадрами и документооборота Московского областного суда
             </p>
             <div class="mt-10 flex items-center justify-center gap-x-6">
-              <button
-                  @click="navigateToDashboard"
-                  class="rounded-md bg-indigo-600 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
-                Перейти в систему
-              </button>
+              <router-link to="/login">
+                <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg font-semibold shadow-sm transition-colors">
+                  Перейти в систему
+                </button>
+              </router-link>
               <button
                   @click="scrollToFeatures"
                   class="text-sm font-semibold leading-6 text-gray-900 flex items-center"
@@ -120,12 +119,11 @@
             Получите доступ ко всем модулям системы управления Московского областного суда
           </p>
           <div class="mt-10 flex items-center justify-center gap-x-6">
-            <button
-                @click="navigateToDashboard"
-                class="rounded-md bg-indigo-600 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              Войти в систему
-            </button>
+            <router-link to="/login">
+              <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg font-semibold shadow-sm transition-colors">
+                Перейти в систему
+              </button>
+            </router-link>
           </div>
         </div>
       </div>
@@ -186,7 +184,7 @@ const features = [
 const benefits = [
   {
     name: 'Безопасность',
-    description: 'Соответствие требованиям ФСТЭК России и ФСБ России по защите информации',
+    description: 'Надёжная защита данных организации от несанкционированного доступа',
     icon: ShieldCheckIcon
   },
   {
@@ -211,13 +209,10 @@ const footerModules = [
 
 // Методы навигации
 const navigateToDashboard = () => {
-  // Навигация в дашборд
-  console.log('Переход в дашборд')
+  router.push('/login')
 }
 
 const navigateToModule = (route) => {
-  // Навигация в модуль
-  console.log('Переход в модуль:', route)
 }
 
 const navigateToDocuments = () => {
@@ -231,7 +226,6 @@ const scrollToFeatures = () => {
 
 const contactSupport = () => {
   // Открытие формы связи с поддержкой
-  console.log('Связь с поддержкой')
 }
 </script>
 

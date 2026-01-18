@@ -449,7 +449,6 @@ const navigation = [
 // Инициализация Echo для вебсокетов с публичным каналом
 const initializeEcho = () => {
   if (!currentUser.value) {
-    console.log('Пользователь не авторизован')
     return
   }
 
@@ -474,12 +473,10 @@ const initializeEcho = () => {
     // Подписываемся на ПУБЛИЧНЫЙ канал уведомлений
     const channelName = `Notification.${currentUser.value}`
 
-    console.log('Подписываюсь на публичный канал уведомлений:', channelName)
 
     // Используем .channel() вместо .private() для публичного канала
     echo.channel(channelName)
         .listen('.Notification', (data) => {
-          console.log('Получено уведомление через вебсокет:', data)
 
           // Создаем объект уведомления из полученных данных
           const notificationData = {
@@ -499,23 +496,18 @@ const initializeEcho = () => {
         })
     // echo.channel(`Notification.${currentUser.value}`)
     //     .listen('.TransferActCreated', (data) => {
-    //       console.log(data)
     //     })
     // Обработчики событий подключения
     echo.connector.pusher.connection.bind('connected', () => {
-      console.log('Подключение к вебсокету установлено (публичный канал)')
     })
 
     echo.connector.pusher.connection.bind('disconnected', () => {
-      console.log('Отключено от вебсокета')
     })
 
     echo.connector.pusher.connection.bind('error', (error) => {
-      console.error('Ошибка подключения к вебсокету:', error)
     })
 
   } catch (error) {
-    console.error('Ошибка инициализации Echo для публичного канала:', error)
   }
 }
 
@@ -544,10 +536,8 @@ const playNotificationSound = () => {
       oscillator.stop(audioContext.currentTime + 0.3)
     } else {
       // Простой beep для старых браузеров
-      console.log('\x07')
     }
   } catch (e) {
-    console.log('Не удалось воспроизвести звук уведомления:', e)
   }
 }
 
@@ -565,7 +555,6 @@ const fetchNotifications = async () => {
       notifications.value = response.data.data
     }
   } catch (error) {
-    console.error('Ошибка загрузки уведомлений:', error)
   } finally {
     isLoading.value = false
   }
@@ -585,7 +574,6 @@ const markAsRead = async (notificationId) => {
       notifications.value[notificationIndex].is_read = 2
     }
   } catch (error) {
-    console.error('Ошибка при отметке уведомления как прочитанного:', error)
   } finally {
     isMarkingAsRead.value = null
   }
@@ -607,7 +595,6 @@ const markAllAsRead = async () => {
       is_read: 2
     }))
   } catch (error) {
-    console.error('Ошибка при отметке всех уведомлений как прочитанных:', error)
   } finally {
     isMarkingAllAsRead.value = false
   }
@@ -635,7 +622,6 @@ const logout = async () => {
     await authStore.logout()
     router.push('/login')
   } catch (e) {
-    console.error('Ошибка выхода', e)
   }
 }
 
