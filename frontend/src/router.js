@@ -96,7 +96,7 @@ const routes = [
     { path: '/things/network/edit/:id', component: NetworkThingEditPage, meta: { auth: true } },
 
 
-    { path: '/files', component: FilePage , meta: { auth: true } }
+    { path: '/admin/files', component: FilePage , meta: { auth: true } }
 ]
 
 const router = createRouter({

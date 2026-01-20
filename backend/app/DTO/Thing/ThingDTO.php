@@ -36,7 +36,7 @@ class ThingDTO implements DTO
             inv_number: $data['inv_number'] ?? null,
             operation_date: Carbon::parse($data['operation_date']),
             thing_type_id: (int) $data['thing_type_id'],
-            thing_parent_id: (int) $data['thing_parent_id'],
+            thing_parent_id: isset($data['thing_parent_id']) ? (int) $data['thing_parent_id'] : null,
             condition: (int) $data['condition'],
             balance: (float) $data['balance'],
             auditorium_id: $data['auditorium_id'] ?? null,

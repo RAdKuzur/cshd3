@@ -104,9 +104,9 @@
                     <div class="text-sm font-semibold text-gray-900">
                       ID файла: {{ file.id }}
                     </div>
-                    <div class="text-xs text-gray-500">
-                      Создан: {{ formatDate(file.created_at) }}
-                    </div>
+<!--                    <div class="text-xs text-gray-500">-->
+<!--                      Создан: {{ formatDate(file.created_at) }}-->
+<!--                    </div>-->
                     <div v-if="file.updated_at" class="text-xs text-gray-400">
                       Обновлен: {{ formatDate(file.updated_at) }}
                     </div>
@@ -141,9 +141,9 @@
                     <div class="text-sm font-semibold text-gray-900 truncate">
                       {{ getFileName(file.filepath) }}
                     </div>
-                    <div class="text-xs text-gray-500 truncate">
-                      {{ file.filepath }}
-                    </div>
+<!--                    <div class="text-xs text-gray-500 truncate">-->
+<!--                      {{ file.filepath }}-->
+<!--                    </div>-->
                     <div class="text-xs text-indigo-600 font-medium mt-1">
                       <button @click="downloadFile(file)" class="hover:text-indigo-800 transition-colors">
                         Скачать файл

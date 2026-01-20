@@ -444,7 +444,7 @@ const navigation = [
   { name: 'Отчёты', href: '/reports', current: false, icon: CalculatorIcon },
   { name: 'Интерактивная карта', href: '/map', current: false, icon: MapIcon },
   { name: 'Панель администратора', href: '/admin', current: false, icon: CommandLineIcon },
-  { name: 'Файловая система', href: '/files', current: false, icon: DocumentIcon }
+  // { name: 'Файловая система', href: '/files', current: false, icon: DocumentIcon }
 ]
 // Инициализация Echo для вебсокетов с публичным каналом
 const initializeEcho = () => {

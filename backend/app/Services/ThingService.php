@@ -125,7 +125,8 @@ class ThingService
         DB::beginTransaction();
         try {
             $thingId = $this->thingRepository->create(array_merge($dto->toArray(), [
-                'is_blocked' => Thing::NOT_BLOCKED
+                'is_blocked' => Thing::NOT_BLOCKED,
+                'balance' => ThingBalanceDictionary::NONE_BALANCE
             ]));
 
             $this->thingAuditoriumRepository->create([

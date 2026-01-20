@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 p-6">
-    <div class="max-w-6xl mx-auto">
+    <div class="max-w-7xl mx-auto">
       <!-- Заголовок и навигация -->
       <div class="mb-12">
         <div class="flex items-center justify-between mb-8">
@@ -15,12 +15,12 @@
             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
-            Назад к категориям
+            Назад
           </router-link>
         </div>
 
         <!-- Карточки управления -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
           <!-- Должности -->
           <div
               class="admin-card group bg-gradient-to-br from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700"
@@ -44,9 +44,6 @@
             </div>
 
             <div class="mt-8 flex items-center justify-between">
-              <span class="text-white text-sm font-medium px-3 py-1 bg-white/20 rounded-full">
-                Управление
-              </span>
               <div class="bg-white/20 p-2 group-hover:bg-white/30 transition-colors">
                 <svg class="w-5 h-5 text-white transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
@@ -78,9 +75,6 @@
             </div>
 
             <div class="mt-8 flex items-center justify-between">
-              <span class="text-white text-sm font-medium px-3 py-1 bg-white/20 rounded-full">
-                Администрирование
-              </span>
               <div class="bg-white/20 p-2 group-hover:bg-white/30 transition-colors">
                 <svg class="w-5 h-5 text-white transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
@@ -112,9 +106,6 @@
             </div>
 
             <div class="mt-8 flex items-center justify-between">
-              <span class="text-white text-sm font-medium px-3 py-1 bg-white/20 rounded-full">
-                Управление
-              </span>
               <div class="bg-white/20 p-2 group-hover:bg-white/30 transition-colors">
                 <svg class="w-5 h-5 text-white transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
@@ -146,9 +137,37 @@
             </div>
 
             <div class="mt-8 flex items-center justify-between">
-              <span class="text-white text-sm font-medium px-3 py-1 bg-white/20 rounded-full">
-                Управление
-              </span>
+              <div class="bg-white/20 p-2 group-hover:bg-white/30 transition-colors">
+                <svg class="w-5 h-5 text-white transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Файловая система -->
+          <div
+              class="admin-card group bg-gradient-to-br from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700"
+              @click="navigateTo('/admin/files')"
+          >
+            <div class="absolute top-6 right-6">
+              <div class="bg-white/20 backdrop-blur-sm p-3">
+                <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+              </div>
+            </div>
+
+            <div class="flex-1 flex flex-col justify-end">
+              <h3 class="text-2xl font-bold text-white mb-3">
+                Файловая система
+              </h3>
+              <p class="text-pink-100/90 text-sm leading-relaxed">
+                Управление файлами и документами, хранение сканов и прочей документации
+              </p>
+            </div>
+
+            <div class="mt-8 flex items-center justify-between">
               <div class="bg-white/20 p-2 group-hover:bg-white/30 transition-colors">
                 <svg class="w-5 h-5 text-white transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
@@ -253,7 +272,7 @@ const navigateTo = (path) => {
 }
 
 /* Адаптивность */
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   .admin-card {
     min-height: 240px;
     padding: 1.25rem;
@@ -264,15 +283,27 @@ const navigateTo = (path) => {
   }
 }
 
-@media (min-width: 769px) and (max-width: 1024px) {
+@media (min-width: 641px) and (max-width: 768px) {
   .grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media (min-width: 1025px) {
+@media (min-width: 769px) and (max-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1025px) and (max-width: 1280px) {
   .grid {
     grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (min-width: 1281px) {
+  .grid {
+    grid-template-columns: repeat(5, 1fr);
   }
 }
 </style>

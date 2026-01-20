@@ -53,7 +53,7 @@
                   </div>
                   <div>
                     <div class="font-medium">{{ branch.name }}</div>
-                    <div class="text-sm opacity-75">{{ getBranchStats(branch.id).total }} объектов материальной ценностей</div>
+                    <div class="text-sm opacity-75">{{ getBranchStats(branch.id).total }} объект материальной ценностей</div>
                   </div>
                 </div>
 
@@ -127,10 +127,6 @@
                   <p class="text-gray-600 mt-2" v-if="!showGraph">Материальные ценности отдела</p>
                   <p class="text-gray-600 mt-2" v-else>Инфографика по годам эксплуатации</p>
                 </div>
-<!--                <div v-if="activeBranch && !showGraph" class="text-sm text-gray-500">-->
-<!--                  Вещей: {{ getBranchStats(activeTab).total }} |-->
-<!--                  Стоимость: {{ formatCurrency(getBranchStats(activeTab).totalCost) }}-->
-<!--                </div>-->
                 <button
                     v-if="activeTab && !showGraph && filteredThings.length > 0"
                     @click="showGraph = true"
@@ -164,6 +160,7 @@
 
                 <!-- Режим инфографики -->
                 <div v-else-if="showGraph" class="space-y-6">
+                  <!-- ... существующий код инфографики ... -->
                   <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
                     <div class="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-2xl border border-blue-100">
                       <div class="flex items-center">
@@ -491,24 +488,127 @@
                     <table class="w-full">
                       <thead class="bg-gradient-to-r from-indigo-500 to-purple-600">
                       <tr>
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-white uppercase tracking-wider">
-                          Название и номер
+                        <!-- Колонка "Название и номер" -->
+                        <th
+                            class="px-6 py-4 text-left text-sm font-semibold text-white uppercase tracking-wider cursor-pointer hover:bg-indigo-600 transition-colors"
+                            @click="sortBy('name')"
+                        >
+                          <div class="flex items-center">
+                            Название и номер
+                            <svg
+                                v-if="sortField === 'name'"
+                                class="ml-1 w-4 h-4"
+                                :class="sortDirection === 'asc' ? 'transform rotate-180' : ''"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                          </div>
                         </th>
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-white uppercase tracking-wider">
-                          Состояние и тип
+
+                        <!-- Колонка "Состояние и тип" -->
+                        <th
+                            class="px-6 py-4 text-left text-sm font-semibold text-white uppercase tracking-wider cursor-pointer hover:bg-indigo-600 transition-colors"
+                            @click="sortBy('condition')"
+                        >
+                          <div class="flex items-center">
+                            Состояние и тип
+                            <svg
+                                v-if="sortField === 'condition'"
+                                class="ml-1 w-4 h-4"
+                                :class="sortDirection === 'asc' ? 'transform rotate-180' : ''"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                          </div>
                         </th>
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-white uppercase tracking-wider">
-                          Характеристика учёта
+
+                        <!-- Колонка "Характеристика учёта" -->
+                        <th
+                            class="px-6 py-4 text-left text-sm font-semibold text-white uppercase tracking-wider cursor-pointer hover:bg-indigo-600 transition-colors"
+                            @click="sortBy('balance')"
+                        >
+                          <div class="flex items-center">
+                            Характеристика учёта
+                            <svg
+                                v-if="sortField === 'balance'"
+                                class="ml-1 w-4 h-4"
+                                :class="sortDirection === 'asc' ? 'transform rotate-180' : ''"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                          </div>
                         </th>
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-white uppercase tracking-wider">
-                          Аудитория
+
+                        <!-- Колонка "Аудитория" -->
+                        <th
+                            class="px-6 py-4 text-left text-sm font-semibold text-white uppercase tracking-wider cursor-pointer hover:bg-indigo-600 transition-colors"
+                            @click="sortBy('auditorium_name')"
+                        >
+                          <div class="flex items-center">
+                            Аудитория
+                            <svg
+                                v-if="sortField === 'auditorium_name'"
+                                class="ml-1 w-4 h-4"
+                                :class="sortDirection === 'asc' ? 'transform rotate-180' : ''"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                          </div>
                         </th>
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-white uppercase tracking-wider">
-                          Дата эксплуатации
+
+                        <!-- Колонка "Дата эксплуатации" -->
+                        <th
+                            class="px-6 py-4 text-left text-sm font-semibold text-white uppercase tracking-wider cursor-pointer hover:bg-indigo-600 transition-colors"
+                            @click="sortBy('operation_date')"
+                        >
+                          <div class="flex items-center">
+                            Дата эксплуатации
+                            <svg
+                                v-if="sortField === 'operation_date'"
+                                class="ml-1 w-4 h-4"
+                                :class="sortDirection === 'asc' ? 'transform rotate-180' : ''"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                          </div>
                         </th>
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-white uppercase tracking-wider">
-                          Стоимость
+
+                        <!-- Колонка "Стоимость" -->
+                        <th
+                            class="px-6 py-4 text-left text-sm font-semibold text-white uppercase tracking-wider cursor-pointer hover:bg-indigo-600 transition-colors"
+                            @click="sortBy('price')"
+                        >
+                          <div class="flex items-center">
+                            Стоимость
+                            <svg
+                                v-if="sortField === 'price'"
+                                class="ml-1 w-4 h-4"
+                                :class="sortDirection === 'asc' ? 'transform rotate-180' : ''"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                          </div>
                         </th>
+
+                        <!-- Колонка "Действия" (без сортировки) -->
                         <th class="px-6 py-4 text-left text-sm font-semibold text-white uppercase tracking-wider">
                           Действия
                         </th>
@@ -717,14 +817,18 @@
 import { ref, computed, watch, onMounted } from 'vue'
 import axios from 'axios'
 import { BACKEND_URL } from "@/router.js"
-const debugMode = ref(false) // Включите для отладки
 
+const debugMode = ref(false)
 const activeTab = ref(null)
 const branches = ref([])
 const loading = ref(true)
 const loadingThings = ref(false)
 const allThings = ref([])
-const showGraph = ref(false) // Новое состояние для переключения между таблицей и графиком
+const showGraph = ref(false)
+
+// Сортировка
+const sortField = ref('name')
+const sortDirection = ref('asc')
 
 // Дополнительные справочники
 const types = ref({})
@@ -736,38 +840,91 @@ const auditoriums = ref([])
 const searchQuery = ref('')
 const conditionFilter = ref('')
 const balanceFilter = ref('')
-const selectedYears = ref([]) // Множественный выбор по годам
-const selectedTypes = ref([]) // Множественный выбор по типам
+const selectedYears = ref([])
+const selectedTypes = ref([])
 
 // Пагинация
 const currentPage = ref(1)
 const itemsPerPage = ref(10)
-const getCategoryCost = (category) => {
-  return filteredThings.value.reduce((sum, item) => {
-    const years = item.years_in_use
-    let inCategory = false
 
-    switch (category) {
-      case '0-5':
-        inCategory = years < 5
-        break
-      case '5-10':
-        inCategory = years >= 5 && years <= 10
-        break
-      case '10+':
-        inCategory = years > 10
-        break
-    }
-
-    return inCategory ? sum + (item.price || 0) : sum
-  }, 0)
-}
 // Опции для фильтра по годам
 const yearOptions = [
   { value: '0-5', label: 'Менее 5 лет' },
   { value: '5-10', label: '5-10 лет' },
   { value: '10+', label: 'Более 10 лет' }
 ]
+
+// Метод сортировки
+const sortBy = (field) => {
+  if (sortField.value === field) {
+    // Если уже сортируем по этому полю, меняем направление
+    sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc'
+  } else {
+    // Если сортируем по новому полю, устанавливаем его и направление по умолчанию
+    sortField.value = field
+    sortDirection.value = 'asc'
+  }
+}
+
+// Отсортированные вещи
+const sortedThings = computed(() => {
+  const filtered = filteredThings.value
+
+  if (!sortField.value) return filtered
+
+  return [...filtered].sort((a, b) => {
+    let aValue = a[sortField.value]
+    let bValue = b[sortField.value]
+
+    // Специальная обработка для определенных полей
+    switch (sortField.value) {
+      case 'name':
+        // Сортировка по названию (строковая)
+        aValue = aValue || ''
+        bValue = bValue || ''
+        break
+
+      case 'condition':
+        // Сортировка по состоянию (числовая)
+        aValue = aValue || 0
+        bValue = bValue || 0
+        break
+
+      case 'balance':
+        // Сортировка по характеристике учета (числовая)
+        aValue = aValue || 0
+        bValue = bValue || 0
+        break
+
+      case 'auditorium_name':
+        // Сортировка по названию аудитории (строковая)
+        aValue = aValue || ''
+        bValue = bValue || ''
+        break
+
+      case 'operation_date':
+        // Сортировка по дате (преобразуем в timestamp)
+        aValue = aValue ? new Date(aValue).getTime() : 0
+        bValue = bValue ? new Date(bValue).getTime() : 0
+        break
+
+      case 'price':
+        // Сортировка по цене (числовая)
+        aValue = aValue || 0
+        bValue = bValue || 0
+        break
+    }
+
+    // Сравнение с учетом направления сортировки
+    if (aValue < bValue) {
+      return sortDirection.value === 'asc' ? -1 : 1
+    }
+    if (aValue > bValue) {
+      return sortDirection.value === 'asc' ? 1 : -1
+    }
+    return 0
+  })
+})
 
 // Данные для графика по годам
 const yearData = computed(() => {
@@ -856,6 +1013,27 @@ const getTotalCostForFiltered = () => {
   return filteredThings.value.reduce((sum, item) => sum + (item.price || 0), 0)
 }
 
+const getCategoryCost = (category) => {
+  return filteredThings.value.reduce((sum, item) => {
+    const years = item.years_in_use
+    let inCategory = false
+
+    switch (category) {
+      case '0-5':
+        inCategory = years < 5
+        break
+      case '5-10':
+        inCategory = years >= 5 && years <= 10
+        break
+      case '10+':
+        inCategory = years > 10
+        break
+    }
+
+    return inCategory ? sum + (item.price || 0) : sum
+  }, 0)
+}
+
 const loadAllData = async () => {
   try {
     loading.value = true
@@ -900,7 +1078,6 @@ const loadAllData = async () => {
     // 2. Только ПОСЛЕ загрузки аудиторий обрабатываем вещи
     if (thingsResponse.data.success) {
       allThings.value = thingsResponse.data.data.map(item => {
-        // Теперь auditoriums.value уже заполнен
         const auditorium = auditoriums.value.find(a => a.id === item.auditorium_id)
 
         const auditoriumName = auditorium ? auditorium.name : 'Не указана'
@@ -926,13 +1103,13 @@ const loadAllData = async () => {
     }
 
   } catch (error) {
+    console.error('Ошибка загрузки данных:', error)
   } finally {
     loading.value = false
     loadingThings.value = false
   }
 }
 
-// Остальные методы и computed свойства остаются без изменений
 // Доступные типы для фильтра
 const availableTypes = computed(() => {
   return Object.entries(types.value).map(([id, name]) => ({
@@ -943,7 +1120,10 @@ const availableTypes = computed(() => {
 
 const setActiveTab = (branchId) => {
   activeTab.value = branchId
-  showGraph.value = false // При смене отдела возвращаемся к таблице
+  showGraph.value = false
+  // Сброс сортировки при смене отдела
+  sortField.value = 'name'
+  sortDirection.value = 'asc'
 }
 
 // Получаем активный отдел
@@ -1020,16 +1200,16 @@ const filteredThings = computed(() => {
 })
 
 // Пагинация
-const totalPages = computed(() => Math.ceil(filteredThings.value.length / itemsPerPage.value))
+const totalPages = computed(() => Math.ceil(sortedThings.value.length / itemsPerPage.value))
 
 const paginatedItems = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage.value
   const end = start + itemsPerPage.value
-  return filteredThings.value.slice(start, end)
+  return sortedThings.value.slice(start, end)
 })
 
 const startIndex = computed(() => (currentPage.value - 1) * itemsPerPage.value + 1)
-const endIndex = computed(() => Math.min(currentPage.value * itemsPerPage.value, filteredThings.value.length))
+const endIndex = computed(() => Math.min(currentPage.value * itemsPerPage.value, sortedThings.value.length))
 
 const visiblePages = computed(() => {
   const pages = []
@@ -1188,7 +1368,7 @@ const formatCurrency = (amount) => {
   return new Intl.NumberFormat('ru-RU', {
     style: 'currency',
     currency: 'RUB',
-    minimumFractionDigits: 0
+    minimumFractionDigits: 2
   }).format(amount)
 }
 
@@ -1232,10 +1412,13 @@ watch(activeTab, () => {
   selectedTypes.value = []
   currentPage.value = 1
   showGraph.value = false
+  // Сброс сортировки
+  sortField.value = 'name'
+  sortDirection.value = 'asc'
 })
 
-// Сброс пагинации при изменении фильтров
-watch([searchQuery, conditionFilter, balanceFilter, selectedYears, selectedTypes], () => {
+// Сброс пагинации при изменении фильтров или сортировки
+watch([searchQuery, conditionFilter, balanceFilter, selectedYears, selectedTypes, sortField, sortDirection], () => {
   currentPage.value = 1
 })
 
@@ -1273,5 +1456,14 @@ watch([searchQuery, conditionFilter, balanceFilter, selectedYears, selectedTypes
 
 .graph-bar {
   transition: height 0.5s ease;
+}
+
+/* Стили для индикатора сортировки */
+th {
+  position: relative;
+}
+
+th:hover {
+  background-color: rgba(255, 255, 255, 0.1);
 }
 </style>
