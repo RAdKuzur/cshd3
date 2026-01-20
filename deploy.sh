@@ -5,7 +5,7 @@ cd backend && cp .env.example .env
 cd ../frontend && cp .env.example .env
 
 echo "Запускаем контейнеры..."
-cd .. && docker compose up --build -d
+cd .. && docker compose -f docker-compose.prod.yml up --build -d
 docker compose exec frontend npm install
 docker compose exec backend php artisan key:generate
 docker compose exec backend php artisan storage:link

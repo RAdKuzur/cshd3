@@ -1,12 +1,10 @@
 FROM php:8.4-fpm
 
+# Устанавливаем зависимости
 RUN apt-get update && apt-get install -y \
-    git zip unzip libpq-dev libpng-dev libonig-dev libzip-dev \
-    && docker-php-ext-install pdo pdo_pgsql zip gd opcache
-
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-WORKDIR /var/www/html
+    git curl zip unzip libpq-dev libpng-dev libonig-dev libzip-dev \
+    && docker-php-ext-configure zip \
+    && docker-php-ext-install zip pdo pdo_pgsql gd opcache sockets pcntl
 
 # Production-режим OPCache
 RUN echo "opcache.enable=1" >> /usr/local/etc/php/conf.d/opcache.ini \
@@ -17,13 +15,32 @@ RUN echo "opcache.enable=1" >> /usr/local/etc/php/conf.d/opcache.ini \
     && echo "opcache.revalidate_freq=0" >> /usr/local/etc/php/conf.d/opcache.ini \
     && echo "realpath_cache_ttl=600" >> /usr/local/etc/php/conf.d/opcache.ini
 
-COPY . /var/www/html
 
-RUN composer install --no-dev --optimize-autoloader \
-    && php artisan config:cache \
-    && php artisan route:cache \
-    && php artisan view:cache
+# Устанавливаем composer (без копирования кода)
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+WORKDIR /var/www/html
+
+# Настройка php-fpm - ИСПРАВЛЕННАЯ ЧАСТЬ
+RUN echo '[www]\n\
+user = www-data\n\
+group = www-data\n\
+listen = 9000\n\
+listen.owner = www-data\n\
+listen.group = www-data\n\
+pm = dynamic\n\
+pm.max_children = 5\n\
+pm.start_servers = 2\n\
+pm.min_spare_servers = 1\n\
+pm.max_spare_servers = 3\n' > /usr/local/etc/php-fpm.d/zz-docker.conf
 
 EXPOSE 9000
 
-CMD ["php-fpm", "-F"]
+# CMD с проверкой vendor
+CMD sh -c '\
+    if [ ! -d "vendor" ]; then \
+        echo "Running composer install..."; \
+        composer install; \
+    fi; \
+    php-fpm -F \
+'
