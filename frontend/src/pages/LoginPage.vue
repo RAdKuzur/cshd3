@@ -62,13 +62,13 @@
                   Пароль
                 </span>
               </label>
-              <button
-                  type="button"
-                  @click="showForgotPassword = true"
-                  class="text-sm font-medium text-indigo-600 hover:text-indigo-500 transition-colors"
-              >
-                Забыли пароль?
-              </button>
+<!--              <button-->
+<!--                  type="button"-->
+<!--                  @click="showForgotPassword = true"-->
+<!--                  class="text-sm font-medium text-indigo-600 hover:text-indigo-500 transition-colors"-->
+<!--              >-->
+<!--                Забыли пароль?-->
+<!--              </button>-->
             </div>
             <div class="relative">
               <input
@@ -91,17 +91,17 @@
           </div>
 
           <!-- Запомнить меня -->
-          <div class="flex items-center">
-            <input
-                v-model="form.remember"
-                id="remember"
-                type="checkbox"
-                class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-            >
-            <label for="remember" class="ml-2 block text-sm text-gray-700">
-              Запомнить меня
-            </label>
-          </div>
+<!--          <div class="flex items-center">-->
+<!--            <input-->
+<!--                v-model="form.remember"-->
+<!--                id="remember"-->
+<!--                type="checkbox"-->
+<!--                class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"-->
+<!--            >-->
+<!--            <label for="remember" class="ml-2 block text-sm text-gray-700">-->
+<!--              Запомнить меня-->
+<!--            </label>-->
+<!--          </div>-->
 
           <!-- Кнопка входа -->
           <div>
@@ -119,20 +119,20 @@
           </div>
         </form>
 
-        <!-- Дополнительная информация -->
-        <div class="mt-8 pt-6 border-t border-gray-200">
-          <div class="text-center">
-            <p class="text-sm text-gray-600">
-              Возникли проблемы со входом?
-              <button
-                  @click="contactSupport"
-                  class="font-medium text-indigo-600 hover:text-indigo-500 transition-colors"
-              >
-                Свяжитесь с поддержкой
-              </button>
-            </p>
-          </div>
-        </div>
+<!--        &lt;!&ndash; Дополнительная информация &ndash;&gt;-->
+<!--        <div class="mt-8 pt-6 border-t border-gray-200">-->
+<!--          <div class="text-center">-->
+<!--            <p class="text-sm text-gray-600">-->
+<!--              Возникли проблемы со входом?-->
+<!--              <button-->
+<!--                  @click="contactSupport"-->
+<!--                  class="font-medium text-indigo-600 hover:text-indigo-500 transition-colors"-->
+<!--              >-->
+<!--                Свяжитесь с поддержкой-->
+<!--              </button>-->
+<!--            </p>-->
+<!--          </div>-->
+<!--        </div>-->
       </div>
 
       <!-- Информация о системе -->

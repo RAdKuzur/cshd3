@@ -29,7 +29,7 @@
         <div class="flex justify-between items-start">
           <div>
             <h1 class="text-3xl font-bold text-gray-900">
-              Акт передачи материальных ценностей №{{ act.id }}
+              Акт передачи материальных ценностей
             </h1>
             <p class="text-gray-600 mt-2">
               {{ act.typeLabel }}
@@ -114,10 +114,10 @@
               </div>
 
               <!-- ID акта -->
-              <div>
-                <h3 class="text-sm font-medium text-gray-500 mb-1">Идентификатор</h3>
-                <p class="text-lg font-mono">#{{ act.id }}</p>
-              </div>
+<!--              <div>-->
+<!--                <h3 class="text-sm font-medium text-gray-500 mb-1">Идентификатор</h3>-->
+<!--                <p class="text-lg font-mono">#{{ act.id }}</p>-->
+<!--              </div>-->
             </div>
 
             <!-- Список подтверждений -->
@@ -621,7 +621,7 @@ const formatCurrency = (value) => {
   return new Intl.NumberFormat('ru-RU', {
     style: 'currency',
     currency: 'RUB',
-    minimumFractionDigits: 0
+    minimumFractionDigits: 2
   }).format(numValue)
 }
 

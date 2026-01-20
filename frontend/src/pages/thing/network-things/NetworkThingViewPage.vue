@@ -16,7 +16,7 @@
             </router-link>
             <div>
               <h1 class="text-3xl font-bold text-gray-900">Сетевое устройство</h1>
-              <p class="text-gray-600 mt-2">Устройство #{{ networkThing?.id }}</p>
+<!--              <p class="text-gray-600 mt-2">Устройство #{{ networkThing?.id }}</p>-->
             </div>
           </div>
 
@@ -88,10 +88,10 @@
             <div class="text-lg font-mono text-indigo-600 font-semibold">{{ networkThing?.inv_number || 'Не указан' }}</div>
           </div>
 
-          <div>
-            <div class="text-sm font-medium text-gray-500 mb-1">ID основного устройства</div>
-            <div class="text-lg font-mono text-gray-900">{{ networkThing?.thing_id || 'Не указан' }}</div>
-          </div>
+<!--          <div>-->
+<!--            <div class="text-sm font-medium text-gray-500 mb-1">ID основного устройства</div>-->
+<!--            <div class="text-lg font-mono text-gray-900">{{ networkThing?.thing_id || 'Не указан' }}</div>-->
+<!--          </div>-->
         </div>
       </div>
 

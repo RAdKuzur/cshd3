@@ -40,7 +40,7 @@
                   </div>
                   <div>
                     <div class="font-medium">{{ branch.branch_name }}</div>
-                    <div class="text-sm opacity-75">{{ getBranchStats(branch.branch_id).total }} сотрудников</div>
+                    <div class="text-sm opacity-75">{{ getBranchStats(branch.branch_id).total }} сотрудник</div>
                   </div>
                 </div>
 
@@ -62,9 +62,9 @@
               <div class="flex items-center justify-between">
                 <div class="flex items-center">
                   <div class="h-10 w-10 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
-                    <svg class="h-5 w-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
-                    </svg>
+
+                    <UserIcon class="h-5 w-5 text-blue-600" />
+
                   </div>
                   <div>
                     <p class="text-sm font-medium text-gray-600">Всего сотрудников</p>
@@ -108,9 +108,8 @@
 
             <div class="p-6">
               <div v-if="!activeTab" class="text-center py-12">
-                <svg class="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                </svg>
+                <UserIcon class="w-16 h-16 mx-auto text-gray-400 mb-4" />
+
                 <p class="text-gray-500">Выберите отдел для просмотра сотрудников</p>
               </div>
 
@@ -127,11 +126,10 @@
                     v-if="activeBranch.stuff.length === 0"
                     class="text-center py-12 text-gray-500"
                 >
-                  <svg class="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
-                  </svg>
+                  <UserIcon class="w-16 h-16 mx-auto text-gray-400 mb-4" />
+
                   <p class="text-lg font-medium mb-2">В этом отделе пока нет сотрудников</p>
-                  <p class="text-sm">Добавьте сотрудников в этот отдел</p>
+
                 </div>
               </div>
             </div>
@@ -147,7 +145,7 @@ import { ref, computed, onMounted } from 'vue'
 import axios from 'axios'
 import Record from "@/components/layouts/Record.vue";
 import {BACKEND_URL} from "@/router.js";
-
+import { UserIcon } from '@heroicons/vue/24/outline'
 const activeTab = ref(null)
 const branches = ref([])
 const loading = ref(true)

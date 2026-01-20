@@ -22,7 +22,7 @@
               <input
                   v-model="searchQuery"
                   type="text"
-                  placeholder="Поиск по IP-адресу, телефону, инвентарному номеру, комментарию..."
+                  placeholder="Поиск по IP-адресу, телефону, инвентарному номеру, аудитории, комментарию."
                   class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
               >
               <div class="absolute inset-y-0 left-0 pl-3 flex items-center">
@@ -44,27 +44,27 @@
               </option>
             </select>
 
-            <select
-                v-model="auditoriumFilter"
-                class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-            >
-              <option value="">Все аудитории</option>
-              <option v-for="auditorium in auditoriums" :key="auditorium.id" :value="auditorium.id">
-                {{ auditorium.name }}
-              </option>
-            </select>
+<!--            <select-->
+<!--                v-model="auditoriumFilter"-->
+<!--                class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"-->
+<!--            >-->
+<!--              <option value="">Все аудитории</option>-->
+<!--              <option v-for="auditorium in auditoriums" :key="auditorium.id" :value="auditorium.id">-->
+<!--                {{ auditorium.name }}-->
+<!--              </option>-->
+<!--            </select>-->
 
-            <select
-                v-model="sortField"
-                class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-            >
-              <option value="ip_address">Сортировка по IP</option>
-              <option value="phone_number">По телефону</option>
-              <option value="type">По типу</option>
-              <option value="inv_number">По инв. номеру</option>
-              <option value="auditorium_name">По аудитории</option>
-              <option value="comment">По комментарию</option>
-            </select>
+<!--            <select-->
+<!--                v-model="sortField"-->
+<!--                class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"-->
+<!--            >-->
+<!--              <option value="ip_address">Сортировка по IP</option>-->
+<!--              <option value="phone_number">По телефону</option>-->
+<!--              <option value="type">По типу</option>-->
+<!--              <option value="inv_number">По инв. номеру</option>-->
+<!--              <option value="auditorium_name">По аудитории</option>-->
+<!--              <option value="comment">По комментарию</option>-->
+<!--            </select>-->
           </div>
         </div>
       </div>
@@ -140,9 +140,9 @@
                     <div class="text-sm font-semibold text-gray-900">
                       {{ item.ip_address || 'Не указан' }}
                     </div>
-                    <div class="text-xs text-gray-500">
-                      ID устройства: {{ item.thing_id }}
-                    </div>
+<!--                    <div class="text-xs text-gray-500">-->
+<!--                      ID устройства: {{ item.thing_id }}-->
+<!--                    </div>-->
                   </div>
                 </div>
               </td>
@@ -241,16 +241,16 @@
                     </button>
                   </router-link>
 
-                  <!-- Кнопка удаления -->
-                  <button
-                      @click="confirmDelete(item)"
-                      class="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                      title="Удалить"
-                  >
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
-                  </button>
+<!--                  &lt;!&ndash; Кнопка удаления &ndash;&gt;-->
+<!--                  <button-->
+<!--                      @click="confirmDelete(item)"-->
+<!--                      class="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"-->
+<!--                      title="Удалить"-->
+<!--                  >-->
+<!--                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">-->
+<!--                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />-->
+<!--                    </svg>-->
+<!--                  </button>-->
                 </div>
               </td>
             </tr>

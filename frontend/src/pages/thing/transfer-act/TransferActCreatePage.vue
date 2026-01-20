@@ -83,7 +83,7 @@
               <!-- От кого (для типов 2 и 3) -->
               <div v-if="formData.type === 2 || formData.type === 3">
                 <label class="block text-sm font-medium text-gray-700 mb-2">
-                  От кого *
+                  С кого (списывают) *
                 </label>
                 <select
                     v-model.number="formData.from"
@@ -112,7 +112,7 @@
               <!-- Кому (для типов 1 и 2) -->
               <div v-if="formData.type === 1  || formData.type === 4 || formData.type === 5 || formData.type === 2">
                 <label class="block text-sm font-medium text-gray-700 mb-2">
-                  Кому (принимает) *
+                  Кто (принимает) *
                 </label>
                 <select
                     v-model.number="formData.to"
@@ -643,7 +643,7 @@ const formatPrice = (price) => {
   return new Intl.NumberFormat('ru-RU', {
     style: 'currency',
     currency: 'RUB',
-    minimumFractionDigits: 0
+    minimumFractionDigits: 2
   }).format(price)
 }
 

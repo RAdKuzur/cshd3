@@ -55,13 +55,18 @@
 <!--        </div>-->
 
         <!-- Карточки отчетов -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <!-- Отчет по объектам материального учёта -->
           <div
-              class="report-card group bg-gradient-to-br from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700"
+              class="relative overflow-hidden rounded-xl p-6 flex flex-col justify-between
+           bg-gradient-to-br from-purple-500 to-indigo-600
+           hover:from-purple-600 hover:to-indigo-700
+           transition-all hover:shadow-lg hover:scale-[1.01]
+           cursor-pointer group"
               @click="navigateTo('/reports/things')"
           >
-            <div class="absolute top-6 right-6">
+            <!-- Иконка (аналогично первому примеру) -->
+            <div class="absolute right-6 top-6">
               <div class="bg-white/20 backdrop-blur-sm p-3 rounded-xl">
                 <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
@@ -69,16 +74,18 @@
               </div>
             </div>
 
-            <div class="flex-1 flex flex-col justify-end">
-              <h3 class="text-2xl font-bold text-white mb-3">
+            <!-- Контент -->
+            <div class="pr-16">
+              <h3 class="text-xl font-semibold text-white mb-2">
                 Объекты учёта
               </h3>
-              <p class="text-purple-100/90 text-sm leading-relaxed">
+              <p class="text-sm text-purple-100 leading-relaxed">
                 Детальная статистика по всем материальным объектам, их движению и состоянию
               </p>
             </div>
 
-            <div class="mt-8 flex items-center justify-between">
+            <!-- Футер с кнопкой и форматом -->
+            <div class="mt-6 flex items-center justify-between">
               <div class="flex items-center gap-2 text-white/80">
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
@@ -95,10 +102,14 @@
 
           <!-- Отчет по кабинетам -->
           <div
-              class="report-card group bg-gradient-to-br from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700"
+              class="relative overflow-hidden rounded-xl p-6 flex flex-col justify-between
+           bg-gradient-to-br from-cyan-500 to-blue-600
+           hover:from-cyan-600 hover:to-blue-700
+           transition-all hover:shadow-lg hover:scale-[1.01]
+           cursor-pointer group"
               @click="navigateTo('/reports/auditoriums')"
           >
-            <div class="absolute top-6 right-6">
+            <div class="absolute right-6 top-6">
               <div class="bg-white/20 backdrop-blur-sm p-3 rounded-xl">
                 <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
@@ -106,16 +117,16 @@
               </div>
             </div>
 
-            <div class="flex-1 flex flex-col justify-end">
-              <h3 class="text-2xl font-bold text-white mb-3">
+            <div class="pr-16">
+              <h3 class="text-xl font-semibold text-white mb-2">
                 Помещения
               </h3>
-              <p class="text-cyan-100/90 text-sm leading-relaxed">
+              <p class="text-sm text-cyan-100 leading-relaxed">
                 Анализ использования помещений, распределение активов и занятости кабинетов
               </p>
             </div>
 
-            <div class="mt-8 flex items-center justify-between">
+            <div class="mt-6 flex items-center justify-between">
               <div class="flex items-center gap-2 text-white/80">
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
@@ -132,10 +143,14 @@
 
           <!-- Отчет по АРМ -->
           <div
-              class="report-card group bg-gradient-to-br from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700"
+              class="relative overflow-hidden rounded-xl p-6 flex flex-col justify-between
+           bg-gradient-to-br from-rose-500 to-pink-600
+           hover:from-rose-600 hover:to-pink-700
+           transition-all hover:shadow-lg hover:scale-[1.01]
+           cursor-pointer group"
               @click="navigateTo('/reports/arms')"
           >
-            <div class="absolute top-6 right-6">
+            <div class="absolute right-6 top-6">
               <div class="bg-white/20 backdrop-blur-sm p-3 rounded-xl">
                 <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -143,21 +158,21 @@
               </div>
             </div>
 
-            <div class="flex-1 flex flex-col justify-end">
-              <h3 class="text-2xl font-bold text-white mb-3">
+            <div class="pr-16">
+              <h3 class="text-xl font-semibold text-white mb-2">
                 АРМ
               </h3>
-              <p class="text-rose-100/90 text-sm leading-relaxed">
+              <p class="text-sm text-rose-100 leading-relaxed">
                 Отчеты по автоматизированным рабочим местам, их техническому состоянию и использованию
               </p>
             </div>
 
-            <div class="mt-8 flex items-center justify-between">
+            <div class="mt-6 flex items-center justify-between">
               <div class="flex items-center gap-2 text-white/80">
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                 </svg>
-                <span class="text-sm">Табличная форма представления</span>
+                <span class="text-sm">Табличная форма</span>
               </div>
               <div class="bg-white/20 p-2 rounded-lg group-hover:bg-white/30 transition-colors">
                 <svg class="w-5 h-5 text-white transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -167,12 +182,16 @@
             </div>
           </div>
 
-          <!-- НОВЫЙ: Общий отчет по отделам -->
+          <!-- Общий отчет по отделам -->
           <div
-              class="report-card group bg-gradient-to-br from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700"
+              class="relative overflow-hidden rounded-xl p-6 flex flex-col justify-between
+           bg-gradient-to-br from-emerald-500 to-teal-600
+           hover:from-emerald-600 hover:to-teal-700
+           transition-all hover:shadow-lg hover:scale-[1.01]
+           cursor-pointer group"
               @click="navigateTo('/reports/general')"
           >
-            <div class="absolute top-6 right-6">
+            <div class="absolute right-6 top-6">
               <div class="bg-white/20 backdrop-blur-sm p-3 rounded-xl">
                 <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
@@ -180,21 +199,25 @@
               </div>
             </div>
 
-            <div class="flex-1 flex flex-col justify-end">
-              <div class="flex items-center gap-3 mb-4">
-                <span class="text-white/80 text-sm font-medium px-3 py-1 bg-white/20 rounded-full">
-                  Сводный
-                </span>
-              </div>
-              <h3 class="text-2xl font-bold text-white mb-3">
+            <div class="pr-16">
+
+
+              <h3 class="text-xl font-semibold text-white mb-2">
                 Отчет по отделам
               </h3>
-              <p class="text-emerald-100/90 text-sm leading-relaxed">
+              <p class="text-sm text-emerald-100 leading-relaxed">
                 Общая статистика по всем отделам, распределение ресурсов и активов по структурным подразделениям
               </p>
             </div>
 
-            <div class="mt-8 flex items-center justify-between">
+            <!-- Бейдж для "Сводный" -->
+            <div class="mt-3">
+                <span class="inline-block text-white/80 text-xs font-medium px-3 py-1 bg-white/20 rounded-full">
+                  Сводный
+                </span>
+            </div>
+
+            <div class="mt-6 flex items-center justify-between">
               <div class="flex items-center gap-2 text-white/80">
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />

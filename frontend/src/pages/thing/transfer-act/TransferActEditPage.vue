@@ -5,7 +5,7 @@
       <div class="mb-8">
         <div class="flex items-center justify-between">
           <div>
-            <h1 class="text-3xl font-bold text-gray-900">Редактирование акта #{{ actId }}</h1>
+            <h1 class="text-3xl font-bold text-gray-900">Редактирование акта </h1>
             <p class="text-gray-600 mt-2">Внесите изменения в состав материальных средств акта</p>
           </div>
           <router-link
@@ -44,10 +44,10 @@
                 <label class="block text-sm font-medium text-gray-700 mb-2">
                   Тип акта *
                 </label>
-                <select
+                <select disabled
                     v-model.number="formData.type"
                     required
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors read-only"
                 >
                   <option value="">Выберите тип</option>
                   <option
@@ -68,7 +68,7 @@
                 <label class="block text-sm font-medium text-gray-700 mb-2">
                   Дата акта *
                 </label>
-                <input
+                <input disabled
                     v-model="formData.date"
                     type="date"
                     required
@@ -91,9 +91,9 @@
               <!-- От кого (для типов 2 и 3) -->
               <div v-if="formData.type === 2 || formData.type === 3">
                 <label class="block text-sm font-medium text-gray-700 mb-2">
-                  От кого *
+                  С кого (списывают) *
                 </label>
-                <select
+                <select disabled
                     v-model.number="formData.from"
                     :required="formData.type === 2 || formData.type === 3"
                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
@@ -115,9 +115,9 @@
               <!-- Кому (для типов 1 и 2) -->
               <div v-if="(formData.type === 1 || formData.type === 4 || formData.type === 5 ) || formData.type === 2">
                 <label class="block text-sm font-medium text-gray-700 mb-2">
-                  Кому (принимает) *
+                  Кто (принимает) *
                 </label>
-                <select
+                <select disabled
                     v-model.number="formData.to"
                     :required="(formData.type === 1 || formData.type === 4 || formData.type === 5 ) || formData.type === 2"
                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
@@ -858,7 +858,7 @@ const formatPrice = (price) => {
   return new Intl.NumberFormat('ru-RU', {
     style: 'currency',
     currency: 'RUB',
-    minimumFractionDigits: 0
+    minimumFractionDigits: 2
   }).format(price)
 }
 
