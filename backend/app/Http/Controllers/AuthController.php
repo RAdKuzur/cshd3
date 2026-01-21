@@ -83,7 +83,6 @@ class AuthController extends Controller
                 'message' => 'Успешный вход',
                 'username' => $refreshData['username'],
                 'fio' => $refreshData['fio'],
-                'position' => $refreshData['position'],
                 'role' => $refreshData['role'],
             ])
                 ->cookie('refresh_token', $refreshData['refreshToken'], (int)env('REFRESH_TOKEN_TIME'))

@@ -276,7 +276,6 @@
           <img class="h-10 w-10 rounded-full border-2 border-white/20" src="/person.jpg" alt="Профиль пользователя" />
           <div class="ml-3">
             <div class="text-base font-medium text-white">{{ profileBar.fio }}</div>
-            <div class="text-sm font-medium text-indigo-200">{{ profileBar.position }}</div>
           </div>
 
           <!-- Мобильная версия кнопки уведомлений -->
@@ -424,7 +423,6 @@ const profileBar = computed(() => ({
   username: authStore.user?.username || '',
   fio: authStore.user?.fio || '',
   role: authStore.user?.role || '',
-  position: authStore.user?.position || ''
 }))
 const profileUrl = computed(() => `/profile/${profileBar.value.username}`)
 

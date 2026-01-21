@@ -24,11 +24,11 @@
             <h3 class="text-lg font-semibold text-gray-900 truncate">
               {{ employee.name }}
             </h3>
-            <span
-                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"
-            >
-              Активен
-            </span>
+<!--            <span-->
+<!--                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"-->
+<!--            >-->
+<!--              Активен-->
+<!--            </span>-->
           </div>
           <div class="flex items-center space-x-4 mt-2 text-sm text-gray-500">
             <span class="flex items-center">

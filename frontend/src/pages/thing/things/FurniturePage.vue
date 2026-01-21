@@ -167,9 +167,9 @@
                     <div class="text-sm font-medium text-gray-900">
                       {{ getBalanceLabel(item.balance) }}
                     </div>
-                    <div class="text-xs text-indigo-500">
-                      Характеристика учёта
-                    </div>
+<!--                    <div class="text-xs text-indigo-500">-->
+<!--                      Характеристика учёта-->
+<!--                    </div>-->
                   </div>
                 </div>
               </td>
