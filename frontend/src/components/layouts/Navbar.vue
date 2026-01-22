@@ -186,7 +186,7 @@
                 <span class="sr-only">Открыть меню пользователя</span>
                 <img
                     class="h-8 w-8 rounded-full border-2 border-white/20"
-                    src="/person.jpg"
+                    :src="profileBar.icon_link"
                     alt="Профиль пользователя"
                 />
                 <span class="ml-2 mr-1 text-indigo-100 text-sm font-medium hidden lg:block">
@@ -422,6 +422,7 @@ const profileBar = computed(() => ({
   username: authStore.user?.username || '',
   fio: authStore.user?.fio || '',
   role: authStore.user?.role || '',
+  icon_link: authStore.user?.icon_link || '',
 }))
 const profileUrl = computed(() => `/profile/${profileBar.value.username}`)
 

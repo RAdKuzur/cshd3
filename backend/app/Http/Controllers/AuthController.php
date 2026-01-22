@@ -40,6 +40,7 @@ class AuthController extends Controller
                 'fio' => $user->people->getFullFio(),
                 'position' => $user->people->getPosition() ? $user->people->getPosition()->name : null,
                 'role' => $user->role,
+                'icon_link' => $user->people->icon_link
             ])
                 ->cookie('refresh_token', $tokens['refreshToken'], (int)env('REFRESH_TOKEN_TIME'))
                 ->cookie('access_token', $tokens['accessToken'], (int)env('ACCESS_TOKEN_TIME'));
@@ -84,6 +85,7 @@ class AuthController extends Controller
                 'username' => $refreshData['username'],
                 'fio' => $refreshData['fio'],
                 'role' => $refreshData['role'],
+                'icon_link' => $refreshData['icon_link'],
             ])
                 ->cookie('refresh_token', $refreshData['refreshToken'], (int)env('REFRESH_TOKEN_TIME'))
                 ->cookie('access_token', $refreshData['accessToken'], (int)env('ACCESS_TOKEN_TIME'));

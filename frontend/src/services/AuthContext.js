@@ -29,7 +29,8 @@ export const useAuthContextStore = defineStore('auth', {
                 username: profile.username,
                 fio: profile.fio,
                 position: profile.position,
-                role: profile.role
+                role: profile.role,
+                icon_link: profile.icon_link
             }
             this.initialized = true
             return true
@@ -41,7 +42,8 @@ export const useAuthContextStore = defineStore('auth', {
                 username: profile.username,
                 fio: profile.fio,
                 position: profile.position,
-                role: profile.role
+                role: profile.role,
+                icon_link: profile.icon_link
             }
         },
 

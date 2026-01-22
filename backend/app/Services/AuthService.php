@@ -113,6 +113,7 @@ class AuthService
                 'username' => $user->username,
                 'fio' => $user->people->getFullFio(),
                 'role' => $user->role,
+                'icon_link' => $user->people->icon_link
             ];
         }
         catch (\Exception $e){
@@ -123,6 +124,7 @@ class AuthService
                 'username' => null,
                 'fio' => null,
                 'role' => null,
+                'icon_link' => null
             ];
         }
 
