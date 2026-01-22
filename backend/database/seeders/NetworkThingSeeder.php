@@ -26,7 +26,7 @@ class NetworkThingSeeder extends Seeder
                 'thing_id' => $networkThing->id,
                 'ip_address' => fake()->ipv4(),
                 'phone_number' => fake()->phoneNumber(),
-                'comment' => 'Рандомный комментарий'
+                'comment' => fake()->text()
             ]);
         }
 

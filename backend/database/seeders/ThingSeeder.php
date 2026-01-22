@@ -26,11 +26,11 @@ class ThingSeeder extends Seeder
         DB::table('things')->truncate();
         for($i = 1; $i <= 1000; $i++){
             DB::table('things')->insert([
-                'name' => 'THING #' . $i,
+                'name' => fake()->word(),
                 'serial_number' => $i,
                 'inv_number' => $i,
                 'operation_date' => Carbon::create(
-                    rand(2000, 2025),
+                    rand(2010, 2025),
                     rand(1, 12),
                     rand(1, 28),
                     rand(0, 23),
@@ -41,7 +41,7 @@ class ThingSeeder extends Seeder
                 'thing_parent_id' => null,
                 'condition' => ConditionDictionary::OK,
                 'price' => rand(1, 100000),
-                'comment' => null,
+                'comment' => fake()->text(),
                 'balance' => ThingBalanceDictionary::NONE_BALANCE,
                 'is_composite' => false,
                 'is_blocked' => Thing::NOT_BLOCKED
@@ -50,11 +50,11 @@ class ThingSeeder extends Seeder
         //things-furniture
         for($i = 1001; $i <= 2000; $i++){
             DB::table('things')->insert([
-                'name' => 'THING #' . $i,
+                'name' => fake()->word(),
                 'serial_number' => $i,
                 'inv_number' => $i,
                 'operation_date' => Carbon::create(
-                    rand(2000, 2025),
+                    rand(2010, 2025),
                     rand(1, 12),
                     rand(1, 28),
                     rand(0, 23),
@@ -65,7 +65,7 @@ class ThingSeeder extends Seeder
                 'thing_parent_id' => null,
                 'condition' => ConditionDictionary::OK,
                 'price' => rand(1, 100000),
-                'comment' => null,
+                'comment' => fake()->text(),
                 'balance' => ThingBalanceDictionary::NONE_BALANCE,
                 'is_composite' => false,
                 'is_blocked' => Thing::NOT_BLOCKED
