@@ -48,4 +48,7 @@ class TokenRepository
             'refresh_token' => $token,
         ])->delete();
     }
+    public function getByRefreshToken($refreshToken) : Token {
+        return Token::where('refresh_token', $refreshToken)->first();
+    }
 }

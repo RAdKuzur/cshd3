@@ -29,4 +29,14 @@ class Auth
         }
         return null;
     }
+
+    public static function userRefresh() : User|int {
+        $refreshToken = request()->cookie('refresh_token');
+        if($refreshToken && JWTAuth::setToken($refreshToken)->check()){
+            $payload = JWTAuth::setToken($refreshToken)->getPayload();
+            $user = User::find($payload['user_id']);
+            return $user;
+        }
+        return 0;
+    }
 }

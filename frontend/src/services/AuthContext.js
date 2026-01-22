@@ -9,37 +9,39 @@ export const useAuthContextStore = defineStore('auth', {
     }),
 
     actions: {
-        async login(email, password) {
+        async init() {
+            if (this.initialized || this.refreshing) return
+
+            this.refreshing = true
             try {
-                const profile = await loginApi(email, password)
-                this.user = {
-                    username: profile.username,
-                    fio: profile.fio,
-                    position: profile.position,
-                    role: profile.role
-                }
-                this.initialized = true
-                return true
-            } catch (e) {
+                await this.refresh()
+            } catch {
                 this.user = null
+            } finally {
                 this.initialized = true
-                return false
+                this.refreshing = false
             }
         },
 
+        async login(email, password) {
+            const profile = await loginApi(email, password)
+            this.user = {
+                username: profile.username,
+                fio: profile.fio,
+                position: profile.position,
+                role: profile.role
+            }
+            this.initialized = true
+            return true
+        },
+
         async refresh() {
-            try {
-                const profile = await refreshApi()
-                this.user = {
-                    username: profile.username,
-                    fio: profile.fio,
-                    position: profile.position,
-                    role: profile.role
-                }
-                return true
-            } catch (e) {
-                this.user = null
-                throw e
+            const profile = await refreshApi()
+            this.user = {
+                username: profile.username,
+                fio: profile.fio,
+                position: profile.position,
+                role: profile.role
             }
         },
 
@@ -48,7 +50,9 @@ export const useAuthContextStore = defineStore('auth', {
                 await logoutApi()
             } finally {
                 this.user = null
+                this.initialized = true
             }
         }
     }
 })
+

@@ -1,27 +1,32 @@
 import axios from "axios";
 import Cookies from "js-cookie";
+import { useAuthContextStore } from "@/services/AuthContext";
 
 axios.defaults.withCredentials = true;
 
 axios.interceptors.request.use(config => {
     const token = Cookies.get("access_token");
-    if (token) config.headers.Authorization = `Bearer ${token}`;
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
     return config;
 });
 
 axios.interceptors.response.use(
     response => response,
     error => {
+        const authStore = useAuthContextStore();
+
         if (error.response?.status === 401) {
-            // Обработка 401 - неавторизован
             Cookies.remove("access_token");
             Cookies.remove("refresh_token");
-            localStorage.removeItem('username');
-            localStorage.removeItem('fio');
-            window.location.href = "/login";
-        } else if (error.response?.status === 403) {
-            window.location.href = "/error";
+            authStore.user = null;
         }
+
+        if (error.response?.status === 403) {
+            // опционально: флаг в store
+        }
+
         return Promise.reject(error);
     }
 );

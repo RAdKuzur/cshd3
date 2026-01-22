@@ -100,7 +100,7 @@
                       <!-- Уведомления -->
                       <div v-else-if="notifications.length > 0">
                         <MenuItem
-                            v-for="notification in notifications"
+                            v-for="notification in unreadNotifications"
                             :key="notification.id"
                             v-slot="{ active }"
                         >
@@ -319,11 +319,10 @@
             <!-- Уведомления -->
             <div v-else-if="notifications.length > 0">
               <div
-                  v-for="notification in notifications"
+                  v-for="notification in notifications "
                   :key="notification.id"
                   :class="[
-                  'text-sm text-white p-3 mb-2 rounded transition-colors duration-150',
-                  notification.is_read === 1 ? 'bg-white/20' : 'bg-white/10'
+                  'text-sm text-white p-3 mb-2 rounded transition-colors duration-150'
                 ]"
                   @click="markAsRead(notification.id)"
               >
@@ -432,6 +431,10 @@ const currentUser = computed(() => {
 
 const unreadCount = computed(() => {
   return notifications.value.filter(n => n.is_read === 1).length
+})
+
+const unreadNotifications = computed(() => {
+  return notifications.value.filter(n => n.is_read === 1)
 })
 
 const mobileUnreadCount = computed(() => unreadCount.value)

@@ -194,6 +194,7 @@
       import { ref, computed } from 'vue'
       import { useRouter } from "vue-router";
       import { useAuthContextStore } from '@/services/AuthContext.js'
+      import { watch } from 'vue'
 
       import {
         ScaleIcon,
@@ -208,7 +209,7 @@
 
       const router = useRouter();
       const auth = useAuthContextStore(); // создаем экземпляр стора
-
+      const isAuth = computed(() => !!auth.user)
       const form = ref({
         email: '',
         password: '',
@@ -247,4 +248,16 @@
           loading.value = false;
         }
       };
+
+
+      watch(
+          () => isAuth.value,
+          (newValue) => {
+            if (newValue) {
+              router.replace('/home')
+            }
+          },
+          { immediate: true }
+      )
+
 </script>

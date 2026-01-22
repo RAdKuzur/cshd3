@@ -660,8 +660,6 @@ const loadActData = async () => {
         formData.to = actDetails.value.to ? parseInt(actDetails.value.to) : null
       }
 
-      // Инициализируем things пустым массивом - теперь они будут из actThings
-      formData.things = []
 
     } else {
       throw new Error('Не удалось загрузить данные акта')

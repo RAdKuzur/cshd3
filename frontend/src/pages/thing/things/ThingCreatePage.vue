@@ -273,12 +273,12 @@
               </p>
             </div>
 
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2 mt-4">
-                Фото предмета
-              </label>
-              <input type="file" accept="image/*" @change="e => formData.image = e.target.files[0]" />
-            </div>
+<!--            <div>-->
+<!--              <label class="block text-sm font-medium text-gray-700 mb-2 mt-4">-->
+<!--                Фото предмета-->
+<!--              </label>-->
+<!--              <input type="file" accept="image/*" @change="e => formData.image = e.target.files[0]" />-->
+<!--            </div>-->
           </div>
 
           <!-- Кнопки действий -->

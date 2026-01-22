@@ -104,53 +104,31 @@ const router = createRouter({
     routes
 })
 
-// Pinia store
-let authStore
-    router.beforeEach(async (to, from, next) => {
-        if (!authStore) authStore = useAuthContextStore()
+router.beforeEach((to, from, next) => {
+    const auth = useAuthContextStore();
 
-        // logout
-        if (to.path === '/logout') {
-            await authStore.logout()
-            return next('/login')
-        }
+    if (to.path === '/logout') {
+        auth.logout();
+        return next('/login');
+    }
 
-        // публичные маршруты
-        if (!to.meta.auth) {
-            return next()
-        }
+    if (to.path === '/login') {
+        return next();
+    }
 
-        // если уже знаем, что пользователь не авторизован
-        if (authStore.initialized && !authStore.user) {
-            if (to.path !== '/login') {
-                return next('/login')
-            }
-            return next()
-        }
+    if (!to.meta.auth) {
+        return next();
+    }
 
-        // refresh один раз
-        if (!authStore.initialized && !authStore.refreshing) {
-            try {
-                authStore.refreshing = true
-                await authStore.refresh()
-            } catch {
-                // ignore
-            } finally {
-                authStore.initialized = true
-                authStore.refreshing = false
-            }
-        }
+    if (!auth.user) {
+        return next('/login');
+    }
 
-        if (authStore.user) {
-            return next()
-        }
+    next();
+});
 
-        if (to.path !== '/login') {
-            return next('/login')
-        }
 
-        return next()
-    })
+
 
 
 

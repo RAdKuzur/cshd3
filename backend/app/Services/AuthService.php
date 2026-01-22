@@ -92,7 +92,7 @@ class AuthService
     {
         DB::beginTransaction();
         try {
-            $user = Auth::user();
+            $user = Auth::userRefresh();
             $this->tokenRepository->delete($refreshToken, $user);
             $accessToken = JWTAuth::customClaims([
                 'type' => 'access',
@@ -122,6 +122,7 @@ class AuthService
                 'accessToken' => null,
                 'username' => null,
                 'fio' => null,
+                'role' => null,
             ];
         }
 
