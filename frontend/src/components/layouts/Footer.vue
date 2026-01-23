@@ -75,6 +75,18 @@ const subscribeToNewsletter = (event) => {
   // Здесь можно добавить логику подписки
   event.target.reset()
 }
+
+
+</script>
+
+<script>
+export default {
+  methods: {
+    getCurrentYear() {
+      return new Date().getFullYear();
+    }
+  }
+}
 </script>
 
 <template>
@@ -237,7 +249,7 @@ const subscribeToNewsletter = (event) => {
         <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
           <div class="flex items-center space-x-6">
             <p class="text-gray-400 text-sm">
-              © 2025 Московский областной суд. Все права защищены.
+              © {{ getCurrentYear() }} Московский областной суд. Все права защищены.
             </p>
           </div>
 

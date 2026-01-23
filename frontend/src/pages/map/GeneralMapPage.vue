@@ -49,7 +49,7 @@
             <div class="grid grid-cols-4 gap-4 mb-6">
               <div class="bg-blue-50 rounded-lg p-4 text-center">
                 <div class="text-2xl font-bold text-blue-700">{{ selectedAuditorium?.things?.length || 0 }}</div>
-                <div class="text-sm text-blue-600 mt-1">Объектов</div>
+                <div class="text-sm text-blue-600 mt-1">Объект</div>
               </div>
               <div class="bg-green-50 rounded-lg p-4 text-center">
                 <div class="text-2xl font-bold text-green-700">{{ workingThingsCount }}</div>
@@ -61,7 +61,7 @@
               </div>
               <div class="bg-purple-50 rounded-lg p-4 text-center">
                 <div class="text-2xl font-bold text-purple-700">{{ selectedAuditorium?.employees?.length || 0 }}</div>
-                <div class="text-sm text-purple-600 mt-1">Сотрудников</div>
+                <div class="text-sm text-purple-600 mt-1">Сотрудник</div>
               </div>
             </div>
 
@@ -253,17 +253,20 @@
       <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-6 mb-8">
         <div class="flex flex-col lg:flex-row items-center justify-between gap-6">
           <!-- Поиск -->
-          <div class="w-full lg:w-auto">
-            <div class="relative max-w-md">
+          <div class="w-full lg:flex-1">
+            <div class="relative w-full">
               <input
                   v-model="searchQuery"
                   type="text"
                   placeholder="Поиск..."
-                  class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white shadow-sm"
+                  class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg
+             focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500
+             bg-white shadow-sm"
               >
               <div class="absolute inset-y-0 left-0 pl-3 flex items-center">
                 <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </div>
             </div>
@@ -281,15 +284,15 @@
               </option>
             </select>
 
-            <select
-                v-model="floorFilter"
-                class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-            >
-              <option value="">Все этажи</option>
-              <option v-for="floor in floors" :key="floor" :value="floor">
-                {{ floor }} этаж
-              </option>
-            </select>
+<!--            <select-->
+<!--                v-model="floorFilter"-->
+<!--                class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"-->
+<!--            >-->
+<!--              <option value="">Все этажи</option>-->
+<!--              <option v-for="floor in floors" :key="floor" :value="floor">-->
+<!--                {{ floor }} этаж-->
+<!--              </option>-->
+<!--            </select>-->
 
             <!-- Фильтр по отделам -->
             <select
@@ -328,6 +331,16 @@
 
       <!-- Карта здания -->
       <div v-else class="bg-white rounded-2xl shadow-xl border border-gray-200 p-8">
+
+        <!-- Подсказка при отсутствии выбора -->
+        <div
+            v-if="!selectedAuditorium && !isLoading && !error && filteredAuditoriums.length > 0"
+            class="mb-8 text-center py-8 bg-gradient-to-br from-gray-50 to-blue-50 rounded-2xl border-2 border-dashed border-gray-300"
+        >
+          <h3 class="text-xl font-semibold text-gray-600 mb-2">Выберите кабинет</h3>
+          <p class="text-gray-500">Нажмите на любой кабинет на плане для просмотра объектов учёта и сотрудников</p>
+        </div>
+
         <!-- Табы этажей -->
         <div class="mb-8">
           <div class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg p-1">
@@ -471,17 +484,7 @@
         </div>
       </div>
 
-      <!-- Подсказка при отсутствии выбора -->
-      <div
-          v-if="!selectedAuditorium && !isLoading && !error && filteredAuditoriums.length > 0"
-          class="mt-8 text-center py-8 bg-gradient-to-br from-gray-50 to-blue-50 rounded-2xl border-2 border-dashed border-gray-300"
-      >
-        <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-        </svg>
-        <h3 class="text-xl font-semibold text-gray-600 mb-2">Выберите кабинет</h3>
-        <p class="text-gray-500">Нажмите на любой кабинет на плане для просмотра объектов учёта и сотрудников</p>
-      </div>
+
     </div>
   </div>
 </template>
@@ -713,7 +716,7 @@ const getBalanceLabel = (balanceId) => {
 }
 
 const viewThing = (thingId) => {
-  // router.push(`/things/things/view/${thingId}`)
+  router.push(`/things/view/${thingId}`)
 }
 </script>
 

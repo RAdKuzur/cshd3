@@ -23,9 +23,7 @@ const fetchUserData = async () => {
 onMounted(() => {
   fetchUserData()
 })
-const sendEmail = () => {
-  window.location.href = `mailto:${user.value.email}`
-}
+
 </script>
 
 <template>
@@ -37,10 +35,10 @@ const sendEmail = () => {
         <h1 class="text-4xl font-bold text-gray-900 mb-4">Профиль сотрудника</h1>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <div class="grid grid-cols-1 lg:grid-cols-6 gap-6">
 
         <!-- Левая колонка - Профиль -->
-        <div class="lg:col-span-1 space-y-6">
+        <div class="lg:col-span-2 space-y-6">
 
           <!-- Карточка профиля -->
           <div class="bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
@@ -59,14 +57,6 @@ const sendEmail = () => {
               <h1 class="text-2xl font-bold text-gray-900 mb-1">{{ user.name }}</h1>
               <p class="text-lg text-indigo-600 font-semibold mb-2">{{ user.position }}</p>
               <p class="text-gray-600 mb-4">{{ user.department }}</p>
-
-              <!-- Кнопка связи -->
-              <button
-                  @click="sendEmail"
-                  class="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white py-3 px-4 rounded-lg font-semibold shadow-sm transition-all duration-200 transform hover:scale-105 mb-6"
-              >
-                📧 Связаться по почте
-              </button>
             </div>
 
             <!-- Контакты -->
@@ -80,11 +70,11 @@ const sendEmail = () => {
                     v-for="contact in contacts"
                     :key="contact.type"
                     class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
-                >
+                 >
                   <span class="text-lg mr-3">{{ contact.icon }}</span>
                   <div>
                     <div class="text-sm text-gray-600 capitalize">{{ contact.type }}</div>
-                    <div class="text-gray-900 font-medium">{{ contact.value }}</div>
+                    <div class="text-gray-900 font-medium break-all">{{ contact.value }}</div>
                   </div>
                 </div>
               </div>
@@ -110,7 +100,7 @@ const sendEmail = () => {
         </div>
 
         <!-- Правая колонка - Контент -->
-        <div class="lg:col-span-3 space-y-6">
+        <div class="lg:col-span-4 space-y-6">
 
           <!-- О себе -->
           <div class="bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
