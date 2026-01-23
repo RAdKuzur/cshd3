@@ -25,11 +25,7 @@ class FileRequest extends FormRequest
         return [
             'table_name' => 'required|string',
             'row_id' => 'required|integer',
-
-            // главное фото
             'file' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
-
-            // дочерние
             'files' => 'nullable|array',
             'files.*' => 'image|mimes:jpg,jpeg,png,webp|max:5120',
         ];
@@ -38,7 +34,8 @@ class FileRequest extends FormRequest
     {
         return new FileDTO(
             table_name: $this->validated('table_name'),
-            row_id: $this->validated('row_id')
+            row_id: $this->validated('row_id'),
+            file: $this->hasFile('file') ? $this->file('file') : null,
         );
     }
 }

@@ -34,20 +34,7 @@ class FileController extends Controller
     public function upload(FileRequest $request)
     {
         $fileDTO = $request->toFileDTO();
-
-        if ($request->hasFile('file')) {
-            $this->fileService->upload(
-                $request->file('file'),
-                $fileDTO
-            );
-        }
-
-        if ($request->hasFile('files')) {
-            foreach ($request->file('files') as $file) {
-                $this->fileService->upload($file, $fileDTO);
-            }
-        }
-
+        $this->fileService->upload($fileDTO);
         return response()->json(['success' => true]);
     }
     public function download($id)

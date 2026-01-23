@@ -10,11 +10,13 @@ class FileDTO implements DTO
     public ?string $table_name;
     public ?string $row_id;
     public ?string $filepath;
+    public $file;
     public function __construct(
         ?int $id = null,
         ?string $table_name = null,
         ?string $row_id = null,
-        ?string $filepath = null
+        ?string $filepath = null,
+        $file = null
 
 
     ){
@@ -22,6 +24,7 @@ class FileDTO implements DTO
         $this->table_name = $table_name;
         $this->row_id = $row_id;
         $this->filepath = $filepath;
+        $this->file = $file;
     }
     public static function fromArray(array $array)
     {

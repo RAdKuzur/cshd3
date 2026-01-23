@@ -13,6 +13,8 @@ class File extends Model
 {
     protected $table = 'files';
 
+    public const BASE_URL = '/storage/app/public/uploads/';
+
     protected $fillable = [
         'table_name',
         'row_id',

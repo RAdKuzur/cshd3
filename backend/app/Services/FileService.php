@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\DTO\FileDTO;
+use App\Models\File;
 use App\Repositories\FileRepository;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -35,22 +36,23 @@ class FileService
             filepath: $file->filepath,
         );
     }
-    public function upload($file, FileDTO $fileDTO)
+    public function upload(FileDTO $fileDTO)
     {
-        if($this->fileRepository->isPossibleToUpload($fileDTO->table_name, $fileDTO->row_id)) {
+        $file = $fileDTO->file;
+        if($file && $this->fileRepository->isPossibleToUpload($fileDTO->table_name, $fileDTO->row_id)) {
             DB::beginTransaction();
             try {
                 $filename = $this->generateUniqueName($file->getClientOriginalName());
                 $this->fileRepository->create([
                     'table_name' => $fileDTO->table_name,
                     'row_id' => $fileDTO->row_id,
-                    'filepath' => base_path() . '/storage/app/public/uploads/' . $filename
+                    'filepath' => base_path() . File::BASE_URL . $filename
                 ]);
                 DB::commit();
-                if (!file_exists(base_path() . '/storage/app/public/uploads')) {
-                    mkdir(base_path() . '/storage/app/public/uploads', 0777, true);
+                if (!file_exists(base_path() . File::BASE_URL)) {
+                    mkdir(base_path() . File::BASE_URL, 0777, true);
                 }
-                $file->move(base_path() . '/storage/app/public/uploads/', $filename);
+                $file->move(base_path() . File::BASE_URL, $filename);
             } catch (\Exception $exception) {
                 Log::debug($exception->getMessage());
                 DB::rollBack();
