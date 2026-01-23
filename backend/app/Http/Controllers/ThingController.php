@@ -8,17 +8,22 @@ use App\Http\Requests\ThingRequest;
 use App\Http\Requests\ThingRequest\StoreThingRequest;
 use App\Http\Requests\ThingRequest\UpdateThingRequest;
 
+use App\Services\FileService;
 use App\Services\ThingService;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
 
 class ThingController extends Controller
 {
     private ThingService $thingService;
+    private FileService $fileService;
     public function __construct(
-        ThingService $thingService
+        ThingService $thingService,
+        FileService $fileService
     )
     {
         $this->thingService = $thingService;
+        $this->fileService = $fileService;
     }
 
     public function all(){
@@ -83,9 +88,10 @@ class ThingController extends Controller
         ]);
     }
     public function compositeCreate(StoreThingRequest $request) {
+        $fileDTO = $request->toFileDTO();
         $dto = ThingDTO::fromArray($request->validated());
         $result = $this->thingService->compositeCreate($dto);
-
+        $this->fileService->uploadRowId($fileDTO, $result['id']);
         return response()->json(
             [
                 'success' => true,
@@ -96,8 +102,10 @@ class ThingController extends Controller
     }
 
     public function update(UpdateThingRequest $request, $id) {
+        $fileDTO = $request->toFileDTO();
         $dto = UpdateThingDTO::fromArray($request->validated());
         $this->thingService->update($id, $dto);
+        $this->fileService->uploadRowId($fileDTO, $id);
         return response()->json(
             [
                 'message' => $request,
@@ -108,8 +116,10 @@ class ThingController extends Controller
     }
 
     public function create(ThingRequest $request){
+        $fileDTO = $request->toFileDTO();
         $thing = $request->toThingDTO();
-        $this->thingService->create($thing);
+        $thingId = $this->thingService->create($thing);
+        $this->fileService->uploadRowId($fileDTO, $thingId);
         return response()->json([
             'success' => true,
             'code' => 200,
@@ -118,10 +128,12 @@ class ThingController extends Controller
     public function getOne($id)
     {
         $model = $this->thingService->get($id);
+        $files = $this->fileService->getFiles('things', $id);
         return response()->json([
             'success' => true,
             'code' => 200,
             'data' => $model,
+            'files' => $files,
         ]);
     }
 

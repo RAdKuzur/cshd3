@@ -3,6 +3,7 @@
 namespace App\Http\Requests\ThingRequest;
 
 
+use App\DTO\FileDTO;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreThingRequest extends FormRequest {
@@ -34,5 +35,12 @@ class StoreThingRequest extends FormRequest {
             'children.*.price' => 'nullable|numeric',
             'children.*.condition' => 'nullable|integer'
         ];
+    }
+    public function toFileDTO(): FileDTO
+    {
+        return new FileDTO(
+            table_name: 'things',
+            file: $this->hasFile('file') ? $this->file('file') : null,
+        );
     }
 }

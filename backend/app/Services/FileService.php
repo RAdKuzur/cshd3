@@ -59,6 +59,30 @@ class FileService
             }
         }
     }
+
+    public function uploadRowId(FileDTO $fileDTO, $rowId)
+    {
+        $file = $fileDTO->file;
+        if($rowId && $file && $this->fileRepository->isPossibleToUpload($fileDTO->table_name, $rowId)) {
+            DB::beginTransaction();
+            try {
+                $filename = $this->generateUniqueName($file->getClientOriginalName());
+                $this->fileRepository->create([
+                    'table_name' => $fileDTO->table_name,
+                    'row_id' => $rowId,
+                    'filepath' => base_path() . File::BASE_URL . $filename
+                ]);
+                DB::commit();
+                if (!file_exists(base_path() . File::BASE_URL)) {
+                    mkdir(base_path() . File::BASE_URL, 0777, true);
+                }
+                $file->move(base_path() . File::BASE_URL, $filename);
+            } catch (\Exception $exception) {
+                Log::debug($exception->getMessage());
+                DB::rollBack();
+            }
+        }
+    }
     public function download($id) {
         $file = $this->fileRepository->get($id);
         if (file_exists($file->filepath)) {
@@ -93,5 +117,13 @@ class FileService
     }
     public function generateUniqueName($filename) : string {
         return time() . '_' . $filename;
+    }
+    public function getFiles($tableName, $rowId) : array {
+        $data = [];
+        $files = $this->fileRepository->getFiles($tableName, $rowId);
+        foreach ($files as $file){
+            $data[] = FileDTO::fromModel($file);
+        }
+        return $data;
     }
 }

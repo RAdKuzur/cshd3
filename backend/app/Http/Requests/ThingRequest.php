@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\DTO\FileDTO;
 use App\DTO\Thing\ThingDTO;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -49,6 +50,13 @@ class ThingRequest extends FormRequest
             price: $this->validated('price'),
             comment: $this->validated('comment'),
             is_composite: $this->validated('thing_parent_id'),
+        );
+    }
+    public function toFileDTO(): FileDTO
+    {
+        return new FileDTO(
+            table_name: 'things',
+            file: $this->hasFile('file') ? $this->file('file') : null,
         );
     }
 }

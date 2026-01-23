@@ -5,10 +5,12 @@ namespace App\Services;
 use App\Dictionaries\ConditionDictionary;
 use App\Dictionaries\ThingBalanceDictionary;
 use App\Dictionaries\ThingTypeDictionary;
+use App\DTO\FileDTO;
 use App\DTO\Thing\ThingDTO;
 use App\DTO\Thing\UpdateThingDTO;
 use App\Models\Thing;
 use App\Repositories\BranchRepository;
+use App\Repositories\FileRepository;
 use App\Repositories\NetworkThingRepository;
 use App\Repositories\ThingAuditoriumRepository;
 use App\Repositories\ThingRepository;
@@ -25,13 +27,15 @@ class ThingService
     public BranchRepository $branchRepository;
     public TransferActThingRepository $transferActThingRepository;
     public NetworkThingRepository $networkThingRepository;
+    public FileRepository $fileRepository;
     public function __construct(
         ThingRepository $thingRepository,
         TransferActRepository $transferActRepository,
         ThingAuditoriumRepository $thingAuditoriumRepository,
         BranchRepository $branchRepository,
         TransferActThingRepository $transferActThingRepository,
-        NetworkThingRepository $networkThingRepository
+        NetworkThingRepository $networkThingRepository,
+        FileRepository $fileRepository
     ) {
         $this->thingRepository = $thingRepository;
         $this->transferActRepository = $transferActRepository;
@@ -39,6 +43,7 @@ class ThingService
         $this->branchRepository = $branchRepository;
         $this->transferActThingRepository = $transferActThingRepository;
         $this->networkThingRepository = $networkThingRepository;
+        $this->fileRepository = $fileRepository;
     }
 
     public function electronics(): array
@@ -162,11 +167,9 @@ class ThingService
             ];
         } catch (\Exception $e) {
             DB::rollBack();
-            logger()->error('Composite create failed', [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-            throw $e;
+            return [
+                'id' => null,
+            ];
         }
     }
     public function getActualAll(): array
@@ -268,9 +271,11 @@ class ThingService
                 'end_date' => null
             ]);
             DB::commit();
+            return $thingId;
         } catch (\Exception $e) {
             Log::debug($e->getMessage());
             DB::rollBack();
+            return null;
         }
     }
 
@@ -347,6 +352,10 @@ class ThingService
             }
             foreach($thing->networkThings as $networkThing) {
                 $this->networkThingRepository->delete($networkThing->id);
+            }
+            $files = $this->fileRepository->getFiles('things', $thing->id);
+            foreach ($files as $file) {
+                $this->fileRepository->delete($file->id);
             }
             $this->thingRepository->delete($id);
             DB::commit();

@@ -53,4 +53,12 @@ class FileRepository
             'id' => $rowId,
         ])->exists();
     }
+
+    public function getFiles($tableName, $rowId)
+    {
+        return File::where([
+            'table_name' => $tableName,
+            'row_id' => $rowId,
+        ])->get();
+    }
 }

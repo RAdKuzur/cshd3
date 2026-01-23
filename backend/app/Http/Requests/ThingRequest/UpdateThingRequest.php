@@ -3,6 +3,7 @@
 namespace App\Http\Requests\ThingRequest;
 
 
+use App\DTO\FileDTO;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateThingRequest extends FormRequest {
@@ -30,5 +31,13 @@ class UpdateThingRequest extends FormRequest {
             'children.delete' => ['nullable', 'array'],
             'children.delete.*' => ['integer'],
         ];
+    }
+
+    public function toFileDTO(): FileDTO
+    {
+        return new FileDTO(
+            table_name: 'things',
+            file: $this->hasFile('file') ? $this->file('file') : null,
+        );
     }
 }
