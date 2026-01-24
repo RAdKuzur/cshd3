@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Dictionaries\ConditionDictionary;
 use App\Dictionaries\ThingBalanceDictionary;
 use App\Dictionaries\ThingTypeDictionary;
-use App\DTO\FileDTO;
 use App\DTO\Thing\ThingDTO;
 use App\DTO\Thing\UpdateThingDTO;
 use App\Models\Thing;
@@ -167,8 +166,12 @@ class ThingService
             ];
         } catch (\Exception $e) {
             DB::rollBack();
+            logger()->error('Composite create failed', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             return [
-                'id' => null,
+                'error' => 'Error'
             ];
         }
     }
@@ -271,11 +274,9 @@ class ThingService
                 'end_date' => null
             ]);
             DB::commit();
-            return $thingId;
         } catch (\Exception $e) {
             Log::debug($e->getMessage());
             DB::rollBack();
-            return null;
         }
     }
 

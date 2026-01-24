@@ -10,7 +10,6 @@ use App\Http\Requests\ThingRequest\UpdateThingRequest;
 
 use App\Services\FileService;
 use App\Services\ThingService;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
 
 class ThingController extends Controller
@@ -88,10 +87,8 @@ class ThingController extends Controller
         ]);
     }
     public function compositeCreate(StoreThingRequest $request) {
-        $fileDTO = $request->toFileDTO();
         $dto = ThingDTO::fromArray($request->validated());
         $result = $this->thingService->compositeCreate($dto);
-        $this->fileService->uploadRowId($fileDTO, $result['id']);
         return response()->json(
             [
                 'success' => true,
@@ -102,10 +99,8 @@ class ThingController extends Controller
     }
 
     public function update(UpdateThingRequest $request, $id) {
-        $fileDTO = $request->toFileDTO();
         $dto = UpdateThingDTO::fromArray($request->validated());
         $this->thingService->update($id, $dto);
-        $this->fileService->uploadRowId($fileDTO, $id);
         return response()->json(
             [
                 'message' => $request,
@@ -116,10 +111,8 @@ class ThingController extends Controller
     }
 
     public function create(ThingRequest $request){
-        $fileDTO = $request->toFileDTO();
         $thing = $request->toThingDTO();
-        $thingId = $this->thingService->create($thing);
-        $this->fileService->uploadRowId($fileDTO, $thingId);
+        $this->thingService->create($thing);
         return response()->json([
             'success' => true,
             'code' => 200,
