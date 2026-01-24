@@ -4,21 +4,21 @@ namespace App\DTO;
 
 class AuditoriumMapDTO implements DTO
 {
-    public int $auditorium_id;
-    public string $auditorium_name;
-    public string $comment;
-    public int $floor;
-    public int $branch_id;
-    public array $things;
-    public array $employees;
+    public ?int $auditorium_id;
+    public ?string $auditorium_name;
+    public ?string $comment;
+    public ?int $floor;
+    public ?int $branch_id;
+    public ?array $things;
+    public ?array $employees;
     public function __construct(
-        int $auditorium_id,
-        string $auditorium_name,
-        string $comment,
-        int $floor,
-        int $branch_id,
-        array $things,
-        array $employees
+        ?int $auditorium_id = null,
+        ?string $auditorium_name = null,
+        ?string $comment = null,
+        ?int $floor = null,
+        ?int $branch_id = null,
+        ?array $things = null,
+        ?array $employees = null
     ){
         $this->auditorium_id = $auditorium_id;
         $this->auditorium_name = $auditorium_name;
