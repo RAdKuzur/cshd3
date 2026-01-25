@@ -53,4 +53,13 @@ class NetworkThingController extends Controller
             'success' => true
         ]);
     }
+
+    public function telephones()
+    {
+        $data = $this->networkThingService->telephonesAll();
+        return response()->json([
+            'success' => true,
+            'data' => $data
+        ]);
+    }
 }

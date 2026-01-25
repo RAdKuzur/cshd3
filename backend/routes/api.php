@@ -117,7 +117,9 @@ Route::middleware([LicenceMiddleware::class, CheckPermissionMiddleware::class])-
     Route::post('/network-things', [NetworkThingController::class, 'create'])->name('network-things.create');
     Route::put('/network-things/{id}', [NetworkThingController::class, 'update'])->name('network-things.update');
     Route::delete('/network-things/{id}', [NetworkThingController::class, 'delete'])->name('network-things.delete');
+    Route::get('/telephones', [NetworkThingController::class, 'telephones'])->name('network-things.telephones');
 });
 
 Route::post('/test' , [TestController::class, 'test'])->name('test');
 Route::post('/tests' , [TestController::class, 'tests'])->name('tests');
+

@@ -84,6 +84,7 @@ class RoleDictionary implements BaseDictionary
         "network-things.create",
         "network-things.update",
         "network-things.delete",
+        "network-things.telephones",
         "test",
         "tests"
     ];
@@ -137,6 +138,7 @@ class RoleDictionary implements BaseDictionary
         "notifications.read-user-notification",
         "notifications.delete",
         "notifications.delete-all-user-notifications",
+        "network-things.telephones",
         "test",
         "tests"
     ];
@@ -184,6 +186,7 @@ class RoleDictionary implements BaseDictionary
         "notifications.read-user-notification",
         "notifications.delete",
         "notifications.delete-all-user-notifications",
+        "network-things.telephones",
         "test",
         "tests"
     ];
@@ -238,6 +241,7 @@ class RoleDictionary implements BaseDictionary
         "notifications.read-user-notification",
         "notifications.delete",
         "notifications.delete-all-user-notifications",
+        "network-things.telephones",
         "test",
         "tests"
     ];
@@ -292,6 +296,7 @@ class RoleDictionary implements BaseDictionary
         "notifications.read-user-notification",
         "notifications.delete",
         "notifications.delete-all-user-notifications",
+        "network-things.telephones",
         "test",
         "tests"
     ];

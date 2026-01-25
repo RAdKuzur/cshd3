@@ -2,7 +2,9 @@
 
 namespace App\Services;
 
+use App\Dictionaries\ThingTypeDictionary;
 use App\DTO\NetworkThingDTO;
+use App\DTO\TelephoneDTO;
 use App\Repositories\NetworkThingRepository;
 use Illuminate\Support\Facades\DB;
 
@@ -81,5 +83,21 @@ class NetworkThingService
         catch (\Exception $e) {
             DB::rollBack();
         }
+    }
+    public function telephonesAll() : array
+    {
+        $data = [];
+        $networkThings = $this->networkThingRepository->getAll();
+        foreach ($networkThings as $networkThing) {
+            if($networkThing->thing->thing_type_id === ThingTypeDictionary::TELEPHONE){
+                $data[] = new TelephoneDTO(
+                    id: $networkThing->id,
+                    phone_number: $networkThing->phone_number,
+                    auditorium_id: $networkThing->thing->getCurrentLocation() ? $networkThing->thing->getCurrentLocation()->id : null,
+                    thing_id: $networkThing->thing->id,
+                );
+            }
+        }
+        return $data;
     }
 }
