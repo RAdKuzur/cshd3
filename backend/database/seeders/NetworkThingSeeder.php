@@ -25,6 +25,17 @@ class NetworkThingSeeder extends Seeder
             DB::table('network_things')->insert([
                 'thing_id' => $networkThing->id,
                 'ip_address' => fake()->ipv4(),
+                'phone_number' => null,
+                'comment' => fake()->text()
+            ]);
+        }
+        $telephones = DB::table('things')->whereIn('thing_type_id', [
+            ThingTypeDictionary::TELEPHONE
+        ])->get();
+        foreach ($telephones as $telephone) {
+            DB::table('network_things')->insert([
+                'thing_id' => $telephone->id,
+                'ip_address' => null,
                 'phone_number' => fake()->phoneNumber(),
                 'comment' => fake()->text()
             ]);

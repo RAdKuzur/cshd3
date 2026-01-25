@@ -59,9 +59,9 @@
                 <div class="text-2xl font-bold text-amber-700">{{ selectedAuditorium?.things?.length - workingThingsCount }}</div>
                 <div class="text-sm text-amber-600 mt-1">Требует внимания</div>
               </div>
-              <div class="bg-purple-50 rounded-lg p-4 text-center">
-                <div class="text-2xl font-bold text-purple-700">{{ selectedAuditorium?.employees?.length || 0 }}</div>
-                <div class="text-sm text-purple-600 mt-1">Сотрудник</div>
+              <div class="bg-teal-50 rounded-lg p-4 text-center">
+                <div class="text-2xl font-bold text-teal-700">{{ selectedAuditoriumTelephones.length || 0 }}</div>
+                <div class="text-sm text-teal-600 mt-1">Телефон</div>
               </div>
             </div>
 
@@ -106,6 +106,65 @@
                     </div>
                   </div>
                 </div>
+              </div>
+            </div>
+
+            <!-- Список телефонов -->
+            <div v-if="selectedAuditoriumTelephones.length" class="mb-8">
+              <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                <svg class="w-5 h-5 text-gray-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                </svg>
+                Телефоны в кабинете
+              </h3>
+
+              <div class="space-y-3">
+                <div
+                    v-for="phone in selectedAuditoriumTelephones"
+                    :key="phone.id"
+                    class="group bg-white border border-gray-200 rounded-lg p-4 hover:border-teal-300 hover:shadow-sm transition-all"
+                >
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                      <div class="w-10 h-10 bg-teal-100 rounded-lg flex items-center justify-center mr-3">
+                        <svg class="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                        </svg>
+                      </div>
+                      <div>
+                        <a
+                            :href="'tel:' + phone.phone_number.replace(/\D/g, '')"
+                            class="font-semibold text-gray-900 hover:text-teal-600 transition-colors"
+                        >
+                          {{ formatPhoneNumber(phone.phone_number) }}
+                        </a>
+                        <div class="text-sm text-gray-500 mt-1">
+                          {{ phone.thing_id ? 'Номер телефона' : null }}
+                        </div>
+                      </div>
+                    </div>
+                    <svg class="w-5 h-5 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Пустой список телефонов -->
+            <div v-else class="mb-8">
+              <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                <svg class="w-5 h-5 text-gray-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                </svg>
+                Телефоны в кабинете
+              </h3>
+
+              <div class="bg-gray-50 rounded-xl p-6 text-center">
+                <svg class="w-12 h-12 text-gray-400 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                </svg>
+                <p class="text-gray-600">В кабинете нет телефонов</p>
               </div>
             </div>
 
@@ -225,8 +284,18 @@
                       <div class="font-medium">{{ selectedAuditorium?.things?.length || 0 }} единиц</div>
                     </div>
                     <div>
+                      <div class="text-sm text-gray-500 mb-1">Телефоны</div>
+                      <div class="font-medium text-teal-600">{{ selectedAuditoriumTelephones.length || 0 }} шт.</div>
+                    </div>
+                  </div>
+                  <div class="grid grid-cols-2 gap-4">
+                    <div>
                       <div class="text-sm text-gray-500 mb-1">Сотрудников</div>
                       <div class="font-medium text-purple-600">{{ selectedAuditorium?.employees?.length || 0 }} чел.</div>
+                    </div>
+                    <div v-if="workingThingsCount > 0">
+                      <div class="text-sm text-gray-500 mb-1">Исправных объектов</div>
+                      <div class="font-medium text-green-600">{{ workingThingsCount }} шт.</div>
                     </div>
                   </div>
                 </div>
@@ -284,17 +353,6 @@
               </option>
             </select>
 
-<!--            <select-->
-<!--                v-model="floorFilter"-->
-<!--                class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"-->
-<!--            >-->
-<!--              <option value="">Все этажи</option>-->
-<!--              <option v-for="floor in floors" :key="floor" :value="floor">-->
-<!--                {{ floor }} этаж-->
-<!--              </option>-->
-<!--            </select>-->
-
-            <!-- Фильтр по отделам -->
             <select
                 v-model="branchFilter"
                 class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
@@ -432,6 +490,14 @@
                 </span>
               </div>
 
+              <!-- Телефоны -->
+              <div v-if="getAuditoriumTelephones(auditorium.auditorium_id).length" class="flex items-center">
+                <svg class="w-3 h-3 text-gray-400 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                </svg>
+                <span class="text-xs text-gray-600">{{ getAuditoriumTelephones(auditorium.auditorium_id).length }} тел.</span>
+              </div>
+
               <!-- Сотрудники -->
               <div v-if="auditorium.employees?.length" class="flex items-center">
                 <svg class="w-3 h-3 text-gray-400 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -452,7 +518,7 @@
             </div>
 
             <!-- Быстрый просмотр объектов -->
-            <div v-if="auditorium.things.length > 0 || auditorium.employees?.length" class="mt-3 pt-3 border-t border-gray-200">
+            <div v-if="auditorium.things.length > 0 || auditorium.employees?.length || getAuditoriumTelephones(auditorium.auditorium_id).length" class="mt-3 pt-3 border-t border-gray-200">
               <div class="text-xs text-gray-500 mb-1">Содержание:</div>
               <div class="space-y-1">
                 <!-- Объекты -->
@@ -469,9 +535,16 @@
                     {{ auditorium.employees.length }} {{ getEmployeesWord(auditorium.employees.length) }}
                   </span>
                 </div>
-                <!-- Пример сотрудника -->
-                <div v-if="auditorium.employees?.length" class="text-xs text-gray-500 truncate pl-2">
-                  {{ auditorium.employees[0].fio }}
+                <!-- Телефоны -->
+                <div v-if="getAuditoriumTelephones(auditorium.auditorium_id).length" class="flex items-center">
+                  <div class="w-1.5 h-1.5 bg-teal-500 rounded-full mr-1"></div>
+                  <span class="text-xs text-gray-700">
+                    {{ getAuditoriumTelephones(auditorium.auditorium_id).length }} {{ getPhonesWord(getAuditoriumTelephones(auditorium.auditorium_id).length) }}
+                  </span>
+                </div>
+                <!-- Пример телефона -->
+                <div v-if="getAuditoriumTelephones(auditorium.auditorium_id).length" class="text-xs text-gray-500 truncate pl-2">
+                  {{ formatPhoneNumber(getAuditoriumTelephones(auditorium.auditorium_id)[0].phone_number) }}
                 </div>
               </div>
             </div>
@@ -510,6 +583,7 @@ const error = ref(null)
 const types = ref({})
 const balanceTypes = ref({})
 const branches = ref({})
+const telephones = ref([]) // Добавляем телефоны
 
 // Загрузка данных
 const loadData = async () => {
@@ -517,11 +591,12 @@ const loadData = async () => {
     isLoading.value = true
     error.value = null
 
-    const [mapResponse, typesResponse, balanceResponse, branchesResponse] = await Promise.all([
+    const [mapResponse, typesResponse, balanceResponse, branchesResponse, telephonesResponse] = await Promise.all([
       axios.get(BACKEND_URL + '/api/auditoriums/map'),
       axios.get(BACKEND_URL + '/api/info/thing-types'),
       axios.get(BACKEND_URL + '/api/info/balance'),
-      axios.get(BACKEND_URL + '/api/info/branches')
+      axios.get(BACKEND_URL + '/api/info/branches'),
+      axios.get(BACKEND_URL + '/api/telephones') // Добавляем загрузку телефонов
     ])
 
     if (mapResponse.data.success) {
@@ -544,6 +619,10 @@ const loadData = async () => {
         branchesData[branch.id] = branch.name
       })
       branches.value = branchesData
+    }
+
+    if (telephonesResponse.data.success) {
+      telephones.value = telephonesResponse.data.data || []
     }
 
   } catch (err) {
@@ -580,6 +659,10 @@ const filteredAuditoriums = computed(() => {
         (a.employees && a.employees.some(e =>
             e.fio.toLowerCase().includes(query) ||
             (e.position && e.position.toLowerCase().includes(query))
+        )) ||
+        // Добавляем поиск по телефонным номерам
+        (getAuditoriumTelephones(a.auditorium_id).some(t =>
+            t.phone_number.toLowerCase().includes(query)
         ))
     )
   }
@@ -627,6 +710,18 @@ const branchesList = computed(() => {
   })).sort((a, b) => a.name.localeCompare(b.name))
 })
 
+// Получаем телефоны для конкретного кабинета
+const getAuditoriumTelephones = (auditoriumId) => {
+  return telephones.value.filter(t => t.auditorium_id === auditoriumId)
+}
+
+// Получаем телефоны для выбранного кабинета
+const selectedAuditoriumTelephones = computed(() => {
+  if (!selectedAuditorium.value) return []
+  return getAuditoriumTelephones(selectedAuditorium.value.auditorium_id)
+})
+
+// Обновляем статистику с учетом телефонов
 const workingThingsCount = computed(() => {
   if (!selectedAuditorium.value?.things) return 0
   return selectedAuditorium.value.things.filter(t => t.condition === 1).length
@@ -685,6 +780,12 @@ const getEmployeesWord = (count) => {
   return 'сотрудников'
 }
 
+const getPhonesWord = (count) => {
+  if (count === 1) return 'телефон'
+  if (count >= 2 && count <= 4) return 'телефона'
+  return 'телефонов'
+}
+
 const getConditionColor = (conditionId) => {
   const colorMap = {
     1: 'bg-green-500',  // Исправно работает
@@ -713,6 +814,21 @@ const getBalanceLabel = (balanceId) => {
     2: 'За балансом'
   }
   return staticBalances[balanceId] || `Характеристика ${balanceId}`
+}
+
+// Метод для форматирования номера телефона
+const formatPhoneNumber = (phone) => {
+  if (!phone) return ''
+  // Убираем все нецифровые символы
+  const cleaned = phone.replace(/\D/g, '')
+
+  // Проверяем российский номер (начинается с 7 или 8 и имеет 11 цифр)
+  if (cleaned.length === 11 && (cleaned.startsWith('7') || cleaned.startsWith('8'))) {
+    return `+7 (${cleaned.slice(1, 4)}) ${cleaned.slice(4, 7)}-${cleaned.slice(7, 9)}-${cleaned.slice(9)}`
+  }
+
+  // Для международных номеров оставляем как есть
+  return phone
 }
 
 const viewThing = (thingId) => {
