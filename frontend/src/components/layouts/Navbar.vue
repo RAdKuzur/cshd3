@@ -394,7 +394,7 @@ import { BACKEND_URL } from "@/router.js";
 import {
   ScaleIcon, Bars3Icon, XMarkIcon, ChevronDownIcon, UserIcon, BellIcon,
   ArrowRightOnRectangleIcon, ArrowPathIcon,
-  CalculatorIcon, CommandLineIcon, BuildingStorefrontIcon, UserGroupIcon, MapIcon, DocumentIcon
+  CalculatorIcon, CommandLineIcon, BuildingStorefrontIcon, UserGroupIcon, MapIcon, DocumentIcon,  MagnifyingGlassIcon
 } from '@heroicons/vue/24/outline'
 
 // Импортируем компонент всплывающих уведомлений
@@ -446,6 +446,7 @@ const navigation = [
   { name: 'Отчёты', href: '/reports', current: false, icon: CalculatorIcon },
   { name: 'Интерактивная карта', href: '/map', current: false, icon: MapIcon },
   { name: 'Панель администратора', href: '/admin', current: false, icon: CommandLineIcon },
+  { name: 'Поиск', href: '/search', current: false, icon: MagnifyingGlassIcon },
   // { name: 'Файловая система', href: '/files', current: false, icon: DocumentIcon }
 ]
 // Инициализация Echo для вебсокетов с публичным каналом

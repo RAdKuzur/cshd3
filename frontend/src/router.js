@@ -44,6 +44,7 @@ import NetworkThingPage from "@/pages/thing/network-things/NetworkThingPage.vue"
 import NetworkThingCreatePage from "@/pages/thing/network-things/NetworkThingCreatePage.vue";
 import NetworkThingViewPage from "@/pages/thing/network-things/NetworkThingViewPage.vue";
 import NetworkThingEditPage from "@/pages/thing/network-things/NetworkThingEditPage.vue";
+import SearchPage from "@/pages/search/SearchPage.vue";
 
 
 const BACKEND_URL = '';
@@ -95,7 +96,7 @@ const routes = [
     { path: '/things/network/view/:id', component: NetworkThingViewPage, meta: { auth: true } },
     { path: '/things/network/edit/:id', component: NetworkThingEditPage, meta: { auth: true } },
 
-
+    { path: '/search', component: SearchPage, meta: { auth: true }},
     { path: '/admin/files', component: FilePage , meta: { auth: true } }
 ]
 

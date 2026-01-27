@@ -1,0 +1,372 @@
+<template>
+  <div class="min-h-screen bg-gradient-to-br from-gray-50 to-indigo-50 flex flex-col">
+    <!-- Навигация -->
+    <nav class="bg-white shadow-sm border-b border-gray-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+          <div class="flex items-center">
+            <div class="flex-shrink-0 flex items-center">
+              <svg class="h-8 w-8 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <span class="ml-2 text-xl font-bold text-gray-900">Поисковая система</span>
+            </div>
+          </div>
+          <div class="flex items-center">
+            <router-link
+                to="/"
+                class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+            >
+              На главную
+            </router-link>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Основной контент -->
+    <main class="flex-grow px-4 py-8">
+      <div class="max-w-4xl mx-auto">
+        <!-- Заголовок -->
+        <div class="text-center mb-12">
+          <h1 class="text-4xl font-bold text-gray-900 mb-4">Поиск по системе</h1>
+          <p class="text-lg text-gray-600">
+            Введите поисковый запрос для поиска информации
+          </p>
+        </div>
+
+        <!-- Поисковая форма -->
+        <div class="bg-white rounded-2xl shadow-xl p-8 mb-8">
+          <!-- Поле ввода -->
+          <div class="mb-8">
+            <label for="search-input" class="block text-sm font-medium text-gray-700 mb-2">
+              Поисковый запрос
+            </label>
+            <div class="relative rounded-lg shadow-sm">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
+              <input
+                  id="search-input"
+                  v-model="searchQuery"
+                  type="text"
+                  placeholder="Введите ваш запрос..."
+                  class="block w-full pl-10 pr-4 py-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-lg"
+                  @keyup.enter="performSearch"
+              />
+            </div>
+            <p class="mt-2 text-sm text-gray-500">
+              Можно искать по названию, номеру, описанию или другим параметрам
+            </p>
+          </div>
+
+          <!-- Кнопка поиска -->
+          <div class="flex justify-center">
+            <button
+                @click="performSearch"
+                :disabled="isSearching || !searchQuery.trim()"
+                class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-lg shadow-md hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <svg
+                  v-if="isSearching"
+                  class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+              >
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              <svg
+                  v-else
+                  class="-ml-1 mr-3 h-5 w-5 text-white"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              {{ isSearching ? 'Идет поиск...' : 'Поиск' }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Состояние загрузки -->
+        <div v-if="isSearching" class="text-center py-12">
+          <div class="inline-flex items-center px-6 py-4 bg-white rounded-xl shadow-md">
+            <svg class="animate-spin h-5 w-5 text-indigo-600 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span class="text-gray-700">Выполняется поиск...</span>
+          </div>
+        </div>
+
+        <!-- Результаты поиска -->
+        <div v-if="searchResults && searchResults.length > 0" class="bg-white rounded-2xl shadow-xl p-8">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-gray-900">
+              Найдено результатов: {{ searchResults.length }}
+            </h2>
+            <button
+                @click="clearSearch"
+                class="text-sm text-gray-500 hover:text-gray-700 flex items-center"
+            >
+              <svg class="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+              Очистить результаты
+            </button>
+          </div>
+
+          <div class="space-y-4">
+            <div
+                v-for="(result, index) in searchResults"
+                :key="index"
+                class="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+            >
+              <div class="flex items-center">
+                <div class="flex-shrink-0 h-10 w-10 bg-indigo-100 rounded-lg flex items-center justify-center mr-4">
+                  <span class="text-indigo-600 font-semibold">{{ index + 1 }}</span>
+                </div>
+                <div>
+                  <div class="text-sm text-gray-500 mb-1">
+                    Ссылка на элемент
+                  </div>
+                  <div class="font-medium text-gray-900">
+                    {{ extractIdFromLink(result.link) }}
+                  </div>
+                </div>
+              </div>
+
+              <a
+                  :href="result.link"
+                  target="_blank"
+                  class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-medium rounded-lg shadow-sm hover:from-indigo-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200"
+              >
+                <svg class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+                Перейти
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Пустой результат -->
+        <div v-if="searchResults && searchResults.length === 0 && !isSearching && searchQuery" class="text-center py-12 bg-white rounded-2xl shadow-xl">
+          <svg class="mx-auto h-16 w-16 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <h3 class="mt-4 text-lg font-medium text-gray-900">Ничего не найдено</h3>
+          <p class="mt-2 text-gray-600 max-w-md mx-auto">
+            По запросу "{{ searchQuery }}" ничего не найдено. Попробуйте изменить формулировку или использовать другие ключевые слова.
+          </p>
+          <button
+              @click="clearSearch"
+              class="mt-6 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            <svg class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+            Очистить поиск
+          </button>
+        </div>
+
+        <!-- История поиска -->
+        <div v-if="searchHistory.length > 0 && !searchResults && !isSearching" class="mt-8 bg-white rounded-2xl shadow-xl p-8">
+          <div class="flex justify-between items-center mb-6">
+            <h3 class="text-lg font-medium text-gray-900">История поиска</h3>
+            <button
+                @click="clearHistory"
+                class="text-sm text-gray-500 hover:text-gray-700 flex items-center"
+            >
+              <svg class="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+              Очистить историю
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            <button
+                v-for="(query, index) in searchHistory"
+                :key="index"
+                @click="useHistoryQuery(query)"
+                class="inline-flex items-center justify-between px-4 py-3 rounded-lg border border-gray-200 hover:border-indigo-300 hover:bg-indigo-50 text-gray-700 transition-all duration-200 group"
+            >
+              <div class="flex items-center truncate">
+                <svg class="flex-shrink-0 w-4 h-4 mr-3 text-gray-400 group-hover:text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <span class="truncate text-left">{{ query }}</span>
+              </div>
+              <button
+                  @click.stop="removeFromHistory(index)"
+                  class="ml-2 text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                  title="Удалить из истории"
+              >
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </button>
+          </div>
+        </div>
+
+        <!-- Ошибка -->
+        <div v-if="error && !isSearching" class="mt-8 bg-red-50 border border-red-200 rounded-2xl p-8">
+          <div class="flex">
+            <svg class="h-6 w-6 text-red-400 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <div>
+              <h3 class="text-lg font-medium text-red-800">Ошибка при выполнении поиска</h3>
+              <p class="mt-2 text-red-700">{{ error }}</p>
+              <button
+                  @click="error = null"
+                  class="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+              >
+                Закрыть
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Футер -->
+
+  </div>
+</template>
+
+<script setup>
+import { ref, onMounted } from 'vue'
+import axios from 'axios'
+import { BACKEND_URL } from '@/router.js'
+
+// Реактивные данные
+const searchQuery = ref('')
+const searchResults = ref(null)
+const isSearching = ref(false)
+const searchHistory = ref([])
+const error = ref(null)
+
+// Загружаем историю поиска из localStorage
+onMounted(() => {
+  const savedHistory = localStorage.getItem('searchHistory')
+  if (savedHistory) {
+    searchHistory.value = JSON.parse(savedHistory)
+  }
+})
+
+// Функция поиска
+const performSearch = async () => {
+  const query = searchQuery.value.trim()
+
+  if (!query) {
+    return
+  }
+
+  try {
+    isSearching.value = true
+    error.value = null
+    searchResults.value = null
+
+    // Добавляем запрос в историю
+    addToHistory(query)
+
+    // Отправляем POST запрос
+    const response = await axios.post(
+        `${BACKEND_URL}/api/search`,
+        {
+          text: query,
+          timestamp: new Date().toISOString()
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+    )
+
+    // Обрабатываем ответ
+    if (response.data.success) {
+      searchResults.value = response.data.data || []
+    } else {
+      throw new Error(response.data.message || 'Ошибка при выполнении поиска')
+    }
+
+  } catch (err) {
+    console.error('Search error:', err)
+    error.value = err.response?.data?.message || err.message || 'Произошла ошибка при поиске'
+  } finally {
+    isSearching.value = false
+  }
+}
+
+// Извлечение ID из ссылки
+const extractIdFromLink = (link) => {
+  try {
+    const url = new URL(link)
+    const pathSegments = url.pathname.split('/')
+    return pathSegments[pathSegments.length - 1] || link
+  } catch {
+    // Если не удалось распарсить как URL, возвращаем как есть
+    return link
+  }
+}
+
+// Добавление в историю
+const addToHistory = (query) => {
+  // Удаляем дубликаты
+  searchHistory.value = searchHistory.value.filter(item => item !== query)
+
+  // Добавляем в начало
+  searchHistory.value.unshift(query)
+
+  // Ограничиваем историю 10 последними запросами
+  if (searchHistory.value.length > 10) {
+    searchHistory.value = searchHistory.value.slice(0, 10)
+  }
+
+  // Сохраняем в localStorage
+  localStorage.setItem('searchHistory', JSON.stringify(searchHistory.value))
+}
+
+// Использование запроса из истории
+const useHistoryQuery = (query) => {
+  searchQuery.value = query
+  performSearch()
+}
+
+// Удаление из истории
+const removeFromHistory = (index) => {
+  searchHistory.value.splice(index, 1)
+  localStorage.setItem('searchHistory', JSON.stringify(searchHistory.value))
+}
+
+// Очистка истории
+const clearHistory = () => {
+  searchHistory.value = []
+  localStorage.removeItem('searchHistory')
+}
+
+// Очистка поиска
+const clearSearch = () => {
+  searchQuery.value = ''
+  searchResults.value = null
+  error.value = null
+}
+</script>
+
+<style scoped>
+/* Стили для обрезки длинного текста */
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+</style>

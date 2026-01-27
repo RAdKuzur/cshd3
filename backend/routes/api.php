@@ -12,6 +12,7 @@ use App\Http\Controllers\NetworkThingController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PeopleController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\ThingController;
 use App\Http\Controllers\TransferActController;
@@ -118,6 +119,8 @@ Route::middleware([LicenceMiddleware::class, CheckPermissionMiddleware::class])-
     Route::put('/network-things/{id}', [NetworkThingController::class, 'update'])->name('network-things.update');
     Route::delete('/network-things/{id}', [NetworkThingController::class, 'delete'])->name('network-things.delete');
     Route::get('/telephones', [NetworkThingController::class, 'telephones'])->name('network-things.telephones');
+
+    Route::post('/search', [SearchController::class, 'search'])->name('search');
 });
 
 Route::post('/test' , [TestController::class, 'test'])->name('test');
