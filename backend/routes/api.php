@@ -21,7 +21,10 @@ use App\Http\Middleware\AuthMiddleware;
 use App\Http\Middleware\CheckAvailabilityMiddleware;
 use App\Http\Middleware\CheckPermissionMiddleware;
 use App\Http\Middleware\LicenceMiddleware;
+use App\Http\Middleware\PrometheusMiddleware;
+use App\Services\PrometheusService;
 use Illuminate\Support\Facades\Route;
+use Prometheus\RenderTextFormat;
 
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -121,6 +124,17 @@ Route::middleware([LicenceMiddleware::class, CheckPermissionMiddleware::class])-
     Route::get('/telephones', [NetworkThingController::class, 'telephones'])->name('network-things.telephones');
 
     Route::post('/search', [SearchController::class, 'search'])->name('search');
+});
+Route::middleware(PrometheusMiddleware::class)->group(function () {
+    Route::get('/metrics', function () {
+        $registry = PrometheusService::registry();
+        $renderer = new RenderTextFormat();
+        return response(
+            $renderer->render($registry->getMetricFamilySamples()),
+            200,
+            ['Content-Type' => RenderTextFormat::MIME_TYPE]
+        );
+    });
 });
 
 Route::post('/test' , [TestController::class, 'test'])->name('test');

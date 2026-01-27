@@ -14,6 +14,7 @@
         "phpoffice/phpspreadsheet": "^5.3",
         "phpoffice/phpword": "^1.4",
         "predis/predis": "^3.3",
+        "promphp/prometheus_client_php": "^2.14",
         "symfony/mailer": "^7.4",
         "tymon/jwt-auth": "^2.2",
         "vladimir-yuldashev/laravel-queue-rabbitmq": "^14.4"

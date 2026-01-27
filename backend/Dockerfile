@@ -1,6 +1,9 @@
 FROM php:8.4-fpm
 
 # Устанавливаем зависимости
+RUN pecl install redis \
+    && docker-php-ext-enable redis
+
 RUN apt-get update && apt-get install -y \
     git curl zip unzip libpq-dev libpng-dev libonig-dev libzip-dev \
     && docker-php-ext-configure zip \
