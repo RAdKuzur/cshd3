@@ -2,27 +2,20 @@
 
 namespace App\Http\Controllers;
 
-
-use App\Events\TransferActCreated;
-use App\Http\Requests\TestRequest;
-use App\Http\Requests\TestsRequest;
-use App\Jobs\TestJob;
-use App\Models\User;
 use Illuminate\Http\Request;
 
 class TestController extends Controller
 {
     //
-    public function test(Request $request){
-        TestJob::dispatch()->onConnection('rabbitmq')->onQueue('test-queue');
+    public function test(){
+
         return response()->json([
-            'data' => 'OK!!!'
+            'data' => 'Test endpoint'
         ]);
     }
-    public function tests(TestsRequest $request){
-        $data = $request->toDTOs();
+    public function tests(){
         return response()->json([
-            'data' => $data
+            'data' => 'Tests endpoint'
         ]);
     }
 }

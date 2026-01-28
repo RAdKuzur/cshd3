@@ -8,6 +8,7 @@ use App\Http\Controllers\AuditoriumController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\InfoController;
+use App\Http\Controllers\MetricsController;
 use App\Http\Controllers\NetworkThingController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PeopleController;
@@ -17,14 +18,11 @@ use App\Http\Controllers\TestController;
 use App\Http\Controllers\ThingController;
 use App\Http\Controllers\TransferActController;
 use App\Http\Controllers\UserController;
-use App\Http\Middleware\AuthMiddleware;
 use App\Http\Middleware\CheckAvailabilityMiddleware;
 use App\Http\Middleware\CheckPermissionMiddleware;
 use App\Http\Middleware\LicenceMiddleware;
 use App\Http\Middleware\PrometheusMiddleware;
-use App\Services\PrometheusService;
 use Illuminate\Support\Facades\Route;
-use Prometheus\RenderTextFormat;
 
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -32,7 +30,7 @@ Route::post('/refresh', [AuthController::class, 'refresh'])->name('refresh');
 Route::post('/block', [AuthController::class, 'block'])->name('block');
 Route::post('/unblock', [AuthController::class, 'unblock'])->name('unblock');
 
-Route::middleware([LicenceMiddleware::class, CheckPermissionMiddleware::class])->group(function () {
+Route::middleware([LicenceMiddleware::class, CheckPermissionMiddleware::class, PrometheusMiddleware::class])->group(function () {
 
     Route::middleware([CheckAvailabilityMiddleware::class])->group(function () {
         //routes...
@@ -125,18 +123,7 @@ Route::middleware([LicenceMiddleware::class, CheckPermissionMiddleware::class])-
 
     Route::post('/search', [SearchController::class, 'search'])->name('search');
 });
-Route::middleware(PrometheusMiddleware::class)->group(function () {
-    Route::get('/metrics', function () {
-        $registry = PrometheusService::registry();
-        $renderer = new RenderTextFormat();
-        return response(
-            $renderer->render($registry->getMetricFamilySamples()),
-            200,
-            ['Content-Type' => RenderTextFormat::MIME_TYPE]
-        );
-    });
-});
-
-Route::post('/test' , [TestController::class, 'test'])->name('test');
-Route::post('/tests' , [TestController::class, 'tests'])->name('tests');
+Route::get('/metrics', [MetricsController::class, 'metrics'])->name('metrics');
+Route::get('/test' , [TestController::class, 'test'])->name('test');
+Route::get('/tests' , [TestController::class, 'tests'])->name('tests');
 

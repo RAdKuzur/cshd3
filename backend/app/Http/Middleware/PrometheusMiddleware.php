@@ -19,6 +19,13 @@ class PrometheusMiddleware
 
         $registry = PrometheusService::registry();
 
+        $allRequestsCounter = $registry->getOrRegisterCounter(
+            'app',
+            'http_requests_all_total',
+            'Total HTTP requests (all)'
+        );
+        $allRequestsCounter->inc();
+
         $counter = $registry->getOrRegisterCounter(
             'app',
             'http_requests_total',
