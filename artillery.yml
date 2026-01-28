@@ -1,0 +1,9 @@
+config:
+  target: "http://localhost"
+  phases:
+    - duration: 300
+      arrivalRate: 20
+scenarios:
+  - flow:
+      - get:
+          url: "/api/info/roles"
