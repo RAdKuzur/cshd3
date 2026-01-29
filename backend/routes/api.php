@@ -30,7 +30,7 @@ Route::post('/refresh', [AuthController::class, 'refresh'])->name('refresh');
 Route::post('/block', [AuthController::class, 'block'])->name('block');
 Route::post('/unblock', [AuthController::class, 'unblock'])->name('unblock');
 
-Route::middleware([LicenceMiddleware::class, CheckPermissionMiddleware::class, PrometheusMiddleware::class])->group(function () {
+Route::middleware([PrometheusMiddleware::class, LicenceMiddleware::class, CheckPermissionMiddleware::class])->group(function () {
 
     Route::middleware([CheckAvailabilityMiddleware::class])->group(function () {
         //routes...

@@ -193,15 +193,11 @@ services:
     ports:
       - "9080:9080"
     volumes:
-      - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - /var/run/docker.sock:/var/run/docker.sock
       - ./promtail-config.yaml:/etc/promtail/config.yml
     command: -config.file=/etc/promtail/config.yml
-    privileged: true
     networks:
       - network
-    depends_on:
-      - backend
 
   loki:
     image: grafana/loki:latest
@@ -210,10 +206,10 @@ services:
       - "3100:3100"
     volumes:
       - ./loki-config.yaml:/etc/loki/local-config.yaml
+      - ./loki-data:/loki
+    command: -config.file=/etc/loki/local-config.yaml
     networks:
       - network
-    depends_on:
-      - backend
 
   prometheus:
     image: prom/prometheus:latest
