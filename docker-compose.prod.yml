@@ -95,7 +95,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile.prod
     container_name: migrator
-    command: sh -c "php artisan migrate && php artisan jwt:secret"
+    command: sh -c "php artisan migrate && php artisan jwt:secret && php artisan vendor:publish --provider="L5Swagger\L5SwaggerServiceProvider" && php artisan l5-swagger:generate"
     volumes:
       - ./backend:/var/www/html
     networks:
