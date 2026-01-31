@@ -94,7 +94,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     container_name: migrator
-    command: sh -c "php artisan migrate && php artisan jwt:secret && php artisan vendor:publish --provider="L5Swagger\L5SwaggerServiceProvider"  && php artisan l5-swagger:generate"
+    command: sh -c "php artisan migrate && php artisan jwt:secret"
     volumes:
       - ./backend:/var/www/html
     networks:
@@ -103,6 +103,19 @@ services:
       - backend
       - redis
     restart: on-failure
+
+  swagger:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: swagger
+    command: sh -c "php artisan vendor:publish --provider="L5Swagger\L5SwaggerServiceProvider" && php artisan l5-swagger:generate"
+    volumes:
+      - ./backend:/var/www/html
+    networks:
+      - network
+    depends_on:
+      - backend
 
   frontend:
     build:
