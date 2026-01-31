@@ -50,6 +50,6 @@ class Auditorium extends Model
      */
     public function getActualThings()
     {
-        return $this->thingAuditoriums()->where('end_date', null)->get();
+        return $this->thingAuditoriums()->where('end_date', null)->with('thing')->get();
     }
 }

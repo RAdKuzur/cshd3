@@ -82,6 +82,12 @@ class Thing extends Model
                 'end_date' => null,
             ])->first()->auditorium : null;
     }
+    public function currentAuditorium()
+    {
+        return $this->hasOne(ThingAuditorium::class)
+            ->whereNull('end_date')
+            ->with('auditorium');
+    }
     /**
      * Получить дочерние вещи
      */

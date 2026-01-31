@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Dictionaries\ThingTypeDictionary;
 use App\Helpers\Auth;
 use App\Models\Log;
 use App\Models\NetworkThing;
@@ -13,6 +14,26 @@ class NetworkThingRepository
     public function getAll()
     {
         return NetworkThing::all();
+    }
+    public function getTelephones() {
+        return NetworkThing::query()
+            ->whereHas('thing', fn ($q) =>
+            $q->where('thing_type_id', ThingTypeDictionary::TELEPHONE)
+            )
+            ->with([
+                'thing:id',
+                'thing.currentAuditorium.auditorium:id'
+            ])
+            ->get();
+    }
+    public function getWithThings()
+    {
+        return NetworkThing::query()
+            ->with([
+                'thing:id,inv_number,thing_type_id',
+                'thing.currentAuditorium.auditorium:id'
+            ])
+            ->get();
     }
 
     public function get($id) : NetworkThing {

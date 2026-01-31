@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Dictionaries\ThingBalanceDictionary;
 use App\Dictionaries\ThingTypeDictionary;
 use App\Helpers\Auth;
 use App\Models\Log;
@@ -19,11 +20,23 @@ class ThingRepository
     }
     public function getElectronics()
     {
-        return Thing::whereIn('thing_type_id', ThingTypeDictionary::ELECTRONICS)->get();
+        return Thing::query()
+            ->whereIn('thing_type_id', ThingTypeDictionary::ELECTRONICS)
+            ->with([
+                'parent:id,inv_number',
+                'currentAuditorium.auditorium:id'
+            ])
+            ->get();
     }
     public function getFurniture()
     {
-        return Thing::whereIn('thing_type_id', ThingTypeDictionary::FURNITURE)->get();
+        return Thing::query()
+            ->whereIn('thing_type_id', ThingTypeDictionary::FURNITURE)
+            ->with([
+                'parent:id,inv_number',
+                'currentAuditorium.auditorium:id'
+            ])
+            ->get();
     }
     public function create($data)
     {

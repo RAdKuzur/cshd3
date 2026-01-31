@@ -21,21 +21,22 @@ class NetworkThingService
 
     public function all() : array
     {
-        $data = [];
-        $networkThings = $this->networkThingRepository->getAll();
-        foreach ($networkThings as $networkThing) {
-            $data[] = new NetworkThingDTO(
+        return $this->networkThingRepository
+            ->getWithThings()
+            ->map(fn ($networkThing) => new NetworkThingDTO(
                 id: $networkThing->id,
                 thing_id: $networkThing->thing_id,
                 ip_address: $networkThing->ip_address,
                 phone_number: $networkThing->phone_number,
                 comment: $networkThing->comment,
-                inv_number: $networkThing->thing->inv_number,
-                type: $networkThing->thing->thing_type_id,
-                auditorium_id: $networkThing->thing->getCurrentLocation() ? $networkThing->thing->getCurrentLocation()->id : null,
-            );
-        }
-        return $data;
+                inv_number: $networkThing->thing?->inv_number,
+                type: $networkThing->thing?->thing_type_id,
+                auditorium_id: $networkThing->thing
+                    ?->currentAuditorium
+                    ?->auditorium
+                    ?->id,
+            ))
+            ->all();
     }
 
     public function getOne($id) : NetworkThingDTO {
@@ -84,20 +85,19 @@ class NetworkThingService
             DB::rollBack();
         }
     }
-    public function telephonesAll() : array
+    public function telephonesAll(): array
     {
-        $data = [];
-        $networkThings = $this->networkThingRepository->getAll();
-        foreach ($networkThings as $networkThing) {
-            if($networkThing->thing->thing_type_id === ThingTypeDictionary::TELEPHONE){
-                $data[] = new TelephoneDTO(
-                    id: $networkThing->id,
-                    phone_number: $networkThing->phone_number,
-                    auditorium_id: $networkThing->thing->getCurrentLocation() ? $networkThing->thing->getCurrentLocation()->id : null,
-                    thing_id: $networkThing->thing->id,
-                );
-            }
-        }
-        return $data;
+        return $this->networkThingRepository
+            ->getTelephones()
+            ->map(fn ($networkThing) => new TelephoneDTO(
+                id: $networkThing->id,
+                phone_number: $networkThing->phone_number,
+                auditorium_id: $networkThing->thing
+                    ?->currentAuditorium
+                    ?->auditorium
+                    ?->id,
+                thing_id: $networkThing->thing->id,
+            ))
+            ->all();
     }
 }

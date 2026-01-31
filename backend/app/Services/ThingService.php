@@ -47,48 +47,44 @@ class ThingService
 
     public function electronics(): array
     {
-        $electronics = $this->thingRepository->getElectronics();
-        $data = [];
-        foreach ($electronics as $electronic) {
-            $data[] = new ThingDTO(
+        return $this->thingRepository
+            ->getElectronics()
+            ->map(fn ($electronic) => new ThingDTO(
                 id: $electronic->id,
                 name: $electronic->name,
                 serial_number: $electronic->serial_number,
                 inv_number: $electronic->inv_number,
                 operation_date: $electronic->operation_date,
-                thing_type_id: $electronic->thing_type_id ? $electronic->thing_type_id : null,
-                thing_parent_id: $electronic->parent ? $electronic->parent->inv_number : null,
+                thing_type_id: $electronic->thing_type_id,
+                thing_parent_id: $electronic->parent?->inv_number,
                 condition: $electronic->condition,
                 balance: $electronic->balance,
-                auditorium_id: $electronic->getCurrentLocation() ? $electronic->getCurrentLocation()->id : null,
+                auditorium_id: $electronic->currentAuditorium?->auditorium?->id,
                 price: $electronic->price,
                 is_blocked: $electronic->is_blocked,
-            );
-        }
-        return $data;
+            ))
+            ->all();
     }
 
     public function furniture() : array
     {
-        $furnitures = $this->thingRepository->getFurniture();
-        $data = [];
-        foreach ($furnitures as $furniture){
-            $data[] = new ThingDTO(
+        return $this->thingRepository
+            ->getFurniture()
+            ->map(fn ($furniture) => new ThingDTO(
                 id: $furniture->id,
                 name: $furniture->name,
                 serial_number: $furniture->serial_number,
                 inv_number: $furniture->inv_number,
                 operation_date: $furniture->operation_date,
-                thing_type_id: $furniture->thing_type_id ? $furniture->thing_type_id : null,
-                thing_parent_id: $furniture->parent ? $furniture->parent->inv_number : null,
+                thing_type_id: $furniture->thing_type_id,
+                thing_parent_id: $furniture->parent?->inv_number,
                 condition: $furniture->condition,
                 balance: $furniture->balance,
-                auditorium_id: $furniture->getCurrentLocation() ? $furniture->getCurrentLocation()->id : null,
+                auditorium_id: $furniture->currentAuditorium?->auditorium?->id,
                 price: $furniture->price,
                 is_blocked: $furniture->is_blocked,
-            );
-        }
-        return $data;
+            ))
+            ->all();
     }
     public function simpleThings(): array
     {
