@@ -220,10 +220,9 @@ class ReportService
 
     public function generalReport()
     {
-        $data = [];
-        $things = $this->thingRepository->getAll();
-        foreach ($things as $thing) {
-            $data[] = new ThingBranchDTO(
+        return $this->thingRepository
+            ->getAllWithRelations()
+            ->map(fn ($thing) => new ThingBranchDTO(
                 id: $thing->id,
                 name: $thing->name,
                 serial_number: $thing->serial_number,
@@ -233,12 +232,11 @@ class ReportService
                 thing_parent_id: $thing->parent ? $thing->parent->inv_number : null,
                 condition: $thing->condition,
                 balance: $thing->balance,
-                auditorium_id: $thing->getCurrentLocation() ? $thing->getCurrentLocation()->id : null,
+                auditorium_id: $thing->currentAuditorium?->auditorium?->id,
                 price: $thing->price,
                 is_blocked: $thing->is_blocked,
-                branch_id: $thing->getCurrentLocation() ? $thing->getCurrentLocation()->branch->id : null,
-            );
-        }
-        return $data;
+                branch_id: $thing->currentAuditorium?->auditorium?->branch_id,
+            ))
+            ->all();
     }
 }

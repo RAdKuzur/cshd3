@@ -38,6 +38,15 @@ class ThingRepository
             ])
             ->get();
     }
+
+    public function getAllWithRelations()
+    {
+        return Thing::with([
+                'parent:id,inv_number',
+                'currentAuditorium.auditorium:id,branch_id'
+        ])
+        ->get();
+    }
     public function create($data)
     {
         DB::table('logs')->insert([
