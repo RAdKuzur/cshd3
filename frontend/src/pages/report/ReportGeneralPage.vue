@@ -31,33 +31,32 @@
             </div>
 
             <div class="p-4 space-y-1">
+              <!-- Кнопка "Вся организация" -->
               <button
-                  v-for="(branch, index) in branches"
-                  :key="branch.id"
-                  class="w-full px-4 py-3 text-left rounded-xl transition-all duration-200 tab-button flex items-center justify-between group"
+                  class="w-full px-4 py-3 text-left rounded-xl transition-all duration-200 tab-button flex items-center justify-between group mb-3"
                   :class="{
-                    'bg-indigo-50 text-indigo-700 border border-indigo-100 shadow-sm': activeTab === branch.id,
-                    'text-gray-700 hover:bg-gray-50 hover:text-gray-900': activeTab !== branch.id
+                    'bg-gradient-to-r from-indigo-50 to-purple-50 text-indigo-700 border border-indigo-100 shadow-sm': activeTab === 'all',
+                    'text-gray-700 hover:bg-gray-50 hover:text-gray-900': activeTab !== 'all'
                   }"
-                  @click="setActiveTab(branch.id)"
+                  @click="setActiveTab('all')"
               >
                 <div class="flex items-center">
                   <div class="flex-shrink-0 h-10 w-10 rounded-lg flex items-center justify-center mr-3"
                        :class="{
-                         'bg-indigo-100 text-indigo-600': activeTab === branch.id,
-                         'bg-gray-100 text-gray-600 group-hover:bg-gray-200': activeTab !== branch.id
+                         'bg-gradient-to-r from-indigo-100 to-purple-100 text-indigo-600': activeTab === 'all',
+                         'bg-gray-100 text-gray-600 group-hover:bg-gray-200': activeTab !== 'all'
                        }">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                     </svg>
                   </div>
                   <div>
-                    <div class="font-medium">{{ branch.name }}</div>
-                    <div class="text-sm opacity-75">{{ getBranchStats(branch.id).total }} объект материальной ценностей</div>
+                    <div class="font-medium">Вся организация</div>
+                    <div class="text-sm opacity-75">Все объекты материальной ценности</div>
                   </div>
                 </div>
 
-                <svg v-if="activeTab === branch.id"
+                <svg v-if="activeTab === 'all'"
                      class="w-5 h-5 text-indigo-500"
                      fill="none"
                      stroke="currentColor"
@@ -65,6 +64,44 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                 </svg>
               </button>
+
+              <div class="border-t border-gray-200 pt-3">
+                <div class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-2">
+                  Отделы ({{ branches.length }})
+                </div>
+                <button
+                    v-for="(branch, index) in branches"
+                    :key="branch.id"
+                    class="w-full px-4 py-3 text-left rounded-xl transition-all duration-200 tab-button flex items-center justify-between group"
+                    :class="{
+                      'bg-indigo-50 text-indigo-700 border border-indigo-100 shadow-sm': activeTab === branch.id,
+                      'text-gray-700 hover:bg-gray-50 hover:text-gray-900': activeTab !== branch.id
+                    }"
+                    @click="setActiveTab(branch.id)"
+                >
+                  <div class="flex items-center">
+                    <div class="flex-shrink-0 h-8 w-8 rounded-lg flex items-center justify-center mr-3"
+                         :class="{
+                           'bg-indigo-100 text-indigo-600': activeTab === branch.id,
+                           'bg-gray-100 text-gray-600 group-hover:bg-gray-200': activeTab !== branch.id
+                         }">
+                      <span class="text-xs font-medium">{{ index + 1 }}</span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <div class="font-medium truncate">{{ branch.name }}</div>
+                      <div class="text-xs opacity-75 truncate">{{ getBranchStats(branch.id).total }} объектов</div>
+                    </div>
+                  </div>
+
+                  <svg v-if="activeTab === branch.id"
+                       class="w-4 h-4 text-indigo-500 flex-shrink-0"
+                       fill="none"
+                       stroke="currentColor"
+                       viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
 
@@ -79,8 +116,8 @@
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                     </svg>
                   </div>
-                  <div>
-                    <p class="text-sm font-medium text-gray-600">Всего объектов материальной ценностей</p>
+                  <div class="flex-1">
+                    <p class="text-sm font-medium text-gray-600">Всего объектов</p>
                     <p class="text-xl font-bold text-gray-900">{{ totalThings }}</p>
                   </div>
                 </div>
@@ -92,7 +129,7 @@
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                     </svg>
                   </div>
-                  <div>
+                  <div class="flex-1">
                     <p class="text-sm font-medium text-gray-600">Отделов</p>
                     <p class="text-xl font-bold text-gray-900">{{ branches.length }}</p>
                   </div>
@@ -105,9 +142,27 @@
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   </div>
-                  <div>
+                  <div class="flex-1">
                     <p class="text-sm font-medium text-gray-600">Общая стоимость</p>
                     <p class="text-xl font-bold text-gray-900">{{ formatCurrency(totalCost) }}</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Статистика по активному отделу -->
+              <div v-if="activeTab && activeTab !== 'all'" class="pt-4 border-t border-gray-100">
+                <div class="flex items-center justify-between mb-2">
+                  <p class="text-sm font-medium text-gray-900">Активный отдел:</p>
+                  <span class="text-sm font-semibold text-indigo-600">{{ activeBranch.name }}</span>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                  <div class="bg-indigo-50 p-2 rounded-lg">
+                    <p class="text-xs text-indigo-600 font-medium">Объектов</p>
+                    <p class="text-sm font-bold">{{ getBranchStats(activeTab).total }}</p>
+                  </div>
+                  <div class="bg-green-50 p-2 rounded-lg">
+                    <p class="text-xs text-green-600 font-medium">Стоимость</p>
+                    <p class="text-sm font-bold">{{ formatCurrency(getBranchStats(activeTab).totalCost) }}</p>
                   </div>
                 </div>
               </div>
@@ -116,15 +171,19 @@
         </div>
 
         <!-- Основной контент -->
-        <div class="lg:w-5/4">
+        <div class="lg:w-3/4">
           <div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden h-full">
             <div class="p-6 border-b border-gray-200">
               <div class="flex justify-between items-center">
                 <div>
                   <h2 class="text-2xl font-bold text-gray-900">
-                    {{ activeBranch ? activeBranch.name : 'Выберите отдел' }}
+                    <span v-if="activeTab === 'all'">Вся организация</span>
+                    <span v-else>{{ activeBranch ? activeBranch.name : 'Выберите отдел' }}</span>
                   </h2>
-                  <p class="text-gray-600 mt-2" v-if="!showGraph">Материальные ценности отдела</p>
+                  <p class="text-gray-600 mt-2" v-if="!showGraph">
+                    <span v-if="activeTab === 'all'">Все материальные ценности организации</span>
+                    <span v-else>Материальные ценности отдела</span>
+                  </p>
                   <p class="text-gray-600 mt-2" v-else>Инфографика по годам эксплуатации</p>
                 </div>
                 <button
@@ -155,12 +214,12 @@
                   <svg class="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                   </svg>
-                  <p class="text-gray-500">Выберите отдел для просмотра материальных ценностей</p>
+                  <p class="text-gray-500">Выберите отдел или "Всю организацию" для просмотра материальных ценностей</p>
                 </div>
 
                 <!-- Режим инфографики -->
                 <div v-else-if="showGraph" class="space-y-6">
-                  <!-- ... существующий код инфографики ... -->
+                  <!-- Статистика по активному виду -->
                   <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
                     <div class="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-2xl border border-blue-100">
                       <div class="flex items-center">
@@ -170,7 +229,12 @@
                           </svg>
                         </div>
                         <div>
-                          <p class="text-sm text-blue-600 font-medium">Всего объектов материальной ценностей в отделе</p>
+                          <p class="text-sm text-blue-600 font-medium" v-if="activeTab === 'all'">
+                            Всего объектов материальной ценности в организации
+                          </p>
+                          <p class="text-sm text-blue-600 font-medium" v-else>
+                            Всего объектов материальной ценности в отделе
+                          </p>
                           <p class="text-2xl font-bold text-gray-900">{{ filteredThings.length }}</p>
                         </div>
                       </div>
@@ -209,11 +273,16 @@
                   <div class="bg-white p-6 rounded-2xl border border-gray-200">
                     <div class="flex justify-between items-center mb-6">
                       <div>
-                        <h3 class="text-xl font-bold text-gray-900">Распределение объектов материальной ценностей по годам эксплуатации</h3>
-                        <p class="text-gray-600 mt-1">Количество объектов материальной ценностей в зависимости от срока использования</p>
+                        <h3 class="text-xl font-bold text-gray-900">
+                          Распределение объектов материальной ценности по годам эксплуатации
+                        </h3>
+                        <p class="text-gray-600 mt-1">
+                          <span v-if="activeTab === 'all'">Количество объектов материальной ценности во всей организации</span>
+                          <span v-else>Количество объектов материальной ценности в отделе</span>
+                        </p>
                       </div>
                       <div class="text-sm text-gray-500">
-                        Всего: {{ filteredThings.length }} объектов материальной ценностей
+                        Всего: {{ filteredThings.length }} объектов материальной ценности
                       </div>
                     </div>
 
@@ -240,7 +309,12 @@
                           <svg class="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                           </svg>
-                          <p class="text-lg font-medium mb-2">Нет данных для построения диаграммы</p>
+                          <p class="text-lg font-medium mb-2" v-if="activeTab === 'all'">
+                            Нет данных для построения диаграммы по организации
+                          </p>
+                          <p class="text-lg font-medium mb-2" v-else>
+                            Нет данных для построения диаграммы по отделу
+                          </p>
                           <p class="text-sm">Попробуйте изменить фильтры</p>
                         </div>
 
@@ -251,7 +325,7 @@
                               <div
                                   class="w-16 bg-gradient-to-t from-blue-400 to-blue-500 rounded-t-lg transition-all duration-300 hover:opacity-90 cursor-pointer"
                                   :style="{ height: getBarHeight(yearData['0-5']) + 'px' }"
-                                  :title="`Менее 5 лет: ${yearData['0-5']} объектов материальной ценностей`"
+                                  :title="`Менее 5 лет: ${yearData['0-5']} объектов материальной ценности`"
                               ></div>
                             </div>
                             <div class="mt-4 text-center">
@@ -267,7 +341,7 @@
                               <div
                                   class="w-16 bg-gradient-to-t from-yellow-400 to-yellow-500 rounded-t-lg transition-all duration-300 hover:opacity-90 cursor-pointer"
                                   :style="{ height: getBarHeight(yearData['5-10']) + 'px' }"
-                                  :title="`5-10 лет: ${yearData['5-10']} объектов материальной ценностей`"
+                                  :title="`5-10 лет: ${yearData['5-10']} объектов материальной ценности`"
                               ></div>
                             </div>
                             <div class="mt-4 text-center">
@@ -283,7 +357,7 @@
                               <div
                                   class="w-16 bg-gradient-to-t from-red-400 to-red-500 rounded-t-lg transition-all duration-300 hover:opacity-90 cursor-pointer"
                                   :style="{ height: getBarHeight(yearData['10+']) + 'px' }"
-                                  :title="`Более 10 лет: ${yearData['10+']} объектов материальной ценностей`"
+                                  :title="`Более 10 лет: ${yearData['10+']} объектов материальной ценности`"
                               ></div>
                             </div>
                             <div class="mt-4 text-center">
@@ -302,7 +376,7 @@
                         <div class="flex justify-between items-center">
                           <div>
                             <p class="text-sm font-medium text-blue-600">Менее 5 лет</p>
-                            <p class="text-lg font-bold text-gray-900">{{ yearData['0-5'] }} объектов материальной ценностей</p>
+                            <p class="text-lg font-bold text-gray-900">{{ yearData['0-5'] }} объектов</p>
                           </div>
                           <div class="text-right">
                             <p class="text-sm text-blue-500">{{ getPercentage('0-5') }}%</p>
@@ -317,7 +391,7 @@
                         <div class="flex justify-between items-center">
                           <div>
                             <p class="text-sm font-medium text-yellow-600">5-10 лет</p>
-                            <p class="text-lg font-bold text-gray-900">{{ yearData['5-10'] }} объектов материальной ценностей</p>
+                            <p class="text-lg font-bold text-gray-900">{{ yearData['5-10'] }} объектов</p>
                           </div>
                           <div class="text-right">
                             <p class="text-sm text-yellow-500">{{ getPercentage('5-10') }}%</p>
@@ -332,7 +406,7 @@
                         <div class="flex justify-between items-center">
                           <div>
                             <p class="text-sm font-medium text-red-600">Более 10 лет</p>
-                            <p class="text-lg font-bold text-gray-900">{{ yearData['10+'] }} объектов материальной ценностей</p>
+                            <p class="text-lg font-bold text-gray-900">{{ yearData['10+'] }} объектов</p>
                           </div>
                           <div class="text-right">
                             <p class="text-sm text-red-500">{{ getPercentage('10+') }}%</p>
@@ -348,7 +422,7 @@
                   <!-- Дополнительная статистика -->
                   <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <div class="bg-white p-6 rounded-2xl border border-gray-200">
-                      <h4 class="text-lg font-semibold text-gray-900 mb-4">Средний возраст объектов материальной ценностей</h4>
+                      <h4 class="text-lg font-semibold text-gray-900 mb-4">Средний возраст объектов</h4>
                       <div class="text-center py-4">
                         <div class="text-5xl font-bold text-indigo-600 mb-2">{{ averageYears }}</div>
                         <p class="text-gray-600">лет эксплуатации в среднем</p>
@@ -372,6 +446,34 @@
                               ></div>
                             </div>
                           </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Распределение по отделам (только для всей организации) -->
+                  <div v-if="activeTab === 'all'" class="bg-white p-6 rounded-2xl border border-gray-200">
+                    <h4 class="text-lg font-semibold text-gray-900 mb-4">Распределение по отделам</h4>
+                    <div v-if="filteredThings.length === 0" class="text-center py-4 text-gray-500">
+                      <p>Нет данных о распределении по отделам</p>
+                    </div>
+                    <div v-else class="space-y-4">
+                      <div v-for="branch in getBranchesWithStats()" :key="branch.id" class="flex items-center justify-between">
+                        <div class="flex items-center">
+                          <div class="w-8 h-8 rounded-lg bg-indigo-100 flex items-center justify-center mr-3">
+                            <span class="text-xs font-medium text-indigo-600">{{ branch.index }}</span>
+                          </div>
+                          <span class="text-sm text-gray-700">{{ branch.name }}</span>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                          <span class="text-sm font-medium text-gray-900">{{ branch.count }} объектов</span>
+                          <div class="w-32 bg-gray-200 rounded-full h-2">
+                            <div
+                                class="bg-indigo-500 h-2 rounded-full"
+                                :style="{ width: branch.percentage + '%' }"
+                            ></div>
+                          </div>
+                          <span class="text-xs text-gray-500 w-16 text-right">{{ branch.percentage }}%</span>
                         </div>
                       </div>
                     </div>
@@ -400,6 +502,7 @@
                         </div>
                       </div>
 
+                      <!-- Дополнительные фильтры -->
                       <select
                           v-model="conditionFilter"
                           class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
@@ -456,7 +559,7 @@
                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                             </svg>
                             <div class="flex-1">
-                              <div class="text-sm text-gray-500 mb-1">Типы объектов материальной ценностей</div>
+                              <div class="text-sm text-gray-500 mb-1">Типы объектов</div>
                               <div class="flex flex-wrap gap-2 max-h-20 overflow-y-auto">
                                 <label v-for="type in availableTypes" :key="type.id" class="inline-flex items-center">
                                   <input
@@ -473,14 +576,36 @@
                         </div>
                       </div>
                     </div>
+
+                    <!-- Статистика по фильтрам -->
+                    <div v-if="activeTab && filteredThings.length > 0" class="bg-gray-50 p-4 rounded-lg">
+                      <div class="flex flex-wrap items-center justify-between gap-3">
+                        <div class="text-sm text-gray-700">
+                          Найдено <span class="font-semibold text-indigo-600">{{ filteredThings.length }}</span> объектов
+                          <span v-if="searchQuery || conditionFilter || balanceFilter || selectedYears.length > 0 || selectedTypes.length > 0">
+                            (после применения фильтров)
+                          </span>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                          <div class="text-sm">
+                            <span class="text-gray-500">Общая стоимость:</span>
+                            <span class="font-semibold text-green-600 ml-2">{{ formatCurrency(getTotalCostForFiltered()) }}</span>
+                          </div>
+                          <div class="text-sm">
+                            <span class="text-gray-500">Средний возраст:</span>
+                            <span class="font-semibold text-indigo-600 ml-2">{{ averageYears }} лет</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
 
                   <!-- Отладочная информация -->
                   <div v-if="debugMode" class="mb-4 p-3 bg-yellow-50 rounded-lg text-sm">
                     <p><strong>Debug Info:</strong></p>
-                    <p>Всего объектов материальной ценностей в отделе: {{ thingsForActiveBranch.length }}</p>
-                    <p>Отфильтровано объектов материальной ценностей: {{ filteredThings.length }}</p>
-                    <p>Активный отдел: {{ activeTab }}</p>
+                    <p>Всего объектов в {{ activeTab === 'all' ? 'организации' : 'отделе' }}: {{ thingsForActiveView.length }}</p>
+                    <p>Отфильтровано объектов: {{ filteredThings.length }}</p>
+                    <p>Активный вид: {{ activeTab === 'all' ? 'Вся организация' : 'Отдел ' + activeTab }}</p>
                   </div>
 
                   <!-- Таблица вещей -->
@@ -497,6 +622,27 @@
                             Название и номер
                             <svg
                                 v-if="sortField === 'name'"
+                                class="ml-1 w-4 h-4"
+                                :class="sortDirection === 'asc' ? 'transform rotate-180' : ''"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                          </div>
+                        </th>
+
+                        <!-- Колонка "Отдел" (только для всей организации) -->
+                        <th
+                            v-if="activeTab === 'all'"
+                            class="px-6 py-4 text-left text-sm font-semibold text-white uppercase tracking-wider cursor-pointer hover:bg-indigo-600 transition-colors"
+                            @click="sortBy('branch_name')"
+                        >
+                          <div class="flex items-center">
+                            Отдел
+                            <svg
+                                v-if="sortField === 'branch_name'"
                                 class="ml-1 w-4 h-4"
                                 :class="sortDirection === 'asc' ? 'transform rotate-180' : ''"
                                 fill="none"
@@ -646,6 +792,19 @@
                           </div>
                         </td>
 
+                        <!-- Отдел (только для всей организации) -->
+                        <td v-if="activeTab === 'all'" class="px-6 py-4 whitespace-nowrap">
+                          <div class="flex items-center">
+                            <div class="flex-shrink-0 h-8 w-8 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
+                              <span class="text-xs font-medium text-purple-600">{{ getBranchIndex(item.branch_id) }}</span>
+                            </div>
+                            <div>
+                              <div class="text-sm font-medium text-gray-900">{{ getBranchName(item.branch_id) }}</div>
+                              <div class="text-xs text-gray-500">Отдел</div>
+                            </div>
+                          </div>
+                        </td>
+
                         <!-- Состояние и тип -->
                         <td class="px-6 py-4 whitespace-nowrap">
                           <div class="flex items-center">
@@ -747,8 +906,13 @@
                     <svg class="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                     </svg>
-                    <p class="text-lg font-medium mb-2">В этом отделе пока нет материальных ценностей</p>
-                    <p class="text-sm">На данный момент нет объектов материальной ценностей, привязанных к этому отделу</p>
+                    <p class="text-lg font-medium mb-2" v-if="activeTab === 'all'">
+                      В организации пока нет материальных ценностей
+                    </p>
+                    <p class="text-lg font-medium mb-2" v-else>
+                      В этом отделе пока нет материальных ценностей
+                    </p>
+                    <p class="text-sm">На данный момент нет объектов материальной ценности</p>
                   </div>
 
                   <!-- Пагинация -->
@@ -819,7 +983,7 @@ import axios from 'axios'
 import { BACKEND_URL } from "@/router.js"
 
 const debugMode = ref(false)
-const activeTab = ref(null)
+const activeTab = ref('all') // По умолчанию показываем всю организацию
 const branches = ref([])
 const loading = ref(true)
 const loadingThings = ref(false)
@@ -857,14 +1021,29 @@ const yearOptions = [
 // Метод сортировки
 const sortBy = (field) => {
   if (sortField.value === field) {
-    // Если уже сортируем по этому полю, меняем направление
     sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc'
   } else {
-    // Если сортируем по новому полю, устанавливаем его и направление по умолчанию
     sortField.value = field
     sortDirection.value = 'asc'
   }
 }
+
+// Получаем вещи для активного вида (вся организация или конкретный отдел)
+const thingsForActiveView = computed(() => {
+  if (activeTab.value === 'all') {
+    // Вся организация - возвращаем все вещи с информацией об отделе
+    return allThings.value.map(item => {
+      const branch = branches.value.find(b => b.id === item.branch_id)
+      return {
+        ...item,
+        branch_name: branch ? branch.name : 'Неизвестный отдел'
+      }
+    })
+  } else {
+    // Конкретный отдел
+    return allThings.value.filter(item => item.branch_id === activeTab.value)
+  }
+})
 
 // Отсортированные вещи
 const sortedThings = computed(() => {
@@ -879,43 +1058,41 @@ const sortedThings = computed(() => {
     // Специальная обработка для определенных полей
     switch (sortField.value) {
       case 'name':
-        // Сортировка по названию (строковая)
+        aValue = aValue || ''
+        bValue = bValue || ''
+        break
+
+      case 'branch_name':
         aValue = aValue || ''
         bValue = bValue || ''
         break
 
       case 'condition':
-        // Сортировка по состоянию (числовая)
         aValue = aValue || 0
         bValue = bValue || 0
         break
 
       case 'balance':
-        // Сортировка по характеристике учета (числовая)
         aValue = aValue || 0
         bValue = bValue || 0
         break
 
       case 'auditorium_name':
-        // Сортировка по названию аудитории (строковая)
         aValue = aValue || ''
         bValue = bValue || ''
         break
 
       case 'operation_date':
-        // Сортировка по дате (преобразуем в timestamp)
         aValue = aValue ? new Date(aValue).getTime() : 0
         bValue = bValue ? new Date(bValue).getTime() : 0
         break
 
       case 'price':
-        // Сортировка по цене (числовая)
         aValue = aValue || 0
         bValue = bValue || 0
         break
     }
 
-    // Сравнение с учетом направления сортировки
     if (aValue < bValue) {
       return sortDirection.value === 'asc' ? -1 : 1
     }
@@ -953,7 +1130,7 @@ const yearData = computed(() => {
 const getBarHeight = (value) => {
   const maxValue = Math.max(yearData.value['0-5'], yearData.value['5-10'], yearData.value['10+'])
   if (maxValue === 0) return 0
-  return (value / maxValue) * 120 // 120px - максимальная высота
+  return (value / maxValue) * 120
 }
 
 // Процентное соотношение
@@ -962,11 +1139,6 @@ const getPercentage = (category) => {
   if (total === 0) return 0
   return Math.round((yearData.value[category] / total) * 100)
 }
-
-// Есть ли данные для графика
-const hasDataForGraph = computed(() => {
-  return filteredThings.value.length > 0
-})
 
 // Средний возраст вещей
 const averageYears = computed(() => {
@@ -1034,6 +1206,40 @@ const getCategoryCost = (category) => {
   }, 0)
 }
 
+// Распределение по отделам (для всей организации)
+const getBranchesWithStats = () => {
+  if (activeTab.value !== 'all') return []
+
+  const branchStats = {}
+
+  // Подсчитываем количество вещей в каждом отделе
+  filteredThings.value.forEach(item => {
+    const branchId = item.branch_id
+    if (branchId) {
+      if (!branchStats[branchId]) {
+        const branch = branches.value.find(b => b.id === branchId)
+        branchStats[branchId] = {
+          id: branchId,
+          name: branch ? branch.name : 'Неизвестный отдел',
+          count: 0
+        }
+      }
+      branchStats[branchId].count++
+    }
+  })
+
+  // Преобразуем в массив и добавляем проценты
+  const total = filteredThings.value.length
+  const result = Object.values(branchStats).map((branch, index) => ({
+    ...branch,
+    index: index + 1,
+    percentage: total > 0 ? Math.round((branch.count / total) * 100) : 0
+  }))
+
+  // Сортируем по количеству (по убыванию)
+  return result.sort((a, b) => b.count - a.count)
+}
+
 const loadAllData = async () => {
   try {
     loading.value = true
@@ -1057,9 +1263,6 @@ const loadAllData = async () => {
     // 1. Сначала сохраняем все справочники
     if (branchesResponse.data.success) {
       branches.value = branchesResponse.data.data
-      if (branches.value.length > 0) {
-        activeTab.value = branches.value[0].id
-      }
     }
 
     if (auditoriumsResponse.data.success) {
@@ -1110,6 +1313,17 @@ const loadAllData = async () => {
   }
 }
 
+// Вспомогательные методы для работы с отделами
+const getBranchName = (branchId) => {
+  const branch = branches.value.find(b => b.id === branchId)
+  return branch ? branch.name : 'Неизвестный отдел'
+}
+
+const getBranchIndex = (branchId) => {
+  const index = branches.value.findIndex(b => b.id === branchId)
+  return index !== -1 ? index + 1 : '?'
+}
+
 // Доступные типы для фильтра
 const availableTypes = computed(() => {
   return Object.entries(types.value).map(([id, name]) => ({
@@ -1128,18 +1342,13 @@ const setActiveTab = (branchId) => {
 
 // Получаем активный отдел
 const activeBranch = computed(() => {
+  if (activeTab.value === 'all') return null
   return branches.value.find(b => b.id === activeTab.value)
-})
-
-// Фильтруем вещи для активного отдела
-const thingsForActiveBranch = computed(() => {
-  if (!activeTab.value) return []
-  return allThings.value.filter(item => item.branch_id === activeTab.value)
 })
 
 // Фильтруем вещи по всем критериям
 const filteredThings = computed(() => {
-  let filtered = thingsForActiveBranch.value
+  let filtered = thingsForActiveView.value
 
   // Фильтрация по поиску
   if (searchQuery.value) {
@@ -1149,7 +1358,8 @@ const filteredThings = computed(() => {
         (item.serial_number && item.serial_number.toLowerCase().includes(query)) ||
         (item.inv_number && item.inv_number.toString().toLowerCase().includes(query)) ||
         (getTypeName(item.thing_type_id) && getTypeName(item.thing_type_id).toLowerCase().includes(query)) ||
-        (getBalanceLabel(item.balance) && getBalanceLabel(item.balance).toLowerCase().includes(query))
+        (getBalanceLabel(item.balance) && getBalanceLabel(item.balance).toLowerCase().includes(query)) ||
+        (activeTab.value === 'all' && item.branch_name && item.branch_name.toLowerCase().includes(query))
     )
   }
 
@@ -1403,7 +1613,7 @@ onMounted(() => {
   loadAllData()
 })
 
-// Сброс фильтров и пагинации при смене отдела
+// Сброс фильтров и пагинации при смене вида
 watch(activeTab, () => {
   searchQuery.value = ''
   conditionFilter.value = ''
@@ -1424,13 +1634,6 @@ watch([searchQuery, conditionFilter, balanceFilter, selectedYears, selectedTypes
 
 watch(itemsPerPage, () => {
   currentPage.value = 1
-})
-
-// При изменении фильтров сбрасываем график
-watch([searchQuery, conditionFilter, balanceFilter, selectedYears, selectedTypes], () => {
-  if (showGraph.value) {
-    // Можно оставить график, он автоматически обновится через computed свойства
-  }
 })
 </script>
 
