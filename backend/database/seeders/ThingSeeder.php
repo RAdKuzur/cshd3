@@ -47,7 +47,7 @@ class ThingSeeder extends Seeder
                     rand(0, 59),
                     rand(0, 59)
                 )->toDateTimeString(),
-                'thing_type_id' => rand(ThingTypeDictionary::PC, ThingTypeDictionary::OTHER),
+                'thing_type_id' => rand(ThingTypeDictionary::PC, ThingTypeDictionary::STATION_AUDIO_VIDEO_PROTOCOL),
                 'thing_parent_id' => null,
                 'condition' => ConditionDictionary::OK,
                 'price' => rand(1, 100000),

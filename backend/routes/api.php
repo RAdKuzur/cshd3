@@ -90,6 +90,8 @@ Route::middleware([PrometheusMiddleware::class, LicenceMiddleware::class, CheckP
     Route::get('/reports/things', [ReportController::class, 'things'])->name('reports.positions');
     Route::get('/reports/workstations', [ReportController::class, 'workstations'])->name('reports.workstations');
     Route::get('/reports/general', [ReportController::class, 'general'])->name('reports.general');
+    Route::get('/reports/form-extended/{year}', [ReportController::class, 'formExtended'])->name('reports.form-extended');
+    Route::get('/reports/form/{year}', [ReportController::class, 'form'])->name('reports.form');
 
     Route::get('/transfer-acts', [TransferActController::class, 'all'])->name('transfer-acts.all');
     Route::get('/transfer-acts/{id}', [TransferActController::class, 'getOne'])->name('transfer-acts.get-one');

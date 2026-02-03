@@ -19,41 +19,6 @@
           </router-link>
         </div>
 
-        <!-- Фильтры и период -->
-<!--        <div class="mb-10 bg-white rounded-xl p-6 shadow-sm border border-gray-100">-->
-<!--          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">-->
-<!--            <div>-->
-<!--              <h3 class="text-lg font-semibold text-gray-800 mb-2">Параметры отчетов</h3>-->
-<!--              <p class="text-gray-500 text-sm">Выберите тип отчета и период для анализа</p>-->
-<!--            </div>-->
-<!--            <div class="flex items-center gap-4">-->
-<!--              <div class="relative">-->
-<!--                <select-->
-<!--                    v-model="selectedPeriod"-->
-<!--                    class="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-10 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"-->
-<!--                >-->
-<!--                  <option value="month">За последний месяц</option>-->
-<!--                  <option value="quarter">За последний квартал</option>-->
-<!--                  <option value="year">За последний год</option>-->
-<!--                  <option value="all">За все время</option>-->
-<!--                </select>-->
-<!--                <svg class="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">-->
-<!--                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />-->
-<!--                </svg>-->
-<!--              </div>-->
-<!--              <button-->
-<!--                  @click="exportAllReports"-->
-<!--                  class="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all shadow-sm"-->
-<!--              >-->
-<!--                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">-->
-<!--                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />-->
-<!--                </svg>-->
-<!--                Экспорт всех-->
-<!--              </button>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--        </div>-->
-
         <!-- Карточки отчетов -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <!-- Отчет по объектам материального учёта -->
@@ -182,6 +147,48 @@
             </div>
           </div>
 
+          <!-- Отчеты по формам (НОВАЯ КАРТОЧКА) -->
+          <div
+              class="relative overflow-hidden rounded-xl p-6 flex flex-col justify-between
+           bg-gradient-to-br from-amber-500 to-orange-600
+           hover:from-amber-600 hover:to-orange-700
+           transition-all hover:shadow-lg hover:scale-[1.01]
+           cursor-pointer group"
+              @click="navigateTo('/reports/forms')"
+          >
+            <div class="absolute right-6 top-6">
+              <div class="bg-white/20 backdrop-blur-sm p-3 rounded-xl">
+                <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+              </div>
+            </div>
+
+            <div class="pr-16">
+              <h3 class="text-xl font-semibold text-white mb-2">
+                Отчёты по формам
+              </h3>
+              <p class="text-sm text-amber-100 leading-relaxed">
+              </p>
+            </div>
+            <div class="mt-6 flex items-center justify-between">
+              <div class="flex items-center gap-2 text-white/80">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                </svg>
+                <span class="text-sm">Excel</span>
+              </div>
+              <div class="bg-white/20 p-2 rounded-lg group-hover:bg-white/30 transition-colors">
+                <svg class="w-5 h-5 text-white transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Вторая строка карточек -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
           <!-- Общий отчет по отделам -->
           <div
               class="relative overflow-hidden rounded-xl p-6 flex flex-col justify-between
@@ -231,55 +238,8 @@
               </div>
             </div>
           </div>
+          <div class="md:col-span-3"></div>
         </div>
-
-        <!-- Быстрые отчеты -->
-<!--        <div class="md:col-span-2 lg:col-span-4 mt-8">-->
-<!--          <h3 class="text-xl font-bold text-gray-800 mb-6">Быстрые отчеты</h3>-->
-<!--          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">-->
-<!--            <button-->
-<!--                @click="generateQuickReport('inventory')"-->
-<!--                class="bg-white p-4 rounded-xl border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all text-left group"-->
-<!--            >-->
-<!--              <div class="flex items-center justify-between mb-3">-->
-<!--                <span class="text-sm font-medium text-gray-500">Инвентаризация</span>-->
-<!--                <svg class="w-5 h-5 text-gray-400 group-hover:text-blue-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">-->
-<!--                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />-->
-<!--                </svg>-->
-<!--              </div>-->
-<!--              <h4 class="font-semibold text-gray-800 mb-2">Акт инвентаризации</h4>-->
-<!--              <p class="text-gray-500 text-sm">Сформировать акт инвентаризации на текущую дату</p>-->
-<!--            </button>-->
-
-<!--            <button-->
-<!--                @click="generateQuickReport('movement')"-->
-<!--                class="bg-white p-4 rounded-xl border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all text-left group"-->
-<!--            >-->
-<!--              <div class="flex items-center justify-between mb-3">-->
-<!--                <span class="text-sm font-medium text-gray-500">Движение</span>-->
-<!--                <svg class="w-5 h-5 text-gray-400 group-hover:text-blue-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">-->
-<!--                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />-->
-<!--                </svg>-->
-<!--              </div>-->
-<!--              <h4 class="font-semibold text-gray-800 mb-2">Движение активов</h4>-->
-<!--              <p class="text-gray-500 text-sm">Отчет о перемещении объектов за период</p>-->
-<!--            </button>-->
-
-<!--            <button-->
-<!--                @click="generateQuickReport('depreciation')"-->
-<!--                class="bg-white p-4 rounded-xl border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all text-left group"-->
-<!--            >-->
-<!--              <div class="flex items-center justify-between mb-3">-->
-<!--                <span class="text-sm font-medium text-gray-500">Амортизация</span>-->
-<!--                <svg class="w-5 h-5 text-gray-400 group-hover:text-blue-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">-->
-<!--                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />-->
-<!--                </svg>-->
-<!--              </div>-->
-<!--              <h4 class="font-semibold text-gray-800 mb-2">Амортизация ОС</h4>-->
-<!--              <p class="text-gray-500 text-sm">Расчет амортизации основных средств</p>-->
-<!--            </button>-->
-<!--          </div>-->
-<!--        </div>-->
 
         <!-- Информационная панель -->
         <div class="mt-12 bg-gradient-to-r from-gray-800 to-gray-900 rounded-2xl p-6 text-white">
@@ -360,6 +320,7 @@ const exportAllReports = () => {
 </script>
 
 <style scoped>
+/* Стили остаются без изменений */
 .report-card {
   position: relative;
   padding: 1.5rem;

@@ -34,4 +34,16 @@ class ReportController extends Controller
             'data' => $data
         ]);
     }
+    public function form($year){
+        $this->reportService->form($year);
+        return response()->json([
+            'success' => true
+        ]);
+    }
+    public function formExtended($year){
+        $this->reportService->formExtended($year);
+        return response()->json([
+            'success' => true
+        ]);
+    }
 }

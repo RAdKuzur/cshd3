@@ -11,6 +11,10 @@ use Illuminate\Support\Facades\DB;
 
 class ThingRepository
 {
+    public function query()
+    {
+        return Thing::query();
+    }
     public function get($id) : Thing
     {
         return Thing::where('id', $id)->first();
@@ -38,7 +42,24 @@ class ThingRepository
             ])
             ->get();
     }
-
+    public function betweenYearsQuery($query, $startYear = null, $endYear = null)
+    {
+        if ($startYear !== null) {
+            $query->where('operation_date', '>=', $startYear . '-01-01');
+        }
+        if ($endYear !== null) {
+            $query->where('operation_date', '<=', $endYear . '-12-31');
+        }
+        return $query;
+    }
+    public function thingTypeQuery($query, $type)
+    {
+        return $query->where('thing_type_id', $type);
+    }
+    public function conditionQuery($query, $condition)
+    {
+        return $query->where('condition', $condition);
+    }
     public function getAllWithRelations()
     {
         return Thing::with([

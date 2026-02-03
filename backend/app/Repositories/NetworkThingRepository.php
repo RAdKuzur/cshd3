@@ -18,7 +18,7 @@ class NetworkThingRepository
     public function getTelephones() {
         return NetworkThing::query()
             ->whereHas('thing', fn ($q) =>
-            $q->where('thing_type_id', ThingTypeDictionary::TELEPHONE)
+            $q->where('thing_type_id', ThingTypeDictionary::IP_TELEPHONE)
             )
             ->with([
                 'thing:id',

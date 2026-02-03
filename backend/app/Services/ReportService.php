@@ -2,10 +2,12 @@
 
 namespace App\Services;
 
+use App\Dictionaries\ConditionDictionary;
 use App\Dictionaries\ThingBalanceDictionary;
 use App\Dictionaries\ThingTypeDictionary;
 use App\DTO\Thing\ThingBranchDTO;
 use App\DTO\Thing\ThingDTO;
+use App\Helpers\Auth;
 use App\Repositories\AuditoriumRepository;
 use App\Repositories\OrganizationRepository;
 use App\Repositories\ThingRepository;
@@ -238,5 +240,87 @@ class ReportService
                 branch_id: $thing->currentAuditorium?->auditorium?->branch_id,
             ))
             ->all();
+    }
+
+    public function form($year)
+    {
+        $templatePath = storage_path('excel/Form1.xls');
+        $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($templatePath);
+        $sheet = $spreadsheet->getSheetByName('Титул');
+
+        /** Заполнение титульника **/
+
+        $sheet->setCellValue('D11', 12);
+        $sheet->setCellValue('D13', 31);
+        $sheet->setCellValue('F11', $year);
+        $sheet->setCellValue('F13', $year);
+        $sheet->setCellValue('G18', Auth::user()->people->getFullFio());
+        $sheet->setCellValue('G19', Auth::user()->people->phone_number);
+        $sheet->setCellValue('G20', Auth::user()->email);
+        //ФИО + номер телефона + эл.почта
+        /** Заполнение титульника **/
+
+        /** Заполнение основной части(ПТС) **/
+        $startIndex = 9;
+        $sheet = $spreadsheet->getSheetByName('ПТС');
+        foreach (ThingTypeDictionary::SHORT_REPORT_TYPES as $index => $type) {
+            $query = $this->thingRepository->query();
+            $query = $this->thingRepository->thingTypeQuery($query, $type);
+            $sheet->setCellValue('D'. ($startIndex + $index), $this->thingRepository->betweenYearsQuery(clone $query, $year - 6,  $year)->count()); // до 6 лет
+            $sheet->setCellValue('E'. ($startIndex + $index), $this->thingRepository->betweenYearsQuery(clone $query, $year - 8, $year - 7)->count()); // от 6 до 8 лет
+            $sheet->setCellValue('F'. ($startIndex + $index), $this->thingRepository->betweenYearsQuery(clone $query, $year - 11, $year - 9)->count()); // от 8 до 11 лет
+            $sheet->setCellValue('G'. ($startIndex + $index), $this->thingRepository->betweenYearsQuery(clone $query, null, $year - 12)->count()); // от 11 лет
+            $sheet->setCellValue('H'. ($startIndex + $index), $this->thingRepository->conditionQuery(clone $query, ConditionDictionary::BROKEN)->count()); // Неисправные ПТС
+            $sheet->setCellValue('I'. ($startIndex + $index), $this->thingRepository->betweenYearsQuery(clone $query, $year, $year)->count()); // Полученные в централизованном порядке
+        }
+        /** Заполнение основной части(ПТС) **/
+
+        /** Вывод пользователю **/
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xls($spreadsheet);
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename=short_report.xls');
+        header('Cache-Control: max-age=0');
+        $writer->save('php://output');
+        exit;
+    }
+
+    public function formExtended($year)
+    {
+        $templatePath = storage_path('excel/Form2.xls');
+        $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($templatePath);
+        $sheet = $spreadsheet->getSheetByName('Титул В10.1');
+
+        /** Заполнение титульника **/
+        $organization = $this->organizationRepository->getMainOrganization();
+
+        $sheet->setCellValue('B11', $organization->name);
+        $sheet->setCellValue('C13', $year);
+        $sheet->setCellValue('E22', Auth::user()->people->getFullFio());
+        $sheet->setCellValue('E23', Auth::user()->people->phone_number);
+        $sheet->setCellValue('E24', Auth::user()->email);
+        //ФИО + номер телефона + эл.почта
+        /** Заполнение титульника **/
+
+        /** Заполнение основной части(ПТС) **/
+        $startIndex = 16;
+        $sheet = $spreadsheet->getSheetByName('Форма');
+        foreach (ThingTypeDictionary::EXTENDED_REPORT_TYPES as $index => $type) {
+            $query = $this->thingRepository->query();
+            $query = $this->thingRepository->thingTypeQuery($query, $type);
+            $sheet->setCellValue('F'. ($startIndex + $index), $this->thingRepository->betweenYearsQuery(clone $query, $year - 5,  $year)->count()); // до 5 лет
+            $sheet->setCellValue('G'. ($startIndex + $index), $this->thingRepository->betweenYearsQuery(clone $query, $year - 7, $year - 6)->count()); // от 5 до 7 лет
+            $sheet->setCellValue('H'. ($startIndex + $index), $this->thingRepository->betweenYearsQuery(clone $query, $year - 10, $year - 8)->count()); // от 7 до 10 лет
+            $sheet->setCellValue('I'. ($startIndex + $index), $this->thingRepository->betweenYearsQuery(clone $query, null, $year - 11)->count()); // от 10 лет
+            $sheet->setCellValue('J'. ($startIndex + $index), $this->thingRepository->conditionQuery(clone $query, ConditionDictionary::FIXING)->count()); // В ремонте
+        }
+        /** Заполнение основной части(ПТС) **/
+
+        /** Вывод пользователю **/
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xls($spreadsheet);
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename=extended_report.xls');
+        header('Cache-Control: max-age=0');
+        $writer->save('php://output');
+        exit;
     }
 }

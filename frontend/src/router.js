@@ -45,6 +45,7 @@ import NetworkThingCreatePage from "@/pages/thing/network-things/NetworkThingCre
 import NetworkThingViewPage from "@/pages/thing/network-things/NetworkThingViewPage.vue";
 import NetworkThingEditPage from "@/pages/thing/network-things/NetworkThingEditPage.vue";
 import SearchPage from "@/pages/search/SearchPage.vue";
+import ReportFormPage from "@/pages/report/ReportFormPage.vue";
 
 
 const BACKEND_URL = '';
@@ -69,6 +70,7 @@ const routes = [
     { path: '/reports/things', component: ReportThingPage, meta: { auth: true }},
     { path: '/reports/arms', component: ReportArmPage, meta: { auth: true }},
     { path: '/reports/general', component: ReportGeneralPage, meta: { auth: true }},
+    { path: '/reports/forms', component: ReportFormPage, meta: { auth: true }},
 
     { path: '/admin', component: AdminPage, meta: { auth: true } },
     { path: '/admin/positions', component: AdminPositionPage, meta: { auth: true } },

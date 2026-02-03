@@ -27,7 +27,7 @@ class NetworkThingSeeder extends Seeder
         DB::table('network_things')->truncate();
         $networkThings = DB::table('things')->whereIn('thing_type_id', [
             ThingTypeDictionary::PC, ThingTypeDictionary::ARM, ThingTypeDictionary::FAX, ThingTypeDictionary::KMA,
-            ThingTypeDictionary::PRINTER, ThingTypeDictionary::SERVER, ThingTypeDictionary::NETWORK_BORDER, ThingTypeDictionary::MONOPC,
+            ThingTypeDictionary::PRINTER_BW, ThingTypeDictionary::SERVER, ThingTypeDictionary::NETWORK_BORDER, ThingTypeDictionary::MONOPC,
             ThingTypeDictionary::STORAGE
         ])->get();
         foreach ($networkThings as $networkThing) {
@@ -47,7 +47,7 @@ class NetworkThingSeeder extends Seeder
         }
 
         $telephones = DB::table('things')->whereIn('thing_type_id', [
-            ThingTypeDictionary::TELEPHONE
+            ThingTypeDictionary::IP_TELEPHONE
         ])->get();
         foreach ($telephones as $telephone) {
             $networkThingsId = DB::table('network_things')->insertGetId([
