@@ -295,10 +295,12 @@ class ReportService
 
         $sheet->setCellValue('B11', $organization->name);
         $sheet->setCellValue('C13', $year);
-        $sheet->setCellValue('E22', Auth::user()->people->getFullFio());
-        $sheet->setCellValue('E23', Auth::user()->people->phone_number);
-        $sheet->setCellValue('E24', Auth::user()->email);
-        //ФИО + номер телефона + эл.почта
+
+        //$sheet->setCellValue('E22', Auth::user()->people->getFullFio());
+        //$sheet->setCellValue('E23', Auth::user()->people->phone_number);
+        //$sheet->setCellValue('E24', Auth::user()->email);
+        //почему-то крашится генерация xls
+
         /** Заполнение титульника **/
 
         /** Заполнение основной части(ПТС) **/
