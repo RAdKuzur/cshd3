@@ -1,6 +1,7 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useAuthContextStore } from "@/services/AuthContext";
+import router from "@/router.js";
 
 axios.defaults.withCredentials = true;
 
@@ -21,10 +22,20 @@ axios.interceptors.response.use(
             Cookies.remove("access_token");
             Cookies.remove("refresh_token");
             authStore.user = null;
+            // придумать перенаправление (см. пример ниже)
         }
 
         if (error.response?.status === 403) {
-            // опционально: флаг в store
+            if(error.response?.data?.error === 'Licence error')
+            {
+                router.push('/licence-error');
+            }
+            else {
+                router.push('/forbidden');
+            }
+        }
+        if (error.response?.status === 500) {
+            router.push('/iternal-error');
         }
 
         return Promise.reject(error);

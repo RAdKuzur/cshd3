@@ -46,6 +46,7 @@ import NetworkThingViewPage from "@/pages/thing/network-things/NetworkThingViewP
 import NetworkThingEditPage from "@/pages/thing/network-things/NetworkThingEditPage.vue";
 import SearchPage from "@/pages/search/SearchPage.vue";
 import ReportFormPage from "@/pages/report/ReportFormPage.vue";
+import IternalErrorPage from "@/pages/error/IternalErrorPage.vue";
 
 
 const BACKEND_URL = '';
@@ -57,6 +58,7 @@ const routes = [
     { path: '/forbidden', component: ForbiddenErrorPage  },
     { path: '/licence-error', component: LicenceErrorPage },
     { path: '/tech-work', component: TechWorkErrorPage },
+    { path: '/iternal-error', component: IternalErrorPage },
     { path: '/home', component: HomePage },
     { path: '/login', component: LoginPage },
     { path: '/logout' }, // special route for logout
