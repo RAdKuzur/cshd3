@@ -281,9 +281,11 @@ class ThingService
         DB::transaction(function () use ($id, $dto) {
 
             $thing = $this->thingRepository->get($id);
-
-            //            TODO edit
-            $thing->update([
+//          $thing->update([
+//              'condition' => $dto->condition,
+//              'comment' => $dto->comment,
+//          ]);
+            $this->thingRepository->update($id,[
                 'condition' => $dto->condition,
                 'comment' => $dto->comment,
             ]);

@@ -10,7 +10,10 @@ use Illuminate\Support\Facades\DB;
 
 class NetworkThingRepository
 {
-
+    public function isPossibleToCreate($thingId) : bool
+    {
+        return !DB::table('network_things')->where('thing_id', $thingId)->exists();
+    }
     public function getAll()
     {
         return NetworkThing::all();

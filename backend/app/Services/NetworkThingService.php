@@ -57,7 +57,9 @@ class NetworkThingService
 
         DB::beginTransaction();
         try {
-            $this->networkThingRepository->create($networkThingDTO->toArray());
+            if($this->networkThingRepository->isPossibleToCreate($networkThingDTO->thing_id)){
+                $this->networkThingRepository->create($networkThingDTO->toArray());
+            }
             DB::commit();
         }
         catch (\Exception $e) {
