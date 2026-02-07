@@ -32,11 +32,9 @@ class LicenceCheckCommand extends Command
         DB::beginTransaction();
         try {
             $url = env('LICENCE_URL_APP');
-            $licenceKey = DB::table('licences')->where([
-                ['is_revoked', '=', LicenceDictionary::ACTIVE],
-                ['expires_at', '>', now()]
-            ])->first();
+            $licenceKeys = DB::table('licences')->get();
             $key = env('APP_KEY');
+            foreach ($licenceKeys as $licenceKey) {
             if ($licenceKey && $url) {
                 $response = Http::post($url, [
                     'app_key' => $key,
@@ -53,13 +51,10 @@ class LicenceCheckCommand extends Command
                         );
                         break;
                     case 404:
-                        DB::table('licences')->where(['id' => $licenceKey->id])->update(
-                            [
-                                'is_revoked' => LicenceDictionary::REVOKED,
-                            ]
-                        );
+                        DB::table('licences')->where(['id' => $licenceKey->id])->delete();
                         break;
                 }
+            }
             }
             DB::commit();
         }
