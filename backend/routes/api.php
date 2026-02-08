@@ -28,6 +28,8 @@ use App\Http\Middleware\TechWorkMiddleware;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/metrics', [MetricsController::class, 'metrics'])->name('metrics');
+Route::get('/test', [TestController::class, 'test'])->name('test');
+Route::get('/tests', [TestController::class, 'tests'])->name('tests');
 
 Route::middleware([PrometheusMiddleware::class])->group(function () {
 

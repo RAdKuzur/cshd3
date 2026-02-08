@@ -63,10 +63,7 @@
                     'w-full px-4 py-3 pl-12 border rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-1 transition-all',
                     error ? 'border-red-300 focus:border-red-500 focus:ring-red-500 bg-red-50' :
                            'border-gray-300 focus:border-green-500 focus:ring-green-500 hover:border-gray-400'
-                  ]"Лицензия успешно активирована!
-                    Система готова к работе с полным функционалом.
-
-
+                  ]"
                     autocomplete="off"
                     spellcheck="false"
                 />

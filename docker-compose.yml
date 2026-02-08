@@ -199,6 +199,7 @@ services:
      memlock:
        soft: -1
        hard: -1
+   restart: always
 
   promtail:
     image: grafana/promtail:latest
@@ -211,6 +212,7 @@ services:
     command: -config.file=/etc/promtail/config.yml
     networks:
       - network
+    restart: always
 
   loki:
     image: grafana/loki:latest
@@ -223,6 +225,7 @@ services:
     command: -config.file=/etc/loki/local-config.yaml
     networks:
       - network
+    restart: always
 
   prometheus:
     image: prom/prometheus:latest
@@ -236,6 +239,7 @@ services:
       - network
     depends_on:
       - backend
+    restart: always
 
   grafana:
     image: grafana/grafana:latest
@@ -252,6 +256,7 @@ services:
       - network
     depends_on:
       - backend
+    restart: always
 
 volumes:
   db_data:
