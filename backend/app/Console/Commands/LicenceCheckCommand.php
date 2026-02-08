@@ -72,6 +72,9 @@ class LicenceCheckCommand extends Command
                         );
                     }
                 }
+                if($url === '') {
+                    DB::table('licences')->where(['id' => $licenceKey->id])->delete();
+                }
             }
             DB::commit();
         }
