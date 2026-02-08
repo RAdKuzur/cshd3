@@ -17,14 +17,12 @@ class PermissionSeeder extends Seeder
     {
         //rules
         DB::table('rules')->truncate();
-        $allRoutes = Route::getRoutes();
+        $allRoutes = RoleDictionary::ADMIN_RULES;
         foreach ($allRoutes as $index => $route) {
-            if (trim($route->getName()) !== '' && $route->getName() !== 'storage.local') {
-                DB::table('rules')->insert([
-                    'path' => $route->getName(),
-                    'name' => 'Правило' . $index
-                ]);
-            }
+            DB::table('rules')->insert([
+                'path' => $route,
+                'name' => 'Правило' . $index
+            ]);
         }
         //permissions
         DB::table('permissions')->truncate();

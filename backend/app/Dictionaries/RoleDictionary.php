@@ -42,10 +42,10 @@ class RoleDictionary implements BaseDictionary
         "admin.positions.create",
         "admin.positions.update",
         "admin.positions.delete",
-        "admin.positions.all",
-        "admin.positions.create",
-        "admin.positions.update",
-        "admin.positions.delete",
+        "admin.auditoriums.all",
+        "admin.auditoriums.create",
+        "admin.auditoriums.update",
+        "admin.auditoriums.delete",
         "admin.branches.all",
         "admin.branches.create",
         "admin.branches.update",
@@ -57,7 +57,7 @@ class RoleDictionary implements BaseDictionary
         "admin.users.delete",
         "reports.auditorium",
         "reports.auditoriums",
-        "reports.positions",
+        "reports.things",
         "reports.workstations",
         "reports.general",
         "reports.form-extended",
@@ -89,8 +89,6 @@ class RoleDictionary implements BaseDictionary
         "network-things.telephones",
         "search",
         "licence.create",
-        "test",
-        "tests"
     ];
     public const DIRECTOR_RULES = [
         "login",
@@ -121,7 +119,7 @@ class RoleDictionary implements BaseDictionary
         "auditorium.map",
         "reports.auditorium",
         "reports.auditoriums",
-        "reports.positions",
+        "reports.things",
         "reports.workstations",
         "reports.general",
         "reports.form-extended",
@@ -146,8 +144,6 @@ class RoleDictionary implements BaseDictionary
         "notifications.delete-all-user-notifications",
         "network-things.telephones",
         "search",
-        "test",
-        "tests"
     ];
     public const WORKER_RULES = [
         "login",
@@ -175,7 +171,7 @@ class RoleDictionary implements BaseDictionary
         "auditorium.map",
         "reports.auditorium",
         "reports.auditoriums",
-        "reports.positions",
+        "reports.things",
         "reports.workstations",
         "reports.general",
         "reports.form-extended",
@@ -197,8 +193,6 @@ class RoleDictionary implements BaseDictionary
         "notifications.delete-all-user-notifications",
         "network-things.telephones",
         "search",
-        "test",
-        "tests"
     ];
     public const STUFF_MANAGER_RULES = [
         "login",
@@ -224,10 +218,10 @@ class RoleDictionary implements BaseDictionary
         "things.furniture",
         "things.get-one",
         "auditorium.map",
-        "admin.positions.all",
-        "admin.positions.create",
-        "admin.positions.update",
-        "admin.positions.delete",
+        "admin.auditoriums.all",
+        "admin.auditoriums.create",
+        "admin.auditoriums.update",
+        "admin.auditoriums.delete",
         "admin.positions.all",
         "admin.positions.create",
         "admin.positions.update",
@@ -253,8 +247,6 @@ class RoleDictionary implements BaseDictionary
         "notifications.delete-all-user-notifications",
         "network-things.telephones",
         "search",
-        "test",
-        "tests"
     ];
     public const ACCOUNTANT_RULES = [
         "login",
@@ -286,7 +278,7 @@ class RoleDictionary implements BaseDictionary
         "auditorium.map",
         "reports.auditorium",
         "reports.auditoriums",
-        "reports.positions",
+        "reports.things",
         "reports.workstations",
         "reports.general",
         "reports.form-extended",
@@ -311,8 +303,6 @@ class RoleDictionary implements BaseDictionary
         "notifications.delete-all-user-notifications",
         "network-things.telephones",
         "search",
-        "test",
-        "tests"
     ];
     public static function type(){
         return [
