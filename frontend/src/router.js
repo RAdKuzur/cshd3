@@ -47,6 +47,7 @@ import NetworkThingEditPage from "@/pages/thing/network-things/NetworkThingEditP
 import SearchPage from "@/pages/search/SearchPage.vue";
 import ReportFormPage from "@/pages/report/ReportFormPage.vue";
 import IternalErrorPage from "@/pages/error/IternalErrorPage.vue";
+import AdminLicencePage from "@/pages/admin/licence/AdminLicencePage.vue";
 
 
 const BACKEND_URL = '';
@@ -78,6 +79,7 @@ const routes = [
     { path: '/admin/positions', component: AdminPositionPage, meta: { auth: true } },
     { path: '/admin/auditoriums', component: AdminAuditoriumPage, meta: { auth: true } },
     { path: '/admin/branches', component: AdminBranchPage, meta: { auth: true } },
+    { path: '/admin/licences', component: AdminLicencePage, meta: { auth: true } },
     { path: '/admin/users', component: AdminUserPage, meta: { auth: true } },
     { path: '/admin/users/create', component: AdminUserCreatePage, meta: { auth: true } },
     { path: '/admin/users/edit/:id', component: AdminUserEditPage, meta: { auth: true } },

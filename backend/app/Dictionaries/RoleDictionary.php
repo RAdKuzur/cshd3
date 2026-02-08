@@ -88,6 +88,7 @@ class RoleDictionary implements BaseDictionary
         "network-things.delete",
         "network-things.telephones",
         "search",
+        "licence.create",
         "test",
         "tests"
     ];

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Dictionaries\LicenceDictionary;
+use App\DTO\LicenceDTO;
 use App\Models\Licence;
 use App\Repositories\LicenceRepository;
 use Illuminate\Support\Facades\DB;
@@ -39,10 +40,14 @@ class LicenceService
 
     }
 
-    public function create($data) {
+    public function create(LicenceDTO $licenceDTO) {
         DB::beginTransaction();
         try {
-            $this->licenceRepository->create($data);
+            $this->licenceRepository->create([
+                'code' => $licenceDTO->licenceKey,
+                'expires_at' => now()->addMinutes(5),
+                'is_revoked' => LicenceDictionary::ACTIVE
+            ]);
             DB::commit();
         }
         catch (\Exception $e) {

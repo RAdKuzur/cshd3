@@ -8,6 +8,7 @@ use App\Http\Controllers\AuditoriumController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\InfoController;
+use App\Http\Controllers\LicenceController;
 use App\Http\Controllers\MetricsController;
 use App\Http\Controllers\NetworkThingController;
 use App\Http\Controllers\NotificationController;
@@ -124,6 +125,8 @@ Route::middleware([PrometheusMiddleware::class, LicenceMiddleware::class, CheckP
     Route::get('/telephones', [NetworkThingController::class, 'telephones'])->name('network-things.telephones');
 
     Route::post('/search', [SearchController::class, 'search'])->name('search');
+
+    Route::post('/licence', [LicenceController::class, 'create'])->name('licence.create');
 });
 Route::get('/metrics', [MetricsController::class, 'metrics'])->name('metrics');
 Route::get('/test' , [TestController::class, 'test'])->name('test');
