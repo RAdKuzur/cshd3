@@ -200,41 +200,41 @@
               </div>
               <div>
                 <h3 class="font-medium text-amber-900">Внимание!</h3>
-                <p class="text-sm text-amber-800 mt-1">Во время технических работ система будет полностью недоступна для всех пользователей.</p>
+                <p class="text-sm text-amber-800 mt-1">Во время технических работ система будет недоступна.</p>
               </div>
             </div>
           </div>
 
           <!-- Карточка рекомендаций -->
-          <div class="bg-white rounded-2xl shadow-lg p-6">
-            <h3 class="font-medium text-gray-900 mb-4 flex items-center gap-2">
-              <svg class="w-5 h-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              Рекомендации
-            </h3>
-            <ul class="space-y-3">
-              <li class="flex items-start gap-2">
-                <svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-                <span class="text-sm text-gray-700">Выбирайте время с минимальной нагрузкой на систему</span>
-              </li>
-              <li class="flex items-start gap-2">
-                <svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-                <span class="text-sm text-gray-700">Предупредите пользователей о предстоящих работах</span>
-              </li>
-              <li class="flex items-start gap-2">
-                <svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-                <span class="text-sm text-gray-700">Убедитесь, что все изменения сохранены</span>
-              </li>
-            </ul>
-          </div>
+<!--          <div class="bg-white rounded-2xl shadow-lg p-6">-->
+<!--            <h3 class="font-medium text-gray-900 mb-4 flex items-center gap-2">-->
+<!--              <svg class="w-5 h-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">-->
+<!--                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"-->
+<!--                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />-->
+<!--              </svg>-->
+<!--              Рекомендации-->
+<!--            </h3>-->
+<!--            <ul class="space-y-3">-->
+<!--              <li class="flex items-start gap-2">-->
+<!--                <svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">-->
+<!--                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />-->
+<!--                </svg>-->
+<!--                <span class="text-sm text-gray-700">Выбирайте время с минимальной нагрузкой на систему</span>-->
+<!--              </li>-->
+<!--              <li class="flex items-start gap-2">-->
+<!--                <svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">-->
+<!--                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />-->
+<!--                </svg>-->
+<!--                <span class="text-sm text-gray-700">Предупредите пользователей о предстоящих работах</span>-->
+<!--              </li>-->
+<!--              <li class="flex items-start gap-2">-->
+<!--                <svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">-->
+<!--                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />-->
+<!--                </svg>-->
+<!--                <span class="text-sm text-gray-700">Убедитесь, что все изменения сохранены</span>-->
+<!--              </li>-->
+<!--            </ul>-->
+<!--          </div>-->
 
           <!-- Карточка активных работ -->
           <div v-if="activeTechWorks.length > 0" class="bg-white rounded-2xl shadow-lg p-6">

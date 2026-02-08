@@ -67,7 +67,7 @@ const routes = [
     { path: '/logout' }, // special route for logout
 
     { path: '/profile/:username', component: ProfilePage, meta: { auth: true } },
-    { path: '/stuff', component: StuffPage },
+    { path: '/stuff', component: StuffPage, meta: { auth: true } },
     { path: '/map', component: MapPage, meta: { auth: true } },
     { path: '/map/general', component:  GeneralMapPage, meta: { auth: true }},
     { path: '/reports', component: ReportPage, meta: { auth: true }},
