@@ -48,6 +48,7 @@ import SearchPage from "@/pages/search/SearchPage.vue";
 import ReportFormPage from "@/pages/report/ReportFormPage.vue";
 import IternalErrorPage from "@/pages/error/IternalErrorPage.vue";
 import AdminLicencePage from "@/pages/admin/licence/AdminLicencePage.vue";
+import AdminTechWorkPage from "@/pages/admin/tech-work/AdminTechWorkPage.vue";
 
 
 const BACKEND_URL = '';
@@ -55,6 +56,7 @@ const BACKEND_URL = '';
 const routes = [
     { path: '/', redirect: '/home' },
     { path: '/:pathMatch(.*)*', component: ErrorPage },
+    { path: '/not-found', component: ErrorPage },
     { path: '/not-auth', component:  AuthErrorPage  },
     { path: '/forbidden', component: ForbiddenErrorPage  },
     { path: '/licence-error', component: LicenceErrorPage },
@@ -80,6 +82,7 @@ const routes = [
     { path: '/admin/auditoriums', component: AdminAuditoriumPage, meta: { auth: true } },
     { path: '/admin/branches', component: AdminBranchPage, meta: { auth: true } },
     { path: '/admin/licences', component: AdminLicencePage, meta: { auth: true } },
+    { path: '/admin/tech-works', component: AdminTechWorkPage, meta: { auth: true } },
     { path: '/admin/users', component: AdminUserPage, meta: { auth: true } },
     { path: '/admin/users/create', component: AdminUserCreatePage, meta: { auth: true } },
     { path: '/admin/users/edit/:id', component: AdminUserEditPage, meta: { auth: true } },

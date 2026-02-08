@@ -22,6 +22,7 @@ class NetworkThingSeeder extends Seeder
     }
     public function run(): void
     {
+        $this->elasticsearchService->delete('network-things');
         $this->elasticsearchService->create('network-things');
 
         DB::table('network_things')->truncate();

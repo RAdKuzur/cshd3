@@ -31,6 +31,7 @@ class ThingSeeder extends Seeder
 
     public function run(): void
     {
+        $this->elasticsearchService->delete('things');
         $this->elasticsearchService->create('things');
         //things-electronics
         DB::table('things')->truncate();

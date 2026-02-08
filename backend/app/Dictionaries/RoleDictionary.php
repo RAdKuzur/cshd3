@@ -89,6 +89,9 @@ class RoleDictionary implements BaseDictionary
         "network-things.telephones",
         "search",
         "licence.create",
+        "tech-works.all",
+        "tech-works.create",
+        "tech-works.cancel"
     ];
     public const DIRECTOR_RULES = [
         "login",

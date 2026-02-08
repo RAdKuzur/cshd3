@@ -11,6 +11,21 @@
 
           <div class="flex flex-wrap items-center gap-3">
             <button
+                @click="navigateTo('/admin/tech-works')"
+                class="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-500 to-amber-600
+                     text-white font-medium rounded-lg hover:from-orange-600 hover:to-amber-700
+                     transition-all hover:shadow-lg active:scale-[0.98] focus:outline-none focus:ring-2
+                     focus:ring-orange-500 focus:ring-offset-2"
+            >
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z" />
+              </svg>
+              Технические работы
+            </button>
+
+            <!-- Кнопка Ввести лицензию -->
+            <button
                 @click="navigateTo('/admin/licences')"
                 class="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600
                      text-white font-medium rounded-lg hover:from-green-600 hover:to-emerald-700

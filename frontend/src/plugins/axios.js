@@ -30,9 +30,15 @@ axios.interceptors.response.use(
             {
                 router.push('/licence-error');
             }
-            else {
+            else if(error.response?.data?.error === 'Tech work')  {
+                router.push('/tech-work');
+            }
+            else if(error.response?.data?.error === 'Forbidden'){
                 router.push('/forbidden');
             }
+        }
+        if (error.response?.status === 404) {
+            router.push('/not-found');
         }
         if (error.response?.status === 500) {
             router.push('/iternal-error');

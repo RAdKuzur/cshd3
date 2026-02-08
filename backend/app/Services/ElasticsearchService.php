@@ -81,7 +81,7 @@ class ElasticsearchService
     }
 
     public function delete($index){
-        $this->client->delete([
+        $this->client->indices()->delete([
             'index' => $index
         ]);
     }

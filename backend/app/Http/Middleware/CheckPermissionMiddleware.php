@@ -37,6 +37,7 @@ class CheckPermissionMiddleware
             return $next($request);
         }
         return response()->json([
+            'error' => 'Forbidden',
             'success' => false,
         ], 403);
     }

@@ -305,7 +305,7 @@ const activateLicence = async () => {
   error.value = ''
 
   try {
-    await axios.post('/api/licence', {
+    await axios.post(BACKEND_URL + '/api/licence', {
       licence_key: licenceKey.value.trim()
     })
 
@@ -370,6 +370,7 @@ const activateAnother = () => {
 
 // При монтировании проверяем сохраненный ключ
 import { onMounted } from 'vue'
+import {BACKEND_URL} from "@/router.js";
 
 onMounted(() => {
   const savedKey = localStorage.getItem('lastLicenceKey')
