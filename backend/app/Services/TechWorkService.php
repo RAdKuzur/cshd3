@@ -5,6 +5,7 @@ namespace App\Services;
 use App\DTO\TechWorkDTO;
 use App\Models\TechWork;
 use App\Repositories\TechWorkRepository;
+use Illuminate\Support\Facades\DB;
 
 class TechWorkService
 {
@@ -31,12 +32,28 @@ class TechWorkService
         return $data;
     }
     public function create(TechWorkDTO $techWorkDTO) {
-        $this->techWorkRepository->create($techWorkDTO->toArray());
+        DB::beginTransaction();
+        try {
+            $this->techWorkRepository->create($techWorkDTO->toArray());
+            DB::commit();
+        }
+        catch (\Exception $e) {
+            DB::rollBack();
+        }
+
     }
     public function cancel($id) {
-        $this->techWorkRepository->update($id, [
-            'status' => TechWork::INACTIVE
-        ]);
+        DB::beginTransaction();
+        try {
+            $this->techWorkRepository->update($id, [
+                'status' => TechWork::INACTIVE
+            ]);
+            DB::commit();
+        }
+        catch (\Exception $e) {
+            DB::rollBack();
+        }
+
     }
 
     public function isTechWork() : bool

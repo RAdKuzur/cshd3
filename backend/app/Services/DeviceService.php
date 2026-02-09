@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\DTO\DeviceDTO;
 use App\Repositories\DeviceRepository;
+use Illuminate\Support\Facades\DB;
 
 class DeviceService
 {
@@ -38,12 +39,36 @@ class DeviceService
     }
 
     public function create(DeviceDTO $deviceDTO) {
-        $this->deviceRepository->create($deviceDTO->toArray());
+        DB::beginTransaction();
+        try {
+            $this->deviceRepository->create($deviceDTO->toArray());
+            DB::commit();
+        }
+        catch (\Exception $e) {
+            DB::rollBack();
+        }
+
     }
     public function update($id, DeviceDTO $deviceDTO) {
-        $this->deviceRepository->update($id, $deviceDTO->toArray());
+        DB::beginTransaction();
+        try {
+            $this->deviceRepository->update($id, $deviceDTO->toArray());
+            DB::commit();
+        }
+        catch (\Exception $e) {
+            DB::rollBack();
+        }
+
     }
     public function delete($id) {
-        $this->deviceRepository->delete($id);
+        DB::beginTransaction();
+        try {
+            $this->deviceRepository->delete($id);
+            DB::commit();
+        }
+        catch (\Exception $e) {
+            DB::rollBack();
+        }
+
     }
 }

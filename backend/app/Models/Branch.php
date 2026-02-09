@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $name
  * @property int $organization_id
  *
- * @property PeoplePosition[] $people
+ * @property PeoplePosition[] $peoplePositions
  * @property Organization $organization
  * @property Auditorium[] $auditoriums
  * */

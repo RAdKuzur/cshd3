@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\DTO\ModelDTO;
 use App\Repositories\ModelRepository;
+use Illuminate\Support\Facades\DB;
 
 class ModelService
 {
@@ -37,12 +38,34 @@ class ModelService
         );
     }
     public function create(ModelDTO $modelDTO) {
-        $this->modelRepository->create($modelDTO->toArray());
+        DB::beginTransaction();
+        try {
+            $this->modelRepository->create($modelDTO->toArray());
+            DB::commit();
+        }
+        catch (\Exception $e) {
+            DB::rollBack();
+        }
     }
     public function update($id, ModelDTO $modelDTO) {
-        $this->modelRepository->update($id, $modelDTO->toArray());
+        DB::beginTransaction();
+        try {
+            $this->modelRepository->update($id, $modelDTO->toArray());
+            DB::commit();
+        }
+        catch (\Exception $e) {
+            DB::rollBack();
+        }
     }
     public function delete($id) {
-        $this->modelRepository->delete($id);
+        DB::beginTransaction();
+        try {
+            $this->modelRepository->delete($id);
+            DB::commit();
+        }
+        catch (\Exception $e) {
+            DB::rollBack();
+        }
+
     }
 }

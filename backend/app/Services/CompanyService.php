@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\DTO\CompanyDTO;
 use App\Repositories\CompanyRepository;
+use Illuminate\Support\Facades\DB;
 
 class CompanyService
 {
@@ -35,12 +36,35 @@ class CompanyService
         );
     }
     public function create(CompanyDTO $companyDTO) {
-        $this->companyRepository->create($companyDTO->toArray());
+        DB::beginTransaction();
+        try {
+            $this->companyRepository->create($companyDTO->toArray());
+            DB::commit();
+        }
+        catch (\Exception $e) {
+            DB::rollBack();
+        }
+
     }
     public function update($id, CompanyDTO $companyDTO) {
-        $this->companyRepository->update($id, $companyDTO->toArray());
+        DB::beginTransaction();
+        try {
+            $this->companyRepository->update($id, $companyDTO->toArray());
+            DB::commit();
+        }
+        catch (\Exception $e) {
+            DB::rollBack();
+        }
+
     }
     public function delete($id) {
-        $this->companyRepository->delete($id);
+        DB::beginTransaction();
+        try {
+            $this->companyRepository->delete($id);
+            DB::commit();
+        }
+        catch (\Exception $e) {
+            DB::rollBack();
+        }
     }
 }
