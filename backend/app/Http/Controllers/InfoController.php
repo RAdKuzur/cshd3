@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Dictionaries\ConditionDictionary;
+use App\Dictionaries\ResourceTypeDictionary;
 use App\Dictionaries\RoleDictionary;
 use App\Dictionaries\ThingBalanceDictionary;
 use App\Dictionaries\ThingTypeDictionary;
@@ -70,6 +71,16 @@ class InfoController extends Controller
     public function roles()
     {
         $data = RoleDictionary::type();
+        return response()->json([
+            'success' => true,
+            'code' => 200,
+            'data' => $data
+        ]);
+    }
+
+    public function resourceTypes()
+    {
+        $data = ResourceTypeDictionary::type();
         return response()->json([
             'success' => true,
             'code' => 200,

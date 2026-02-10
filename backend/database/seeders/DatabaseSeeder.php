@@ -29,7 +29,8 @@ class DatabaseSeeder extends Seeder
             ThingSeeder::class,
             //TransferActSeeder::class,
             LicenceSeeder::class,
-            NetworkThingSeeder::class
+            NetworkThingSeeder::class,
+            ResourceSeeder::class
         ]);
     }
 }

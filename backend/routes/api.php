@@ -6,14 +6,18 @@ use App\Http\Controllers\AdminPositionController;
 use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\AuditoriumController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\DeviceController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\InfoController;
 use App\Http\Controllers\LicenceController;
 use App\Http\Controllers\MetricsController;
+use App\Http\Controllers\ModelController;
 use App\Http\Controllers\NetworkThingController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PeopleController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ResourceController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\TechWorkController;
 use App\Http\Controllers\TestController;
@@ -45,7 +49,7 @@ Route::middleware([PrometheusMiddleware::class])->group(function () {
         Route::post('/tech-works/{id}/cancel', [TechWorkController::class, 'cancel'])->name('tech-works.cancel');
 
         Route::middleware([TechWorkMiddleware::class])->group(function () {
-            Route::post('/licence', [LicenceController::class, 'create'])->name('licence.create');
+            Route::post('/licence', [LicenceController::class, 'create'])->name('licences.create');
             Route::get('/profile/{username}', [UserController::class, 'profile'])->name('profile');
 
             Route::get('/notifications/{username}', [NotificationController::class, 'getUserNotifications'])->name('notifications.get-user-notifications');
@@ -64,13 +68,14 @@ Route::middleware([PrometheusMiddleware::class])->group(function () {
                 Route::get('/info/branches', [InfoController::class, 'branches'])->name('info.branches');
                 Route::get('/info/transfer-acts/types', [InfoController::class, 'transferActTypes'])->name('info.transfer-acts.types');
                 Route::get('/info/roles', [InfoController::class, 'roles'])->name('info.roles');
+                Route::get('/info/resource-types', [InfoController::class, 'resourceTypes'])->name('info.resource-types');
 
-                Route::get('/auditoriums', [AuditoriumController::class, 'all'])->name('auditorium.all');
+                Route::get('/auditoriums', [AuditoriumController::class, 'all'])->name('auditoriums.all');
                 Route::get('/things/simple-things', [ThingController::class, 'simpleThings'])->name('things.simple-things');
 
                 Route::post('/things/composite', [ThingController::class, 'compositeCreate'])->name('things.composite-create');
                 Route::get('/things', [ThingController::class, 'all'])->name('things.all');
-                Route::get('/things/person/{id}', [ThingController::class, 'personThings'])->name('things.person');
+                Route::get('/things/person/{id}', [ThingController::class, 'personThings'])->name('things.person'); //refactoring
                 Route::get('/things/free', [ThingController::class, 'getFreeThings'])->name('things.free');
 
                 Route::get('/stuff', [PeopleController::class, 'stuff'])->name('stuff');
@@ -83,7 +88,7 @@ Route::middleware([PrometheusMiddleware::class])->group(function () {
                 Route::put('/things/{id}', [ThingController::class, 'update'])->name('things.update');
                 Route::delete('/things/{id}', [ThingController::class, 'delete'])->name('things.delete');
 
-                Route::get('/auditoriums/map', [AuditoriumController::class, 'map'])->name('auditorium.map');
+                Route::get('/auditoriums/map', [AuditoriumController::class, 'map'])->name('auditoriums.map');
 
                 Route::get('/admin/positions', [AdminPositionController::class, 'all'])->name('admin.positions.all');
                 Route::post('/admin/positions', [AdminPositionController::class, 'create'])->name('admin.positions.create');
@@ -119,7 +124,7 @@ Route::middleware([PrometheusMiddleware::class])->group(function () {
                 Route::post('/transfer-acts', [TransferActController::class, 'create'])->name('transfer-acts.create');
                 Route::put('/transfer-acts/{id}', [TransferActController::class, 'update'])->name('transfer-acts.update');
                 Route::delete('/transfer-acts/{id}', [TransferActController::class, 'delete'])->name('transfer-acts.delete');
-                Route::get('/transfer-acts/things/{id}', [ThingController::class, 'transferActThings'])->name('things.transfer-act-things');
+                Route::get('/transfer-acts/things/{id}', [ThingController::class, 'transferActThings'])->name('things.transfer-act-things'); //refactoring
                 Route::post('/transfer-acts/confirm', [TransferActController::class, 'confirm'])->name('transfer-acts.confirm');
                 Route::post('/transfer-acts/cancel-confirm', [TransferActController::class, 'cancelConfirm'])->name('transfer-acts.cancel-confirm');
 
@@ -127,7 +132,7 @@ Route::middleware([PrometheusMiddleware::class])->group(function () {
 
                 Route::get('/files', [FileController::class, 'all'])->name('files.all');
                 Route::get('/files/{id}', [FileController::class, 'getOne'])->name('files.get-one');
-                Route::get('/files/download/{id}', [FileController::class, 'download'])->name('files.download');
+                Route::get('/files/download/{id}', [FileController::class, 'download'])->name('files.download'); //refactoring
                 Route::post('/files', [FileController::class, 'upload'])->name('files.upload');
                 Route::delete('/files/{id}', [FileController::class, 'delete'])->name('files.delete');
 
@@ -140,6 +145,30 @@ Route::middleware([PrometheusMiddleware::class])->group(function () {
                 Route::get('/telephones', [NetworkThingController::class, 'telephones'])->name('network-things.telephones');
 
                 Route::post('/search', [SearchController::class, 'search'])->name('search');
+
+                Route::get('/companies', [CompanyController::class, 'all'])->name('companies.all');
+                Route::get('/companies/{id}', [CompanyController::class, 'getOne'])->name('companies.get-one');
+                Route::post('/companies', [CompanyController::class, 'create'])->name('companies.create');
+                Route::put('/companies/{id}', [CompanyController::class, 'update'])->name('companies.update');
+                Route::delete('/companies/{id}', [CompanyController::class, 'delete'])->name('companies.delete');
+
+                Route::get('/models', [ModelController::class, 'all'])->name('models.all');
+                Route::get('/models/{id}', [ModelController::class, 'getOne'])->name('models.get-one');
+                Route::post('/models', [ModelController::class, 'create'])->name('models.create');
+                Route::put('/models/{id}', [ModelController::class, 'update'])->name('models.update');
+                Route::delete('/models/{id}', [ModelController::class, 'delete'])->name('models.delete');
+
+                Route::get('/devices', [DeviceController::class, 'all'])->name('devices.all');
+                Route::get('/devices/{id}', [DeviceController::class, 'getOne'])->name('devices.get-one');
+                Route::post('/devices', [DeviceController::class, 'create'])->name('devices.create');
+                Route::put('/devices/{id}', [DeviceController::class, 'update'])->name('devices.update');
+                Route::delete('/devices/{id}', [DeviceController::class, 'delete'])->name('devices.delete');
+
+                Route::get('/resources', [ResourceController::class, 'all'])->name('resources.all');
+                Route::get('/resources/{id}', [ResourceController::class, 'getOne'])->name('resources.get-one');
+                Route::post('/resources', [ResourceController::class, 'create'])->name('resources.create');
+                Route::put('/resources/{id}', [ResourceController::class, 'update'])->name('resources.update');
+                Route::delete('/resources/{id}', [ResourceController::class, 'delete'])->name('resources.delete');
             });
         });
     });
