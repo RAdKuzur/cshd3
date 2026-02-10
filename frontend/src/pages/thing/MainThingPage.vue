@@ -12,7 +12,7 @@
       </div>
 
       <!-- Сетка категорий -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         <!-- Оборудование -->
         <div
             class="relative overflow-hidden rounded-xl p-6 flex flex-col justify-between
@@ -42,6 +42,35 @@
           </div>
         </div>
 
+        <!-- Устройства (новая карточка) -->
+        <div
+            class="relative overflow-hidden rounded-xl p-6 flex flex-col justify-between
+           bg-gradient-to-br from-violet-500 to-purple-600
+           hover:from-violet-600 hover:to-purple-700
+           transition-all hover:shadow-lg hover:scale-[1.01]
+           cursor-pointer group"
+            @click="navigateTo('/things/devices')"
+        >
+          <DevicePhoneMobileIcon
+              class="absolute right-6 top-6 h-12 w-12 text-white/25 pointer-events-none"
+          />
+
+          <div class="pr-16">
+            <h3 class="text-xl font-semibold text-white mb-2">
+              Устройства
+            </h3>
+            <p class="text-sm text-violet-100 leading-relaxed">
+              Мобильные устройства, планшеты, периферия и гаджеты
+            </p>
+          </div>
+
+          <div class="mt-6 flex justify-end">
+            <ArrowRightIcon
+                class="h-5 w-5 text-white transition-transform group-hover:translate-x-1"
+            />
+          </div>
+        </div>
+
         <!-- Сетевые устройства -->
         <div
             class="relative overflow-hidden rounded-xl p-6 flex flex-col justify-between
@@ -61,6 +90,35 @@
             </h3>
             <p class="text-sm text-cyan-100 leading-relaxed">
               Маршрутизаторы, коммутаторы, точки доступа и серверы
+            </p>
+          </div>
+
+          <div class="mt-6 flex justify-end">
+            <ArrowRightIcon
+                class="h-5 w-5 text-white transition-transform group-hover:translate-x-1"
+            />
+          </div>
+        </div>
+
+        <!-- Расходные материалы (новая карточка) -->
+        <div
+            class="relative overflow-hidden rounded-xl p-6 flex flex-col justify-between
+           bg-gradient-to-br from-amber-500 to-orange-600
+           hover:from-amber-600 hover:to-orange-700
+           transition-all hover:shadow-lg hover:scale-[1.01]
+           cursor-pointer group"
+            @click="navigateTo('/things/resources')"
+        >
+          <ArchiveBoxIcon
+              class="absolute right-6 top-6 h-12 w-12 text-white/25 pointer-events-none"
+          />
+
+          <div class="pr-16">
+            <h3 class="text-xl font-semibold text-white mb-2">
+              Расходные материалы
+            </h3>
+            <p class="text-sm text-amber-100 leading-relaxed">
+              Бумага, картриджи, канцелярия и прочие расходники
             </p>
           </div>
 
@@ -143,17 +201,20 @@ import {
   DocumentTextIcon,
   CubeIcon,
   ArrowRightIcon,
+  DevicePhoneMobileIcon, // Новая иконка для устройств
+  ArchiveBoxIcon, // Новая иконка для расходных материалов
 } from '@heroicons/vue/24/outline'
 const router = useRouter()
 
 // Моковые данные для демонстрации
 const categories = ref({
   electronics: 42,
+  devices: 38, // Добавлено для устройств
   furniture: 28,
-  consumables: 156,
+  resources: 156, // Добавлено для расходных материалов
   other: 19,
   acts: 15,
-  network: 25 // Добавлено для сетевых устройств
+  network: 25
 })
 
 // Методы

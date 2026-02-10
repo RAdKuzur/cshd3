@@ -232,6 +232,76 @@
               </div>
             </div>
           </div>
+
+          <!-- Компании -->
+          <div
+              class="relative overflow-hidden rounded-xl p-6 flex flex-col justify-between
+           bg-gradient-to-br from-cyan-500 to-sky-600
+           hover:from-cyan-600 hover:to-sky-700
+           transition-all hover:shadow-lg hover:scale-[1.01]
+           cursor-pointer group"
+              @click="navigateTo('/admin/companies')"
+          >
+            <div class="absolute right-6 top-6">
+              <div class="bg-white/20 backdrop-blur-sm p-3 rounded-xl">
+                <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                </svg>
+              </div>
+            </div>
+
+            <div class="pr-16">
+              <h3 class="text-xl font-semibold text-white mb-2">
+                Компании
+              </h3>
+              <p class="text-sm text-cyan-100 leading-relaxed">
+                Управление организациями-партнерами, поставщиками и клиентами
+              </p>
+            </div>
+
+            <div class="mt-6 flex justify-end">
+              <div class="bg-white/20 p-2 rounded-lg group-hover:bg-white/30 transition-colors">
+                <svg class="w-5 h-5 text-white transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Модели устройств -->
+          <div
+              class="relative overflow-hidden rounded-xl p-6 flex flex-col justify-between
+           bg-gradient-to-br from-lime-500 to-green-600
+           hover:from-lime-600 hover:to-green-700
+           transition-all hover:shadow-lg hover:scale-[1.01]
+           cursor-pointer group"
+              @click="navigateTo('/admin/models')"
+          >
+            <div class="absolute right-6 top-6">
+              <div class="bg-white/20 backdrop-blur-sm p-3 rounded-xl">
+                <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+                </svg>
+              </div>
+            </div>
+
+            <div class="pr-16">
+              <h3 class="text-xl font-semibold text-white mb-2">
+                Модели устройств
+              </h3>
+              <p class="text-sm text-lime-100 leading-relaxed">
+                Управление моделями оборудования, их характеристиками и спецификациями
+              </p>
+            </div>
+
+            <div class="mt-6 flex justify-end">
+              <div class="bg-white/20 p-2 rounded-lg group-hover:bg-white/30 transition-colors">
+                <svg class="w-5 h-5 text-white transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -49,6 +49,16 @@ import ReportFormPage from "@/pages/report/ReportFormPage.vue";
 import IternalErrorPage from "@/pages/error/IternalErrorPage.vue";
 import AdminLicencePage from "@/pages/admin/licence/AdminLicencePage.vue";
 import AdminTechWorkPage from "@/pages/admin/tech-work/AdminTechWorkPage.vue";
+import DevicePage from "@/pages/thing/devices/DevicePage.vue";
+import DeviceCreatePage from "@/pages/thing/devices/DeviceCreatePage.vue";
+import DeviceViewPage from "@/pages/thing/devices/DeviceViewPage.vue";
+import DeviceEditPage from "@/pages/thing/devices/DeviceEditPage.vue";
+import ResourcePage from "@/pages/thing/resources/ResourcePage.vue";
+import ResourceCreatePage from "@/pages/thing/resources/ResourceCreatePage.vue";
+import ResourceViewPage from "@/pages/thing/resources/ResourceViewPage.vue";
+import ResourceEditPage from "@/pages/thing/resources/ResourceEditPage.vue";
+import AdminCompanyPage from "@/pages/admin/company/AdminCompanyPage.vue";
+import AdminModelPage from "@/pages/admin/model/AdminModelPage.vue";
 
 
 const BACKEND_URL = '';
@@ -82,6 +92,8 @@ const routes = [
     { path: '/admin/auditoriums', component: AdminAuditoriumPage, meta: { auth: true } },
     { path: '/admin/branches', component: AdminBranchPage, meta: { auth: true } },
     { path: '/admin/licences', component: AdminLicencePage, meta: { auth: true } },
+    { path: '/admin/models', component: AdminModelPage, meta: { auth: true } },
+    { path: '/admin/companies', component: AdminCompanyPage, meta: { auth: true } },
     { path: '/admin/tech-works', component: AdminTechWorkPage, meta: { auth: true } },
     { path: '/admin/users', component: AdminUserPage, meta: { auth: true } },
     { path: '/admin/users/create', component: AdminUserCreatePage, meta: { auth: true } },
@@ -104,6 +116,16 @@ const routes = [
     { path: '/things/network/create', component: NetworkThingCreatePage, meta: { auth: true } },
     { path: '/things/network/view/:id', component: NetworkThingViewPage, meta: { auth: true } },
     { path: '/things/network/edit/:id', component: NetworkThingEditPage, meta: { auth: true } },
+
+    { path: '/things/devices', component: DevicePage, meta: { auth: true } },
+    { path: '/things/devices/create', component: DeviceCreatePage, meta: { auth: true } },
+    { path: '/things/devices/view/:id', component: DeviceViewPage, meta: { auth: true } },
+    { path: '/things/devices/edit/:id', component: DeviceEditPage, meta: { auth: true } },
+
+    { path: '/things/resources', component: ResourcePage, meta: { auth: true } },
+    { path: '/things/resources/create', component: ResourceCreatePage, meta: { auth: true } },
+    { path: '/things/resources/view/:id', component: ResourceViewPage, meta: { auth: true } },
+    { path: '/things/resources/edit/:id', component: ResourceEditPage, meta: { auth: true } },
 
     { path: '/search', component: SearchPage, meta: { auth: true }},
     { path: '/admin/files', component: FilePage , meta: { auth: true } }
