@@ -59,6 +59,8 @@ import ResourceViewPage from "@/pages/thing/resources/ResourceViewPage.vue";
 import ResourceEditPage from "@/pages/thing/resources/ResourceEditPage.vue";
 import AdminCompanyPage from "@/pages/admin/company/AdminCompanyPage.vue";
 import AdminModelPage from "@/pages/admin/model/AdminModelPage.vue";
+import AdminModelResourcePage from "@/pages/admin/model-resource/AdminModelResourcePage.vue";
+import DevelopPage from "@/pages/error/DevelopPage.vue";
 
 
 const BACKEND_URL = '';
@@ -72,6 +74,7 @@ const routes = [
     { path: '/licence-error', component: LicenceErrorPage },
     { path: '/tech-work', component: TechWorkErrorPage },
     { path: '/iternal-error', component: IternalErrorPage },
+    { path: '/develop-page', component: DevelopPage },
     { path: '/home', component: HomePage },
     { path: '/login', component: LoginPage },
     { path: '/logout' }, // special route for logout
@@ -93,6 +96,7 @@ const routes = [
     { path: '/admin/branches', component: AdminBranchPage, meta: { auth: true } },
     { path: '/admin/licences', component: AdminLicencePage, meta: { auth: true } },
     { path: '/admin/models', component: AdminModelPage, meta: { auth: true } },
+    { path: '/admin/model-resources', component: AdminModelResourcePage, meta: { auth: true } },
     { path: '/admin/companies', component: AdminCompanyPage, meta: { auth: true } },
     { path: '/admin/tech-works', component: AdminTechWorkPage, meta: { auth: true } },
     { path: '/admin/users', component: AdminUserPage, meta: { auth: true } },

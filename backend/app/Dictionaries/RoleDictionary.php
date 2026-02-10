@@ -114,6 +114,11 @@ class RoleDictionary implements BaseDictionary
         "resources.create",
         "resources.update",
         "resources.delete",
+        "model-resources.all",
+        "model-resources.get-one",
+        "model-resources.create",
+        "model-resources.update",
+        "model-resources.delete"
     ];
     public const DIRECTOR_RULES = [
         "login",

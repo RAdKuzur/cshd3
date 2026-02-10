@@ -13,6 +13,7 @@ use App\Http\Controllers\InfoController;
 use App\Http\Controllers\LicenceController;
 use App\Http\Controllers\MetricsController;
 use App\Http\Controllers\ModelController;
+use App\Http\Controllers\ModelResourceController;
 use App\Http\Controllers\NetworkThingController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PeopleController;
@@ -169,6 +170,12 @@ Route::middleware([PrometheusMiddleware::class])->group(function () {
                 Route::post('/resources', [ResourceController::class, 'create'])->name('resources.create');
                 Route::put('/resources/{id}', [ResourceController::class, 'update'])->name('resources.update');
                 Route::delete('/resources/{id}', [ResourceController::class, 'delete'])->name('resources.delete');
+
+                Route::get('/model-resources', [ModelResourceController::class, 'all'])->name('model-resources.all');
+                Route::get('/model-resources/{id}', [ModelResourceController::class, 'getOne'])->name('model-resources.get-one');
+                Route::post('/model-resources', [ModelResourceController::class, 'create'])->name('model-resources.create');
+                Route::put('/model-resources/{id}', [ModelResourceController::class, 'update'])->name('model-resources.update');
+                Route::delete('/model-resources/{id}', [ModelResourceController::class, 'delete'])->name('model-resources.delete');
             });
         });
     });

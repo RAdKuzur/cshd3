@@ -36,6 +36,9 @@ axios.interceptors.response.use(
             else if(error.response?.data?.error === 'Forbidden'){
                 router.push('/forbidden');
             }
+            else if(error.response?.data?.error === 'Develop'){
+                router.push('/develop-page');
+            }
         }
         if (error.response?.status === 404) {
             router.push('/not-found');

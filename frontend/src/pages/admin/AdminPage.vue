@@ -255,7 +255,7 @@
                 Компании
               </h3>
               <p class="text-sm text-cyan-100 leading-relaxed">
-                Управление организациями-партнерами, поставщиками и клиентами
+                Управление компаниями
               </p>
             </div>
 
@@ -291,6 +291,41 @@
               </h3>
               <p class="text-sm text-lime-100 leading-relaxed">
                 Управление моделями оборудования, их характеристиками и спецификациями
+              </p>
+            </div>
+
+            <div class="mt-6 flex justify-end">
+              <div class="bg-white/20 p-2 rounded-lg group-hover:bg-white/30 transition-colors">
+                <svg class="w-5 h-5 text-white transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </div>
+            </div>
+          </div>
+          <!-- Потребление расходных материалов -->
+          <div
+              class="relative overflow-hidden rounded-xl p-6 flex flex-col justify-between
+     bg-gradient-to-br from-red-500 to-pink-600
+     hover:from-red-600 hover:to-pink-700
+     transition-all hover:shadow-lg hover:scale-[1.01]
+     cursor-pointer group"
+              @click="navigateTo('/admin/model-resources')"
+          >
+            <div class="absolute right-6 top-6">
+              <div class="bg-white/20 backdrop-blur-sm p-3 rounded-xl">
+                <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                        d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                </svg>
+              </div>
+            </div>
+
+            <div class="pr-16">
+              <h3 class="text-xl font-semibold text-white mb-2">
+                Потребление расходных материалов
+              </h3>
+              <p class="text-sm text-red-100 leading-relaxed">
+                Учёт и управление расходными материалами, отслеживание потребления и остатков
               </p>
             </div>
 
