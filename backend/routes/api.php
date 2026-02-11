@@ -74,9 +74,9 @@ Route::middleware([PrometheusMiddleware::class])->group(function () {
                 Route::get('/auditoriums', [AuditoriumController::class, 'all'])->name('auditoriums.all');
                 Route::get('/things/simple-things', [ThingController::class, 'simpleThings'])->name('things.simple-things');
 
-                Route::post('/things/composite', [ThingController::class, 'compositeCreate'])->name('things.composite-create');
+                Route::post('/things-composite', [ThingController::class, 'compositeCreate'])->name('things.composite-create');
                 Route::get('/things', [ThingController::class, 'all'])->name('things.all');
-                Route::get('/things/person/{id}', [ThingController::class, 'personThings'])->name('things.person'); //refactoring
+                Route::get('/things/{id}/person', [ThingController::class, 'personThings'])->name('things.person');
                 Route::get('/things/free', [ThingController::class, 'getFreeThings'])->name('things.free');
 
                 Route::get('/stuff', [PeopleController::class, 'stuff'])->name('stuff');
@@ -125,7 +125,7 @@ Route::middleware([PrometheusMiddleware::class])->group(function () {
                 Route::post('/transfer-acts', [TransferActController::class, 'create'])->name('transfer-acts.create');
                 Route::put('/transfer-acts/{id}', [TransferActController::class, 'update'])->name('transfer-acts.update');
                 Route::delete('/transfer-acts/{id}', [TransferActController::class, 'delete'])->name('transfer-acts.delete');
-                Route::get('/transfer-acts/things/{id}', [ThingController::class, 'transferActThings'])->name('things.transfer-act-things'); //refactoring
+                Route::get('/transfer-acts/{id}/things', [ThingController::class, 'transferActThings'])->name('things.transfer-act-things');
                 Route::post('/transfer-acts/confirm', [TransferActController::class, 'confirm'])->name('transfer-acts.confirm');
                 Route::post('/transfer-acts/cancel-confirm', [TransferActController::class, 'cancelConfirm'])->name('transfer-acts.cancel-confirm');
 
@@ -133,7 +133,7 @@ Route::middleware([PrometheusMiddleware::class])->group(function () {
 
                 Route::get('/files', [FileController::class, 'all'])->name('files.all');
                 Route::get('/files/{id}', [FileController::class, 'getOne'])->name('files.get-one');
-                Route::get('/files/download/{id}', [FileController::class, 'download'])->name('files.download'); //refactoring
+                Route::get('/files/{id}/download', [FileController::class, 'download'])->name('files.download');
                 Route::post('/files', [FileController::class, 'upload'])->name('files.upload');
                 Route::delete('/files/{id}', [FileController::class, 'delete'])->name('files.delete');
 

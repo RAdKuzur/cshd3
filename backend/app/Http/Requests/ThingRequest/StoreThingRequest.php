@@ -20,7 +20,7 @@ class StoreThingRequest extends FormRequest {
             'operation_date' => 'required|date',
             'thing_type_id' => 'required|integer',
             'condition' => 'required|integer',
-            'balance' => 'required|numeric',
+            'balance' => 'nullable|integer',
             'auditorium_id' => 'required|integer',
             'price' => 'nullable|numeric',
             'comment' => 'nullable|string',

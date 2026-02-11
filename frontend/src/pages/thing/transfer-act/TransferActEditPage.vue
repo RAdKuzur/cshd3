@@ -673,7 +673,7 @@ const loadActData = async () => {
 // Загрузка вещей акта
 const loadActThings = async () => {
   try {
-    const response = await axios.get(`${BACKEND_URL}/api/transfer-acts/things/${actId}`)
+    const response = await axios.get(`${BACKEND_URL}/api/transfer-acts/${actId}/things`)
 
     if (response.data && response.data.success && Array.isArray(response.data.data)) {
       actThings.value = response.data.data
@@ -731,7 +731,7 @@ const loadAvailableThings = async () => {
         availableThings.value = []
         return
       }
-      url = BACKEND_URL + `/api/things/person/${formData.from}`
+      url = BACKEND_URL + `/api/things/${formData.from}/person`
     }
 
     if (url) {

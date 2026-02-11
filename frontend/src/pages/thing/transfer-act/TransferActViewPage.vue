@@ -438,7 +438,7 @@ const loadActData = async () => {
 
     // Загружаем дополнительные данные параллельно
     const [thingsRes, peopleRes, typesRes, thingTypesRes] = await Promise.all([
-      axios.get(BACKEND_URL + `/api/transfer-acts/things/${actId}`).catch(() => ({ data: { success: false, data: [] } })),
+      axios.get(BACKEND_URL + `/api/transfer-acts/${actId}/things`).catch(() => ({ data: { success: false, data: [] } })),
       axios.get(BACKEND_URL + '/api/people').catch(() => ({ data: { success: false, data: [] } })),
       axios.get(BACKEND_URL + '/api/info/transfer-acts/types').catch(() => ({ data: { success: false, data: {} } })),
       axios.get(BACKEND_URL + '/api/info/thing-types').catch(() => ({ data: { success: false, data: [] } }))

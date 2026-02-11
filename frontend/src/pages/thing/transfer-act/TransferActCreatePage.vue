@@ -554,7 +554,7 @@ const loadAvailableThings = async () => {
       if (!formData.from) {
         return
       }
-      url = BACKEND_URL + `/api/things/person/${formData.from}`
+      url = BACKEND_URL + `/api/things/${formData.from}/person`
     }
 
     const response = await axios.get(url)

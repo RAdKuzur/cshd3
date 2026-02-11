@@ -56,7 +56,7 @@ class ThingService
                 inv_number: $electronic->inv_number,
                 operation_date: $electronic->operation_date,
                 thing_type_id: $electronic->thing_type_id,
-                thing_parent_id: $electronic->parent?->inv_number,
+                thing_parent_id: $electronic->parent?->thing_id,
                 condition: $electronic->condition,
                 balance: $electronic->balance,
                 auditorium_id: $electronic->currentAuditorium?->auditorium?->id,
@@ -77,7 +77,7 @@ class ThingService
                 inv_number: $furniture->inv_number,
                 operation_date: $furniture->operation_date,
                 thing_type_id: $furniture->thing_type_id,
-                thing_parent_id: $furniture->parent?->inv_number,
+                thing_parent_id: $furniture->parent?->thing_id,
                 condition: $furniture->condition,
                 balance: $furniture->balance,
                 auditorium_id: $furniture->currentAuditorium?->auditorium?->id,
@@ -143,7 +143,7 @@ class ThingService
                     $childData = $childDTO->toArray();
                     $childData['thing_parent_id'] = $thingId;
                     $childData['is_blocked'] = Thing::NOT_BLOCKED;
-
+                    $childData['operation_date'] = $dto->operation_date;
                     $childId = $this->thingRepository->create($childData);
                     $this->thingAuditoriumRepository->create([
                         'auditorium_id' => $dto->auditorium_id,

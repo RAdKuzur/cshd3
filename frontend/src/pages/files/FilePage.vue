@@ -758,7 +758,7 @@ const downloadFile = async (file) => {
   try {
     isLoading.value = true
 
-    const response = await axios.get(`${BACKEND_URL}/api/files/download/${file.id}`, {
+    const response = await axios.get(`${BACKEND_URL}/api/files/${file.id}/download`, {
       responseType: 'blob'
     })
 
