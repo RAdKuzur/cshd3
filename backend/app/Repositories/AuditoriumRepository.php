@@ -12,9 +12,21 @@ class AuditoriumRepository
     public function getAll(){
         return Auditorium::all();
     }
-
+    public function getWithThingsAll(){
+        return Auditorium::with([
+            'branch.organization',
+            'thingAuditoriums.thing'
+        ])->get();
+    }
     public function get($id) : Auditorium {
         return Auditorium::find($id);
+    }
+    public function getWithThingsById($id)
+    {
+        return Auditorium::with([
+            'branch.organization',
+            'thingAuditoriums.thing'
+        ])->find($id);
     }
     public function create($data){
         DB::table('logs')->insert([

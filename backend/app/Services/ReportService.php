@@ -8,6 +8,7 @@ use App\Dictionaries\ThingTypeDictionary;
 use App\DTO\Thing\ThingBranchDTO;
 use App\DTO\Thing\ThingDTO;
 use App\Helpers\Auth;
+use App\Models\Auditorium;
 use App\Repositories\AuditoriumRepository;
 use App\Repositories\OrganizationRepository;
 use App\Repositories\ThingRepository;
@@ -36,7 +37,7 @@ class ReportService
 
     public function auditoriumReport($id)
     {
-        $auditorium = $this->auditoriumRepository->get($id);
+        $auditorium = $this->auditoriumRepository->getWithThingsById($id);
         $phpWord = new PhpWord();
         $phpWord->addTitleStyle(1, ['bold' => true, 'size' => 16, 'allCaps' => true], ['align' => 'center']);
         $phpWord->addParagraphStyle('center', ['align' => 'center']);
@@ -65,21 +66,48 @@ class ReportService
             $table->addCell($wName)->addText('Наименование', ['bold' => true, 'size' => 12], ['alignment' => Jc::CENTER]);
             $table->addCell($wCount)->addText('Кол-во', ['bold' => true, 'size' => 12], ['alignment' => Jc::CENTER]);
             $table->addCell($wInv)->addText('Инвентарный номер', ['bold' => true, 'size' => 12], ['alignment' => Jc::CENTER]);
-            foreach ($auditorium->getActualThings() as $index => $item) {
-                $table->addRow();
-                $table->addCell($wNum)->addText($index + 1, ['size' => 12], ['alignment' => Jc::CENTER]);
-                $table->addCell($wName)->addText($item->thing->name, ['size' => 12]);
-                $table->addCell($wCount)->addText(
-                    1,
-                    ['size' => 14],
-                    ['alignment' => Jc::CENTER]
-                );
-
-                $table->addCell($wInv)->addText($item->thing->inv_number, ['size' => 12], ['alignment' => Jc::CENTER]);
+            $table->addRow();
+            $table->addCell(null, ['gridSpan' => 4, 'valign' => 'center'])->addText('ОФИСНАЯ МЕБЕЛЬ',
+                ['bold' => true, 'size' => 14, 'allCaps' => true],
+                ['alignment' => Jc::CENTER]
+            );
+            $thingAuditoriums = $auditorium->getActualThings();
+            //Мебель
+            foreach ($thingAuditoriums as $index => $item) {
+                if (in_array($item->thing->thing_type_id, ThingTypeDictionary::FURNITURE)) {
+                    $table->addRow();
+                    $table->addCell($wNum)->addText($index + 1, ['size' => 12], ['alignment' => Jc::CENTER]);
+                    $table->addCell($wName)->addText($item->thing->name, ['size' => 12]);
+                    $table->addCell($wCount)->addText(
+                        1,
+                        ['size' => 14],
+                        ['alignment' => Jc::CENTER]
+                    );
+                    $table->addCell($wInv)->addText($item->thing->inv_number, ['size' => 12], ['alignment' => Jc::CENTER]);
+                }
+            }
+            $table->addRow();
+            $table->addCell(null, ['gridSpan' => 4, 'valign' => 'center'])->addText('ОФИСНАЯ ТЕХНИКА',
+                ['bold' => true, 'size' => 14, 'allCaps' => true],
+                ['alignment' => Jc::CENTER]
+            );
+            //Техника
+            foreach ($thingAuditoriums as $index => $item) {
+                if (in_array($item->thing->thing_type_id, ThingTypeDictionary::ELECTRONICS)) {
+                    $table->addRow();
+                    $table->addCell($wNum)->addText($index + 1, ['size' => 12], ['alignment' => Jc::CENTER]);
+                    $table->addCell($wName)->addText($item->thing->name, ['size' => 12]);
+                    $table->addCell($wCount)->addText(
+                        1,
+                        ['size' => 14],
+                        ['alignment' => Jc::CENTER]
+                    );
+                    $table->addCell($wInv)->addText($item->thing->inv_number, ['size' => 12], ['alignment' => Jc::CENTER]);
+                }
             }
         }
         else {
-            $section->addText('В ПОМЕЩЕНИИ НИЧЕГО НЕТ' , ['size' => 14], ['align' => 'center']);
+            $section->addText('В ПОМЕЩЕНИИ НЕТ МАТ. ЦЕННОСТЕЙ' , ['size' => 14], ['align' => 'center']);
         }
         $writer = IOFactory::createWriter($phpWord, 'Word2007');
         header('Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document');
@@ -148,31 +176,65 @@ class ReportService
                     ['bold' => true, 'size' => 12],
                     ['alignment' => Jc::CENTER]
                 );
-                foreach ($auditorium->getActualThings() as $index => $item) {
-                    $table->addRow();
-                    $table->addCell($wNum)->addText($index + 1,
-                        ['size' => 12],
-                        ['alignment' => Jc::CENTER]
-                    );
-                    $table->addCell($wName)->addText($item->thing->name, ['size' => 12]);
-                    $table->addCell($wCount)->addText(
-                        $item->count ?? 1,
-                        ['size' => 12],
-                        ['alignment' => Jc::CENTER]
-                    );
-                    $table->addCell($wInv)->addText(
-                        $item->thing->inv_number ?? '-',
-                        ['size' => 12],
-                        ['alignment' => Jc::CENTER]
-                    );
+                $table->addRow();
+                $table->addCell(null, ['gridSpan' => 4, 'valign' => 'center'])->addText('ОФИСНАЯ МЕБЕЛЬ',
+                    ['bold' => true, 'size' => 14, 'allCaps' => true],
+                    ['alignment' => Jc::CENTER]
+                );
+                $thingsAuditoriums = $auditorium->getActualThings();
+                foreach ($thingsAuditoriums as $index => $item) {
+                    if (in_array($item->thing->thing_type_id, ThingTypeDictionary::FURNITURE)){
+                        $table->addRow();
+                        $table->addCell($wNum)->addText($index + 1,
+                            ['size' => 12],
+                            ['alignment' => Jc::CENTER]
+                        );
+                        $table->addCell($wName)->addText($item->thing->name, ['size' => 12]);
+                        $table->addCell($wCount)->addText(
+                            $item->count ?? 1,
+                            ['size' => 12],
+                            ['alignment' => Jc::CENTER]
+                        );
+                        $table->addCell($wInv)->addText(
+                            $item->thing->inv_number ?? '-',
+                            ['size' => 12],
+                            ['alignment' => Jc::CENTER]
+                        );
+                    }
+                }
+                $table->addRow();
+                $table->addCell(null, ['gridSpan' => 4, 'valign' => 'center'])->addText('ОФИСНАЯ ТЕХНИКА',
+                    ['bold' => true, 'size' => 14, 'allCaps' => true],
+                    ['alignment' => Jc::CENTER]
+                );
+                foreach ($thingsAuditoriums as $index => $item) {
+                    if (in_array($item->thing->thing_type_id, ThingTypeDictionary::ELECTRONICS)){
+                        $table->addRow();
+                        $table->addCell($wNum)->addText($index + 1,
+                            ['size' => 12],
+                            ['alignment' => Jc::CENTER]
+                        );
+                        $table->addCell($wName)->addText($item->thing->name, ['size' => 12]);
+                        $table->addCell($wCount)->addText(
+                            $item->count ?? 1,
+                            ['size' => 12],
+                            ['alignment' => Jc::CENTER]
+                        );
+                        $table->addCell($wInv)->addText(
+                            $item->thing->inv_number ?? '-',
+                            ['size' => 12],
+                            ['alignment' => Jc::CENTER]
+                        );
+                    }
                 }
             } else {
-                $section->addText('В кабинете нет оборудования',
+                $section->addText('В кабинете нет объектов материальных ценностей',
                     ['size' => 12, 'italic' => true],
                     ['align' => 'center']
                 );
             }
             unset($table);
+            $section->addPageBreak(); // переход на новую страницу
         }
         $writer = IOFactory::createWriter($phpWord, 'Word2007');
         header('Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document');
