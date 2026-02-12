@@ -65,15 +65,14 @@ class LicenceCheckCommand extends Command
                         }
                     }
                     catch (\Exception $e) {
-                        DB::table('licences')->where(['id' => $licenceKey->id])->update(
-                            [
-                                'is_revoked' => LicenceDictionary::REVOKED,
-                            ]
-                        );
+                        // если эндпойнт не отвечает
+                        // DB::table('licences')->where(['id' => $licenceKey->id])->update(
+                        //     [
+                        //         'is_revoked' => LicenceDictionary::REVOKED,
+                        //     ]
+                        // );
+                        DB::rollBack();
                     }
-                }
-                if($url === '') {
-                    DB::table('licences')->where(['id' => $licenceKey->id])->delete();
                 }
             }
             DB::commit();

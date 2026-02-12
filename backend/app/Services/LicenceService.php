@@ -45,7 +45,7 @@ class LicenceService
         try {
             $this->licenceRepository->create([
                 'code' => $licenceDTO->licenceKey,
-                'expires_at' => now()->addMinutes(5),
+                'expires_at' => now()->addDays(7),
                 'is_revoked' => LicenceDictionary::ACTIVE
             ]);
             DB::commit();
