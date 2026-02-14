@@ -27,6 +27,7 @@ class ThingService
     public TransferActThingRepository $transferActThingRepository;
     public NetworkThingRepository $networkThingRepository;
     public FileRepository $fileRepository;
+    public ElasticsearchService $elasticsearchService;
     public function __construct(
         ThingRepository $thingRepository,
         TransferActRepository $transferActRepository,
@@ -34,7 +35,8 @@ class ThingService
         BranchRepository $branchRepository,
         TransferActThingRepository $transferActThingRepository,
         NetworkThingRepository $networkThingRepository,
-        FileRepository $fileRepository
+        FileRepository $fileRepository,
+        ElasticsearchService $elasticsearchService
     ) {
         $this->thingRepository = $thingRepository;
         $this->transferActRepository = $transferActRepository;
@@ -43,6 +45,7 @@ class ThingService
         $this->transferActThingRepository = $transferActThingRepository;
         $this->networkThingRepository = $networkThingRepository;
         $this->fileRepository = $fileRepository;
+        $this->elasticsearchService = $elasticsearchService;
     }
 
     public function electronics(): array
@@ -154,7 +157,13 @@ class ThingService
                     $childIds[] = $childId;
                 }
             }
-
+            $this->elasticsearchService->index(
+                'things',
+                [
+                    'comment' => $dto->comment,
+                    'id' => $thingId
+                ]
+            );
             DB::commit();
             return [
                 'id' => $thingId,
@@ -269,6 +278,13 @@ class ThingService
                 'start_date' => now(),
                 'end_date' => null
             ]);
+            $this->elasticsearchService->index(
+                'things',
+                [
+                    'comment' => $thing->comment,
+                    'id' => $thingId
+                ]
+            );
             DB::commit();
         } catch (\Exception $e) {
             Log::debug($e->getMessage());
@@ -289,6 +305,14 @@ class ThingService
                 'condition' => $dto->condition,
                 'comment' => $dto->comment,
             ]);
+            $this->elasticsearchService->updateById(
+                'things',
+                $id,
+                [
+                    'comment' => $dto->comment,
+                    'id' => $id
+                ]
+            );
 
             if (!$thing->is_composite) {
                 return;
@@ -357,6 +381,7 @@ class ThingService
                 $this->fileRepository->delete($file->id);
             }
             $this->thingRepository->delete($id);
+            $this->elasticsearchService->deleteByBodyId('things', $id);
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();

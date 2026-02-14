@@ -79,7 +79,40 @@ class ElasticsearchService
 
         return $this->client->get($params);
     }
-
+    public function update(string $index, string|int $esId, array $data)
+    {
+        return $this->client->update([
+            'index' => $index,
+            'id'    => $esId,
+            'body'  => [
+                'doc' => $data
+            ]
+        ]);
+    }
+    public function updateById(string $index, int $id, array $data)
+    {
+        $response = $this->client->search([
+            'index' => $index,
+            'body' => [
+                'query' => [
+                    'term' => [
+                        'id' => $id
+                    ]
+                ]
+            ]
+        ]);
+        if (empty($response['hits']['hits'])) {
+            throw new \Exception("Document with id=$id not found");
+        }
+        $esId = $response['hits']['hits'][0]['_id'];
+        return $this->client->update([
+            'index' => $index,
+            'id'    => $esId,
+            'body'  => [
+                'doc' => $data
+            ]
+        ]);
+    }
     public function delete($index){
         $this->client->indices()->delete([
             'index' => $index
@@ -90,6 +123,28 @@ class ElasticsearchService
         $this->client->delete([
             'index' => $index,
             'id' => $id
+        ]);
+    }
+
+    public function deleteByBodyId(string $index, int $bodyId)
+    {
+        $response = $this->client->search([
+            'index' => $index,
+            'body' => [
+                'query' => [
+                    'term' => [
+                        'id' => $bodyId
+                    ]
+                ]
+            ]
+        ]);
+        if (empty($response['hits']['hits'])) {
+            throw new \Exception("Document with id=$bodyId not found");
+        }
+        $esId = $response['hits']['hits'][0]['_id'];
+        return $this->client->delete([
+            'index' => $index,
+            'id'    => $esId
         ]);
     }
 }

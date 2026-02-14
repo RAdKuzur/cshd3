@@ -19,10 +19,8 @@ class SearchController extends Controller
     public function search(SearchRequest $request){
         $data = $this->searchService->search([
             'query' => [
-                'wildcard' => [
-                    'comment' => [
-                        'value' => '*' . $request->binding() . '*'
-                    ]
+                'match_phrase_prefix' => [
+                    'comment' => $request->binding()
                 ]
             ],
             'size' => 10000

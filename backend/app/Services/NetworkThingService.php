@@ -11,12 +11,15 @@ use Illuminate\Support\Facades\DB;
 class NetworkThingService
 {
     public NetworkThingRepository $networkThingRepository;
+    public ElasticsearchService $elasticsearchService;
 
     public function __construct(
-        NetworkThingRepository $networkThingRepository
+        NetworkThingRepository $networkThingRepository,
+        ElasticsearchService $elasticsearchService
     )
     {
         $this->networkThingRepository = $networkThingRepository;
+        $this->elasticsearchService = $elasticsearchService;
     }
 
     public function all() : array
@@ -58,7 +61,14 @@ class NetworkThingService
         DB::beginTransaction();
         try {
             if($this->networkThingRepository->isPossibleToCreate($networkThingDTO->thing_id)){
-                $this->networkThingRepository->create($networkThingDTO->toArray());
+                $networkThingId = $this->networkThingRepository->create($networkThingDTO->toArray());
+                $this->elasticsearchService->index(
+                    'network-things',
+                    [
+                        'comment' => $networkThingDTO->comment,
+                        'id' => $networkThingId
+                    ]
+                );
             }
             DB::commit();
         }
@@ -70,6 +80,14 @@ class NetworkThingService
         DB::beginTransaction();
         try {
             $this->networkThingRepository->update($id, $networkThingDTO->toArray());
+            $this->elasticsearchService->updateById(
+                'network-things',
+                $id,
+                [
+                    'comment' => $networkThingDTO->comment,
+                    'id' => $id
+                ]
+            );
             DB::commit();
         }
         catch (\Exception $e) {
@@ -81,6 +99,7 @@ class NetworkThingService
         DB::beginTransaction();
         try {
             $this->networkThingRepository->delete($id);
+            $this->elasticsearchService->deleteByBodyId('network-things', $id);
             DB::commit();
         }
         catch (\Exception $e) {

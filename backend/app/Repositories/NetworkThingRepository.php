@@ -52,7 +52,7 @@ class NetworkThingRepository
             'time' => now()
         ]);
 
-        return DB::table('network_things')->insert($data);
+        return DB::table('network_things')->insertGetId($data);
     }
     public function update($id, $data) {
         DB::table('logs')->insert([
