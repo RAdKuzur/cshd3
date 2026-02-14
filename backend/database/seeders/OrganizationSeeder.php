@@ -18,6 +18,7 @@ class OrganizationSeeder extends Seeder
         //organizations
         DB::table('organizations')->truncate();
         DB::table('organizations')->insert([
+            'id' => 1,
             'name' => 'Московский областной суд',
             'address' => 'Россия, Московская область, г. Красногорск, б-р Строителей дом 4 корпус 3',
             'inn' => 7718123097,

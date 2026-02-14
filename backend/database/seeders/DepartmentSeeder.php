@@ -19,22 +19,22 @@ class DepartmentSeeder extends Seeder
         DB::table('departments')->insert([
             'name' => 'A',
             'organization_id' => $organizationId,
-            'address' => 'Россия, Московская область',
+            'address' => 'Россия, Московская область, г. Красногорск, б-р Строителей дом 4 корпус 3',
         ]);
         DB::table('departments')->insert([
             'name' => 'B',
             'organization_id' => $organizationId,
-            'address' => 'Россия, Московская область',
+            'address' => 'Россия, Московская область, г. Красногорск, б-р Строителей дом 4 корпус 3',
         ]);
         DB::table('departments')->insert([
             'name' => 'C',
             'organization_id' => $organizationId,
-            'address' => 'Россия, Московская область',
+            'address' => 'Россия, Московская область, г. Красногорск, б-р Строителей дом 4 корпус 3',
         ]);
         DB::table('departments')->insert([
             'name' => 'D',
             'organization_id' => $organizationId,
-            'address' => 'Россия, Московская область',
+            'address' => 'Россия, Московская область, г. Красногорск, б-р Строителей дом 4 корпус 3',
         ]);
     }
 }
