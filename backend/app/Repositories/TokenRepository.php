@@ -16,8 +16,8 @@ class TokenRepository
             'user_id' => $user->id,
             'expires_at' => now()->addMinutes((int)(env('REFRESH_TOKEN_TIME'))),
             'is_revoked' => false,
-            'user_agent' => $_SERVER['HTTP_USER_AGENT'],
-            'ip_address' => $_SERVER['REMOTE_ADDR']
+            'user_agent' => request()->userAgent(),
+            'ip_address' => request()->ip(),
         ];
         return DB::table('tokens')->insert($data);
     }
@@ -26,7 +26,7 @@ class TokenRepository
             'refresh_token' => $token,
             'user_id' => $userId,
             ['expires_at', '>', now()],
-            'ip_address' => $_SERVER['REMOTE_ADDR'],
+            'ip_address' => request()->ip(),
             'is_revoked' => false
             //прочие фильтры
         ])->get();

@@ -11,13 +11,13 @@ class VisitRepository
 {
     public function create(){
         $data = [
-            'ip_address' => $_SERVER['REMOTE_ADDR'],
-            'user_agent' => $_SERVER['HTTP_USER_AGENT'],
-            'host' => $_SERVER['HTTP_HOST'],
-            'request_method' => $_SERVER['REQUEST_METHOD'],
-            'request_time' => now(),
-            'url' => $_SERVER['REQUEST_URI'],
-            'route' => request()->route()->getName()
+            'ip_address'      => request()->ip(),
+            'user_agent'      => request()->userAgent(),
+            'host'            => request()->getHost(),
+            'request_method'  => request()->method(),
+            'request_time'    => now(),
+            'url'             => request()->fullUrl(),
+            'route'           => optional(request()->route())->getName(),
         ];
         return DB::table('visits')->insert($data);
     }
