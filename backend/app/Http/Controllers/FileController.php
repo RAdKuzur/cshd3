@@ -39,10 +39,7 @@ class FileController extends Controller
     }
     public function download($id)
     {
-        $this->fileService->download($id);
-        return response()->json([
-            'success' => true
-        ]);
+        return $this->fileService->download($id);
     }
 
     public function delete($id)
