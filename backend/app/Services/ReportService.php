@@ -126,9 +126,7 @@ class ReportService
         }
         $auditoriums = $this->auditoriumRepository->getAll();
         if (empty($auditoriums)) {
-            header('Content-Type: text/html; charset=utf-8');
-            echo "Нет данных для отчета";
-            exit;
+            return response()->json(['message' => 'Нет данных для отчета'], 404);
         }
         $organization = $this->organizationRepository->getMainOrganization();
         $phpWord = new PhpWord();

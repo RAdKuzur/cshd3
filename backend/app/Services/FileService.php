@@ -85,21 +85,15 @@ class FileService
     }
     public function download($id) {
         $file = $this->fileRepository->get($id);
-        if (file_exists($file->filepath)) {
-            $mimeType = mime_content_type($file->filepath) ?: 'application/octet-stream';
-            $filename = $file->filename ?? basename($file->filepath);
-            header('Content-Type: ' . $mimeType);
-            header('Content-Disposition: attachment; filename="' . $filename . '"');
-            header('Content-Length: ' . filesize($file->filepath));
-            header('Cache-Control: no-cache, no-store, must-revalidate');
-            header('Pragma: no-cache');
-            header('Expires: 0');
-            readfile($file->filepath);
-            exit;
-        } else {
-            http_response_code(404);
-            echo "Файл не найден";
+        if (!file_exists($file->filepath)) {
+            abort(404, 'Файл не найден');
         }
+        $filename = $file->filename ?? basename($file->filepath);
+        return response()->download($file->filepath, $filename, [
+            'Cache-Control' => 'no-cache, no-store, must-revalidate',
+            'Pragma' => 'no-cache',
+            'Expires' => '0',
+        ]);
     }
     public function delete($id){
         DB::beginTransaction();
