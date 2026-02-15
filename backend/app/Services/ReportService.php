@@ -13,6 +13,7 @@ use App\Repositories\AuditoriumRepository;
 use App\Repositories\OrganizationRepository;
 use App\Repositories\ThingRepository;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xls;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpWord\IOFactory;
 use PhpOffice\PhpWord\PhpWord;
@@ -109,11 +110,14 @@ class ReportService
         else {
             $section->addText('В ПОМЕЩЕНИИ НЕТ МАТ. ЦЕННОСТЕЙ' , ['size' => 14], ['align' => 'center']);
         }
-        $writer = IOFactory::createWriter($phpWord, 'Word2007');
-        header('Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document');
-        header('Content-Disposition: attachment; filename=auditorium_report.docx');
-        $writer->save('php://output');
-        exit;
+        $fileName = 'auditorium_report.docx';
+        return response()->streamDownload(function () use ($phpWord) {
+            $writer = IOFactory::createWriter($phpWord, 'Word2007');
+            $writer->save('php://output');
+        }, $fileName, [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
+        ]);
     }
     public function allAuditoriumReport()
     {
@@ -236,11 +240,14 @@ class ReportService
             unset($table);
             $section->addPageBreak(); // переход на новую страницу
         }
-        $writer = IOFactory::createWriter($phpWord, 'Word2007');
-        header('Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document');
-        header('Content-Disposition: attachment; filename=general_auditorium_report.docx');
-        $writer->save('php://output');
-        exit;
+        $fileName = 'general_auditorium_report.docx';
+        return response()->streamDownload(function () use ($phpWord) {
+            $writer = IOFactory::createWriter($phpWord, 'Word2007');
+            $writer->save('php://output');
+        }, $fileName, [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
+        ]);
     }
     public function thingReport()
     {
@@ -257,7 +264,7 @@ class ReportService
         $sheet->setCellValue('G1', 'Балансовая стоимость');
         $sheet->setCellValue('H1', 'Помещение');
         $sheet->getStyle('A1:H1')->getFont()->setBold(true);
-        $writer = new Xlsx($spreadsheet);
+
         $index = 2;
         foreach ($organization->departments as $department) {
             foreach ($department->auditoriums as $auditorium) {
@@ -275,11 +282,15 @@ class ReportService
             }
         }
 
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename=thing_report.xlsx');
-        header('Cache-Control: max-age=0');
-        $writer->save('php://output');
-        exit;
+        $fileName = 'thing_report.xlsx';
+        return response()->streamDownload(function () use ($spreadsheet) {
+            $writer = new Xlsx($spreadsheet);
+            $writer->save('php://output');
+        }, $fileName, [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
+            'Cache-Control' => 'max-age=0',
+        ]);
     }
 
     public function generalReport()
@@ -338,12 +349,16 @@ class ReportService
         /** Заполнение основной части(ПТС) **/
 
         /** Вывод пользователю **/
-        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xls($spreadsheet);
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename=short_report.xls');
-        header('Cache-Control: max-age=0');
-        $writer->save('php://output');
-        exit;
+        $fileName = 'short_report.xls';
+
+        return response()->streamDownload(function () use ($spreadsheet) {
+            $writer = new Xls($spreadsheet);
+            $writer->save('php://output');
+        }, $fileName, [
+            'Content-Type' => 'application/vnd.ms-excel',
+            'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
+            'Cache-Control' => 'max-age=0',
+        ]);
     }
 
     public function formExtended($year)
@@ -380,11 +395,14 @@ class ReportService
         /** Заполнение основной части(ПТС) **/
 
         /** Вывод пользователю **/
-        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xls($spreadsheet);
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename=extended_report.xls');
-        header('Cache-Control: max-age=0');
-        $writer->save('php://output');
-        exit;
+        $fileName = 'extended_report.xls';
+        return response()->streamDownload(function () use ($spreadsheet) {
+            $writer = new Xls($spreadsheet);
+            $writer->save('php://output');
+        }, $fileName, [
+            'Content-Type' => 'application/vnd.ms-excel',
+            'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
+            'Cache-Control' => 'max-age=0',
+        ]);
     }
 }

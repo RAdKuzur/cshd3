@@ -15,17 +15,13 @@ class ReportController extends Controller
         $this->reportService = $reportService;
     }
     public function things(){
-        $this->reportService->thingReport();
+        return $this->reportService->thingReport();
     }
     public function auditoriums(){
-        $this->reportService->allAuditoriumReport();
+        return $this->reportService->allAuditoriumReport();
     }
     public function auditorium($id){
-        $this->reportService->auditoriumReport($id);
-    }
-    public function workstations()
-    {
-
+        return $this->reportService->auditoriumReport($id);
     }
     public function general(){
         $data = $this->reportService->generalReport();
@@ -35,15 +31,9 @@ class ReportController extends Controller
         ]);
     }
     public function form($year){
-        $this->reportService->form($year);
-        return response()->json([
-            'success' => true
-        ]);
+        return $this->reportService->form($year);
     }
     public function formExtended($year){
-        $this->reportService->formExtended($year);
-        return response()->json([
-            'success' => true
-        ]);
+        return $this->reportService->formExtended($year);
     }
 }
