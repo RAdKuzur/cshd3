@@ -189,9 +189,6 @@
                     <div class="text-lg font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors">
                       {{ getResourceName(history.resource_id) }}
                     </div>
-                    <div class="text-xs text-gray-500">
-                      Тип: {{ getResourceType(history.resource_id) }}
-                    </div>
                   </div>
                 </div>
               </td>
@@ -379,7 +376,7 @@
                       :key="resource.id"
                       :value="resource.id"
                   >
-                    {{ resource.name }} (тип {{ resource.type }}, остаток: {{ resource.amount }})
+                    {{ resource.name }} (остаток: {{ resource.amount }})
                   </option>
                 </select>
                 <p v-if="formErrors.resource_id" class="mt-2 text-sm text-red-600">{{ formErrors.resource_id }}</p>
@@ -545,8 +542,10 @@ const headers = ref([
 
 const history = ref([])
 const resources = ref([])
+const resourceTypes = ref({}) // Добавляем для хранения типов ресурсов
 const isLoading = ref(false)
 const resourcesLoading = ref(false)
+const resourceTypesLoading = ref(false)
 const error = ref(null)
 
 // Поиск и сортировка
@@ -595,6 +594,22 @@ const showNotification = (message, type = 'success') => {
   }, 3000)
 }
 
+// Загрузка типов ресурсов
+const loadResourceTypes = async () => {
+  try {
+    resourceTypesLoading.value = true
+    const response = await axios.get(`${BACKEND_URL}/api/info/resource-types`)
+
+    if (response.data.success) {
+      resourceTypes.value = response.data.data || {}
+    }
+  } catch (err) {
+    console.error('Ошибка загрузки типов ресурсов:', err)
+  } finally {
+    resourceTypesLoading.value = false
+  }
+}
+
 // Загрузка списка ресурсов
 const loadResources = async () => {
   try {
@@ -617,10 +632,13 @@ const getResourceName = (resourceId) => {
   return resource ? resource.name : 'Неизвестный ресурс'
 }
 
-// Получение типа ресурса по ID
+// Получение типа ресурса по ID (теперь используем resourceTypes)
 const getResourceType = (resourceId) => {
   const resource = resources.value.find(r => r.id === resourceId)
-  return resource ? resource.type : 'Неизвестный'
+  if (!resource) return 'Неизвестный'
+
+  // Получаем название типа из объекта resourceTypes по ID типа
+  return resourceTypes.value[resource.type] || `Тип ${resource.type}`
 }
 
 // Получение текущего количества ресурса
@@ -655,7 +673,12 @@ const loadData = async () => {
 }
 
 onMounted(async () => {
-  await Promise.all([loadData(), loadResources()])
+  // Загружаем все данные параллельно
+  await Promise.all([
+    loadData(),
+    loadResources(),
+    loadResourceTypes() // Добавляем загрузку типов ресурсов
+  ])
 })
 
 // Вычисляемые свойства
@@ -767,7 +790,11 @@ const openCreateModal = async () => {
   }
   formErrors.value = {}
 
-  await loadResources()
+  // Загружаем ресурсы и типы ресурсов
+  await Promise.all([
+    loadResources(),
+    loadResourceTypes()
+  ])
   showModal.value = true
 }
 
@@ -779,7 +806,11 @@ const openEditModal = async (historyItem) => {
   }
   formErrors.value = {}
 
-  await loadResources()
+  // Загружаем ресурсы и типы ресурсов
+  await Promise.all([
+    loadResources(),
+    loadResourceTypes()
+  ])
   showModal.value = true
 }
 
@@ -832,7 +863,12 @@ const saveHistory = async () => {
       )
 
       closeModal()
-      await Promise.all([loadData(), loadResources()])
+      // После сохранения перезагружаем все данные
+      await Promise.all([
+        loadData(),
+        loadResources(),
+        loadResourceTypes()
+      ])
     } else {
       throw new Error(response.data.message || 'Ошибка сохранения')
     }
@@ -869,7 +905,12 @@ const confirmDelete = async () => {
     if (response.data.success) {
       showNotification('Запись успешно удалена')
       closeDeleteModal()
-      await Promise.all([loadData(), loadResources()])
+      // После удаления перезагружаем все данные
+      await Promise.all([
+        loadData(),
+        loadResources(),
+        loadResourceTypes()
+      ])
     } else {
       throw new Error(response.data.message || 'Ошибка удаления')
     }
