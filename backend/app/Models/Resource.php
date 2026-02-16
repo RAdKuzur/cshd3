@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $amount
  *
  * @property ModelResource[] $modelResources
+ * @property HistoryResource[] $historyResources
 */
 
 class Resource extends Model
@@ -22,5 +23,8 @@ class Resource extends Model
     public function modelResources()
     {
         return $this->hasMany(ModelResource::class);
+    }
+    public function historyResource() {
+        return $this->hasMany(HistoryResource::class);
     }
 }

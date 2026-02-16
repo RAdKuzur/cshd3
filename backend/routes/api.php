@@ -9,6 +9,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\DeviceController;
 use App\Http\Controllers\FileController;
+use App\Http\Controllers\HistoryResourceController;
 use App\Http\Controllers\InfoController;
 use App\Http\Controllers\LicenceController;
 use App\Http\Controllers\MetricsController;
@@ -43,6 +44,7 @@ Route::middleware([PrometheusMiddleware::class])->group(function () {
     Route::post('/refresh', [AuthController::class, 'refresh'])->name('refresh');
     Route::post('/block', [AuthController::class, 'block'])->name('block');
     Route::post('/unblock', [AuthController::class, 'unblock'])->name('unblock');
+
     Route::middleware([CheckPermissionMiddleware::class])->group(function () {
 
         Route::get('/tech-works', [TechWorkController::class, 'all'])->name('tech-works.all');
@@ -174,6 +176,12 @@ Route::middleware([PrometheusMiddleware::class])->group(function () {
                 Route::post('/resources', [ResourceController::class, 'create'])->name('resources.create');
                 Route::put('/resources/{id}', [ResourceController::class, 'update'])->name('resources.update');
                 Route::delete('/resources/{id}', [ResourceController::class, 'delete'])->name('resources.delete');
+
+                Route::get('/history/resources', [HistoryResourceController::class, 'all'])->name('history-resources.all');
+                Route::get('/history/resources/{id}', [HistoryResourceController::class, 'getOne'])->name('history-resources.get-one');
+                Route::post('/history/resources', [HistoryResourceController::class, 'create'])->name('history-resources.create');
+                Route::put('/history/resources/{id}', [HistoryResourceController::class, 'update'])->name('history-resources.update');
+                Route::delete('/history/resources/{id}', [HistoryResourceController::class, 'delete'])->name('history-resources.delete');
 
                 Route::get('/model-resources', [ModelResourceController::class, 'all'])->name('model-resources.all');
                 Route::get('/model-resources/{id}', [ModelResourceController::class, 'getOne'])->name('model-resources.get-one');

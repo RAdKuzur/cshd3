@@ -82,31 +82,10 @@
         </div>
 
         <!-- Ссылка на поддержку -->
-        <div class="mt-8 pt-6 border-t border-gray-200">
-          <button
-              @click="contactSupport"
-              class="text-indigo-600 hover:text-indigo-700 font-medium transition-colors duration-200 flex items-center justify-center mx-auto group"
-          >
-            <span class="flex items-center">
-              Связаться со службой поддержки
-              <svg class="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-              </svg>
-            </span>
-          </button>
-        </div>
 
         <!-- Декор -->
         <div class="absolute -bottom-10 -left-10 w-20 h-20 bg-yellow-200 rounded-full opacity-20 animate-pulse"></div>
         <div class="absolute -top-10 -right-10 w-16 h-16 bg-blue-200 rounded-full opacity-30 animate-pulse" style="animation-delay: 1s;"></div>
-      </div>
-
-      <!-- Статистика -->
-      <div class="mt-8 text-center">
-        <p class="text-sm text-gray-500">
-          Если проблема повторяется, пожалуйста,
-          <button @click="contactSupport" class="text-indigo-600 hover:text-indigo-700 underline">сообщите нам</button>
-        </p>
       </div>
     </div>
   </div>
