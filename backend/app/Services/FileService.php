@@ -23,18 +23,19 @@ class FileService
         $data = [];
         $files = $this->fileRepository->getAll();
         foreach ($files as $file){
-            $data[] = FileDTO::fromModel($file);
+            $data[] = (FileDTO::fromModel($file))->toArray();
         }
         return $data;
     }
-    public function get($id) : FileDTO
+    public function get($id) : array
     {
         $file = $this->fileRepository->get($id);
-        return new FileDTO(
+        return (new FileDTO(
+            id: $file->id,
             table_name: $file->table_name,
             row_id: $file->row_id,
             filepath: $file->filepath,
-        );
+        ))->toArray();
     }
     public function upload(FileDTO $fileDTO)
     {
@@ -109,6 +110,34 @@ class FileService
             DB::rollBack();
         }
     }
+
+    public function importUpload(FileDTO $fileDTO)
+    {
+        DB::beginTransaction();
+        try {
+            $this->fileRepository->create([
+                'table_name' => $fileDTO->table_name,
+                'row_id' => $fileDTO->row_id,
+                'filepath' => $fileDTO->filepath
+            ]);
+            DB::commit();
+        }
+        catch (\Exception $exception) {
+            DB::rollBack();
+        }
+    }
+    public function importDelete($id)
+    {
+        DB::beginTransaction();
+        try {
+            $this->fileRepository->delete($id);
+            DB::commit();
+        }
+        catch (\Exception $exception) {
+            DB::rollBack();
+        }
+    }
+
     public function generateUniqueName($filename) : string {
         return time() . '_' . $filename;
     }

@@ -6,6 +6,178 @@
         "version": "1.0.0"
     },
     "paths": {
+        "/api/files": {
+            "get": {
+                "tags": [
+                    "Files"
+                ],
+                "summary": "Список файлов",
+                "operationId": "5baabf60af4423ca7af8c73f4f8cf994",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "table_name": {
+                                                        "type": "string",
+                                                        "example": "table_name"
+                                                    },
+                                                    "row_id": {
+                                                        "type": "string",
+                                                        "example": "1"
+                                                    },
+                                                    "filepath": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/files/{id}": {
+            "get": {
+                "tags": [
+                    "Files"
+                ],
+                "summary": "Получить файл по id",
+                "operationId": "438d254fdec671d1d74fc30d64a80028",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer"
+                                                },
+                                                "table_name": {
+                                                    "type": "string"
+                                                },
+                                                "row_id": {
+                                                    "type": "integer"
+                                                },
+                                                "filepath": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "File not found"
+                    }
+                }
+            }
+        },
+        "/api/import-files": {
+            "post": {
+                "tags": [
+                    "Files"
+                ],
+                "summary": "Импорт данных файла",
+                "operationId": "86114dd5e8479c942b834bda33de5097",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "table_name",
+                                    "row_id",
+                                    "filepath"
+                                ],
+                                "properties": {
+                                    "table_name": {
+                                        "type": "string",
+                                        "example": "table_name"
+                                    },
+                                    "row_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "filepath": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "success"
+                    }
+                }
+            }
+        },
+        "/api/import-files/{id}": {
+            "delete": {
+                "tags": [
+                    "Files"
+                ],
+                "summary": "Удалить данные о файле",
+                "operationId": "b3a620790072ced28a113ad18b60fcbe",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success"
+                    }
+                }
+            }
+        },
         "/api/test": {
             "get": {
                 "tags": [
@@ -34,6 +206,9 @@
         }
     },
     "tags": [
+        {
+            "name": "Files"
+        },
         {
             "name": "Test"
         }

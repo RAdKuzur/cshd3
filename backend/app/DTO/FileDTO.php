@@ -8,13 +8,13 @@ class FileDTO implements DTO
 {
     public ?int $id;
     public ?string $table_name;
-    public ?string $row_id;
+    public ?int $row_id;
     public ?string $filepath;
     public $file;
     public function __construct(
         ?int $id = null,
         ?string $table_name = null,
-        ?string $row_id = null,
+        ?int $row_id = null,
         ?string $filepath = null,
         $file = null
 
