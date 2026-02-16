@@ -133,10 +133,10 @@ class TransferActService
             }
             DB::commit();
             if (isset($peopleTo)) {
-                TransferActCreated::dispatch($peopleTo->user);
+                TransferActCreated::dispatch($peopleTo->user, $transferActDTOId);
             }
             if (isset($peopleFrom)) {
-                TransferActCreated::dispatch($peopleFrom->user);
+                TransferActCreated::dispatch($peopleFrom->user, $transferActDTOId);
             }
         }
         catch (\Exception $exception){
@@ -169,11 +169,11 @@ class TransferActService
             DB::commit();
             if($transferAct->from){
                 $peopleFrom = $this->peopleRepository->get($transferAct->fromPerson->people->id);
-                TransferActUpdated::dispatch($peopleFrom->user);
+                TransferActUpdated::dispatch($peopleFrom->user, $id);
             }
             if($transferAct->to){
                 $peopleTo = $this->peopleRepository->get($transferAct->toPerson->people->id);
-                TransferActUpdated::dispatch($peopleTo->user);
+                TransferActUpdated::dispatch($peopleTo->user, $id);
             }
         }
         catch (\Exception $exception){
@@ -199,7 +199,7 @@ class TransferActService
             ]);
             $transferActConfirms = $this->transferActConfirmRepository->getByTransferActId($transferAct->id);
             foreach ($transferActConfirms as $transferActConfirm) {
-                TransferActConfirmChanged::dispatch($transferActConfirm->peoplePosition->people->user);
+                TransferActConfirmChanged::dispatch($transferActConfirm->peoplePosition->people->user, $transferAct->id);
                 if ($transferActConfirm->status != TransferActStatusDictionary::CONFIRMED) {
                     $isConfirmed = false;
                     break;
@@ -245,7 +245,7 @@ class TransferActService
             }
             $transferActConfirms = $this->transferActConfirmRepository->getByTransferActId($transferAct->id);
             foreach ($transferActConfirms as $transferActConfirm) {
-                TransferActConfirmChanged::dispatch($transferActConfirm->peoplePosition->people->user);
+                TransferActConfirmChanged::dispatch($transferActConfirm->peoplePosition->people->user, $transferAct->id);
                 if ($transferActConfirm->status != TransferActStatusDictionary::CONFIRMED) {
                     $isConfirmed = true;
                     break;

@@ -18,6 +18,22 @@ class EmailDictionary implements BaseDictionary
             self::TRANSFER_ACT_UPDATE_EMAIL => '<p>Акт приёма/передачи/списания был изменён</p>'
         ];
     }
+
+    public static function message($index, $url)
+    {
+        switch ($index) {
+            case self::HELLO_EMAIL:
+                return '<p>Приветственное сообщение</p>';
+            case self::TRANSFER_ACT_CREATE_EMAIL:
+                return view('emails.transfer-act-created', ['url' => $url])->render();
+            case self::TRANSFER_ACT_UPDATE_EMAIL:
+                return view('emails.transfer-act-updated', ['url' => $url])->render();
+            case self::TRANSFER_ACT_CONFIRM_CHANGED_EMAIL:
+                return view('emails.transfer-act-confirm-changed', ['url' => $url])->render();
+            default:
+                return '<p>Это сообщение доставлено по ошибке!!! Пожалуйста, обратитесь к администратору</p>';
+        }
+    }
     public static function get($index){
         return self::type()[$index];
     }

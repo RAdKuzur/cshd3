@@ -5,6 +5,7 @@ namespace App\Listeners;
 use App\Dictionaries\EmailDictionary;
 use App\Dictionaries\NotificationTypeDictionary;
 use App\Events\TransferActConfirmChanged;
+use App\Helpers\UrlHelper;
 use App\Jobs\EmailSendMessageJob;
 use App\Services\NotificationService;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -28,7 +29,9 @@ class TransferActConfirmListener
      */
     public function handle(TransferActConfirmChanged $event): void
     {
-        EmailSendMessageJob::dispatch($event->user->email, 'Акт материального перемещения', EmailDictionary::TRANSFER_ACT_CONFIRM_CHANGED_EMAIL)
+        $url = UrlHelper::createUrlFromSearch('transfer-acts', $event->id);
+        $messageType = EmailDictionary::TRANSFER_ACT_CONFIRM_CHANGED_EMAIL;
+        EmailSendMessageJob::dispatch($event->user->email, 'Акт материального перемещения', EmailDictionary::message($messageType, $url))
             ->onConnection('rabbitmq')->onQueue('email');
         $this->notificationService->createNotification($event->user->id, NotificationTypeDictionary::TRANSFER_ACT_CONFIRM);
     }

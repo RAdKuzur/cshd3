@@ -16,6 +16,8 @@ class UrlHelper
                 return 'things';
             case 'network-things':
                 return 'things/network';
+            case 'transfer-acts':
+                return 'things/transfer-acts';
             default:
                 return null;
         }

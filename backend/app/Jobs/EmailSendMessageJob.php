@@ -34,6 +34,6 @@ class EmailSendMessageJob implements ShouldQueue
      */
     public function handle(): void
     {
-        (new EmailService())->send($this->email, $this->text, EmailDictionary::get($this->html));
+        (new EmailService())->send($this->email, $this->text, $this->html);
     }
 }

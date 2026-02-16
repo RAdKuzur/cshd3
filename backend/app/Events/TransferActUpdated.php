@@ -21,11 +21,14 @@ class TransferActUpdated implements ShouldBroadcastNow
      * Create a new event instance.
      */
     public User $user;
+    public int $id;
     public function __construct(
-        User $user
+        User $user,
+        int $id
     )
     {
         $this->user = $user;
+        $this->id = $id;
     }
 
     /**
