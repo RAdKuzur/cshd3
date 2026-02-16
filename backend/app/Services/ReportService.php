@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Dictionaries\ConditionDictionary;
+use App\Dictionaries\ResourceTypeDictionary;
 use App\Dictionaries\ThingBalanceDictionary;
 use App\Dictionaries\ThingTypeDictionary;
 use App\DTO\Thing\ThingBranchDTO;
@@ -10,6 +11,8 @@ use App\DTO\Thing\ThingDTO;
 use App\Helpers\Auth;
 use App\Models\Auditorium;
 use App\Repositories\AuditoriumRepository;
+use App\Repositories\DeviceRepository;
+use App\Repositories\ModelRepository;
 use App\Repositories\OrganizationRepository;
 use App\Repositories\ThingRepository;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -25,15 +28,21 @@ class ReportService
     public AuditoriumRepository $auditoriumRepository;
     public OrganizationRepository $organizationRepository;
     public ThingRepository $thingRepository;
+    public ModelRepository $modelRepository;
+    public DeviceRepository $deviceRepository;
     public function __construct(
         AuditoriumRepository $auditoriumRepository,
         OrganizationRepository $organizationRepository,
-        ThingRepository $thingRepository
+        ThingRepository $thingRepository,
+        ModelRepository $modelRepository,
+        DeviceRepository $deviceRepository
     )
     {
         $this->auditoriumRepository = $auditoriumRepository;
         $this->organizationRepository = $organizationRepository;
         $this->thingRepository = $thingRepository;
+        $this->modelRepository = $modelRepository;
+        $this->deviceRepository = $deviceRepository;
     }
 
     public function auditoriumReport($id)
@@ -399,6 +408,53 @@ class ReportService
             $writer->save('php://output');
         }, $fileName, [
             'Content-Type' => 'application/vnd.ms-excel',
+            'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
+            'Cache-Control' => 'max-age=0',
+        ]);
+    }
+
+    public function resources()
+    {
+        // По устройствам
+        $models = $this->modelRepository->getAll();
+        $templatePath = storage_path('excel/Resource.xlsx');
+        $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($templatePath);
+        $sheet = $spreadsheet->getSheetByName('По устройствам');
+        $startIndex = 4;
+        foreach ($models as $index => $model) {
+            foreach ($model->modelResources as $resource) {
+                $sheet->setCellValue('A' . ($index + $startIndex), $index + 1);
+                $sheet->setCellValue('B' . ($index + $startIndex), $model->company->name);
+                $sheet->setCellValue('C' . ($index + $startIndex), $model->company->name);
+                $sheet->setCellValue('D' . ($index + $startIndex), $model->company->name . ' ' . $model->name);
+                $sheet->setCellValue('E' . ($index + $startIndex), ResourceTypeDictionary::get($resource->resource->type));
+                $sheet->setCellValue('F' . ($index + $startIndex), $resource->resource->amount);
+            }
+        }
+        // По материальным ценностям
+        $sheet = $spreadsheet->getSheetByName('По МЦ');
+        $devices = $this->deviceRepository->getAll();
+        foreach ($devices as $index => $device) {
+            foreach ($device->model->modelResources as $resource) {
+                $sheet->setCellValue('A' . ($index + $startIndex), $index + 1);
+                $sheet->setCellValue('B' . ($index + $startIndex), $device->thing->name);
+                $sheet->setCellValue('C' . ($index + $startIndex), $device->thing->inv_number);
+                $sheet->setCellValue('D' . ($index + $startIndex), ThingTypeDictionary::get($device->thing->thing_type_id));
+                $sheet->setCellValue('E' . ($index + $startIndex), $device->thing?->currentAuditorium?->auditorium?->name);
+                $sheet->setCellValue('F' . ($index + $startIndex), $device->model->company->name);
+                $sheet->setCellValue('G' . ($index + $startIndex), $device->model->name);
+                $sheet->setCellValue('H' . ($index + $startIndex), $device->model->company->name . ' ' . $device->model->name);
+                $sheet->setCellValue('I' . ($index + $startIndex), ResourceTypeDictionary::get($resource->resource->type));
+                $sheet->setCellValue('J' . ($index + $startIndex), $resource->resource->amount);
+            }
+        }
+
+        $fileName = 'resources.xlsx';
+        return response()->streamDownload(function () use ($spreadsheet) {
+            $writer = new Xlsx($spreadsheet);
+            $writer->save('php://output');
+        }, $fileName, [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
             'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
             'Cache-Control' => 'max-age=0',
         ]);

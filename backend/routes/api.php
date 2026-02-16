@@ -119,6 +119,7 @@ Route::middleware([PrometheusMiddleware::class])->group(function () {
                 Route::get('/reports/general', [ReportController::class, 'general'])->name('reports.general');
                 Route::get('/reports/form-extended/{year}', [ReportController::class, 'formExtended'])->name('reports.form-extended');
                 Route::get('/reports/form/{year}', [ReportController::class, 'form'])->name('reports.form');
+                Route::get('/reports/resources', [ReportController::class, 'resources'])->name('reports.resources');
 
                 Route::get('/transfer-acts', [TransferActController::class, 'all'])->name('transfer-acts.all');
                 Route::get('/transfer-acts/{id}', [TransferActController::class, 'getOne'])->name('transfer-acts.get-one');

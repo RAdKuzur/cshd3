@@ -169,6 +169,7 @@
                 Отчёты по формам
               </h3>
               <p class="text-sm text-amber-100 leading-relaxed">
+                Статистика заполнения форм, отчётность по документам и бланкам учёта
               </p>
             </div>
             <div class="mt-6 flex items-center justify-between">
@@ -207,8 +208,6 @@
             </div>
 
             <div class="pr-16">
-
-
               <h3 class="text-xl font-semibold text-white mb-2">
                 Отчет по отделам
               </h3>
@@ -238,7 +237,51 @@
               </div>
             </div>
           </div>
-          <div class="md:col-span-3"></div>
+
+          <!-- НОВАЯ КАРТОЧКА: Расходные материалы -->
+          <div
+              class="relative overflow-hidden rounded-xl p-6 flex flex-col justify-between
+           bg-gradient-to-br from-violet-500 to-purple-700
+           hover:from-violet-600 hover:to-purple-800
+           transition-all hover:shadow-lg hover:scale-[1.01]
+           cursor-pointer group"
+              @click="navigateTo('/reports/resources')"
+          >
+            <div class="absolute right-6 top-6">
+              <div class="bg-white/20 backdrop-blur-sm p-3 rounded-xl">
+                <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                </svg>
+              </div>
+            </div>
+
+            <div class="pr-16">
+              <h3 class="text-xl font-semibold text-white mb-2">
+                Расходные материалы
+              </h3>
+              <p class="text-sm text-violet-100 leading-relaxed">
+                Учёт и статистика расходных материалов: остатки, прогнозирование потребности
+              </p>
+            </div>
+
+            <div class="mt-6 flex items-center justify-between">
+              <div class="flex items-center gap-2 text-white/80">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                </svg>
+                <span class="text-sm">Excel</span>
+              </div>
+              <div class="bg-white/20 p-2 rounded-lg group-hover:bg-white/30 transition-colors">
+                <svg class="w-5 h-5 text-white transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Оставшиеся ячейки сетки (пустые для соблюдения сетки) -->
+          <div class="hidden lg:block"></div>
+          <div class="hidden lg:block"></div>
         </div>
 
         <!-- Информационная панель -->

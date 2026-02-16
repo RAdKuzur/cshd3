@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Model as EloquentModel;
 /** @property int $id
  * @property int $model_id
  * @property int $thing_id
@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property \App\Models\Model $model
  * @property Thing $thing
 */
-class Device extends Model
+class Device extends EloquentModel
 {
     protected $table = 'devices';
     protected $fillable = [

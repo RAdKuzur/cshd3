@@ -36,4 +36,8 @@ class ReportController extends Controller
     public function formExtended($year){
         return $this->reportService->formExtended($year);
     }
+
+    public function resources(){
+        return $this->reportService->resources();
+    }
 }

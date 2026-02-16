@@ -61,6 +61,7 @@ import AdminCompanyPage from "@/pages/admin/company/AdminCompanyPage.vue";
 import AdminModelPage from "@/pages/admin/model/AdminModelPage.vue";
 import AdminModelResourcePage from "@/pages/admin/model-resource/AdminModelResourcePage.vue";
 import DevelopPage from "@/pages/error/DevelopPage.vue";
+import ReportResourcePage from "@/pages/report/ReportResourcePage.vue";
 
 
 const BACKEND_URL = '';
@@ -89,6 +90,7 @@ const routes = [
     { path: '/reports/arms', component: ReportArmPage, meta: { auth: true }},
     { path: '/reports/general', component: ReportGeneralPage, meta: { auth: true }},
     { path: '/reports/forms', component: ReportFormPage, meta: { auth: true }},
+    { path: '/reports/resources', component: ReportResourcePage, meta: { auth: true }},
 
     { path: '/admin', component: AdminPage, meta: { auth: true } },
     { path: '/admin/positions', component: AdminPositionPage, meta: { auth: true } },

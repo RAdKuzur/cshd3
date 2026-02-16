@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Model as EloquentModel;
 /**
  * @property int $id
  * @property int $model_id
@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property Model $model
  * @property Resource $resource
  */
-class ModelResource extends Model
+class ModelResource extends EloquentModel
 {
     protected $table = 'model_resources';
 
