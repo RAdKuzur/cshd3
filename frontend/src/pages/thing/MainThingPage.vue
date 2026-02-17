@@ -158,6 +158,34 @@
           </div>
         </div>
 
+        <div
+            class="relative overflow-hidden rounded-xl p-6 flex flex-col justify-between
+           bg-gradient-to-br from-indigo-500 to-purple-600
+           hover:from-indigo-600 hover:to-purple-700
+           transition-all hover:shadow-lg hover:scale-[1.01]
+           cursor-pointer group"
+            @click="navigateTo('/things/history/thing-auditoriums')"
+        >
+          <DocumentTextIcon
+              class="absolute right-6 top-6 h-12 w-12 text-white/25 pointer-events-none"
+          />
+
+          <div class="pr-16">
+            <h3 class="text-xl font-semibold text-white mb-2">
+              История перемещений МС
+            </h3>
+            <p class="text-sm text-indigo-100 leading-relaxed">
+              Полная история перемещений материальных средств по организации
+            </p>
+          </div>
+
+          <div class="mt-6 flex justify-end">
+            <ArrowRightIcon
+                class="h-5 w-5 text-white transition-transform group-hover:translate-x-1"
+            />
+          </div>
+        </div>
+
         <!-- Акты -->
         <div
             class="relative overflow-hidden rounded-xl p-6 flex flex-col justify-between
@@ -232,7 +260,7 @@ import {
   ArrowRightIcon,
   DevicePhoneMobileIcon,
   ArchiveBoxIcon,
-  ClockIcon, // Новая иконка для истории перемещений
+  ClockIcon,
 } from '@heroicons/vue/24/outline'
 
 const router = useRouter()

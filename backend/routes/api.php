@@ -23,6 +23,7 @@ use App\Http\Controllers\ResourceController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\TechWorkController;
 use App\Http\Controllers\TestController;
+use App\Http\Controllers\ThingAuditoriumController;
 use App\Http\Controllers\ThingController;
 use App\Http\Controllers\TransferActController;
 use App\Http\Controllers\UserController;
@@ -179,6 +180,12 @@ Route::middleware([PrometheusMiddleware::class])->group(function () {
                 Route::post('/history/resources', [HistoryResourceController::class, 'create'])->name('history-resources.create');
                 Route::put('/history/resources/{id}', [HistoryResourceController::class, 'update'])->name('history-resources.update');
                 Route::delete('/history/resources/{id}', [HistoryResourceController::class, 'delete'])->name('history-resources.delete');
+
+                Route::get('/history/thing-auditoriums', [ThingAuditoriumController::class, 'all'])->name('history-thing-auditoriums.all');
+                Route::get('/history/thing-auditoriums/{id}', [ThingAuditoriumController::class, 'getOne'])->name('history-thing-auditoriums.get-one');
+                Route::post('/history/thing-auditoriums', [ThingAuditoriumController::class, 'create'])->name('history-thing-auditoriums.create');
+                Route::put('/history/thing-auditoriums/{id}', [ThingAuditoriumController::class, 'update'])->name('history-thing-auditoriums.update');
+                Route::delete('/history/thing-auditoriums/{id}', [ThingAuditoriumController::class, 'delete'])->name('history-thing-auditoriums.delete');
 
                 Route::get('/model-resources', [ModelResourceController::class, 'all'])->name('model-resources.all');
                 Route::get('/model-resources/{id}', [ModelResourceController::class, 'getOne'])->name('model-resources.get-one');

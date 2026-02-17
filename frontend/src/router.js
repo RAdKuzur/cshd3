@@ -63,6 +63,7 @@ import AdminModelResourcePage from "@/pages/admin/model-resource/AdminModelResou
 import DevelopPage from "@/pages/error/DevelopPage.vue";
 import ReportResourcePage from "@/pages/report/ReportResourcePage.vue";
 import HistoryResourcePage from "@/pages/history/HistoryResourcePage.vue";
+import HistoryThingAuditoriumPage from "@/pages/history/HistoryThingAuditoriumPage.vue";
 
 
 const BACKEND_URL = '';
@@ -135,6 +136,7 @@ const routes = [
     { path: '/things/resources/edit/:id', component: ResourceEditPage, meta: { auth: true } },
 
     { path: '/things/history/resources', component: HistoryResourcePage, meta: { auth: true } },
+    { path: '/things/history/thing-auditoriums', component: HistoryThingAuditoriumPage, meta: { auth: true } },
 
     { path: '/search', component: SearchPage, meta: { auth: true }},
     { path: '/admin/files', component: FilePage , meta: { auth: true } }
