@@ -145,4 +145,63 @@ class FileController extends Controller
             'success' => true
         ]);
     }
+    #[OA\Get(
+        path: "/api/files/{tableName}/row/{rowId}",
+        summary: "Список файлов по таблице и rowId",
+        tags: ["Files"],
+        parameters: [
+            new OA\Parameter(
+                name: "tableName",
+                description: "Название таблицы (например: users, etc.)",
+                in: "path",
+                required: true,
+                schema: new OA\Schema(
+                    type: "string",
+                    example: "users"
+                )
+            ),
+            new OA\Parameter(
+                name: "rowId",
+                description: "ID записи в таблице",
+                in: "path",
+                required: true,
+                schema: new OA\Schema(
+                    type: "integer",
+                    example: 1
+                )
+            )
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: "OK",
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: "success", type: "boolean", example: true),
+                        new OA\Property(
+                            property: "data",
+                            type: "array",
+                            items: new OA\Items(
+                                properties: [
+                                    new OA\Property(property: "id", type: "integer", example: 1),
+                                    new OA\Property(property: "table_name", type: "string", example: "table_name"),
+                                    new OA\Property(property: "row_id", type: "string", example: "1"),
+                                    new OA\Property(property: "file_id", type: "string"),
+                                    new OA\Property(property: "filename", type: "string"),
+                                ]
+                            )
+                        )
+                    ]
+                )
+            )
+        ]
+    )]
+    public function getFiles($tableName, $rowId)
+    {
+        $files = $this->fileService->getFiles($tableName, $rowId);
+        return response()->json([
+            'success' => true,
+            'data' => $files
+        ]);
+    }
 }

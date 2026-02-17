@@ -48,10 +48,8 @@ class FileRepository
         ]);
         return DB::table('files')->where('id', $id)->delete();
     }
-    public function isPossibleToUpload($tableName, $rowId) {
-        return DB::table($tableName)->where([
-            'id' => $rowId,
-        ])->exists();
+    public function isPossibleToUpload($tableName) : bool {
+        return DB::table($tableName)->exists();
     }
 
     public function getFiles($tableName, $rowId)

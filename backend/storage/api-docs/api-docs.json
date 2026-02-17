@@ -183,6 +183,81 @@
                 }
             }
         },
+        "/api/files/{tableName}/row/{rowId}": {
+            "get": {
+                "tags": [
+                    "Files"
+                ],
+                "summary": "Список файлов по таблице и rowId",
+                "operationId": "99575469e488677c00806c65dd500db2",
+                "parameters": [
+                    {
+                        "name": "tableName",
+                        "in": "path",
+                        "description": "Название таблицы (например: users, etc.)",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "users"
+                        }
+                    },
+                    {
+                        "name": "rowId",
+                        "in": "path",
+                        "description": "ID записи в таблице",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "table_name": {
+                                                        "type": "string",
+                                                        "example": "table_name"
+                                                    },
+                                                    "row_id": {
+                                                        "type": "string",
+                                                        "example": "1"
+                                                    },
+                                                    "file_id": {
+                                                        "type": "string"
+                                                    },
+                                                    "filename": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/test": {
             "get": {
                 "tags": [

@@ -138,6 +138,8 @@ Route::middleware([PrometheusMiddleware::class])->group(function () {
                 Route::get('/files/{id}', [FileController::class, 'getOne'])->name('files.get-one');
                 Route::post('/files', [FileController::class, 'upload'])->name('files.upload');
                 Route::delete('/files/{id}', [FileController::class, 'delete'])->name('files.delete');
+                Route::get('/files/{tableName}/row/{rowId}', [FileController::class, 'getFiles'])->name('files.get-files');
+
 
                 Route::get('/network-things', [NetworkThingController::class, 'all'])->name('network-things.all');
                 Route::get('/network-things/{id}', [NetworkThingController::class, 'getOne'])->name('network-things.get-one');

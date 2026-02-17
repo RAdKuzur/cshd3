@@ -40,7 +40,7 @@ class FileService
     }
     public function create(FileDTO $fileDTO)
     {
-        if($this->fileRepository->isPossibleToUpload($fileDTO->table_name, $fileDTO->row_id)) {
+        if($this->fileRepository->isPossibleToUpload($fileDTO->table_name)) {
             DB::beginTransaction();
             try {
                 $this->fileRepository->create([
