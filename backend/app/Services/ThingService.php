@@ -158,7 +158,7 @@ class ThingService
                 }
             }
             $this->elasticsearchService->index(
-                'things',
+                ElasticsearchService::THING_INDEX,
                 [
                     'comment' => $dto->comment,
                     'id' => $thingId
@@ -279,7 +279,7 @@ class ThingService
                 'end_date' => null
             ]);
             $this->elasticsearchService->index(
-                'things',
+                ElasticsearchService::THING_INDEX,
                 [
                     'comment' => $thing->comment,
                     'id' => $thingId
@@ -306,7 +306,7 @@ class ThingService
                 'comment' => $dto->comment,
             ]);
             $this->elasticsearchService->updateById(
-                'things',
+                ElasticsearchService::THING_INDEX,
                 $id,
                 [
                     'comment' => $dto->comment,
@@ -381,7 +381,7 @@ class ThingService
                 $this->fileRepository->delete($file->id);
             }
             $this->thingRepository->delete($id);
-            $this->elasticsearchService->deleteByBodyId('things', $id);
+            $this->elasticsearchService->deleteByBodyId(ElasticsearchService::THING_INDEX, $id);
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();

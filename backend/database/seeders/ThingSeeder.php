@@ -31,10 +31,10 @@ class ThingSeeder extends Seeder
 
     public function run(): void
     {
-        if ($this->elasticsearchService->exist('things')){
-            $this->elasticsearchService->delete('things');
+        if ($this->elasticsearchService->exist(ElasticsearchService::THING_INDEX)){
+            $this->elasticsearchService->delete(ElasticsearchService::THING_INDEX);
         }
-        $this->elasticsearchService->create('things');
+        $this->elasticsearchService->create(ElasticsearchService::THING_INDEX);
         //things-electronics
         DB::table('things')->truncate();
         for($i = 1; $i <= 1000; $i++){
@@ -60,7 +60,7 @@ class ThingSeeder extends Seeder
                 'is_blocked' => Thing::NOT_BLOCKED
             ]);
             $this->elasticsearchService->index(
-                'things',
+                ElasticsearchService::THING_INDEX,
                 [
                     'comment' => $fakeText,
                     'id' => $thingId
@@ -92,7 +92,7 @@ class ThingSeeder extends Seeder
                 'is_blocked' => Thing::NOT_BLOCKED
             ]);
             $this->elasticsearchService->index(
-                'things',
+                ElasticsearchService::THING_INDEX,
                [
                    'comment' => $fakeText,
                    'id' => $thingId

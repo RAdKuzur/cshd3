@@ -8,6 +8,8 @@ use Elastic\Elasticsearch\ClientBuilder;
 class ElasticsearchService
 {
     protected Client $client;
+    public const THING_INDEX = 'things';
+    public const NETWORK_THING_INDEX = 'network-things';
 
     public function __construct()
     {

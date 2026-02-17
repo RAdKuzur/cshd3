@@ -63,7 +63,7 @@ class NetworkThingService
             if($this->networkThingRepository->isPossibleToCreate($networkThingDTO->thing_id)){
                 $networkThingId = $this->networkThingRepository->create($networkThingDTO->toArray());
                 $this->elasticsearchService->index(
-                    'network-things',
+                    ElasticsearchService::NETWORK_THING_INDEX,
                     [
                         'comment' => $networkThingDTO->comment,
                         'id' => $networkThingId
@@ -81,7 +81,7 @@ class NetworkThingService
         try {
             $this->networkThingRepository->update($id, $networkThingDTO->toArray());
             $this->elasticsearchService->updateById(
-                'network-things',
+                ElasticsearchService::NETWORK_THING_INDEX,
                 $id,
                 [
                     'comment' => $networkThingDTO->comment,
@@ -99,7 +99,7 @@ class NetworkThingService
         DB::beginTransaction();
         try {
             $this->networkThingRepository->delete($id);
-            $this->elasticsearchService->deleteByBodyId('network-things', $id);
+            $this->elasticsearchService->deleteByBodyId(ElasticsearchService::NETWORK_THING_INDEX, $id);
             DB::commit();
         }
         catch (\Exception $e) {

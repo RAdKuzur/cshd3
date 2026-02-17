@@ -22,10 +22,10 @@ class NetworkThingSeeder extends Seeder
     }
     public function run(): void
     {
-        if($this->elasticsearchService->exist('network-things')) {
-            $this->elasticsearchService->delete('network-things');
+        if($this->elasticsearchService->exist(ElasticsearchService::NETWORK_THING_INDEX)) {
+            $this->elasticsearchService->delete(ElasticsearchService::NETWORK_THING_INDEX);
         }
-        $this->elasticsearchService->create('network-things');
+        $this->elasticsearchService->create(ElasticsearchService::NETWORK_THING_INDEX);
 
         DB::table('network_things')->truncate();
         $networkThings = DB::table('things')->whereIn('thing_type_id', [
@@ -41,7 +41,7 @@ class NetworkThingSeeder extends Seeder
                 'comment' => $fakeText = fake()->text()
             ]);
             $this->elasticsearchService->index(
-                'network-things',
+                ElasticsearchService::NETWORK_THING_INDEX,
                 [
                     'comment' => $fakeText,
                     'id' => $networkThingsId
@@ -60,7 +60,7 @@ class NetworkThingSeeder extends Seeder
                 'comment' => $fakeText = fake()->text()
             ]);
             $this->elasticsearchService->index(
-                'network-things',
+                ElasticsearchService::NETWORK_THING_INDEX,
                 [
                     'comment' => $fakeText,
                     'id' => $networkThingsId
