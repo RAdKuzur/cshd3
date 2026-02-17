@@ -40,7 +40,10 @@
                                                         "type": "string",
                                                         "example": "1"
                                                     },
-                                                    "filepath": {
+                                                    "file_id": {
+                                                        "type": "string"
+                                                    },
+                                                    "filename": {
                                                         "type": "string"
                                                     }
                                                 },
@@ -52,6 +55,49 @@
                                 }
                             }
                         }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Files"
+                ],
+                "summary": "Импорт данных файла",
+                "operationId": "9a2bf45b41e0ce24050fa66025747fc6",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "table_name",
+                                    "row_id",
+                                    "filepath"
+                                ],
+                                "properties": {
+                                    "table_name": {
+                                        "type": "string",
+                                        "example": "table_name"
+                                    },
+                                    "row_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "file_id": {
+                                        "type": "string"
+                                    },
+                                    "filename": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "success"
                     }
                 }
             }
@@ -94,7 +140,10 @@
                                                 "row_id": {
                                                     "type": "integer"
                                                 },
-                                                "filepath": {
+                                                "file_id": {
+                                                    "type": "string"
+                                                },
+                                                "filename": {
                                                     "type": "string"
                                                 }
                                             },
@@ -110,57 +159,13 @@
                         "description": "File not found"
                     }
                 }
-            }
-        },
-        "/api/import-files": {
-            "post": {
-                "tags": [
-                    "Files"
-                ],
-                "summary": "Импорт данных файла",
-                "operationId": "86114dd5e8479c942b834bda33de5097",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "table_name",
-                                    "row_id",
-                                    "filepath"
-                                ],
-                                "properties": {
-                                    "table_name": {
-                                        "type": "string",
-                                        "example": "table_name"
-                                    },
-                                    "row_id": {
-                                        "type": "integer",
-                                        "example": 1
-                                    },
-                                    "filepath": {
-                                        "type": "string"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "success"
-                    }
-                }
-            }
-        },
-        "/api/import-files/{id}": {
+            },
             "delete": {
                 "tags": [
                     "Files"
                 ],
                 "summary": "Удалить данные о файле",
-                "operationId": "b3a620790072ced28a113ad18b60fcbe",
+                "operationId": "dfd9c6f79f5a54b06a9491ad78e3f045",
                 "parameters": [
                     {
                         "name": "id",

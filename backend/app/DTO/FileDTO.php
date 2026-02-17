@@ -9,22 +9,20 @@ class FileDTO implements DTO
     public ?int $id;
     public ?string $table_name;
     public ?int $row_id;
-    public ?string $filepath;
-    public $file;
+    public ?string $file_id;
+    public ?string $filename;
     public function __construct(
         ?int $id = null,
         ?string $table_name = null,
         ?int $row_id = null,
-        ?string $filepath = null,
-        $file = null
-
-
+        ?string $file_id = null,
+        ?string $filename = null,
     ){
         $this->id = $id;
         $this->table_name = $table_name;
         $this->row_id = $row_id;
-        $this->filepath = $filepath;
-        $this->file = $file;
+        $this->file_id = $file_id;
+        $this->filename = $filename;
     }
     public static function fromArray(array $array)
     {
@@ -33,7 +31,8 @@ class FileDTO implements DTO
             $array['id'],
             $array['table_name'],
             $array['row_id'],
-            $array['filepath']
+            $array['file_id'],
+            $array['filename']
         );
     }
     public static function fromModel(File $model): self{
@@ -41,7 +40,8 @@ class FileDTO implements DTO
             $model->id,
             $model->table_name,
             $model->row_id,
-            $model->filepath,
+            $model->file_id,
+            $model->filename,
         );
     }
     public function toArray() : array {
@@ -49,7 +49,8 @@ class FileDTO implements DTO
             'id' => $this->id,
             'table_name' => $this->table_name,
             'row_id' => $this->row_id,
-            'filepath' => $this->filepath,
+            'file_id' => $this->file_id,
+            'filename' => $this->filename,
         ];
     }
 }

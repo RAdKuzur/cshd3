@@ -41,7 +41,7 @@
             >
               <option value="table_name">Сортировка по таблице</option>
               <option value="row_id">По ID записи</option>
-              <option value="filepath">По имени файла</option>
+              <option value="filename">По имени файла</option>
               <option value="created_at">По дате создания</option>
             </select>
           </div>
@@ -92,7 +92,7 @@
                 :key="file.id"
                 class="hover:bg-gradient-to-r hover:from-indigo-50 hover:to-white transition-all duration-200 group"
             >
-              <!-- ID и основная информация -->
+              <!-- ID файла -->
               <td class="px-6 py-4 whitespace-nowrap">
                 <div class="flex items-center">
                   <div class="flex-shrink-0 h-10 w-10 bg-indigo-100 rounded-lg flex items-center justify-center">
@@ -102,13 +102,10 @@
                   </div>
                   <div class="ml-4">
                     <div class="text-sm font-semibold text-gray-900">
-                      ID файла: {{ file.id }}
+                      {{ file.file_id }}
                     </div>
-<!--                    <div class="text-xs text-gray-500">-->
-<!--                      Создан: {{ formatDate(file.created_at) }}-->
-<!--                    </div>-->
-                    <div v-if="file.updated_at" class="text-xs text-gray-400">
-                      Обновлен: {{ formatDate(file.updated_at) }}
+                    <div class="text-xs text-gray-400">
+                      ID: {{ file.id }}
                     </div>
                   </div>
                 </div>
@@ -123,13 +120,13 @@
                     </svg>
                   </div>
                   <div>
-                    <div class="text-sm font-medium text-gray-900">Таблица: {{ file.table_name }}</div>
+                    <div class="text-sm font-medium text-gray-900">{{ file.table_name }}</div>
                     <div class="text-xs text-gray-500">ID записи: {{ file.row_id }}</div>
                   </div>
                 </div>
               </td>
 
-              <!-- Файл -->
+              <!-- Информация о файле -->
               <td class="px-6 py-4">
                 <div class="flex items-center">
                   <div class="flex-shrink-0 h-8 w-8 bg-green-100 rounded-lg flex items-center justify-center mr-3">
@@ -139,70 +136,35 @@
                   </div>
                   <div class="truncate max-w-xs">
                     <div class="text-sm font-semibold text-gray-900 truncate">
-                      {{ getFileName(file.filepath) }}
+                      {{ file.filename }}
                     </div>
-<!--                    <div class="text-xs text-gray-500 truncate">-->
-<!--                      {{ file.filepath }}-->
-<!--                    </div>-->
-                    <div class="text-xs text-indigo-600 font-medium mt-1">
-                      <button @click="downloadFile(file)" class="hover:text-indigo-800 transition-colors">
-                        Скачать файл
-                      </button>
+                    <div class="text-xs text-gray-500 truncate">
+                      file_id: {{ file.file_id }}
                     </div>
                   </div>
                 </div>
               </td>
 
-              <!-- Предпросмотр файла -->
-              <td class="px-6 py-4 whitespace-nowrap">
-                <div class="flex items-center">
-                  <div class="flex-shrink-0 h-8 w-8 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
-                    <svg class="h-4 w-4 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <div v-if="isImageFile(file.filepath)" class="text-sm font-medium text-gray-900">
-                      <button @click="previewFile(file)" class="text-indigo-600 hover:text-indigo-800 transition-colors">
-                        Просмотр изображения
-                      </button>
-                    </div>
-                    <div v-else class="text-sm text-gray-500">
-                      Предпросмотр недоступен
-                    </div>
-                    <div class="text-xs text-gray-500">
-                      {{ getFileType(file.filepath) }}
-                    </div>
-                  </div>
-                </div>
-              </td>
+              <!-- Дата создания -->
+<!--              <td class="px-6 py-4 whitespace-nowrap">-->
+<!--                <div class="flex items-center">-->
+<!--                  <div class="flex-shrink-0 h-8 w-8 bg-purple-100 rounded-lg flex items-center justify-center mr-3">-->
+<!--                    <svg class="h-4 w-4 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">-->
+<!--                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />-->
+<!--                    </svg>-->
+<!--                  </div>-->
+<!--                  <div>-->
+<!--                    <div class="text-sm text-gray-900">{{ formatDate(file.created_at) }}</div>-->
+<!--                    <div v-if="file.updated_at" class="text-xs text-gray-500">-->
+<!--                      обновлено: {{ formatDate(file.updated_at) }}-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </td>-->
+
               <!-- Действия -->
               <td class="px-6 py-4 whitespace-nowrap">
                 <div class="flex items-center space-x-2">
-                  <!-- Кнопка просмотра -->
-                  <button
-                      @click="viewFile(file)"
-                      class="p-2 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
-                      title="Просмотреть"
-                  >
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                    </svg>
-                  </button>
-
-                  <!-- Кнопка редактирования -->
-<!--                  <button-->
-<!--                      @click="editFile(file)"-->
-<!--                      class="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors"-->
-<!--                      title="Редактировать"-->
-<!--                  >-->
-<!--                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">-->
-<!--                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />-->
-<!--                    </svg>-->
-<!--                  </button>-->
-
                   <!-- Кнопка удаления -->
                   <button
                       @click="confirmDelete(file)"
@@ -290,7 +252,7 @@
         <h3 class="text-lg font-medium text-gray-900 mb-4">Подтверждение удаления</h3>
         <p class="text-sm text-gray-500 mb-6">
           Вы уверены, что хотите удалить файл
-          <span class="font-semibold">{{ fileToDelete?.filepath }}</span>?
+          <span class="font-semibold">{{ fileToDelete?.filename }}</span>?
           Это действие нельзя отменить.
         </p>
         <div class="flex justify-end space-x-3">
@@ -346,18 +308,28 @@
 
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">
-                Выберите файл
+                File ID
               </label>
               <input
-                  type="file"
-                  ref="fileInput"
-                  @change="onFileSelect"
+                  v-model="newFile.file_id"
+                  type="text"
                   required
                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="Идентификатор файла"
               >
-              <p v-if="selectedFile" class="text-sm text-gray-500 mt-1">
-                Выбран файл: {{ selectedFile.name }} ({{ (selectedFile.size / 1024).toFixed(2) }} KB)
-              </p>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">
+                Имя файла
+              </label>
+              <input
+                  v-model="newFile.filename"
+                  type="text"
+                  required
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="example.jpg"
+              >
             </div>
           </div>
 
@@ -380,46 +352,6 @@
         </form>
       </div>
     </div>
-
-    <!-- Модальное окно предпросмотра -->
-    <div v-if="showPreviewModal" class="fixed inset-0 bg-gray-900 bg-opacity-90 flex items-center justify-center z-50">
-      <div class="bg-white rounded-lg p-4 max-w-4xl w-full mx-4">
-        <div class="flex justify-between items-center mb-4">
-          <h3 class="text-lg font-medium text-gray-900">Предпросмотр файла</h3>
-          <button @click="showPreviewModal = false" class="text-gray-400 hover:text-gray-500">
-            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-
-        <div class="text-center">
-          <div v-if="previewingFile && isImageFile(previewingFile.filepath)" class="max-h-96 overflow-auto">
-            <img
-                :src="getFileUrl(previewingFile.filepath)"
-                :alt="previewingFile.filepath"
-                class="max-w-full h-auto mx-auto"
-            />
-          </div>
-          <div v-else class="py-12">
-            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-            <p class="mt-2 text-gray-600">Предпросмотр доступен только для изображений</p>
-            <button
-                @click="downloadFile(previewingFile)"
-                class="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-md text-sm font-medium hover:bg-indigo-700"
-            >
-              Скачать файл
-            </button>
-          </div>
-
-          <div class="mt-4 text-sm text-gray-500">
-            {{ previewingFile?.filepath }}
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -430,10 +362,10 @@ import { BACKEND_URL } from "@/router.js"
 
 // Реактивные данные
 const headers = ref([
-  { key: 'id', label: 'ID файла' },
+  { key: 'file_id', label: 'File ID' },
   { key: 'table_name', label: 'Таблица и запись' },
-  { key: 'filepath', label: 'Файл' },
-  { key: 'preview', label: 'Предпросмотр' },
+  { key: 'filename', label: 'Файл' },
+  // { key: 'created_at', label: 'Дата создания' },
   { key: 'actions', label: 'Действия' }
 ])
 
@@ -453,18 +385,15 @@ const itemsPerPage = ref(10)
 // Модальные окна
 const showDeleteModal = ref(false)
 const showCreateModal = ref(false)
-const showPreviewModal = ref(false)
 const fileToDelete = ref(null)
-const previewingFile = ref(null)
 
 // Создание файла
 const newFile = ref({
   table_name: '',
   row_id: '',
-  file: null
+  file_id: '',
+  filename: ''
 })
-const selectedFile = ref(null)
-const fileInput = ref(null)
 const isCreating = ref(false)
 
 // Загрузка данных
@@ -475,12 +404,14 @@ const loadData = async () => {
 
     const response = await axios.get(`${BACKEND_URL}/api/files`)
 
+    // Предполагаем, что ответ приходит в формате { data: [...] }
     if (response.data.data) {
       files.value = response.data.data.map(file => ({
         id: file.id,
         table_name: file.table_name,
         row_id: file.row_id,
-        filepath: file.filepath,
+        file_id: file.file_id,
+        filename: file.filename,
         created_at: file.created_at || new Date().toISOString(),
         updated_at: file.updated_at || null
       }))
@@ -490,6 +421,7 @@ const loadData = async () => {
 
   } catch (err) {
     error.value = err.message
+    console.error('Ошибка загрузки:', err)
   } finally {
     isLoading.value = false
   }
@@ -509,7 +441,8 @@ const filteredFiles = computed(() => {
     filtered = filtered.filter(file =>
         (file.table_name && file.table_name.toLowerCase().includes(query)) ||
         (file.row_id && file.row_id.toString().includes(query)) ||
-        (file.filepath && file.filepath.toLowerCase().includes(query)) ||
+        (file.filename && file.filename.toLowerCase().includes(query)) ||
+        (file.file_id && file.file_id.toLowerCase().includes(query)) ||
         (file.id && file.id.toString().includes(query))
     )
   }
@@ -607,61 +540,7 @@ const formatDate = (dateString) => {
   }
 }
 
-const getFileName = (filepath) => {
-  if (!filepath) return 'Файл без имени'
-  const parts = filepath.split(/[\\/]/)
-  return parts[parts.length - 1]
-}
-
-const getFileExtension = (filepath) => {
-  if (!filepath) return ''
-  const parts = filepath.split('.')
-  return parts.length > 1 ? parts[parts.length - 1] : ''
-}
-
-const getFileType = (filepath) => {
-  const ext = getFileExtension(filepath).toLowerCase()
-  const types = {
-    'jpg': 'Изображение JPEG',
-    'jpeg': 'Изображение JPEG',
-    'png': 'Изображение PNG',
-    'gif': 'Изображение GIF',
-    'pdf': 'Документ PDF',
-    'doc': 'Документ Word',
-    'docx': 'Документ Word',
-    'xls': 'Таблица Excel',
-    'xlsx': 'Таблица Excel',
-    'txt': 'Текстовый файл',
-    'zip': 'Архив ZIP',
-    'rar': 'Архив RAR'
-  }
-  return types[ext] || `Файл ${ext.toUpperCase()}`
-}
-
-const isImageFile = (filepath) => {
-  const ext = getFileExtension(filepath).toLowerCase()
-  return ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'svg'].includes(ext)
-}
-
-const getFileUrl = (filepath) => {
-  const filename = filepath.split('/').pop();
-  return `${BACKEND_URL}/storage/uploads/${filename}`;
-}
-
-const getFileSize = (file) => {
-  return Math.floor(Math.random() * 1024) + 1
-}
-
 // Действия с файлами
-const viewFile = (file) => {
-  previewFile(file)
-}
-
-const editFile = (file) => {
-  // В реальном приложении можно открыть форму редактирования
-  alert(`Редактирование файла ${file.id} - ${getFileName(file.filepath)}`)
-}
-
 const confirmDelete = (file) => {
   fileToDelete.value = file
   showDeleteModal.value = true
@@ -683,98 +562,47 @@ const deleteFile = async () => {
     alert('Файл успешно удален')
   } catch (err) {
     alert('Ошибка при удалении файла')
+    console.error('Ошибка удаления:', err)
   } finally {
     isLoading.value = false
   }
 }
 
 const openCreateModal = () => {
-  newFile.value = { table_name: '', row_id: '', file: null }
-  selectedFile.value = null
+  newFile.value = { table_name: '', row_id: '', file_id: '', filename: '' }
   showCreateModal.value = true
 }
 
-const onFileSelect = (event) => {
-  const file = event.target.files[0]
-  if (file) {
-    selectedFile.value = file
-    newFile.value.file = file
-  }
-}
-
 const createFile = async () => {
-  if (!selectedFile.value) {
-    alert('Пожалуйста, выберите файл')
-    return
-  }
-
   try {
     isCreating.value = true
 
-    const formData = new FormData()
-    formData.append('table_name', newFile.value.table_name)
-    formData.append('row_id', newFile.value.row_id)
-    formData.append('file', selectedFile.value)
-
-    const response = await axios.post(`${BACKEND_URL}/api/files`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
+    const response = await axios.post(`${BACKEND_URL}/api/files`, {
+      table_name: newFile.value.table_name,
+      row_id: parseInt(newFile.value.row_id),
+      file_id: newFile.value.file_id,
+      filename: newFile.value.filename
     })
 
     if (response.data.success) {
-      // Добавляем новый файл в список
-      const newFileData = {
-        table_name: newFile.value.table_name,
-        row_id: newFile.value.row_id,
-        created_at: new Date().toISOString(),
-        updated_at: null
+      // Добавляем новый файл в список, если API возвращает созданную запись
+      if (response.data.data) {
+        files.value.unshift(response.data.data)
+      } else {
+        // Иначе перезагружаем список
+        await loadData()
       }
-      files.value.unshift(newFileData)
 
       showCreateModal.value = false
-      selectedFile.value = null
-      if (fileInput.value) {
-        fileInput.value.value = ''
-      }
-
       alert('Файл успешно добавлен')
     } else {
       throw new Error(response.data.message || 'Ошибка при создании файла')
     }
   } catch (err) {
     alert(err.response?.data?.message || 'Ошибка при создании файла')
+    console.error('Ошибка создания:', err)
   } finally {
     isCreating.value = false
-  }
-}
-
-const previewFile = (file) => {
-  previewingFile.value = file
-  showPreviewModal.value = true
-}
-
-const downloadFile = async (file) => {
-  try {
-    isLoading.value = true
-
-    const response = await axios.get(`${BACKEND_URL}/api/files/${file.id}/download`, {
-      responseType: 'blob'
-    })
-
-    const url = window.URL.createObjectURL(new Blob([response.data]))
-    const link = document.createElement('a')
-    link.href = url
-    const fileName = getFileName(file.filepath) || `file_${file.id}`
-    link.download = fileName
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-    window.URL.revokeObjectURL(url)
-  } catch (err) {
-    alert('Ошибка при скачивании файла')
-  } finally {
-    isLoading.value = false
   }
 }
 

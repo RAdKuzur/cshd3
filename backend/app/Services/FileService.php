@@ -34,112 +34,37 @@ class FileService
             id: $file->id,
             table_name: $file->table_name,
             row_id: $file->row_id,
-            filepath: $file->filepath,
+            file_id: $file->file_id,
+            filename: $file->filename,
         ))->toArray();
     }
-    public function upload(FileDTO $fileDTO)
+    public function create(FileDTO $fileDTO)
     {
-        $file = $fileDTO->file;
-        if($file && $this->fileRepository->isPossibleToUpload($fileDTO->table_name, $fileDTO->row_id)) {
+        if($this->fileRepository->isPossibleToUpload($fileDTO->table_name, $fileDTO->row_id)) {
             DB::beginTransaction();
             try {
-                $filename = $this->generateUniqueName($file->getClientOriginalName());
                 $this->fileRepository->create([
                     'table_name' => $fileDTO->table_name,
                     'row_id' => $fileDTO->row_id,
-                    'filepath' => base_path() . File::BASE_URL . $filename
+                    'file_id' => $fileDTO->file_id,
+                    'filename' => $fileDTO->filename
                 ]);
                 DB::commit();
-                if (!file_exists(base_path() . File::BASE_URL)) {
-                    mkdir(base_path() . File::BASE_URL, 0777, true);
-                }
-                $file->move(base_path() . File::BASE_URL, $filename);
             } catch (\Exception $exception) {
-                Log::debug($exception->getMessage());
+                Log::debug($exception->getTraceAsString());
                 DB::rollBack();
             }
         }
-    }
-
-    public function uploadRowId(FileDTO $fileDTO, $rowId)
-    {
-        $file = $fileDTO->file;
-        if($rowId && $file && $this->fileRepository->isPossibleToUpload($fileDTO->table_name, $rowId)) {
-            DB::beginTransaction();
-            try {
-                $filename = $this->generateUniqueName($file->getClientOriginalName());
-                $this->fileRepository->create([
-                    'table_name' => $fileDTO->table_name,
-                    'row_id' => $rowId,
-                    'filepath' => base_path() . File::BASE_URL . $filename
-                ]);
-                DB::commit();
-                if (!file_exists(base_path() . File::BASE_URL)) {
-                    mkdir(base_path() . File::BASE_URL, 0777, true);
-                }
-                $file->move(base_path() . File::BASE_URL, $filename);
-            } catch (\Exception $exception) {
-                Log::debug($exception->getMessage());
-                DB::rollBack();
-            }
-        }
-    }
-    public function download($id) {
-        $file = $this->fileRepository->get($id);
-        if (!file_exists($file->filepath)) {
-            abort(404, 'Файл не найден');
-        }
-        $filename = $file->filename ?? basename($file->filepath);
-        return response()->download($file->filepath, $filename, [
-            'Cache-Control' => 'no-cache, no-store, must-revalidate',
-            'Pragma' => 'no-cache',
-            'Expires' => '0',
-        ]);
     }
     public function delete($id){
         DB::beginTransaction();
         try {
-            $file = $this->fileRepository->get($id);
             $this->fileRepository->delete($id);
             DB::commit();
-            if (file_exists($file->filepath)) {
-                unlink($file->filepath);
-            }
         } catch (\Exception $exception) {
             Log::debug($exception->getMessage());
             DB::rollBack();
         }
-    }
-
-    public function importUpload(FileDTO $fileDTO)
-    {
-        DB::beginTransaction();
-        try {
-            $this->fileRepository->create([
-                'table_name' => $fileDTO->table_name,
-                'row_id' => $fileDTO->row_id,
-                'filepath' => $fileDTO->filepath
-            ]);
-            DB::commit();
-        }
-        catch (\Exception $exception) {
-            DB::rollBack();
-        }
-    }
-    public function importDelete($id)
-    {
-        DB::beginTransaction();
-        try {
-            $this->fileRepository->delete($id);
-            DB::commit();
-        }
-        catch (\Exception $exception) {
-            DB::rollBack();
-        }
-    }
-
-    public function generateUniqueName($filename) : string {
-        return time() . '_' . $filename;
     }
     public function getFiles($tableName, $rowId) : array {
         $data = [];

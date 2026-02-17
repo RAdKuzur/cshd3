@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('table_name');
             $table->integer('row_id');
-            $table->string('filepath');
+            $table->string('file_id');
+            $table->string('filename');
             $table->timestamps();
         });
     }

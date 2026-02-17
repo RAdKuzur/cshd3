@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer $id
  * @property string $table_name
  * @property integer $row_id
- * @property string $filepath
+ * @property string $file_id
+ * @property string $filename
  */
 class File extends Model
 {
@@ -18,6 +19,7 @@ class File extends Model
     protected $fillable = [
         'table_name',
         'row_id',
-        'filepath'
+        'file_id',
+        'filename',
     ];
 }

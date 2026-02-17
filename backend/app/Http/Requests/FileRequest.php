@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\DTO\FileDTO;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
 
 class FileRequest extends FormRequest
 {
@@ -25,9 +26,8 @@ class FileRequest extends FormRequest
         return [
             'table_name' => 'required|string',
             'row_id' => 'required|integer',
-            'file' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
-            'files' => 'nullable|array',
-            'files.*' => 'image|mimes:jpg,jpeg,png,webp|max:5120',
+            'file_id' => 'required|string',
+            'filename' => 'required|string',
         ];
     }
     public function toFileDTO(): FileDTO
@@ -35,7 +35,8 @@ class FileRequest extends FormRequest
         return new FileDTO(
             table_name: $this->validated('table_name'),
             row_id: $this->validated('row_id'),
-            file: $this->hasFile('file') ? $this->file('file') : null,
+            file_id: $this->validated('file_id'),
+            filename: $this->validated('filename')
         );
     }
 }
