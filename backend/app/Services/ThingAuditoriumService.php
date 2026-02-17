@@ -49,12 +49,13 @@ class ThingAuditoriumService
     public function getOne($id)
     {
         $thingAuditorium = $this->thingAuditoriumRepository->get($id);
-    }
-
-    public function getHistoryThing($id)
-    {
-        $thingAuditorium = $this->thingAuditoriumRepository->get($id);
-
+        return new ThingAuditoriumDTO(
+            id: $thingAuditorium->id,
+            thing_id: $thingAuditorium->thing_id,
+            auditorium_id: $thingAuditorium->auditorium_id,
+            start_date: $thingAuditorium->start_date,
+            end_date: $thingAuditorium->end_date,
+        );
     }
 
     public function create(ThingAuditoriumDTO $thingAuditoriumDTO)
