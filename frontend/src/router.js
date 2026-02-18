@@ -64,6 +64,8 @@ import DevelopPage from "@/pages/error/DevelopPage.vue";
 import ReportResourcePage from "@/pages/report/ReportResourcePage.vue";
 import HistoryResourcePage from "@/pages/history/HistoryResourcePage.vue";
 import HistoryThingAuditoriumPage from "@/pages/history/HistoryThingAuditoriumPage.vue";
+import ChangePasswordPage from "@/pages/ChangePasswordPage.vue";
+import SignedUrlErrorPage from "@/pages/error/SignedUrlErrorPage.vue";
 
 
 const BACKEND_URL = '';
@@ -77,12 +79,15 @@ const routes = [
     { path: '/licence-error', component: LicenceErrorPage },
     { path: '/tech-work', component: TechWorkErrorPage },
     { path: '/iternal-error', component: IternalErrorPage },
+    { path: '/signed-url-error', component: SignedUrlErrorPage },
     { path: '/develop-page', component: DevelopPage },
     { path: '/home', component: HomePage },
     { path: '/login', component: LoginPage },
     { path: '/logout' }, // special route for logout
+    { path: '/change-password', component: ChangePasswordPage },
 
     { path: '/profile/:username', component: ProfilePage, meta: { auth: true } },
+    { path: '/settings/:username', component: SettingPage, meta: { auth: true }},
     { path: '/stuff', component: StuffPage, meta: { auth: true } },
     { path: '/map', component: MapPage, meta: { auth: true } },
     { path: '/map/general', component:  GeneralMapPage, meta: { auth: true }},

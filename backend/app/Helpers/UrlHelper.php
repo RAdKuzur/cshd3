@@ -22,4 +22,8 @@ class UrlHelper
                 return null;
         }
     }
+    public static function urlWithoutApi($url) : string
+    {
+        return str_replace('/api', '', $url);
+    }
 }

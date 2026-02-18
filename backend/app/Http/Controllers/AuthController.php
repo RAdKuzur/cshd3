@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Helpers\Auth;
 use App\Http\Requests\BlockRequest;
+use App\Http\Requests\ChangePasswordRequest;
+use App\Http\Requests\ForgotPasswordRequest;
 use App\Http\Requests\LoginRequest;
 use App\Models\User;
 use App\Repositories\UserRepository;
@@ -52,9 +54,21 @@ class AuthController extends Controller
             ], 401);
         }
     }
-    public function forgotPassword(Request $request)
+    public function forgotPassword(ForgotPasswordRequest $request)
     {
-
+        $email = $request->email();
+        $this->authService->forgotPassword($email);
+        return response()->json([
+            'success' => true,
+        ]);
+    }
+    public function changePassword(ChangePasswordRequest $request)
+    {
+        $dto = $request->toDTO();
+        $this->authService->changePassword($dto);
+        return response()->json([
+            'success' => true,
+        ]);
     }
     public function block(BlockRequest $request)
     {

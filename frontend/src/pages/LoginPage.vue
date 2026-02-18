@@ -62,13 +62,13 @@
                   Пароль
                 </span>
               </label>
-<!--              <button-->
-<!--                  type="button"-->
-<!--                  @click="showForgotPassword = true"-->
-<!--                  class="text-sm font-medium text-indigo-600 hover:text-indigo-500 transition-colors"-->
-<!--              >-->
-<!--                Забыли пароль?-->
-<!--              </button>-->
+              <button
+                  type="button"
+                  @click="showForgotPassword = true"
+                  class="text-sm font-medium text-indigo-600 hover:text-indigo-500 transition-colors"
+              >
+                Забыли пароль?
+              </button>
             </div>
             <div class="relative">
               <input
@@ -90,19 +90,6 @@
             </div>
           </div>
 
-          <!-- Запомнить меня -->
-<!--          <div class="flex items-center">-->
-<!--            <input-->
-<!--                v-model="form.remember"-->
-<!--                id="remember"-->
-<!--                type="checkbox"-->
-<!--                class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"-->
-<!--            >-->
-<!--            <label for="remember" class="ml-2 block text-sm text-gray-700">-->
-<!--              Запомнить меня-->
-<!--            </label>-->
-<!--          </div>-->
-
           <!-- Кнопка входа -->
           <div>
             <button
@@ -118,21 +105,6 @@
             </button>
           </div>
         </form>
-
-<!--        &lt;!&ndash; Дополнительная информация &ndash;&gt;-->
-<!--        <div class="mt-8 pt-6 border-t border-gray-200">-->
-<!--          <div class="text-center">-->
-<!--            <p class="text-sm text-gray-600">-->
-<!--              Возникли проблемы со входом?-->
-<!--              <button-->
-<!--                  @click="contactSupport"-->
-<!--                  class="font-medium text-indigo-600 hover:text-indigo-500 transition-colors"-->
-<!--              >-->
-<!--                Свяжитесь с поддержкой-->
-<!--              </button>-->
-<!--            </p>-->
-<!--          </div>-->
-<!--        </div>-->
       </div>
 
       <!-- Информация о системе -->
@@ -157,32 +129,48 @@
     <div
         v-if="showForgotPassword"
         class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
-        @click="showForgotPassword = false"
+        @click="closeForgotPasswordModal"
     >
       <div
           class="bg-white rounded-2xl p-6 max-w-md w-full"
           @click.stop
       >
         <h3 class="text-xl font-bold text-gray-900 mb-4">Восстановление пароля</h3>
+
+        <!-- Сообщение в модальном окне -->
+        <div v-if="forgotPasswordMessage" :class="['mb-4 p-3 rounded-xl text-sm',
+          forgotPasswordMessageType === 'success' ? 'bg-green-50 border border-green-200 text-green-600' :
+          'bg-red-50 border border-red-200 text-red-600']">
+          {{ forgotPasswordMessage }}
+        </div>
+
         <p class="text-gray-600 mb-4">
           Введите ваш email, и мы вышлем инструкции по восстановлению пароля.
         </p>
+
         <input
+            v-model="forgotPasswordEmail"
             type="email"
             placeholder="your.email@example.com"
             class="w-full px-4 py-3 border border-gray-300 rounded-xl mb-4 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            :disabled="forgotPasswordLoading"
         >
+
         <div class="flex space-x-3">
           <button
-              @click="showForgotPassword = false"
+              @click="closeForgotPasswordModal"
               class="flex-1 px-4 py-3 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 transition-colors"
+              :disabled="forgotPasswordLoading"
           >
             Отмена
           </button>
           <button
-              class="flex-1 px-4 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-colors"
+              @click="handleForgotPassword"
+              class="flex-1 px-4 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-colors flex items-center justify-center"
+              :disabled="forgotPasswordLoading || !forgotPasswordEmail"
           >
-            Отправить
+            <ArrowPathIcon v-if="forgotPasswordLoading" class="w-5 h-5 mr-2 animate-spin" />
+            {{ forgotPasswordLoading ? 'Отправка...' : 'Восстановить пароль' }}
           </button>
         </div>
       </div>
@@ -191,73 +179,122 @@
 </template>
 
 <script setup>
-      import { ref, computed } from 'vue'
-      import { useRouter } from "vue-router";
-      import { useAuthContextStore } from '@/services/AuthContext.js'
-      import { watch } from 'vue'
+import { ref, computed } from 'vue'
+import { useRouter } from "vue-router";
+import { useAuthContextStore } from '@/services/AuthContext.js'
+import { watch } from 'vue'
+import axios from 'axios'
 
-      import {
-        ScaleIcon,
-        EnvelopeIcon,
-        LockClosedIcon,
-        EyeIcon,
-        EyeSlashIcon,
-        ArrowRightIcon,
-        ArrowPathIcon,
-        CheckCircleIcon
-      } from '@heroicons/vue/24/outline'
-
-      const router = useRouter();
-      const auth = useAuthContextStore(); // создаем экземпляр стора
-      const isAuth = computed(() => !!auth.user)
-      const form = ref({
-        email: '',
-        password: '',
-        remember: false
-      })
-
-      const loading = ref(false);
-      const showPassword = ref(false);
-      const showForgotPassword = ref(false);
-      const errorMessage = ref(null);
-
-      // валидация логина/email
-      const emailValid = computed(() => form.value.email.length > 3);
-
-      const handleLogin = async () => {
-        errorMessage.value = null;
-
-        if (!form.value.email || !form.value.password) {
-          errorMessage.value = "Введите логин и пароль";
-          return;
-        }
-
-        loading.value = true;
-        try {
-          await auth.login(form.value.email, form.value.password);
-
-          // Если пользователь включил remember — можно сохранить токен в localStorage в самом store
-          if (form.value.remember) {
-            auth.persistTokens(); // необязательно — зависит от вашей реализации
-          }
-
-          router.push("/home");
-        } catch (e) {
-          errorMessage.value = e?.response?.data?.message || "Ошибка входа";
-        } finally {
-          loading.value = false;
-        }
-      };
+import {
+  ScaleIcon,
+  EnvelopeIcon,
+  LockClosedIcon,
+  EyeIcon,
+  EyeSlashIcon,
+  ArrowRightIcon,
+  ArrowPathIcon,
+  CheckCircleIcon
+} from '@heroicons/vue/24/outline'
+import {BACKEND_URL} from "@/router.js";
 
 
-      watch(
-          () => isAuth.value,
-          (newValue) => {
-            if (newValue) {
-              router.replace('/home')
-            }
-          },
-          { immediate: true }
-      )
+const router = useRouter();
+const auth = useAuthContextStore();
+const isAuth = computed(() => !!auth.user)
+
+const form = ref({
+  email: '',
+  password: '',
+  remember: false
+})
+
+const loading = ref(false);
+const showPassword = ref(false);
+const showForgotPassword = ref(false);
+const errorMessage = ref(null);
+const successMessage = ref(null);
+
+// Данные для восстановления пароля
+const forgotPasswordEmail = ref('');
+const forgotPasswordLoading = ref(false);
+const forgotPasswordMessage = ref(null);
+const forgotPasswordMessageType = ref('success');
+
+// Валидация логина/email
+const emailValid = computed(() => form.value.email.length > 3);
+
+const handleLogin = async () => {
+  errorMessage.value = null;
+  successMessage.value = null;
+
+  if (!form.value.email || !form.value.password) {
+    errorMessage.value = "Введите логин и пароль";
+    return;
+  }
+
+  loading.value = true;
+  try {
+    await auth.login(form.value.email, form.value.password);
+
+    if (form.value.remember) {
+      auth.persistTokens();
+    }
+
+    router.push("/home");
+  } catch (e) {
+    errorMessage.value = e?.response?.data?.message || "Ошибка входа";
+  } finally {
+    loading.value = false;
+  }
+};
+
+const handleForgotPassword = async () => {
+  if (!forgotPasswordEmail.value) {
+    forgotPasswordMessage.value = "Введите email";
+    forgotPasswordMessageType.value = 'error';
+    return;
+  }
+
+  forgotPasswordLoading.value = true;
+  forgotPasswordMessage.value = null;
+
+  try {
+    await axios.post(`${BACKEND_URL}/api/forgot-password`, {
+      email: forgotPasswordEmail.value
+    });
+
+    forgotPasswordMessage.value = "Инструкции по восстановлению пароля отправлены на ваш email";
+    forgotPasswordMessageType.value = 'success';
+
+    // Очищаем поле через 3 секунды и закрываем модальное окно
+    setTimeout(() => {
+      closeForgotPasswordModal();
+    }, 3000);
+
+  } catch (error) {
+    console.error('Forgot password error:', error);
+    forgotPasswordMessage.value = error?.response?.data?.message || "Ошибка при отправке запроса. Попробуйте позже.";
+    forgotPasswordMessageType.value = 'error';
+  } finally {
+    forgotPasswordLoading.value = false;
+  }
+};
+
+const closeForgotPasswordModal = () => {
+  showForgotPassword.value = false;
+  forgotPasswordEmail.value = '';
+  forgotPasswordMessage.value = null;
+  forgotPasswordLoading.value = false;
+};
+
+watch(
+    () => isAuth.value,
+    (newValue) => {
+      if (newValue) {
+        router.replace('/home')
+      }
+    },
+    { immediate: true }
+)
 
 </script>

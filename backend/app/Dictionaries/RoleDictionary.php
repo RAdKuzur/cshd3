@@ -11,11 +11,16 @@ class RoleDictionary implements BaseDictionary
     public const ACCOUNTANT = 5;
 
     public const ADMIN_RULES = [
+        "metrics",
+        "test",
+        "tests",
         "login",
         "logout",
         "refresh",
         "block",
         "unblock",
+        "forgot-password",
+        "change-password",
         "info.types",
         "info.balance",
         "info.departments",

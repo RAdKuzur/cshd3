@@ -134,10 +134,10 @@ class UserService
             DB::rollBack();
         }
     }
-    public function update($id, $data){
+    public function updateUser($id, $data){
         DB::beginTransaction();
         try {
-            $this->userRepository->update($id, $data);
+            $this->userRepository->updateUser($id, $data);
             $user = $this->userRepository->get($id);
             $this->peopleRepository->updateByUserId($user->id, $data);
             DB::commit();

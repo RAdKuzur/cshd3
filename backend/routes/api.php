@@ -29,6 +29,7 @@ use App\Http\Controllers\TransferActController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\CheckAvailabilityMiddleware;
 use App\Http\Middleware\CheckPermissionMiddleware;
+use App\Http\Middleware\CheckSignedUrlMiddleware;
 use App\Http\Middleware\LicenceMiddleware;
 use App\Http\Middleware\PrometheusMiddleware;
 use App\Http\Middleware\TechWorkMiddleware;
@@ -45,6 +46,12 @@ Route::middleware([PrometheusMiddleware::class])->group(function () {
     Route::post('/refresh', [AuthController::class, 'refresh'])->name('refresh');
     Route::post('/block', [AuthController::class, 'block'])->name('block');
     Route::post('/unblock', [AuthController::class, 'unblock'])->name('unblock');
+
+    Route::post('/forgot-password', [AuthController::class, 'forgotPassword'])->name('forgot-password');
+
+    Route::middleware([CheckSignedUrlMiddleware::class])->group(function () {
+        Route::post('/change-password', [AuthController::class, 'changePassword'])->name('change-password');
+    });
 
     Route::middleware([CheckPermissionMiddleware::class])->group(function () {
 

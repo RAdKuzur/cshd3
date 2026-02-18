@@ -50,7 +50,7 @@ class UserRepository
             'role' => $data['role']
         ]);
     }
-    public function update($id, $data){
+    public function updateUser($id, $data){
         DB::table('logs')->insert([
             'user_id' => Auth::user()->id,
             'table' => User::class,
@@ -74,6 +74,11 @@ class UserRepository
             !empty($data['password']) ? ['password' => Hash::make($data['password'])] : []
         ));
     }
+
+    public function update($id, $data)
+    {
+        return DB::table('users')->where('id', $id)->update($data);
+    }
     public function delete($id)
     {
         DB::table('logs')->insert([
@@ -85,5 +90,10 @@ class UserRepository
             'time' => now()
         ]);
         return DB::table('users')->where('id', $id)->delete();
+    }
+
+    public function isEmailExist($email) : bool
+    {
+        return DB::table('users')->where(['email' => $email])->exists();
     }
 }

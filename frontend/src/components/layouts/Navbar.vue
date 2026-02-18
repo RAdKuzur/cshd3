@@ -215,6 +215,18 @@
                       Профиль
                     </router-link>
                   </MenuItem>
+
+                  <!-- Новый пункт "Настройки" -->
+                  <MenuItem v-slot="{ active }">
+                    <router-link
+                        :to="settingsUrl"
+                        :class="[active ? 'bg-gray-100' : '', 'flex items-center px-4 py-2 text-sm text-gray-700']"
+                    >
+                      <Cog6ToothIcon class="w-4 h-4 mr-2 text-gray-400" />
+                      Настройки
+                    </router-link>
+                  </MenuItem>
+
                   <div class="border-t border-gray-100 my-1"></div>
                   <MenuItem v-slot="{ active }" @click="logout">
                     <button
@@ -365,6 +377,16 @@
             <UserIcon class="w-5 h-5 mr-3" />
             Профиль
           </router-link>
+
+          <!-- Настройки в мобильном меню -->
+          <router-link
+              :to="settingsUrl"
+              class="flex items-center rounded-md px-3 py-2 text-base font-medium text-indigo-100 hover:bg-white/10 hover:text-white transition-colors duration-200"
+          >
+            <Cog6ToothIcon class="w-5 h-5 mr-3" />
+            Настройки
+          </router-link>
+
           <router-link
               to="/logout"
               class="flex items-center rounded-md px-3 py-2 text-base font-medium text-indigo-100 hover:bg-white/10 hover:text-white transition-colors duration-200"
@@ -393,7 +415,7 @@ import Pusher from 'pusher-js'
 import { BACKEND_URL } from "@/router.js";
 import {
   ScaleIcon, Bars3Icon, XMarkIcon, ChevronDownIcon, UserIcon, BellIcon,
-  ArrowRightOnRectangleIcon, ArrowPathIcon,
+  ArrowRightOnRectangleIcon, ArrowPathIcon, Cog6ToothIcon, // Добавлен импорт Cog6ToothIcon
   CalculatorIcon, CommandLineIcon, BuildingStorefrontIcon, UserGroupIcon, MapIcon, DocumentIcon,  MagnifyingGlassIcon
 } from '@heroicons/vue/24/outline'
 
@@ -426,6 +448,9 @@ const profileBar = computed(() => ({
 }))
 const profileUrl = computed(() => `/profile/${profileBar.value.username}`)
 
+// URL для настроек (можно изменить на нужный путь)
+const settingsUrl = computed(() => `/settings/${profileBar.value.username}`)
+
 const currentUser = computed(() => {
   return authStore.user?.username || ''
 })
@@ -449,6 +474,7 @@ const navigation = [
   { name: 'Поиск', href: '/search', current: false, icon: MagnifyingGlassIcon },
   // { name: 'Файловая система', href: '/files', current: false, icon: DocumentIcon }
 ]
+
 // Инициализация Echo для вебсокетов с публичным каналом
 const initializeEcho = () => {
   if (!currentUser.value) {

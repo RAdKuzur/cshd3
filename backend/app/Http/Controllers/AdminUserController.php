@@ -44,7 +44,7 @@ class AdminUserController extends Controller
 
     public function update(UserRequest $request, $id){
         $data = $request->validated();
-        $this->userService->update($id, $data);
+        $this->userService->updateUser($id, $data);
         return response()->json([
             'success' => true,
             'code' => 200

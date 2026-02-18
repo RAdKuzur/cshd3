@@ -19,10 +19,16 @@ axios.interceptors.response.use(
         const authStore = useAuthContextStore();
 
         if (error.response?.status === 401) {
-            Cookies.remove("access_token");
-            Cookies.remove("refresh_token");
-            authStore.user = null;
-            // придумать перенаправление (см. пример ниже)
+            console.log(error.response?.data?.error, 401)
+            if(error.response?.data?.error === 'Invalid signed url')
+            {
+                router.push('/signed-url-error');
+            }
+            else {
+                Cookies.remove("access_token");
+                Cookies.remove("refresh_token");
+                authStore.user = null;
+            }
         }
 
         if (error.response?.status === 403) {

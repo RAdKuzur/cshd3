@@ -2,13 +2,15 @@
 
 namespace App\Services;
 
+use App\DTO\ChangePasswordDTO;
+use App\Events\PasswordChanged;
 use App\Helpers\Auth;
-use App\Models\User;
 use App\Repositories\PermissionRepository;
 use App\Repositories\RuleRepository;
 use App\Repositories\TokenRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthService
@@ -16,15 +18,18 @@ class AuthService
     private TokenRepository $tokenRepository;
     private PermissionRepository $permissionRepository;
     private RuleRepository $ruleRepository;
+    private UserRepository $userRepository;
     public function __construct(
         TokenRepository $tokenRepository,
         PermissionRepository $permissionRepository,
-        RuleRepository $ruleRepository
+        RuleRepository $ruleRepository,
+        UserRepository $userRepository
     )
     {
         $this->tokenRepository = $tokenRepository;
         $this->permissionRepository = $permissionRepository;
         $this->ruleRepository = $ruleRepository;
+        $this->userRepository = $userRepository;
     }
 
     public function login($user) : array
@@ -134,5 +139,29 @@ class AuthService
     {
         $ruleId = $this->ruleRepository->getByPath($rule) ? $this->ruleRepository->getByPath($rule)->id : 0;
         return $this->permissionRepository->hasAccess($role, $ruleId);
+    }
+
+    public function forgotPassword($email = null)
+    {
+        if($this->userRepository->isEmailExist($email)) {
+            $user = $this->userRepository->getByEmail($email);
+            PasswordChanged::dispatch($user->email, $user->username);
+        }
+    }
+    public function changePassword(ChangePasswordDTO $changePasswordDTO)
+    {
+        DB::beginTransaction();
+        try {
+            if($this->userRepository->isEmailExist($changePasswordDTO->email)){
+                $user = $this->userRepository->getByEmail($changePasswordDTO->email);
+                $this->userRepository->update($user->id, [
+                    'password' => Hash::make($changePasswordDTO->password)
+                ]);
+            }
+            DB::commit();
+        }
+        catch (\Exception $e){
+            DB::rollBack();
+        }
     }
 }
