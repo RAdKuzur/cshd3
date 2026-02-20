@@ -34,6 +34,7 @@ class PeopleRepository
             'auditorium_id' => $data['auditorium_id'],
             'organization_id' => DB::table('organizations')->first()->id,
             'user_id' => $data['user_id'],
+            'is_active' => true,
             'about' => $data['about']
         ]);
     }
