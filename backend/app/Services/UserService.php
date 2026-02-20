@@ -61,24 +61,9 @@ class UserService
                 'department' => $user->people->getBranch()->name,
                 'email' => $user->email,
                 'phone' => $user->people->phone_number,
-                'bio' => $user->people->getBio(),
+                'about' => $user->people->about,
                 'avatar' => $user->people->icon_link,
-                'skills' => $user->people->getSkills()
             ],
-            contacts: [
-                [
-                    'type' => 'email',
-                    'value' => $user->email,
-                    'icon' => '📧'
-                ],
-                [
-                    'type' => 'phone',
-                    'value' => $user->people->phone_number,
-                    'icon' => '📱'
-                ]
-            ],
-            workExperience: $user->people->getWorkExperience(),
-            education: $user->people->getEducation(),
         );
     }
     public function getUserInfoAll() : array
@@ -97,7 +82,7 @@ class UserService
                     phone: $user->people->phone_number,
                     birthdate: $user->people->birthdate,
                     auditorium_id: $user->people->auditorium_id,
-                    bio: $user->people->getBio(),
+                    about: $user->people->about,
                     role: $user->role
                 );
             }
@@ -117,7 +102,7 @@ class UserService
             phone: $user->people->phone_number,
             birthdate: $user->people->birthdate,
             auditorium_id: $user->people->auditorium_id,
-            bio: $user->people->getBio(),
+            about: $user->people->about,
             role: $user->role
         ) : null;
         return $data;

@@ -34,7 +34,7 @@ class PeopleRepository
             'auditorium_id' => $data['auditorium_id'],
             'organization_id' => DB::table('organizations')->first()->id,
             'user_id' => $data['user_id'],
-//            'about' => $data['bio'],
+            'about' => $data['about']
         ]);
     }
     public function updateByUserId($id,$data){
@@ -55,7 +55,7 @@ class PeopleRepository
             'birthdate' => $data['birthdate'],
             'auditorium_id' => $data['auditorium_id'],
             'organization_id' => DB::table('organizations')->first()->id,
-            //'about' => $data['bio'],
+            'about' => $data['about']
         ]);
     }
     public function update($id,$data){
@@ -75,7 +75,7 @@ class PeopleRepository
             'birthdate' => $data['birthdate'],
             'auditorium_id' => $data['auditorium_id'],
             'organization_id' => DB::table('organizations')->first()->id,
-            //'about' => $data['bio'],
+            'about' => $data['about']
         ]);
     }
     public function delete($id){

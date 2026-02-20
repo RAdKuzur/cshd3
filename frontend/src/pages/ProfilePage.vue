@@ -1,25 +1,48 @@
 <script setup>
-import {onMounted, ref} from 'vue'
+import {onMounted, ref, computed} from 'vue'
 import axios from 'axios'
 import { useRoute } from 'vue-router'
 import {BACKEND_URL} from "@/router.js";
 
 const user = ref({})
-const workExperience = ref({})
-const contacts = ref({})
-const education = ref({})
+
+const formattedContacts = computed(() => {
+  const contactsList = [];
+
+  if (user.value.email) {
+    contactsList.push({
+      type: 'email',
+      icon: '✉️',
+      value: user.value.email,
+      bgColor: 'from-blue-500 to-blue-600',
+      lightBg: 'bg-blue-50'
+    });
+  }
+
+  if (user.value.phone) {
+    contactsList.push({
+      type: 'телефон',
+      icon: '📞',
+      value: user.value.phone,
+      bgColor: 'from-green-500 to-green-600',
+      lightBg: 'bg-green-50'
+    });
+  }
+
+  return contactsList;
+});
+
 const fetchUserData = async () => {
   try {
     const route = useRoute()
     const username = route.params.username
     const response = await axios.get(BACKEND_URL + "/api/profile/" + username)
     user.value = response.data.data.user;
-    contacts.value = response.data.data.contacts
-    workExperience.value = response.data.data.workExperience
-    education.value = response.data.data.education
   } catch (err) {
+    console.error('Ошибка при загрузке данных:', err);
   }
 }
+
 onMounted(() => {
   fetchUserData()
 })
@@ -27,167 +50,148 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 p-6">
-    <div class="max-w-6xl mx-auto">
+  <div class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
+    <!-- Декоративный фон -->
+    <div class="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,transparent,black)] pointer-events-none"></div>
 
-      <!-- Заголовок -->
-      <div class="text-center mb-8">
-        <h1 class="text-4xl font-bold text-gray-900 mb-4">Профиль сотрудника</h1>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
+      <!-- Заголовок с градиентом -->
+      <div class="text-center mb-10">
+        <div class="inline-block">
+          <h1 class="text-5xl lg:text-6xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-3">
+            Профиль сотрудника
+          </h1>
+          <div class="h-1 w-24 bg-gradient-to-r from-indigo-600 to-purple-600 mx-auto rounded-full"></div>
+        </div>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-6 gap-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
         <!-- Левая колонка - Профиль -->
-        <div class="lg:col-span-2 space-y-6">
+        <div class="lg:col-span-4 space-y-6">
 
-          <!-- Карточка профиля -->
-          <div class="bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
-            <div class="flex flex-col items-center text-center">
-              <!-- Аватар -->
-              <div class="relative mb-4">
-                <img
-                    :src="user.avatar"
-                    class="w-32 h-32 rounded-full border-4 border-white shadow-lg"
-                    alt="Аватар"
-                >
-                <div class="absolute bottom-2 right-2 w-6 h-6 bg-green-500 border-2 border-white rounded-full"></div>
+          <!-- Карточка профиля с эффектом стекла -->
+          <div class="group relative">
+            <!-- Фоновый градиент -->
+            <div class="absolute -inset-0.5 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl opacity-0 group-hover:opacity-100 transition duration-300 blur"></div>
+
+            <div class="relative bg-white/90 backdrop-blur-xl rounded-2xl shadow-xl border border-gray-200 p-6 hover:border-transparent transition-all duration-300">
+
+              <!-- Аватар с анимацией -->
+              <div class="flex flex-col items-center text-center">
+                <div class="relative mb-6">
+                  <div class="absolute -inset-1 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full opacity-75 blur-lg group-hover:opacity-100 transition duration-300"></div>
+                  <div class="relative">
+                    <img
+                        :src="user.avatar || '/default-avatar.jpg'"
+                        class="w-32 h-32 rounded-full border-4 border-white shadow-xl object-cover transform group-hover:scale-105 transition duration-300"
+                        alt="Аватар"
+                    >
+                    <div class="absolute bottom-2 right-2 w-6 h-6 bg-green-500 border-2 border-white rounded-full animate-pulse"></div>
+                  </div>
+                </div>
+
+                <!-- Основная информация -->
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ user.name || 'Имя не указано' }}</h1>
+                <div class="flex items-center justify-center space-x-2 mb-2">
+                  <span class="px-4 py-1.5 bg-indigo-100 text-indigo-700 rounded-full text-sm font-medium">
+                    {{ user.position || 'Должность не указана' }}
+                  </span>
+                </div>
+                <p class="text-gray-600 mb-6 flex items-center justify-center">
+                  <span class="w-2 h-2 bg-indigo-500 rounded-full mr-2"></span>
+                  {{ user.department || 'Отдел не указан' }}
+                </p>
               </div>
 
-              <!-- Основная информация -->
-              <h1 class="text-2xl font-bold text-gray-900 mb-1">{{ user.name }}</h1>
-              <p class="text-lg text-indigo-600 font-semibold mb-2">{{ user.position }}</p>
-              <p class="text-gray-600 mb-4">{{ user.department }}</p>
-            </div>
+              <!-- Контакты с новым дизайном -->
+              <div class="border-t border-gray-200 pt-6" v-if="formattedContacts.length > 0">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                  <span class="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center mr-3">
+                    <span class="text-indigo-600">📱</span>
+                  </span>
+                  Контактная информация
+                </h3>
+                <div class="space-y-3">
+                  <div
+                      v-for="contact in formattedContacts"
+                      :key="contact.type"
+                      class="group/contact relative overflow-hidden"
+                  >
+                    <!-- Фоновый эффект при наведении -->
+                    <div class="absolute inset-0 bg-gradient-to-r opacity-0 group-hover/contact:opacity-100 transition-opacity duration-300"
+                         :class="contact.bgColor"></div>
 
-            <!-- Контакты -->
-            <div class="border-t border-gray-200 pt-6">
-              <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                <span class="w-2 h-2 bg-indigo-500 rounded-full mr-2"></span>
-                Контакты
-              </h3>
-              <div class="space-y-3">
-                <div
-                    v-for="contact in contacts"
-                    :key="contact.type"
-                    class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
-                 >
-                  <span class="text-lg mr-3">{{ contact.icon }}</span>
-                  <div>
-                    <div class="text-sm text-gray-600 capitalize">{{ contact.type }}</div>
-                    <div class="text-gray-900 font-medium break-all">{{ contact.value }}</div>
+                    <div class="relative flex items-center p-4 bg-gray-50 rounded-xl hover:bg-transparent transition-all duration-300">
+                      <div class="w-10 h-10 rounded-lg flex items-center justify-center text-xl mr-3"
+                           :class="contact.lightBg">
+                        {{ contact.icon }}
+                      </div>
+                      <div>
+                        <div class="text-xs uppercase tracking-wider text-gray-500 mb-0.5">{{ contact.type }}</div>
+                        <div class="text-gray-900 font-medium break-all group-hover/contact:text-white transition-colors">
+                          <template v-if="contact.type === 'email'">
+                            <a :href="'mailto:' + contact.value" class="hover:underline">
+                              {{ contact.value }}
+                            </a>
+                          </template>
+                          <template v-else-if="contact.type === 'телефон'">
+                            <a :href="'tel:' + contact.value" class="hover:underline">
+                              {{ contact.value }}
+                            </a>
+                          </template>
+                          <template v-else>
+                            {{ contact.value }}
+                          </template>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            <!-- Навыки -->
-            <div class="border-t border-gray-200 pt-6">
-              <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
-                Навыки
-              </h3>
-              <div class="flex flex-wrap gap-2">
-                <span
-                    v-for="skill in user.skills"
-                    :key="skill"
-                    class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium hover:bg-blue-200 transition-colors cursor-pointer"
-                >
-                  {{ skill }}
-                </span>
+              <!-- Сообщение, если контактов нет -->
+              <div v-else class="border-t border-gray-200 pt-6">
+                <div class="bg-gray-50 rounded-xl p-8 text-center">
+                  <span class="text-4xl mb-3 block">📭</span>
+                  <p class="text-gray-500">Контакты не указаны</p>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
         <!-- Правая колонка - Контент -->
-        <div class="lg:col-span-4 space-y-6">
+        <div class="lg:col-span-8 space-y-6">
 
-          <!-- О себе -->
-          <div class="bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
-            <div class="flex items-center justify-between mb-6">
-              <h2 class="text-2xl font-bold text-gray-900 flex items-center">
-                <span class="w-3 h-3 bg-indigo-500 rounded-full mr-3"></span>
-                О себе
-              </h2>
+          <!-- Карточка "О себе" с улучшенным дизайном -->
+          <div class="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden transform hover:shadow-2xl transition-shadow duration-300">
+            <!-- Градиентный заголовок -->
+            <div class="bg-gradient-to-r from-indigo-600 to-purple-600 px-8 py-5">
+              <div class="flex items-center">
+                <span class="w-10 h-10 bg-white/20 backdrop-blur rounded-lg flex items-center justify-center text-white text-xl mr-4">
+                  👤
+                </span>
+                <h2 class="text-2xl font-bold text-white">О себе</h2>
+              </div>
             </div>
-            <p class="text-gray-700 leading-relaxed text-lg">{{ user.bio }}</p>
-            <!-- МЕСТО ДЛЯ ДОСТИЖЕНИЙ -->
-          </div>
 
-          <!-- Опыт работы -->
-          <div class="bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
-            <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-              <span class="w-3 h-3 bg-green-500 rounded-full mr-3"></span>
-              Опыт работы
-            </h2>
-
-            <div class="space-y-6">
-              <div
-                  v-for="exp in workExperience"
-                  :key="exp.id"
-                  class="border-l-4 border-indigo-500 pl-6 pb-6 relative"
-              >
-                <!-- Точка на временной линии -->
-                <div class="absolute -left-2.5 top-0 w-5 h-5 bg-indigo-500 border-4 border-white rounded-full shadow"></div>
-
-                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-3">
-                  <div>
-                    <h3 class="text-xl font-semibold text-gray-900">{{ exp.position }}</h3>
-                    <p class="text-lg text-indigo-600 font-medium">{{ exp.company }}</p>
-                  </div>
-                  <span class="mt-2 sm:mt-0 px-3 py-1 bg-indigo-100 text-indigo-800 rounded-full text-sm font-medium">
-                    {{ exp.period }}
-                  </span>
-                </div>
-
-                <p class="text-gray-700 mb-4 leading-relaxed">{{ exp.description }}</p>
-
-                <!-- Технологии -->
-                <div class="flex flex-wrap gap-2">
-                  <span
-                      v-for="tech in exp.technologies"
-                      :key="tech"
-                      class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200 transition-colors"
-                  >
-                    {{ tech }}
-                  </span>
-                </div>
+            <!-- Контент -->
+            <div class="p-8">
+              <div v-if="user.about" class="relative">
+                <!-- Декоративные кавычки -->
+                <span class="absolute -top-4 -left-2 text-6xl text-indigo-200 opacity-50">"</span>
+                <p class="text-gray-700 leading-relaxed text-lg relative z-10 pl-6">
+                  {{ user.about }}
+                </p>
+                <span class="absolute -bottom-12 -right-2 text-6xl text-indigo-200 opacity-50 transform rotate-180">"</span>
+              </div>
+              <div v-else class="text-center py-12">
+                <span class="text-5xl mb-4 block text-gray-300">📝</span>
+                <p class="text-gray-500 text-lg">Информация отсутствует</p>
               </div>
             </div>
           </div>
-
-          <!-- Образование -->
-          <div class="bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
-            <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-              <span class="w-3 h-3 bg-purple-500 rounded-full mr-3"></span>
-              Образование
-            </h2>
-
-            <div class="space-y-6">
-              <div
-                  v-for="edu in education"
-                  :key="edu.id"
-                  class="border-l-4 border-purple-500 pl-6 pb-6 relative last:pb-0"
-              >
-                <!-- Точка на временной линии -->
-                <div class="absolute -left-2.5 top-0 w-5 h-5 bg-purple-500 border-4 border-white rounded-full shadow"></div>
-
-                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-3">
-                  <div>
-                    <h3 class="text-xl font-semibold text-gray-900">{{ edu.institution }}</h3>
-                    <p class="text-lg text-purple-600 font-medium">{{ edu.degree }}</p>
-                  </div>
-                  <span class="mt-2 sm:mt-0 px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-medium">
-                    {{ edu.period }}
-                  </span>
-                </div>
-
-                <p class="text-gray-700 leading-relaxed">{{ edu.description }}</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- МЕСТО ДЛЯ СЕРТИФИКАТОВ -->
         </div>
       </div>
     </div>
@@ -195,16 +199,42 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.border-l-4 {
-  border-left-width: 4px;
+.bg-grid-slate-100 {
+  background-image:
+      linear-gradient(to right, rgb(241 245 249 / 0.4) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(241 245 249 / 0.4) 1px, transparent 1px);
+  background-size: 50px 50px;
 }
 
-/* Анимация для точек на временной линии */
-.absolute {
-  transition: all 0.3s ease;
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
 }
 
-.absolute:hover {
-  transform: scale(1.2);
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Анимация для статистики */
+.group:hover .group-hover\:w-full {
+  width: 100%;
+}
+
+/* Стили для скроллбара */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #4f46e5, #9333ea);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, #4338ca, #7e22ce);
 }
 </style>

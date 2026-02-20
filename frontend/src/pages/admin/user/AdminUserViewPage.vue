@@ -206,13 +206,13 @@
       </div>
 
       <!-- О пользователе -->
-      <div v-if="!isLoading && user && !error && user?.bio" class="bg-white shadow-lg border border-gray-200 p-6 mb-6">
+      <div v-if="!isLoading && user && !error && user?.about" class="bg-white shadow-lg border border-gray-200 p-6 mb-6">
         <h2 class="text-xl font-semibold text-gray-900 mb-4">О пользователе</h2>
 
         <div>
           <div class="text-sm font-medium text-gray-500 mb-2">Информация</div>
           <div class="bg-gray-50 p-4 border border-gray-200 rounded-lg">
-            <div class="text-gray-700 whitespace-pre-line">{{ user.bio }}</div>
+            <div class="text-gray-700 whitespace-pre-line">{{ user.about }}</div>
           </div>
         </div>
       </div>

@@ -185,7 +185,7 @@
                   </div>
                   <div>
                     <div class="text-sm font-medium text-gray-900 truncate max-w-xs">
-                      {{ user.bio || 'Информация не указана' }}
+                      {{ user.about || 'Информация не указана' }}
                     </div>
                     <div class="text-xs text-gray-500">
                       О пользователе
@@ -340,7 +340,7 @@ const headers = ref([
   { key: 'auditorium_name', label: 'Кабинет' },
   { key: 'birthdate', label: 'Дата рождения' },
   { key: 'role', label: 'Роль' },
-  { key: 'bio', label: 'Информация' },
+  { key: 'about', label: 'Информация' },
   { key: 'actions', label: 'Действия' }
 ])
 
@@ -414,7 +414,7 @@ const loadData = async () => {
           auditorium_id: user.auditorium_id,
           auditorium_name: auditoriumName,
           auditorium_floor: auditoriumFloor,
-          bio: user.bio
+          about: user.about
         }
       })
     } else {
@@ -466,7 +466,7 @@ const filteredUsers = computed(() => {
         (user.phone && user.phone.toLowerCase().includes(query)) ||
         (user.auditorium_name && user.auditorium_name.toLowerCase().includes(query)) ||
         (user.role_name && user.role_name.toLowerCase().includes(query)) ||
-        (user.bio && user.bio.toLowerCase().includes(query))
+        (user.about && user.about.toLowerCase().includes(query))
     )
   }
 

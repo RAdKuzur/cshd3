@@ -65,26 +65,6 @@ class People extends Model
     {
         return $this->peoplePositions()->where('end_date', null)->first() ? $this->peoplePositions()->where('end_date', null)->first() : null;
     }
-    public function getEducation()
-    {
-        $data = json_decode($this->about);
-        return $data ? $data->education : null;
-    }
-    public function getBio()
-    {
-        $data = json_decode($this->about);
-        return $data ? $data->bio : null;
-    }
-    public function getWorkExperience()
-    {
-        $data = json_decode($this->about);
-        return $data ? $data->workExperience : null;
-    }
-    public function getSkills()
-    {
-        $data = json_decode($this->about);
-        return $data ? $data->skills : null;
-    }
     public function getFullFio(){
         return $this->surname . ' ' . $this->firstname . ' ' . $this->patronymic;
     }

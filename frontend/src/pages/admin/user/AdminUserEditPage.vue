@@ -287,7 +287,7 @@
                 О пользователе
               </label>
               <textarea
-                  v-model="formData.bio"
+                  v-model="formData.about"
                   rows="4"
                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
                   placeholder="Введите информацию о пользователе..."
@@ -382,7 +382,7 @@ const formData = reactive({
   role: '',
   password: '',
   password_confirmation: '',
-  bio: ''
+  about: ''
 })
 const auditoriums = ref([])
 const roles = ref({})
@@ -422,7 +422,7 @@ const loadUserData = async () => {
       formData.birthdate = user.value.birthdate ? formatDateForInput(user.value.birthdate) : ''
       formData.auditorium_id = user.value.auditorium_id || null
       formData.role = user.value.role || ''
-      formData.bio = user.value.bio || ''
+      formData.about = user.value.about || ''
 
       // Пароли оставляем пустыми для безопасности
       formData.password = ''
@@ -589,7 +589,7 @@ const handleSubmit = async () => {
       birthdate: formData.birthdate || null,
       auditorium_id: formData.auditorium_id ? parseInt(formData.auditorium_id) : null,
       role: formData.role,
-      bio: formData.bio ? formData.bio.trim() : null
+      about: formData.about ? formData.about.trim() : null
     }
 
     // Добавляем пароль только если он указан

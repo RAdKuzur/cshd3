@@ -274,7 +274,7 @@
                 О пользователе
               </label>
               <textarea
-                  v-model="formData.bio"
+                  v-model="formData.about"
                   rows="4"
                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
                   placeholder="Введите информацию о пользователе..."
@@ -366,7 +366,7 @@ const formData = reactive({
   role: '',
   password: '',
   password_confirmation: '',
-  bio: ''
+  about: ''
 })
 
 // Данные с сервера
@@ -563,7 +563,7 @@ const handleSubmit = async () => {
       role: formData.role,
       password: formData.password,
       password_confirmation: formData.password_confirmation,
-      bio: formData.bio ? formData.bio.trim() : null
+      about: formData.about ? formData.about.trim() : null
     }
 
     // Отправка данных на сервер
@@ -621,7 +621,7 @@ const formatKey = (key) => {
     birthdate: 'Дата рождения',
     auditorium_id: 'Кабинет',
     role: 'Роль',
-    bio: 'О пользователе'
+    about: 'О пользователе'
   }
   return translations[key] || key
 }

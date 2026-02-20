@@ -15,7 +15,7 @@ class UserDTO implements DTO
     public ?string $phone;
     public ?string $birthdate;
     public ?int $auditorium_id;
-    public ?string $bio;
+    public ?string $about;
     public ?int $role;
     public function __construct(
         ?int $id = null,
@@ -27,7 +27,7 @@ class UserDTO implements DTO
         ?string $phone = null,
         ?string $birthdate = null,
         ?int $auditorium_id = null,
-        ?string $bio = null,
+        ?string $about = null,
         ?int $role = null
     )
     {
@@ -40,7 +40,7 @@ class UserDTO implements DTO
         $this->phone = $phone;
         $this->birthdate = $birthdate;
         $this->auditorium_id = $auditorium_id;
-        $this->bio = $bio;
+        $this->about = $about;
         $this->role = $role;
     }
 
@@ -55,7 +55,7 @@ class UserDTO implements DTO
             isset($array['phone']) ? (string)$array['phone'] : null,
             isset($array['birthdate']) ? (string)$array['birthdate'] : null,
             isset($array['auditorium_id']) ? (int)$array['auditorium_id'] : null,
-            isset($array['bio']) ? (string)$array['bio'] : null,
+            isset($array['about']) ? (string)$array['about'] : null,
             isset($array['role']) ? (int)$array['role'] : null,
         );
     }
@@ -71,7 +71,7 @@ class UserDTO implements DTO
             'phone' => $this->phone,
             'birthdate' => $this->birthdate,
             'auditorium_id' => $this->auditorium_id,
-            'bio' => $this->bio,
+            'about' => $this->about,
             'role' => $this->role,
         ];
     }

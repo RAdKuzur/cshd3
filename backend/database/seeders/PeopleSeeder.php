@@ -28,31 +28,7 @@ class PeopleSeeder extends Seeder
                 'icon_link' => '/person.jpg',
                 'auditorium_id' => Auditorium::inRandomOrder()->value('id'),
                 'is_active' => true,
-                'about' => json_encode([
-                    'bio' => 'ABOUT ME TEXT',
-                    'workExperience' => [
-                        [
-                            'position' => 'Senior Frontend Developer',
-                            'company' => 'Tech Solutions Inc.',
-                            'period' => '2022 - настоящее время',
-                            'description' => 'Разработка и поддержка крупного SaaS-продукта. Руководство командой из 3 разработчиков. Внедрение микросервисной архитектуры.',
-                            'technologies' => [
-                                'Коммуникабельность', 'TypeScript', 'GraphQL', 'Jest', 'Docker'
-                            ]
-                        ]
-                    ],
-                    'education' => [
-                        [
-                            'institution' => 'Санкт-Петербургский Политехнический Университет',
-                            'degree' => 'Бакалавр информатики',
-                            'period' => '2011 - 2015',
-                            'description' => 'Основы программирования, алгоритмы и структуры данных.'
-                        ]
-                    ],
-                    'skills' => [
-                        'Общение', 'Мудрость'
-                    ]
-                ])
+                'about' => fake()->text
             ]);
         }
 

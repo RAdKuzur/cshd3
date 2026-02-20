@@ -30,7 +30,7 @@ class UserRequest extends FormRequest
             'phone_number' => 'string|nullable',
             'birthdate' => 'nullable',
             'auditorium_id' => 'nullable',
-            'bio' => 'nullable',
+            'about' => 'nullable',
             'password' => 'string|nullable',
             'role' => 'required'
         ];
