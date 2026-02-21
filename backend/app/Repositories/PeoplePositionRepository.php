@@ -12,7 +12,7 @@ class PeoplePositionRepository
     public function getByBranch($branchId){
         return PeoplePosition::where('branch_id', $branchId)->get();
     }
-    public function getByActiveBranchStuff($branchId){
+    public function getByActiveBranchStaff($branchId){
         return PeoplePosition::where('branch_id', $branchId)->where('end_date', null)->get();
     }
     public function delete($id){

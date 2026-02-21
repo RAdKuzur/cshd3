@@ -89,7 +89,7 @@ Route::middleware([PrometheusMiddleware::class])->group(function () {
                 Route::get('/things/{id}/person', [ThingController::class, 'personThings'])->name('things.person');
                 Route::get('/things/free', [ThingController::class, 'getFreeThings'])->name('things.free');
 
-                Route::get('/stuff', [PeopleController::class, 'stuff'])->name('stuff');
+                Route::get('/staff', [PeopleController::class, 'staff'])->name('staff');
 
                 Route::get('/things/filter-arm', [ThingController::class, 'filterArm'])->name('things.filter-arm');
                 Route::get('/things/electronics', [ThingController::class, 'electronics'])->name('things.electronics');

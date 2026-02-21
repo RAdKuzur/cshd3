@@ -5,7 +5,7 @@ import { useAuthContextStore } from '@/services/AuthContext.js'
 import HomePage from "@/pages/HomePage.vue"
 import LoginPage from "@/pages/LoginPage.vue"
 import ProfilePage from "@/pages/ProfilePage.vue"
-import StuffPage from "@/pages/StuffPage.vue"
+import StaffPage from "@/pages/staff/StaffPage.vue"
 import SettingPage from "@/pages/SettingPage.vue"
 import DocPage from "@/pages/DocPage.vue"
 import MapPage from "@/pages/map/MapPage.vue"
@@ -66,6 +66,8 @@ import HistoryResourcePage from "@/pages/history/HistoryResourcePage.vue";
 import HistoryThingAuditoriumPage from "@/pages/history/HistoryThingAuditoriumPage.vue";
 import ChangePasswordPage from "@/pages/ChangePasswordPage.vue";
 import SignedUrlErrorPage from "@/pages/error/SignedUrlErrorPage.vue";
+import HistoryStaffPage from "@/pages/staff/HistoryStaffPage.vue";
+import StaffMapPage from "@/pages/staff/StaffMapPage.vue";
 
 
 const BACKEND_URL = '';
@@ -88,7 +90,9 @@ const routes = [
 
     { path: '/profile/:username', component: ProfilePage, meta: { auth: true } },
     { path: '/settings/:username', component: SettingPage, meta: { auth: true }},
-    { path: '/stuff', component: StuffPage, meta: { auth: true } },
+    { path: '/staff', component: StaffPage, meta: { auth: true } },
+    { path: '/staff/history', component: HistoryStaffPage, meta: { auth: true } },
+    { path: '/staff/all', component: StaffMapPage, meta: { auth: true } },
     { path: '/map', component: MapPage, meta: { auth: true } },
     { path: '/map/general', component:  GeneralMapPage, meta: { auth: true }},
     { path: '/reports', component: ReportPage, meta: { auth: true }},

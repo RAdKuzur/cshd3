@@ -51,11 +51,11 @@ class PermissionSeeder extends Seeder
         }
 
 
-        foreach (RoleDictionary::rules(RoleDictionary::STUFF_MANAGER) as $path) {
+        foreach (RoleDictionary::rules(RoleDictionary::STAFF_MANAGER) as $path) {
             $rule = DB::table('rules')->where('path', $path)->first();
             DB::table('permissions')->insert([
                 'rule_id' => $rule->id,
-                'role' => RoleDictionary::STUFF_MANAGER,
+                'role' => RoleDictionary::STAFF_MANAGER,
             ]);
         }
 

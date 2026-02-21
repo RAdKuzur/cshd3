@@ -467,7 +467,7 @@ const mobileUnreadCount = computed(() => unreadCount.value)
 
 const navigation = [
   { name: 'Материальные ценности', href: '/things', current: false, icon: BuildingStorefrontIcon },
-  { name: 'Кадры', href: '/stuff', current: false, icon: UserGroupIcon },
+  { name: 'Кадры', href: '/staff', current: false, icon: UserGroupIcon },
   { name: 'Отчёты', href: '/reports', current: false, icon: CalculatorIcon },
   { name: 'Интерактивная карта', href: '/map', current: false, icon: MapIcon },
   { name: 'Панель администратора', href: '/admin', current: false, icon: CommandLineIcon },

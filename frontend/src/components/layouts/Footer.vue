@@ -38,7 +38,7 @@ const quickLinks = [
   },
   {
     name: 'Сотрудники',
-    href: '/stuff', // Обновлено
+    href: '/staff', // Обновлено
     icon: UserGroupIcon
   },
   {

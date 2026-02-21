@@ -7,7 +7,7 @@ class RoleDictionary implements BaseDictionary
     public const ADMIN = 1;
     public const DIRECTOR = 2;
     public const WORKER = 3;
-    public const STUFF_MANAGER = 4;
+    public const STAFF_MANAGER = 4;
     public const ACCOUNTANT = 5;
 
     public const ADMIN_RULES = [
@@ -35,7 +35,7 @@ class RoleDictionary implements BaseDictionary
         "things.person",
         "things.free",
         "profile",
-        "stuff",
+        "staff",
         "things.filter-arm",
         "things.electronics",
         "things.furniture",
@@ -155,7 +155,7 @@ class RoleDictionary implements BaseDictionary
         "things.person",
         "things.free",
         "profile",
-        "stuff",
+        "staff",
         "things.filter-arm",
         "things.electronics",
         "things.furniture",
@@ -212,7 +212,7 @@ class RoleDictionary implements BaseDictionary
         "things.person",
         "things.free",
         "profile",
-        "stuff",
+        "staff",
         "things.filter-arm",
         "things.electronics",
         "things.furniture",
@@ -244,7 +244,7 @@ class RoleDictionary implements BaseDictionary
         "network-things.telephones",
         "search",
     ];
-    public const STUFF_MANAGER_RULES = [
+    public const STAFF_MANAGER_RULES = [
         "login",
         "logout",
         "refresh",
@@ -263,7 +263,7 @@ class RoleDictionary implements BaseDictionary
         "things.person",
         "things.free",
         "profile",
-        "stuff",
+        "staff",
         "things.filter-arm",
         "things.electronics",
         "things.furniture",
@@ -319,7 +319,7 @@ class RoleDictionary implements BaseDictionary
         "things.person",
         "things.free",
         "profile",
-        "stuff",
+        "staff",
         "things.filter-arm",
         "things.electronics",
         "things.furniture",
@@ -362,7 +362,7 @@ class RoleDictionary implements BaseDictionary
             self::ADMIN => 'Администратор',
             self::DIRECTOR => 'Директор',
             self::WORKER => 'Сотрудник',
-            self::STUFF_MANAGER => 'Работник отдела кадров',
+            self::STAFF_MANAGER => 'Работник отдела кадров',
             self::ACCOUNTANT => 'Бухгалтер'
         ];
     }
@@ -379,7 +379,7 @@ class RoleDictionary implements BaseDictionary
             self::ADMIN => self::ADMIN_RULES,
             self::DIRECTOR => self::DIRECTOR_RULES,
             self::WORKER => self::WORKER_RULES,
-            self::STUFF_MANAGER => self::STUFF_MANAGER_RULES,
+            self::STAFF_MANAGER => self::STAFF_MANAGER_RULES,
             self::ACCOUNTANT => self::ACCOUNTANT_RULES,
             default => []
         };

@@ -2,7 +2,7 @@
 
 namespace App\DTO;
 
-class StuffDTO implements DTO
+class StaffDTO implements DTO
 {
     public ?int $id;
     public ?string $fio;

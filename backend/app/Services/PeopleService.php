@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\DTO\PeopleDTO;
-use App\DTO\StuffDTO;
+use App\DTO\StaffDTO;
 use App\Repositories\BranchRepository;
 use App\Repositories\PeoplePositionRepository;
 use App\Repositories\PeopleRepository;
@@ -23,15 +23,15 @@ class PeopleService
         $this->branchRepository = $branchRepository;
         $this->peoplePositionRepository = $peoplePositionRepository;
     }
-    public function stuffAll() : array
+    public function staffAll() : array
     {
         $data = [];
         $branches = $this->branchRepository->getAll();
         foreach ($branches as $branch) {
-            $stuff = [];
-            $branchStuff = $this->peoplePositionRepository->getByActiveBranchStuff($branch->id);
-            foreach ($branchStuff as $person) {
-                $stuff[] = new StuffDTO(
+            $staff = [];
+            $branchStaff = $this->peoplePositionRepository->getByActiveBranchStaff($branch->id);
+            foreach ($branchStaff as $person) {
+                $staff[] = new StaffDTO(
                     id: $person->id,
                     fio:$person->people->getFullFio(),
                     position: $person->position->name,
@@ -43,7 +43,7 @@ class PeopleService
             $data[] = [
                 'branch_id' => $branch->id,
                 'branch_name' => $branch->name,
-                'stuff' => $stuff,
+                'staff' => $staff,
             ];
         }
         return $data;

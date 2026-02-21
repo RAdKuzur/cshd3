@@ -22,8 +22,8 @@ class PeopleController extends Controller
         ]);
     }
 
-    public function stuff(){
-        $data = $this->peopleService->stuffAll();
+    public function staff(){
+        $data = $this->peopleService->staffAll();
         return response()->json([
             'success' => true,
             'data' => $data,

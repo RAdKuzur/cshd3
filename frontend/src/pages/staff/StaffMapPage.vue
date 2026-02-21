@@ -112,24 +112,21 @@
 
                 <p class="text-gray-500">Выберите отдел для просмотра сотрудников</p>
               </div>
-
               <div v-else>
                 <div class="grid gap-6">
                   <Record
-                      v-for="employee in activeBranch.stuff"
+                      v-for="employee in activeBranch.staff"
                       :key="employee.id"
                       :employee="formatEmployee(employee)"
                   />
                 </div>
 
                 <div
-                    v-if="activeBranch.stuff.length === 0"
+                    v-if="activeBranch.staff.length === 0"
                     class="text-center py-12 text-gray-500"
                 >
                   <UserIcon class="w-16 h-16 mx-auto text-gray-400 mb-4" />
-
                   <p class="text-lg font-medium mb-2">В этом отделе пока нет сотрудников</p>
-
                 </div>
               </div>
             </div>
@@ -150,10 +147,10 @@ const activeTab = ref(null)
 const branches = ref([])
 const loading = ref(true)
 
-const loadStuffData = async () => {
+const loadStaffData = async () => {
   try {
     loading.value = true
-    const response = await axios.get(`${BACKEND_URL}/api/stuff`)
+    const response = await axios.get(`${BACKEND_URL}/api/staff`)
     const result = response.data
 
     if (result.success) {
@@ -201,17 +198,17 @@ const getBranchStats = (branchId) => {
   if (!branch) return { total: 0 }
 
   return {
-    total: branch.stuff.length
+    total: branch.staff.length
   }
 }
 
 // Общая статистика
 const totalEmployees = computed(() => {
-  return branches.value.reduce((total, branch) => total + branch.stuff.length, 0)
+  return branches.value.reduce((total, branch) => total + branch.staff.length, 0)
 })
 
 onMounted(() => {
-  loadStuffData()
+  loadStaffData()
 })
 </script>
 
