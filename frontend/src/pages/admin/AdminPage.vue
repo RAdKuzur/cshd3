@@ -10,6 +10,21 @@
           </div>
 
           <div class="flex flex-wrap items-center gap-3">
+            <!-- Кнопка Кадровик -->
+            <button
+                @click="navigateTo('/staff/history')"
+                class="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-400 to-indigo-500
+                     text-white font-medium rounded-lg hover:from-blue-500 hover:to-indigo-600
+                     transition-all hover:shadow-lg active:scale-[0.98] focus:outline-none focus:ring-2
+                     focus:ring-blue-500 focus:ring-offset-2"
+            >
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+              Кадровик
+            </button>
+
             <button
                 @click="navigateTo('/admin/tech-works')"
                 class="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-500 to-amber-600
@@ -55,6 +70,44 @@
 
         <!-- Карточки управления -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+          <!-- Карточка кадровика - отдельная и первая -->
+          <div
+              class="relative overflow-hidden rounded-xl p-6 flex flex-col justify-between
+           bg-gradient-to-br from-blue-400 to-indigo-500
+           hover:from-blue-500 hover:to-indigo-600
+           transition-all hover:shadow-lg hover:scale-[1.02] hover:shadow-indigo-200
+           cursor-pointer group border-2 border-white/50"
+              @click="navigateTo('/staff/history')"
+          >
+            <!-- Иконка кадровика -->
+            <div class="absolute right-6 top-6">
+              <div class="bg-white/20 backdrop-blur-sm p-3 rounded-xl">
+                <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+              </div>
+            </div>
+
+            <!-- Контент -->
+            <div class="pr-16">
+              <h3 class="text-xl font-semibold text-white mb-2 flex items-center gap-2">
+                Кадровик
+              </h3>
+              <p class="text-sm text-blue-100 leading-relaxed">
+                Управление перемещениями сотрудников между отделами и должностями, история кадровых изменений
+              </p>
+            </div>
+            <!-- Стрелка и статус -->
+            <div class="mt-6 flex justify-end">
+              <div class="bg-white/20 p-2 rounded-lg group-hover:bg-white/30 transition-colors">
+                <svg class="w-5 h-5 text-white transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
           <!-- Должности -->
           <div
               class="relative overflow-hidden rounded-xl p-6 flex flex-col justify-between
@@ -302,6 +355,7 @@
               </div>
             </div>
           </div>
+
           <!-- Потребление расходных материалов -->
           <div
               class="relative overflow-hidden rounded-xl p-6 flex flex-col justify-between
@@ -357,7 +411,11 @@ const stats = ref({
   branches: 10,
   activeSessions: 8,
   dailyActivity: '142',
-  lastUpdate: '2 мин назад'
+  lastUpdate: '2 мин назад',
+  // Данные для кадровика
+  employees: 156,
+  activeEmployees: 142,
+  lastHRUpdate: '5 мин назад'
 })
 
 // Метод навигации
@@ -467,5 +525,19 @@ const navigateTo = (path) => {
   .grid {
     grid-template-columns: repeat(5, 1fr);
   }
+}
+
+/* Анимация пульсации для индикатора */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 </style>
