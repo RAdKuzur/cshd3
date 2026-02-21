@@ -18,6 +18,7 @@ use App\Http\Controllers\ModelResourceController;
 use App\Http\Controllers\NetworkThingController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PeopleController;
+use App\Http\Controllers\PeoplePositionController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ResourceController;
 use App\Http\Controllers\SearchController;
@@ -193,6 +194,12 @@ Route::middleware([PrometheusMiddleware::class])->group(function () {
                 Route::post('/history/thing-auditoriums', [ThingAuditoriumController::class, 'create'])->name('history-thing-auditoriums.create');
                 Route::put('/history/thing-auditoriums/{id}', [ThingAuditoriumController::class, 'update'])->name('history-thing-auditoriums.update');
                 Route::delete('/history/thing-auditoriums/{id}', [ThingAuditoriumController::class, 'delete'])->name('history-thing-auditoriums.delete');
+
+                Route::get('/history/people-positions', [PeoplePositionController::class, 'all'])->name('history-people-positions.all');
+                Route::get('/history/people-positions/{id}', [PeoplePositionController::class, 'getOne'])->name('history-people-positions.get-one');
+                Route::post('/history/people-positions', [PeoplePositionController::class, 'create'])->name('history-people-positions.create');
+                Route::put('/history/people-positions/{id}', [PeoplePositionController::class, 'update'])->name('history-people-positions.update');
+                Route::delete('/history/people-positions/{id}', [PeoplePositionController::class, 'delete'])->name('history-people-positions.delete');
 
                 Route::get('/model-resources', [ModelResourceController::class, 'all'])->name('model-resources.all');
                 Route::get('/model-resources/{id}', [ModelResourceController::class, 'getOne'])->name('model-resources.get-one');

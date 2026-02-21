@@ -125,11 +125,18 @@ class RoleDictionary implements BaseDictionary
         "history-resources.create",
         "history-resources.update",
         "history-resources.delete",
-        'history-thing-auditoriums.all',
-        'history-thing-auditoriums.get-one',
-        'history-thing-auditoriums.create',
-        'history-thing-auditoriums.update',
-        'history-thing-auditoriums.delete',
+        "history-thing-auditoriums.all",
+        "history-thing-auditoriums.get-one",
+        "history-thing-auditoriums.create",
+        "history-thing-auditoriums.update",
+        "history-thing-auditoriums.delete",
+
+        "history-people-positions.all",
+        "history-people-positions.get-one",
+        "history-people-positions.create",
+        "history-people-positions.update",
+        "history-people-positions.delete",
+
         "model-resources.all",
         "model-resources.get-one",
         "model-resources.create",
@@ -190,6 +197,13 @@ class RoleDictionary implements BaseDictionary
         "notifications.read-user-notification",
         "notifications.delete",
         "notifications.delete-all-user-notifications",
+
+        "history-people-positions.all",
+        "history-people-positions.get-one",
+        "history-people-positions.create",
+        "history-people-positions.update",
+        "history-people-positions.delete",
+
         "network-things.telephones",
         "search",
     ];
@@ -296,6 +310,13 @@ class RoleDictionary implements BaseDictionary
         "notifications.read-user-notification",
         "notifications.delete",
         "notifications.delete-all-user-notifications",
+
+        "history-people-positions.all",
+        "history-people-positions.get-one",
+        "history-people-positions.create",
+        "history-people-positions.update",
+        "history-people-positions.delete",
+
         "network-things.telephones",
         "search",
     ];

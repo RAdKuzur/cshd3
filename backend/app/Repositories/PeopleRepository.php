@@ -16,6 +16,10 @@ class PeopleRepository
     public function getAll(){
         return People::all();
     }
+    public function getAllWithPeoplePositions()
+    {
+        return People::with(['peoplePositions'])->get();
+    }
     public function create($data){
         DB::table('logs')->insert([
             'user_id' => Auth::user()->id,
