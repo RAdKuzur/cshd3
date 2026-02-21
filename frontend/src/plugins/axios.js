@@ -19,7 +19,6 @@ axios.interceptors.response.use(
         const authStore = useAuthContextStore();
 
         if (error.response?.status === 401) {
-            console.log(error.response?.data?.error, 401)
             if(error.response?.data?.error === 'Invalid signed url')
             {
                 router.push('/signed-url-error');

@@ -706,13 +706,10 @@ const loadPeopleList = async () => {
   try {
     peopleLoading.value = true
     const response = await axios.get(`${BACKEND_URL}/api/people`)
-    console.log('People list response:', response.data)
     if (response.data.success) {
       peopleList.value = response.data.data || []
-      console.log('People list after loading:', peopleList.value)
     }
   } catch (err) {
-    console.error('Ошибка загрузки списка сотрудников:', err)
     showNotification('Ошибка загрузки списка сотрудников', 'error')
   } finally {
     peopleLoading.value = false
@@ -755,7 +752,6 @@ const loadData = async () => {
     error.value = null
 
     const response = await axios.get(`${BACKEND_URL}/api/history/people-positions`)
-    console.log('History data:', response.data)
     if (response.data.success) {
       historyItems.value = response.data.data || []
     } else {
