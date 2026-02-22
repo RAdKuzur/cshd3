@@ -57,7 +57,7 @@
 
           <div class="pr-20">
             <h3 class="text-2xl font-semibold text-white mb-3">
-              Панель кадровика
+              Панель Кадры
             </h3>
             <p class="text-base text-emerald-100 leading-relaxed">
               История приёмов, увольнений, переводов
