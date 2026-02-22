@@ -40,7 +40,7 @@
               <input
                   v-model="searchQuery"
                   type="text"
-                  placeholder="Поиск по названию, номеру, этажу, отделу..."
+                  placeholder="Поиск по названию, номеру, этажу, отделу, комментарию..."
                   class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm bg-white"
               >
               <div class="absolute inset-y-0 left-0 pl-3 flex items-center">
@@ -249,6 +249,26 @@
                 </div>
               </td>
 
+              <!-- Комментарий -->
+              <td class="px-6 py-4">
+                <div class="flex items-start max-w-xs">
+                  <div class="flex-shrink-0 h-8 w-8 bg-gradient-to-r from-gray-100 to-slate-100 rounded-lg flex items-center justify-center mr-3 shadow-sm">
+                    <svg class="h-4 w-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+                    </svg>
+                  </div>
+                  <div class="group relative">
+                    <div class="text-sm text-gray-900 line-clamp-2">
+                      {{ auditorium.comment || 'Нет комментария' }}
+                    </div>
+                    <div v-if="auditorium.comment && auditorium.comment.length > 100"
+                         class="absolute left-0 bottom-full mb-2 hidden group-hover:block w-64 p-2 bg-gray-900 text-white text-xs rounded-lg shadow-lg z-10">
+                      {{ auditorium.comment }}
+                    </div>
+                  </div>
+                </div>
+              </td>
+
               <!-- Действия -->
               <td class="px-6 py-4 whitespace-nowrap">
                 <div class="flex items-center space-x-2">
@@ -451,6 +471,7 @@
                   </label>
                   <select
                       v-model="form.branch_id"
+                      required
                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                       :disabled="isSaving"
                   >
@@ -460,6 +481,22 @@
                     </option>
                   </select>
                   <p v-if="formErrors.branch_id" class="mt-1 text-sm text-red-600">{{ formErrors.branch_id }}</p>
+                </div>
+
+                <!-- Комментарий -->
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">
+                    Комментарий
+                  </label>
+                  <textarea
+                      v-model="form.comment"
+                      required
+                      rows="3"
+                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors resize-none"
+                      placeholder="Введите комментарий к кабинету..."
+                      :disabled="isSaving"
+                  ></textarea>
+                  <p v-if="formErrors.comment" class="mt-1 text-sm text-red-600">{{ formErrors.comment }}</p>
                 </div>
               </div>
 
@@ -553,7 +590,8 @@ const headers = ref([
   { key: 'name', label: 'Название и номер' },
   { key: 'floor', label: 'Этаж' },
   { key: 'department_id', label: 'Сектор' },
-  { key: 'branch_id', label: 'Отдел' }
+  { key: 'branch_id', label: 'Отдел' },
+  { key: 'comment', label: 'Комментарий' }
 ])
 
 const auditoriums = ref([])
@@ -589,7 +627,8 @@ const form = ref({
   number: '',
   floor: '',
   department_id: '',
-  branch_id: ''
+  branch_id: '',
+  comment: ''
 })
 
 const formErrors = ref({})
@@ -687,7 +726,8 @@ const filteredAuditoriums = computed(() => {
         (auditorium.name && auditorium.name.toLowerCase().includes(query)) ||
         (auditorium.number && auditorium.number.toString().toLowerCase().includes(query)) ||
         (getDepartmentFullName(auditorium.department_id) && getDepartmentFullName(auditorium.department_id).toLowerCase().includes(query)) ||
-        (getBranchName(auditorium.branch_id) && getBranchName(auditorium.branch_id).toLowerCase().includes(query))
+        (getBranchName(auditorium.branch_id) && getBranchName(auditorium.branch_id).toLowerCase().includes(query)) ||
+        (auditorium.comment && auditorium.comment.toLowerCase().includes(query))
     )
   }
 
@@ -718,13 +758,14 @@ const filteredAuditoriums = computed(() => {
       aVal = aVal || ''
       bVal = bVal || ''
     } else if (sortKey.value === 'department_id') {
-      // Сортировка по названию сектора
       aVal = getDepartmentFullName(a.department_id) || ''
       bVal = getDepartmentFullName(b.department_id) || ''
     } else if (sortKey.value === 'branch_id') {
-      // Сортировка по названию отдела
       aVal = getBranchName(a.branch_id) || ''
       bVal = getBranchName(b.branch_id) || ''
+    } else if (sortKey.value === 'comment') {
+      aVal = a.comment || ''
+      bVal = b.comment || ''
     }
 
     if (aVal < bVal) return sortOrder.value === 'asc' ? -1 : 1
@@ -853,7 +894,8 @@ const openCreateModal = () => {
     number: '',
     floor: '',
     department_id: '',
-    branch_id: ''
+    branch_id: '',
+    comment: ''
   }
   formErrors.value = {}
   showModal.value = true
@@ -866,7 +908,8 @@ const openEditModal = (auditorium) => {
     number: auditorium.number,
     floor: auditorium.floor,
     department_id: auditorium.department_id,
-    branch_id: auditorium.branch_id || ''
+    branch_id: auditorium.branch_id || '',
+    comment: auditorium.comment || ''
   }
   formErrors.value = {}
   showModal.value = true
@@ -886,7 +929,8 @@ const closeModal = () => {
       number: '',
       floor: '',
       department_id: '',
-      branch_id: ''
+      branch_id: '',
+      comment: ''
     }
     formErrors.value = {}
   }
@@ -1106,5 +1150,13 @@ thead tr:hover {
 
 .overflow-x-auto::-webkit-scrollbar-thumb:hover {
   background: #a1a1a1;
+}
+
+/* Для обрезки длинного текста */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 </style>

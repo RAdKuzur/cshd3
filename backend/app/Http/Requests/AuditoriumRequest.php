@@ -27,7 +27,8 @@ class AuditoriumRequest extends FormRequest
             'number' => 'required',
             'floor' => 'required',
             'department_id' => 'required',
-            'branch_id' => 'required'
+            'branch_id' => 'required',
+            'comment' => 'required|string'
         ];
     }
     public function toDTO(){
@@ -36,7 +37,8 @@ class AuditoriumRequest extends FormRequest
             number: $this->validated('number'),
             floor: $this->validated('floor'),
             department_id: $this->validated('department_id'),
-            branch_id: $this->validated('branch_id')
+            branch_id: $this->validated('branch_id'),
+            comment: $this->validated('comment')
         );
     }
 }
