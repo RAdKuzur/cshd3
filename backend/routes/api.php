@@ -207,6 +207,8 @@ Route::middleware([PrometheusMiddleware::class])->group(function () {
                 Route::post('/model-resources', [ModelResourceController::class, 'create'])->name('model-resources.create');
                 Route::put('/model-resources/{id}', [ModelResourceController::class, 'update'])->name('model-resources.update');
                 Route::delete('/model-resources/{id}', [ModelResourceController::class, 'delete'])->name('model-resources.delete');
+
+                Route::get('/inventory/{username}', [ThingController::class, 'inventory'])->name('things.inventory');
             });
         });
     });

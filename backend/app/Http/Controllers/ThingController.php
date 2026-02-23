@@ -142,4 +142,12 @@ class ThingController extends Controller
             'data' => $data,
         ]);
     }
+    public function inventory($username)
+    {
+        $data = $this->thingService->inventory($username);
+        return response()->json([
+            'success' => true,
+            'data' => $data,
+        ]);
+    }
 }

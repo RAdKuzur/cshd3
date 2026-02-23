@@ -15,6 +15,7 @@ use App\Repositories\ThingAuditoriumRepository;
 use App\Repositories\ThingRepository;
 use App\Repositories\TransferActRepository;
 use App\Repositories\TransferActThingRepository;
+use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -28,6 +29,7 @@ class ThingService
     public NetworkThingRepository $networkThingRepository;
     public FileRepository $fileRepository;
     public ElasticsearchService $elasticsearchService;
+    public UserRepository $userRepository;
     public function __construct(
         ThingRepository $thingRepository,
         TransferActRepository $transferActRepository,
@@ -36,7 +38,8 @@ class ThingService
         TransferActThingRepository $transferActThingRepository,
         NetworkThingRepository $networkThingRepository,
         FileRepository $fileRepository,
-        ElasticsearchService $elasticsearchService
+        ElasticsearchService $elasticsearchService,
+        UserRepository $userRepository
     ) {
         $this->thingRepository = $thingRepository;
         $this->transferActRepository = $transferActRepository;
@@ -46,6 +49,7 @@ class ThingService
         $this->networkThingRepository = $networkThingRepository;
         $this->fileRepository = $fileRepository;
         $this->elasticsearchService = $elasticsearchService;
+        $this->userRepository = $userRepository;
     }
 
     public function electronics(): array
@@ -89,6 +93,31 @@ class ThingService
             ))
             ->all();
     }
+    public function inventory(string $username): array
+    {
+        $user = $this->userRepository->getByUsername($username);
+
+        return $this->thingRepository
+            ->getAllWithCurrentAuditorium()
+            ->filter(fn($thing) => $thing->getActualMaster()?->id === $user->people->id)
+            ->map(fn($thing) => new ThingDTO(
+                id: $thing->id,
+                name: $thing->name,
+                serial_number: $thing->serial_number,
+                inv_number: $thing->inv_number,
+                operation_date: $thing->operation_date,
+                thing_type_id: $thing->thing_type_id,
+                thing_parent_id: $thing->parent?->thing_id,
+                condition: $thing->condition,
+                balance: $thing->balance,
+                auditorium_id: $thing->currentAuditorium?->auditorium?->id,
+                price: $thing->price,
+                is_blocked: $thing->is_blocked,
+            ))
+            ->values()
+            ->all();
+    }
+
     public function simpleThings(): array
     {
         $electronics = $this->thingRepository->getAll();

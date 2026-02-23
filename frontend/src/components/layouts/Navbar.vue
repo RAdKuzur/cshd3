@@ -227,6 +227,16 @@
                     </router-link>
                   </MenuItem>
 
+                  <MenuItem v-slot="{ active }">
+                    <router-link
+                        :to="inventoryUrl"
+                        :class="[active ? 'bg-gray-100' : '', 'flex items-center px-4 py-2 text-sm text-gray-700']"
+                    >
+                      <ArchiveBoxIcon class="w-4 h-4 mr-2 text-gray-400" />
+                      Мои мат. ценности
+                    </router-link>
+                  </MenuItem>
+
                   <div class="border-t border-gray-100 my-1"></div>
                   <MenuItem v-slot="{ active }" @click="logout">
                     <button
@@ -415,7 +425,7 @@ import Pusher from 'pusher-js'
 import { BACKEND_URL } from "@/router.js";
 import {
   ScaleIcon, Bars3Icon, XMarkIcon, ChevronDownIcon, UserIcon, BellIcon,
-  ArrowRightOnRectangleIcon, ArrowPathIcon, Cog6ToothIcon, // Добавлен импорт Cog6ToothIcon
+  ArrowRightOnRectangleIcon, ArrowPathIcon, Cog6ToothIcon, ArchiveBoxIcon,  // Добавлен импорт Cog6ToothIcon
   CalculatorIcon, CommandLineIcon, BuildingStorefrontIcon, UserGroupIcon, MapIcon, DocumentIcon,  MagnifyingGlassIcon
 } from '@heroicons/vue/24/outline'
 
@@ -450,6 +460,8 @@ const profileUrl = computed(() => `/profile/${profileBar.value.username}`)
 
 // URL для настроек (можно изменить на нужный путь)
 const settingsUrl = computed(() => `/settings/${profileBar.value.username}`)
+
+const inventoryUrl = computed(() => `/inventory/${profileBar.value.username}`)
 
 const currentUser = computed(() => {
   return authStore.user?.username || ''

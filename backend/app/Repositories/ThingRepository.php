@@ -22,6 +22,15 @@ class ThingRepository
     public function getAll(){
         return Thing::all();
     }
+    public function getAllWithCurrentAuditorium()
+    {
+        return Thing::query()
+            ->with([
+                'parent:id,inv_number',
+                'currentAuditorium.auditorium:id'
+            ])
+            ->get();
+    }
     public function getAllWithThingAuditoriums()
     {
         return Thing::with(['thingAuditoriums'])->get();

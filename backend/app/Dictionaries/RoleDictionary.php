@@ -142,7 +142,8 @@ class RoleDictionary implements BaseDictionary
         "model-resources.get-one",
         "model-resources.create",
         "model-resources.update",
-        "model-resources.delete"
+        "model-resources.delete",
+        "things.inventory"
     ];
     public const DIRECTOR_RULES = [
         "login",
@@ -208,6 +209,7 @@ class RoleDictionary implements BaseDictionary
 
         "network-things.telephones",
         "search",
+        "things.inventory"
     ];
     public const WORKER_RULES = [
         "login",
@@ -260,6 +262,7 @@ class RoleDictionary implements BaseDictionary
         "notifications.delete-all-user-notifications",
         "network-things.telephones",
         "search",
+        "things.inventory"
     ];
     public const STAFF_MANAGER_RULES = [
         "login",
@@ -322,6 +325,7 @@ class RoleDictionary implements BaseDictionary
 
         "network-things.telephones",
         "search",
+        "things.inventory"
     ];
     public const ACCOUNTANT_RULES = [
         "login",
@@ -381,6 +385,7 @@ class RoleDictionary implements BaseDictionary
         "notifications.delete-all-user-notifications",
         "network-things.telephones",
         "search",
+        "things.inventory"
     ];
     public static function type(){
         return [
