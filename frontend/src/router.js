@@ -68,6 +68,7 @@ import ChangePasswordPage from "@/pages/ChangePasswordPage.vue";
 import SignedUrlErrorPage from "@/pages/error/SignedUrlErrorPage.vue";
 import HistoryStaffPage from "@/pages/staff/HistoryStaffPage.vue";
 import StaffMapPage from "@/pages/staff/StaffMapPage.vue";
+import ReportNetworkPage from "@/pages/report/ReportNetworkPage.vue";
 
 
 const BACKEND_URL = '';
@@ -102,6 +103,7 @@ const routes = [
     { path: '/reports/general', component: ReportGeneralPage, meta: { auth: true }},
     { path: '/reports/forms', component: ReportFormPage, meta: { auth: true }},
     { path: '/reports/resources', component: ReportResourcePage, meta: { auth: true }},
+    { path: '/reports/network', component: ReportNetworkPage, meta: { auth: true }},
 
     { path: '/admin', component: AdminPage, meta: { auth: true } },
     { path: '/admin/positions', component: AdminPositionPage, meta: { auth: true } },

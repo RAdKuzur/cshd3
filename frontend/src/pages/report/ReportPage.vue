@@ -279,8 +279,48 @@
             </div>
           </div>
 
-          <!-- Оставшиеся ячейки сетки (пустые для соблюдения сетки) -->
-          <div class="hidden lg:block"></div>
+          <!-- НОВАЯ КАРТОЧКА: Сетевой аудит -->
+          <div
+              class="relative overflow-hidden rounded-xl p-6 flex flex-col justify-between
+           bg-gradient-to-br from-blue-600 to-indigo-700
+           hover:from-blue-700 hover:to-indigo-800
+           transition-all hover:shadow-lg hover:scale-[1.01]
+           cursor-pointer group"
+              @click="navigateTo('/reports/network')"
+          >
+            <div class="absolute right-6 top-6">
+              <div class="bg-white/20 backdrop-blur-sm p-3 rounded-xl">
+                <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0" />
+                </svg>
+              </div>
+            </div>
+
+            <div class="pr-16">
+              <h3 class="text-xl font-semibold text-white mb-2">
+                Сетевой аудит
+              </h3>
+              <p class="text-sm text-blue-100 leading-relaxed">
+                Мониторинг сетевой инфраструктуры
+              </p>
+            </div>
+
+            <div class="mt-6 flex items-center justify-between">
+              <div class="flex items-center gap-2 text-white/80">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                </svg>
+                <span class="text-sm">Excel</span>
+              </div>
+              <div class="bg-white/20 p-2 rounded-lg group-hover:bg-white/30 transition-colors">
+                <svg class="w-5 h-5 text-white transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Оставшаяся ячейка сетки (пустая для соблюдения сетки) -->
           <div class="hidden lg:block"></div>
         </div>
 
@@ -450,8 +490,12 @@ button.bg-white:hover {
 }
 
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .animate-spin {

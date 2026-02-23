@@ -40,4 +40,7 @@ class ReportController extends Controller
     public function resources(){
         return $this->reportService->resources();
     }
+    public function networkAudit(){
+        return $this->reportService->networkAudit();
+    }
 }

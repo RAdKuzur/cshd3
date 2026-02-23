@@ -13,6 +13,7 @@ use App\Models\Auditorium;
 use App\Repositories\AuditoriumRepository;
 use App\Repositories\DeviceRepository;
 use App\Repositories\ModelRepository;
+use App\Repositories\NetworkThingRepository;
 use App\Repositories\OrganizationRepository;
 use App\Repositories\ThingRepository;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -30,12 +31,14 @@ class ReportService
     public ThingRepository $thingRepository;
     public ModelRepository $modelRepository;
     public DeviceRepository $deviceRepository;
+    public NetworkThingRepository $networkThingRepository;
     public function __construct(
         AuditoriumRepository $auditoriumRepository,
         OrganizationRepository $organizationRepository,
         ThingRepository $thingRepository,
         ModelRepository $modelRepository,
-        DeviceRepository $deviceRepository
+        DeviceRepository $deviceRepository,
+        NetworkThingRepository $networkThingRepository
     )
     {
         $this->auditoriumRepository = $auditoriumRepository;
@@ -43,6 +46,7 @@ class ReportService
         $this->thingRepository = $thingRepository;
         $this->modelRepository = $modelRepository;
         $this->deviceRepository = $deviceRepository;
+        $this->networkThingRepository = $networkThingRepository;
     }
 
     public function auditoriumReport($id)
@@ -270,7 +274,9 @@ class ReportService
         $sheet->setCellValue('F1', 'Дата введения в эксплуатацию');
         $sheet->setCellValue('G1', 'Балансовая стоимость');
         $sheet->setCellValue('H1', 'Помещение');
-        $sheet->getStyle('A1:H1')->getFont()->setBold(true);
+        $sheet->setCellValue('I1', 'Отдел');
+        $sheet->setCellValue('J1', 'МОЛ');
+        $sheet->getStyle('A1:J1')->getFont()->setBold(true);
 
         $index = 2;
         foreach ($organization->departments as $department) {
@@ -284,6 +290,8 @@ class ReportService
                     $sheet->setCellValue('F' . $index, $thingAuditorium->thing->operation_date);
                     $sheet->setCellValue('G' . $index, $thingAuditorium->thing->price);
                     $sheet->setCellValue('H' . $index, $auditorium->name);
+                    $sheet->setCellValue('I' . $index, $thingAuditorium->auditorium->branch->name);
+                    $sheet->setCellValue('J' . $index, $thingAuditorium->thing->getActualMaster()?->getFullFio());
                     $index++;
                 }
             }
@@ -450,6 +458,48 @@ class ReportService
         }
 
         $fileName = 'resources.xlsx';
+        return response()->streamDownload(function () use ($spreadsheet) {
+            $writer = new Xlsx($spreadsheet);
+            $writer->save('php://output');
+        }, $fileName, [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
+            'Cache-Control' => 'max-age=0',
+        ]);
+    }
+
+    public function networkAudit()
+    {
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle('СЕТЕВОЙ ОТЧЁТ');
+        $sheet->setCellValue('A1', '№');
+        $sheet->setCellValue('B1', 'Инвентарный номер');
+        $sheet->setCellValue('C1', 'Серийный номер');
+        $sheet->setCellValue('D1', 'Тип');
+        $sheet->setCellValue('E1', 'IP-адрес');
+        $sheet->setCellValue('F1', 'Номер телефона');
+        $sheet->setCellValue('G1', 'Аудитория');
+        $sheet->setCellValue('H1', 'Отдел');
+        $sheet->setCellValue('I1', 'Характеристика учёта');
+        $sheet->setCellValue('J1', 'МОЛ');
+        $sheet->getStyle('A1:J1')->getFont()->setBold(true);
+        $networkThings = $this->networkThingRepository->getAll();
+        $index = 2;
+        foreach ($networkThings as $networkThing) {
+            $sheet->setCellValue('A' . $index, $index - 1);
+            $sheet->setCellValue('B' . $index, $networkThing->thing->inv_number);
+            $sheet->setCellValue('C' . $index, $networkThing->thing->serial_number);
+            $sheet->setCellValue('D' . $index, ThingTypeDictionary::get($networkThing->thing->thing_type_id));
+            $sheet->setCellValue('E' . $index, $networkThing->ip_address);
+            $sheet->setCellValue('F' . $index, $networkThing->phone_number);
+            $sheet->setCellValue('G' . $index, $networkThing->thing->getCurrentLocation()->name);
+            $sheet->setCellValue('H' . $index, $networkThing->thing->getCurrentLocation()->branch->name);
+            $sheet->setCellValue('I' . $index, ThingBalanceDictionary::get($networkThing->thing->balance));
+            $sheet->setCellValue('J' . $index, $networkThing->thing->getActualMaster()?->getFullFio());
+            $index++;
+        }
+        $fileName = 'network_audit.xlsx';
         return response()->streamDownload(function () use ($spreadsheet) {
             $writer = new Xlsx($spreadsheet);
             $writer->save('php://output');
