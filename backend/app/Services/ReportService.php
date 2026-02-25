@@ -123,6 +123,11 @@ class ReportService
         else {
             $section->addText('В ПОМЕЩЕНИИ НЕТ МАТ. ЦЕННОСТЕЙ' , ['size' => 14], ['align' => 'center']);
         }
+        $section->addTextBreak();
+        $section->addText('Год проведения работ по текущему ремонту:', ['size' => 12], ['align' => 'left']);
+        $section->addText('Площадь помещения: ' .  $auditorium->area . ' кв.м.', ['size' => 12], ['align' => 'left']);
+        $section->addTextBreak();
+        $section->addText('Ответственный за кабинет __________/____________________/', ['size' => 12], ['align' => 'left']);
         $fileName = 'auditorium_report.docx';
         return response()->streamDownload(function () use ($phpWord) {
             $writer = IOFactory::createWriter($phpWord, 'Word2007');
@@ -249,6 +254,11 @@ class ReportService
                 );
             }
             unset($table);
+            $section->addTextBreak();
+            $section->addText('Год проведения работ по текущему ремонту:', ['size' => 12], ['align' => 'left']);
+            $section->addText('Площадь помещения: ' .  $auditorium->area . ' кв.м.', ['size' => 12], ['align' => 'left']);
+            $section->addTextBreak();
+            $section->addText('Ответственный за кабинет __________/____________________/', ['size' => 12], ['align' => 'left']);
             $section->addPageBreak(); // переход на новую страницу
         }
         $fileName = 'general_auditorium_report.docx';
