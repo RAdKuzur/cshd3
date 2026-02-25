@@ -138,6 +138,11 @@ class RoleDictionary implements BaseDictionary
         "history-people-positions.update",
         "history-people-positions.delete",
 
+        "tokens.all",
+        "tokens.username-all",
+        "tokens.revoke",
+        "tokens.delete",
+
         "model-resources.all",
         "model-resources.get-one",
         "model-resources.create",

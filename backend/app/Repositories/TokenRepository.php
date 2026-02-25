@@ -9,6 +9,22 @@ use Illuminate\Support\Facades\DB;
 
 class TokenRepository
 {
+    public function getAll()
+    {
+        return Token::all();
+    }
+    public function getAllWithUsers()
+    {
+        return Token::with(['user'])->get();
+    }
+    public function get($id)
+    {
+        return Token::find($id);
+    }
+    public function getByUserId($id)
+    {
+        return Token::where(['user_id' => $id])->get();
+    }
     public function create(string $token, $user)
     {
         $data = [
@@ -20,6 +36,9 @@ class TokenRepository
             'ip_address' => request()->ip(),
         ];
         return DB::table('tokens')->insert($data);
+    }
+    public function update($id, $data) {
+        return DB::table('tokens')->where('id', $id)->update($data);
     }
     public function isValidToken($token, $userId){
         return Token::where([
@@ -50,5 +69,9 @@ class TokenRepository
     }
     public function getByRefreshToken($refreshToken) : Token {
         return Token::where('refresh_token', $refreshToken)->first();
+    }
+    public function deleteById($id)
+    {
+        return DB::table('tokens')->where('id', $id)->delete();
     }
 }

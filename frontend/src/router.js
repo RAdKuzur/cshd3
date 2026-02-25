@@ -70,6 +70,8 @@ import HistoryStaffPage from "@/pages/staff/HistoryStaffPage.vue";
 import StaffMapPage from "@/pages/staff/StaffMapPage.vue";
 import ReportNetworkPage from "@/pages/report/ReportNetworkPage.vue";
 import InventoryPage from "@/pages/InventoryPage.vue";
+import SecurityPage from "@/pages/SecurityPage.vue";
+import AdminSecurityPage from "@/pages/admin/security/AdminSecurityPage.vue";
 
 
 const BACKEND_URL = '';
@@ -92,6 +94,7 @@ const routes = [
 
     { path: '/profile/:username', component: ProfilePage, meta: { auth: true } },
     { path: '/settings/:username', component: SettingPage, meta: { auth: true }},
+    { path: '/security/:username', component: SecurityPage, meta: { auth: true }},
     { path: '/inventory/:username', component: InventoryPage, meta: { auth: true }},
     { path: '/staff', component: StaffPage, meta: { auth: true } },
     { path: '/staff/history', component: HistoryStaffPage, meta: { auth: true } },
@@ -115,6 +118,7 @@ const routes = [
     { path: '/admin/models', component: AdminModelPage, meta: { auth: true } },
     { path: '/admin/model-resources', component: AdminModelResourcePage, meta: { auth: true } },
     { path: '/admin/companies', component: AdminCompanyPage, meta: { auth: true } },
+    { path: '/admin/security', component: AdminSecurityPage, meta: { auth: true } },
     { path: '/admin/tech-works', component: AdminTechWorkPage, meta: { auth: true } },
     { path: '/admin/users', component: AdminUserPage, meta: { auth: true } },
     { path: '/admin/users/create', component: AdminUserCreatePage, meta: { auth: true } },

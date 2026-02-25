@@ -26,6 +26,7 @@ use App\Http\Controllers\TechWorkController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\ThingAuditoriumController;
 use App\Http\Controllers\ThingController;
+use App\Http\Controllers\TokenController;
 use App\Http\Controllers\TransferActController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\CheckAvailabilityMiddleware;
@@ -207,6 +208,11 @@ Route::middleware([PrometheusMiddleware::class])->group(function () {
                 Route::post('/model-resources', [ModelResourceController::class, 'create'])->name('model-resources.create');
                 Route::put('/model-resources/{id}', [ModelResourceController::class, 'update'])->name('model-resources.update');
                 Route::delete('/model-resources/{id}', [ModelResourceController::class, 'delete'])->name('model-resources.delete');
+
+                Route::get('/tokens', [TokenController::class, 'all'])->name('tokens.all');
+                Route::get('/tokens/{username}/all', [TokenController::class, 'allUsername'])->name('tokens.username-all');
+                Route::put('/tokens/{id}/revoke', [TokenController::class, 'revoke'])->name('tokens.revoke');
+                Route::delete('/tokens/{id}', [TokenController::class, 'delete'])->name('tokens.delete');
 
                 Route::get('/inventory/{username}', [ThingController::class, 'inventory'])->name('things.inventory');
             });
