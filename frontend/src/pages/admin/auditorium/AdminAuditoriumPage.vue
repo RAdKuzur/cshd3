@@ -89,6 +89,7 @@
               <option value="name">Сортировка по названию</option>
               <option value="floor">По этажу</option>
               <option value="number">По номеру</option>
+              <option value="area">По площади</option>
               <option value="department_id">По сектору</option>
               <option value="branch_id">По отделу</option>
             </select>
@@ -208,6 +209,25 @@
                     </div>
                     <div class="text-xs text-gray-500">
                       Этаж
+                    </div>
+                  </div>
+                </div>
+              </td>
+
+              <!-- Площадь -->
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 h-8 w-8 bg-gradient-to-r from-orange-100 to-amber-100 rounded-lg flex items-center justify-center mr-3 shadow-sm">
+                    <svg class="h-4 w-4 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div class="text-sm font-medium text-gray-900">
+                      {{ auditorium.area ? auditorium.area : '—' }} м²
+                    </div>
+                    <div class="text-xs text-gray-500">
+                      Площадь
                     </div>
                   </div>
                 </div>
@@ -445,6 +465,24 @@
                   <p v-if="formErrors.floor" class="mt-1 text-sm text-red-600">{{ formErrors.floor }}</p>
                 </div>
 
+                <!-- Площадь -->
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">
+                    Площадь (м²)
+                  </label>
+                  <input
+                      v-model="form.area"
+                      type="number"
+                      step="0.001"
+                      min="0"
+                      required
+                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                      placeholder="Например: 50.5"
+                      :disabled="isSaving"
+                  />
+                  <p v-if="formErrors.area" class="mt-1 text-sm text-red-600">{{ formErrors.area }}</p>
+                </div>
+
                 <!-- Сектор -->
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-1">
@@ -589,6 +627,7 @@ const headers = ref([
   { key: 'id', label: 'ID' },
   { key: 'name', label: 'Название и номер' },
   { key: 'floor', label: 'Этаж' },
+  { key: 'area', label: 'Площадь' },
   { key: 'department_id', label: 'Сектор' },
   { key: 'branch_id', label: 'Отдел' },
   { key: 'comment', label: 'Комментарий' }
@@ -626,6 +665,7 @@ const form = ref({
   name: '',
   number: '',
   floor: '',
+  area: '',
   department_id: '',
   branch_id: '',
   comment: ''
@@ -766,6 +806,9 @@ const filteredAuditoriums = computed(() => {
     } else if (sortKey.value === 'comment') {
       aVal = a.comment || ''
       bVal = b.comment || ''
+    } else if (sortKey.value === 'area') {
+      aVal = a.area || 0
+      bVal = b.area || 0
     }
 
     if (aVal < bVal) return sortOrder.value === 'asc' ? -1 : 1
@@ -893,6 +936,7 @@ const openCreateModal = () => {
     name: '',
     number: '',
     floor: '',
+    area: '',
     department_id: '',
     branch_id: '',
     comment: ''
@@ -907,6 +951,7 @@ const openEditModal = (auditorium) => {
     name: auditorium.name,
     number: auditorium.number,
     floor: auditorium.floor,
+    area: auditorium.area || '',
     department_id: auditorium.department_id,
     branch_id: auditorium.branch_id || '',
     comment: auditorium.comment || ''
@@ -928,6 +973,7 @@ const closeModal = () => {
       name: '',
       number: '',
       floor: '',
+      area: '',
       department_id: '',
       branch_id: '',
       comment: ''
@@ -970,7 +1016,6 @@ const saveAuditorium = async () => {
       throw new Error(response.data.message || 'Ошибка сохранения')
     }
   } catch (err) {
-
     if (err.response?.data?.errors) {
       formErrors.value = err.response.data.errors
 
@@ -1111,16 +1156,45 @@ tbody tr {
   }
 }
 
-tbody tr:nth-child(1) { animation-delay: 0.05s; }
-tbody tr:nth-child(2) { animation-delay: 0.1s; }
-tbody tr:nth-child(3) { animation-delay: 0.15s; }
-tbody tr:nth-child(4) { animation-delay: 0.2s; }
-tbody tr:nth-child(5) { animation-delay: 0.25s; }
-tbody tr:nth-child(6) { animation-delay: 0.3s; }
-tbody tr:nth-child(7) { animation-delay: 0.35s; }
-tbody tr:nth-child(8) { animation-delay: 0.4s; }
-tbody tr:nth-child(9) { animation-delay: 0.45s; }
-tbody tr:nth-child(10) { animation-delay: 0.5s; }
+tbody tr:nth-child(1) {
+  animation-delay: 0.05s;
+}
+
+tbody tr:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+tbody tr:nth-child(3) {
+  animation-delay: 0.15s;
+}
+
+tbody tr:nth-child(4) {
+  animation-delay: 0.2s;
+}
+
+tbody tr:nth-child(5) {
+  animation-delay: 0.25s;
+}
+
+tbody tr:nth-child(6) {
+  animation-delay: 0.3s;
+}
+
+tbody tr:nth-child(7) {
+  animation-delay: 0.35s;
+}
+
+tbody tr:nth-child(8) {
+  animation-delay: 0.4s;
+}
+
+tbody tr:nth-child(9) {
+  animation-delay: 0.45s;
+}
+
+tbody tr:nth-child(10) {
+  animation-delay: 0.5s;
+}
 
 /* Улучшенные hover-эффекты */
 tr:hover {

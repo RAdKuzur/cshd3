@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $floor
  * @property int $department_id
  * @property int $branch_id
+ * @property float $area
  * @property string $comment
  *
  * @property Department $department
@@ -26,7 +27,9 @@ class Auditorium extends Model
         'number',
         'floor',
         'department_id',
-        'branch_id'
+        'area',
+        'branch_id',
+        'comment'
     ];
     public function department(){
         return $this->belongsTo(Department::class);

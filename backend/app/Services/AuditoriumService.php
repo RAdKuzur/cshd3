@@ -39,6 +39,7 @@ class AuditoriumService
                 floor: $auditorium->floor,
                 department_id: $auditorium->department_id,
                 branch_id: $auditorium->branch_id,
+                area: $auditorium->area,
                 comment: $auditorium->comment,
             );
         }

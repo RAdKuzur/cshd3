@@ -25,6 +25,7 @@ class AuditoriumSeeder extends Seeder
                 'floor' => $floor,
                 'department_id' => $department->id,
                 'branch_id' => DB::table('branches')->inRandomOrder()->first()->id,
+                'area' => random_int(30, 70),
                 'comment' => fake()->text(),
             ]);
         }

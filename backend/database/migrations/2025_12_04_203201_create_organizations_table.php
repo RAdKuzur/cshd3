@@ -41,6 +41,7 @@ return new class extends Migration
             $table->integer('floor')->nullable(false);
             $table->foreignId('department_id')->constrained('departments');
             $table->foreignId('branch_id')->constrained('branches');
+            $table->float('area')->nullable(false);
             $table->text('comment')->nullable();
             $table->timestamps();
         });

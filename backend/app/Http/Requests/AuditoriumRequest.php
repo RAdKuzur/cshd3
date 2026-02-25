@@ -28,6 +28,7 @@ class AuditoriumRequest extends FormRequest
             'floor' => 'required',
             'department_id' => 'required',
             'branch_id' => 'required',
+            'area' => 'required',
             'comment' => 'required|string'
         ];
     }
@@ -38,6 +39,7 @@ class AuditoriumRequest extends FormRequest
             floor: $this->validated('floor'),
             department_id: $this->validated('department_id'),
             branch_id: $this->validated('branch_id'),
+            area: $this->validated('area'),
             comment: $this->validated('comment')
         );
     }

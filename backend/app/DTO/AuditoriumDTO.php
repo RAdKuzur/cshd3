@@ -10,6 +10,7 @@ class AuditoriumDTO implements DTO
     public ?int  $floor;
     public ?int $department_id;
     public ?int $branch_id;
+    public ?float $area;
     public ?string $comment;
 
     public function __construct(
@@ -19,6 +20,7 @@ class AuditoriumDTO implements DTO
         ?int $floor = null,
         ?int $department_id = null,
         ?int $branch_id = null,
+        ?float $area = null,
         ?string $comment = null
     )
     {
@@ -28,6 +30,7 @@ class AuditoriumDTO implements DTO
         $this->floor = $floor;
         $this->department_id = $department_id;
         $this->branch_id = $branch_id;
+        $this->area = $area;
         $this->comment = $comment;
     }
 
@@ -38,6 +41,7 @@ class AuditoriumDTO implements DTO
             $array['floor'] ?? null,
             $array['department_id'] ?? null,
             $array['branch_id'] ?? null,
+            $array['area'] ?? null,
             $array['comment'] ?? null
         );
     }
@@ -50,6 +54,7 @@ class AuditoriumDTO implements DTO
             'floor' => $this->floor,
             'department_id' => $this->department_id,
             'branch_id' => $this->branch_id,
+            'area' => $this->area,
             'comment' => $this->comment
         ];
     }
