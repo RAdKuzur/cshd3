@@ -32,6 +32,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Middleware\CheckAvailabilityMiddleware;
 use App\Http\Middleware\CheckPermissionMiddleware;
 use App\Http\Middleware\CheckSignedUrlMiddleware;
+use App\Http\Middleware\IdentifyUsernameMiddleware;
 use App\Http\Middleware\LicenceMiddleware;
 use App\Http\Middleware\PrometheusMiddleware;
 use App\Http\Middleware\TechWorkMiddleware;
@@ -63,7 +64,7 @@ Route::middleware([PrometheusMiddleware::class])->group(function () {
 
         Route::middleware([TechWorkMiddleware::class])->group(function () {
             Route::post('/licence', [LicenceController::class, 'create'])->name('licences.create');
-            Route::get('/profile/{username}', [UserController::class, 'profile'])->name('profile');
+            Route::get('/profile/{username}', [UserController::class, 'profile'])->name('profile')->middleware(IdentifyUsernameMiddleware::class);
 
             Route::get('/notifications/{username}', [NotificationController::class, 'getUserNotifications'])->name('notifications.get-user-notifications');
             Route::post('/notifications/{username}', [NotificationController::class, 'readAllUserNotifications'])->name('notifications.read-all-user-notifications');
@@ -210,11 +211,11 @@ Route::middleware([PrometheusMiddleware::class])->group(function () {
                 Route::delete('/model-resources/{id}', [ModelResourceController::class, 'delete'])->name('model-resources.delete');
 
                 Route::get('/tokens', [TokenController::class, 'all'])->name('tokens.all');
-                Route::get('/tokens/{username}/all', [TokenController::class, 'allUsername'])->name('tokens.username-all');
+                Route::get('/tokens/{username}/all', [TokenController::class, 'allUsername'])->name('tokens.username-all')->middleware(IdentifyUsernameMiddleware::class);;
                 Route::put('/tokens/{id}/revoke', [TokenController::class, 'revoke'])->name('tokens.revoke');
                 Route::delete('/tokens/{id}', [TokenController::class, 'delete'])->name('tokens.delete');
 
-                Route::get('/inventory/{username}', [ThingController::class, 'inventory'])->name('things.inventory');
+                Route::get('/inventory/{username}', [ThingController::class, 'inventory'])->name('things.inventory')->middleware(IdentifyUsernameMiddleware::class);;
             });
         });
     });
