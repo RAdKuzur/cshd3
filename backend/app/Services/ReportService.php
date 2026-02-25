@@ -53,15 +53,15 @@ class ReportService
     {
         $auditorium = $this->auditoriumRepository->getWithThingsById($id);
         $phpWord = new PhpWord();
-        $phpWord->addTitleStyle(1, ['bold' => true, 'size' => 16, 'allCaps' => true], ['align' => 'center']);
-        $phpWord->addParagraphStyle('center', ['align' => 'center']);
-        $phpWord->addParagraphStyle('centerItalic', ['align' => 'center']);
+        $phpWord->addTitleStyle(1, ['bold' => true, 'size' => 16, 'allCaps' => true], ['align' => Jc::CENTER]);
+        $phpWord->addParagraphStyle(Jc::CENTER, ['align' => Jc::CENTER]);
+        $phpWord->addParagraphStyle('centerItalic', ['align' => Jc::CENTER]);
         $phpWord->addFontStyle('italic14', ['italic' => true, 'size' => 12]);
         $section = $phpWord->addSection();
-        $section->addText($auditorium->branch->organization->name , ['size' => 14], ['align' => 'center']);
-        $section->addText($auditorium->branch->organization->address, ['italic' => true, 'size' => 12], ['align' => 'center']);
-        $section->addText('ПАСПОРТ КАБИНЕТА', ['bold' => true, 'size' => 14, 'allCaps' => true], ['align' => 'center']);
-        $section->addText('Кабинет № ' . $auditorium->name,  ['italic' => true, 'size' => 12], ['align' => 'center']);
+        $section->addText($auditorium->branch->organization->name , ['size' => 14], ['align' => Jc::CENTER]);
+        $section->addText($auditorium->branch->organization->address, ['italic' => true, 'size' => 12], ['align' => Jc::CENTER]);
+        $section->addText('ПАСПОРТ КАБИНЕТА', ['bold' => true, 'size' => 14, 'allCaps' => true], ['align' => Jc::CENTER]);
+        $section->addText('Кабинет № ' . $auditorium->name,  ['italic' => true, 'size' => 12], ['align' => Jc::CENTER]);
         $table = $section->addTable([
             'borderSize' => 6,
             'borderColor' => '000000',
@@ -81,7 +81,7 @@ class ReportService
             $table->addCell($wCount)->addText('Кол-во', ['bold' => true, 'size' => 12], ['alignment' => Jc::CENTER]);
             $table->addCell($wInv)->addText('Инвентарный номер', ['bold' => true, 'size' => 12], ['alignment' => Jc::CENTER]);
             $table->addRow();
-            $table->addCell(null, ['gridSpan' => 4, 'valign' => 'center'])->addText('ОФИСНАЯ МЕБЕЛЬ',
+            $table->addCell(null, ['gridSpan' => 4, 'valign' => Jc::CENTER])->addText('ОФИСНАЯ МЕБЕЛЬ',
                 ['bold' => true, 'size' => 14, 'allCaps' => true],
                 ['alignment' => Jc::CENTER]
             );
@@ -101,7 +101,7 @@ class ReportService
                 }
             }
             $table->addRow();
-            $table->addCell(null, ['gridSpan' => 4, 'valign' => 'center'])->addText('ОФИСНАЯ ТЕХНИКА',
+            $table->addCell(null, ['gridSpan' => 4, 'valign' => Jc::CENTER])->addText('ОФИСНАЯ ТЕХНИКА',
                 ['bold' => true, 'size' => 14, 'allCaps' => true],
                 ['alignment' => Jc::CENTER]
             );
@@ -121,13 +121,13 @@ class ReportService
             }
         }
         else {
-            $section->addText('В ПОМЕЩЕНИИ НЕТ МАТ. ЦЕННОСТЕЙ' , ['size' => 14], ['align' => 'center']);
+            $section->addText('В ПОМЕЩЕНИИ НЕТ МАТ. ЦЕННОСТЕЙ' , ['size' => 14], ['align' => Jc::CENTER]);
         }
         $section->addTextBreak();
-        $section->addText('Год проведения работ по текущему ремонту:', ['size' => 12], ['align' => 'left']);
-        $section->addText('Площадь помещения: ' .  $auditorium->area . ' кв.м.', ['size' => 12], ['align' => 'left']);
+        $section->addText('Год проведения работ по текущему ремонту:', ['size' => 12], ['align' => Jc::LEFT]);
+        $section->addText('Площадь помещения: ' .  $auditorium->area . ' кв.м.', ['size' => 12], ['align' => Jc::LEFT]);
         $section->addTextBreak();
-        $section->addText('Ответственный за кабинет __________/____________________/', ['size' => 12], ['align' => 'left']);
+        $section->addText('Ответственный за кабинет __________/____________________/', ['size' => 12], ['align' => Jc::LEFT]);
         $fileName = 'auditorium_report.docx';
         return response()->streamDownload(function () use ($phpWord) {
             $writer = IOFactory::createWriter($phpWord, 'Word2007');
@@ -149,22 +149,22 @@ class ReportService
         $organization = $this->organizationRepository->getMainOrganization();
         $phpWord = new PhpWord();
         $phpWord->getSettings()->setUpdateFields(true);
-        $phpWord->addTitleStyle(1, ['bold' => true, 'size' => 16, 'allCaps' => true], ['align' => 'center']);
-        $phpWord->addParagraphStyle('center', ['align' => 'center']);
+        $phpWord->addTitleStyle(1, ['bold' => true, 'size' => 16, 'allCaps' => true], ['align' => Jc::CENTER]);
+        $phpWord->addParagraphStyle(Jc::CENTER, ['align' => Jc::CENTER]);
         $phpWord->addFontStyle('italic14', ['italic' => true, 'size' => 12]);
         $section = $phpWord->addSection();
-        $section->addText($organization->name, ['size' => 14], ['align' => 'center']);
-        $section->addText($organization->address, ['italic' => true, 'size' => 12], ['align' => 'center']);
+        $section->addText($organization->name, ['size' => 14], ['align' => Jc::CENTER]);
+        $section->addText($organization->address, ['italic' => true, 'size' => 12], ['align' => Jc::CENTER]);
         $section->addText('ОБЩИЙ ПАСПОРТ КАБИНЕТОВ',
             ['bold' => true, 'size' => 14, 'allCaps' => true],
-            ['align' => 'center']
+            ['align' => Jc::CENTER]
         );
         $section->addTextBreak();
         foreach ($auditoriums as $auditorium) {
             $section->addTextBreak();
             $section->addText('Кабинет № ' . $auditorium->name,
                 ['italic' => true, 'size' => 12],
-                ['align' => 'center']
+                ['align' => Jc::CENTER]
             );
             $table = $section->addTable([
                 'borderSize' => 6,
@@ -197,7 +197,7 @@ class ReportService
                     ['alignment' => Jc::CENTER]
                 );
                 $table->addRow();
-                $table->addCell(null, ['gridSpan' => 4, 'valign' => 'center'])->addText('ОФИСНАЯ МЕБЕЛЬ',
+                $table->addCell(null, ['gridSpan' => 4, 'valign' => Jc::CENTER])->addText('ОФИСНАЯ МЕБЕЛЬ',
                     ['bold' => true, 'size' => 14, 'allCaps' => true],
                     ['alignment' => Jc::CENTER]
                 );
@@ -223,7 +223,7 @@ class ReportService
                     }
                 }
                 $table->addRow();
-                $table->addCell(null, ['gridSpan' => 4, 'valign' => 'center'])->addText('ОФИСНАЯ ТЕХНИКА',
+                $table->addCell(null, ['gridSpan' => 4, 'valign' => Jc::CENTER])->addText('ОФИСНАЯ ТЕХНИКА',
                     ['bold' => true, 'size' => 14, 'allCaps' => true],
                     ['alignment' => Jc::CENTER]
                 );
@@ -250,15 +250,15 @@ class ReportService
             } else {
                 $section->addText('В кабинете нет объектов материальных ценностей',
                     ['size' => 12, 'italic' => true],
-                    ['align' => 'center']
+                    ['align' => Jc::CENTER]
                 );
             }
             unset($table);
             $section->addTextBreak();
-            $section->addText('Год проведения работ по текущему ремонту:', ['size' => 12], ['align' => 'left']);
-            $section->addText('Площадь помещения: ' .  $auditorium->area . ' кв.м.', ['size' => 12], ['align' => 'left']);
+            $section->addText('Год проведения работ по текущему ремонту:', ['size' => 12], ['align' => Jc::LEFT]);
+            $section->addText('Площадь помещения: ' .  $auditorium->area . ' кв.м.', ['size' => 12], ['align' => Jc::LEFT]);
             $section->addTextBreak();
-            $section->addText('Ответственный за кабинет __________/____________________/', ['size' => 12], ['align' => 'left']);
+            $section->addText('Ответственный за кабинет __________/____________________/', ['size' => 12], ['align' => Jc::LEFT]);
             $section->addPageBreak(); // переход на новую страницу
         }
         $fileName = 'general_auditorium_report.docx';
