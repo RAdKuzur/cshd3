@@ -37,4 +37,13 @@ class LogHelper
             'time' => now()
         ]);
     }
+
+    public static function error(string $message, string $trace)
+    {
+        DB::table('error_logs')->insert([
+            'message' => $message,
+            'trace' => $trace,
+            'time' => now()
+        ]);
+    }
 }
