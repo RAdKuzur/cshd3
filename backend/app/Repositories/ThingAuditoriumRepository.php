@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Helpers\Auth;
+use App\Helpers\LogHelper;
 use App\Models\Log;
 use App\Models\ThingAuditorium;
 use Illuminate\Support\Facades\DB;
@@ -18,50 +19,21 @@ class ThingAuditoriumRepository
     }
     public function create($data)
     {
-        DB::table('logs')->insert([
-            'user_id' => Auth::user()->id,
-            'table' => ThingAuditorium::class,
-            'type' => Log::INSERT,
-            'bindings' => json_encode($data),
-            'extra_bindings' => null,
-            'time' => now()
-        ]);
+        LogHelper::insert(ThingAuditorium::class, $data);
         return DB::table('thing_auditoriums')->insert($data);
     }
     public function update($id, $data){
-        DB::table('logs')->insert([
-            'user_id' => Auth::user()->id,
-            'table' => ThingAuditorium::class,
-            'type' => Log::UPDATE,
-            'bindings' => json_encode($data),
-            'extra_bindings' => json_encode(['id' => $id]),
-            'time' => now()
-        ]);
+        LogHelper::update(ThingAuditorium::class, $data, ['id' => $id]);
         return DB::table('thing_auditoriums')->where('id', $id)->update($data);
     }
     public function delete($id){
-        DB::table('logs')->insert([
-            'user_id' => Auth::user()->id,
-            'table' => ThingAuditorium::class,
-            'type' => Log::DELETE,
-            'bindings' => null,
-            'extra_bindings' => json_encode(['id' => $id]),
-            'time' => now()
-        ]);
+        LogHelper::delete(ThingAuditorium::class, ['id' => $id]);
         return DB::table('thing_auditoriums')->where('id', $id)->delete();
     }
 
     public function deleteByListId(array $ids) {
-        DB::table('logs')->insert([
-            'user_id' => Auth::user()->id,
-            'table' => ThingAuditorium::class,
-            'type' => Log::DELETE,
-            'bindings' => null,
-            'extra_bindings' => json_encode(['ids' => $ids]),
-            'time' => now()
-        ]);
+        LogHelper::delete(ThingAuditorium::class, ['id' => $ids]);
         return DB::table('thing_auditoriums')->whereIn('thing_id', $ids)->delete();
-
     }
 
     public function isPossibleToCreate($thingId, $startDate) : bool
@@ -77,16 +49,9 @@ class ThingAuditoriumRepository
 
     public function updateOldOnCreate($thingId, $endDate)
     {
-        DB::table('logs')->insert([
-            'user_id' => Auth::user()->id,
-            'table' => ThingAuditorium::class,
-            'type' => Log::UPDATE,
-            'bindings' => json_encode(['end_date' => $endDate]),
-            'extra_bindings' => json_encode([
-                'thing_id' => $thingId,
-                'end_date' => null
-            ]),
-            'time' => now()
+        LogHelper::update(ThingAuditorium::class, ['end_date' => $endDate], [
+            'thing_id' => $thingId,
+            'end_date' => null
         ]);
         return DB::table('thing_auditoriums')
             ->where('thing_id', $thingId)
@@ -96,16 +61,9 @@ class ThingAuditoriumRepository
     }
     public function updateOldOnUpdate($thingId, $oldDate, $newDate)
     {
-        DB::table('logs')->insert([
-            'user_id' => Auth::user()->id,
-            'table' => ThingAuditorium::class,
-            'type' => Log::UPDATE,
-            'bindings' => json_encode(['end_date' => $newDate]),
-            'extra_bindings' => json_encode([
-                'thing_id' => $thingId,
-                'end_date' => $oldDate
-            ]),
-            'time' => now()
+        LogHelper::update(ThingAuditorium::class, ['end_date' => $newDate], [
+            'thing_id' => $thingId,
+            'end_date' => $oldDate
         ]);
         return DB::table('thing_auditoriums')
             ->where('thing_id', $thingId)
@@ -115,16 +73,9 @@ class ThingAuditoriumRepository
     }
     public function updateOldOnDelete($thingId, $date)
     {
-        DB::table('logs')->insert([
-            'user_id' => Auth::user()->id,
-            'table' => ThingAuditorium::class,
-            'type' => Log::UPDATE,
-            'bindings' => json_encode(['end_date' => null]),
-            'extra_bindings' => json_encode([
-                'thing_id' => $thingId,
-                'end_date' => $date
-            ]),
-            'time' => now()
+        LogHelper::update(ThingAuditorium::class, ['end_date' => null], [
+            'thing_id' => $thingId,
+            'end_date' => $date
         ]);
         return DB::table('thing_auditoriums')
             ->where('thing_id', $thingId)

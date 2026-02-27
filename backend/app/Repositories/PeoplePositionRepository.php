@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Helpers\Auth;
+use App\Helpers\LogHelper;
 use App\Models\Log;
 use App\Models\PeoplePosition;
 use Illuminate\Support\Facades\DB;
@@ -26,38 +27,17 @@ class PeoplePositionRepository
     }
     public function create($data)
     {
-        DB::table('logs')->insert([
-            'user_id' => Auth::user()->id,
-            'table' => PeoplePosition::class,
-            'type' => Log::INSERT,
-            'bindings' => json_encode($data),
-            'extra_bindings' => null,
-            'time' => now()
-        ]);
+        LogHelper::insert(PeoplePosition::class, $data);
         return DB::table('people_positions')->insertGetId($data);
     }
 
     public function update($id, $data){
-        DB::table('logs')->insert([
-            'user_id' => Auth::user()->id,
-            'table' => PeoplePosition::class,
-            'type' => Log::UPDATE,
-            'bindings' => json_encode($data),
-            'extra_bindings' => json_encode(['id' => $id]),
-            'time' => now()
-        ]);
+        LogHelper::update(PeoplePosition::class, $data, ['id' => $id]);
         DB::table('people_positions')->where('id', $id)->update($data);
     }
 
     public function delete($id){
-        DB::table('logs')->insert([
-            'user_id' => Auth::user()->id,
-            'table' => PeoplePosition::class,
-            'type' => Log::DELETE,
-            'bindings' => null,
-            'extra_bindings' => json_encode(['id' => $id]),
-            'time' => now()
-        ]);
+        LogHelper::delete(PeoplePosition::class, ['id' => $id]);
         return DB::table('people_positions')->where('id', $id)->delete();
     }
 
@@ -74,16 +54,9 @@ class PeoplePositionRepository
 
     public function updateOldOnCreate($peopleId, $endDate)
     {
-        DB::table('logs')->insert([
-            'user_id' => Auth::user()->id,
-            'table' => PeoplePosition::class,
-            'type' => Log::UPDATE,
-            'bindings' => json_encode(['end_date' => $endDate]),
-            'extra_bindings' => json_encode([
-                'people_id' => $peopleId,
-                'end_date' => null
-            ]),
-            'time' => now()
+        LogHelper::update(PeoplePosition::class, ['end_date' => $endDate], [
+            'people_id' => $peopleId,
+            'end_date' => null
         ]);
         return DB::table('people_positions')
             ->where('people_id', $peopleId)
@@ -93,16 +66,9 @@ class PeoplePositionRepository
     }
     public function updateOldOnUpdate($peopleId, $oldDate, $newDate)
     {
-        DB::table('logs')->insert([
-            'user_id' => Auth::user()->id,
-            'table' => PeoplePosition::class,
-            'type' => Log::UPDATE,
-            'bindings' => json_encode(['end_date' => $newDate]),
-            'extra_bindings' => json_encode([
-                'people_id' => $peopleId,
-                'end_date' => $oldDate
-            ]),
-            'time' => now()
+        LogHelper::update(PeoplePosition::class, ['end_date' => $newDate], [
+            'people_id' => $peopleId,
+            'end_date' => $oldDate
         ]);
         return DB::table('people_positions')
             ->where('people_id', $peopleId)
@@ -112,16 +78,9 @@ class PeoplePositionRepository
     }
     public function updateOldOnDelete($peopleId, $date)
     {
-        DB::table('logs')->insert([
-            'user_id' => Auth::user()->id,
-            'table' => PeoplePosition::class,
-            'type' => Log::UPDATE,
-            'bindings' => json_encode(['end_date' => null]),
-            'extra_bindings' => json_encode([
-                'people_id' => $peopleId,
-                'end_date' => $date
-            ]),
-            'time' => now()
+        LogHelper::update(PeoplePosition::class, ['end_date' => null], [
+            'people_id' => $peopleId,
+            'end_date' => $date
         ]);
         return DB::table('people_positions')
             ->where('people_id', $peopleId)
