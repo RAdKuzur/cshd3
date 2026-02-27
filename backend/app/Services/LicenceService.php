@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Dictionaries\LicenceDictionary;
 use App\DTO\LicenceDTO;
+use App\Helpers\LogHelper;
 use App\Models\Licence;
 use App\Repositories\LicenceRepository;
 use Illuminate\Support\Facades\DB;
@@ -36,6 +37,7 @@ class LicenceService
         }
         catch (\Exception $e) {
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
 
     }
@@ -52,6 +54,7 @@ class LicenceService
         }
         catch (\Exception $e) {
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
     }
 
@@ -63,6 +66,7 @@ class LicenceService
         }
         catch (\Exception $e) {
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
     }
 }

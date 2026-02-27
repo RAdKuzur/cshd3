@@ -9,6 +9,7 @@ use App\DTO\TransferActDTO;
 use App\Events\TransferActConfirmChanged;
 use App\Events\TransferActCreated;
 use App\Events\TransferActUpdated;
+use App\Helpers\LogHelper;
 use App\Models\Thing;
 use App\Models\TransferActConfirm;
 use App\Repositories\PeopleRepository;
@@ -139,9 +140,9 @@ class TransferActService
                 TransferActCreated::dispatch($peopleFrom->user, $transferActDTOId);
             }
         }
-        catch (\Exception $exception){
-            Log::debug($exception->getMessage());
+        catch (\Exception $e){
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
     }
     public function update($id, TransferActDTO $transferActDTO){
@@ -176,9 +177,9 @@ class TransferActService
                 TransferActUpdated::dispatch($peopleTo->user, $id);
             }
         }
-        catch (\Exception $exception){
-            Log::debug($exception->getMessage());
+        catch (\Exception $e){
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
     }
 
@@ -222,9 +223,9 @@ class TransferActService
             }
             DB::commit();
         }
-        catch (\Exception $exception){
-            Log::debug($exception->getMessage());
+        catch (\Exception $e){
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
     }
     public function cancelConfirm(TransferActConfirmDTO $transferActConfirmDTO){
@@ -268,9 +269,9 @@ class TransferActService
             }
             DB::commit();
         }
-        catch (\Exception $exception){
-            Log::debug($exception->getMessage());
+        catch (\Exception $e){
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
     }
     public function delete($id)
@@ -287,8 +288,9 @@ class TransferActService
             $this->transferActRepository->delete($transferAct->id);
             DB::commit();
         }
-        catch (\Exception $exception){
+        catch (\Exception $e){
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
     }
 }

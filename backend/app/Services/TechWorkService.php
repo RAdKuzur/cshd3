@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\DTO\TechWorkDTO;
+use App\Helpers\LogHelper;
 use App\Models\TechWork;
 use App\Repositories\TechWorkRepository;
 use Illuminate\Support\Facades\DB;
@@ -39,6 +40,7 @@ class TechWorkService
         }
         catch (\Exception $e) {
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
 
     }
@@ -52,6 +54,7 @@ class TechWorkService
         }
         catch (\Exception $e) {
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
 
     }

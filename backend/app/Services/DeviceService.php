@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\DTO\DeviceDTO;
+use App\Helpers\LogHelper;
 use App\Repositories\DeviceRepository;
 use Illuminate\Support\Facades\DB;
 
@@ -46,6 +47,7 @@ class DeviceService
         }
         catch (\Exception $e) {
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
 
     }
@@ -57,6 +59,7 @@ class DeviceService
         }
         catch (\Exception $e) {
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
 
     }
@@ -68,7 +71,7 @@ class DeviceService
         }
         catch (\Exception $e) {
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
-
     }
 }

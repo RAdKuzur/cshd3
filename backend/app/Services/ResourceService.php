@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\DTO\ResourceDTO;
+use App\Helpers\LogHelper;
 use App\Repositories\ResourceRepository;
 use Illuminate\Support\Facades\DB;
 
@@ -47,6 +48,7 @@ class ResourceService
         }
         catch (\Exception $e) {
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
     }
     public function update($id, ResourceDTO $resourceDTO){
@@ -57,6 +59,7 @@ class ResourceService
         }
         catch (\Exception $e) {
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
 
     }
@@ -68,6 +71,7 @@ class ResourceService
         }
         catch (\Exception $e) {
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
 
     }

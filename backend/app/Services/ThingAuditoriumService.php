@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\DTO\HistoryThingDTO;
 use App\DTO\ThingAuditoriumDTO;
+use App\Helpers\LogHelper;
 use App\Repositories\ThingAuditoriumRepository;
 use App\Repositories\ThingRepository;
 use Illuminate\Support\Facades\DB;
@@ -70,6 +71,7 @@ class ThingAuditoriumService
         }
         catch (\Exception $e) {
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
 
     }
@@ -87,6 +89,7 @@ class ThingAuditoriumService
         }
         catch (\Exception $e) {
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
     }
 
@@ -102,6 +105,7 @@ class ThingAuditoriumService
         }
         catch (\Exception $e) {
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
     }
 }

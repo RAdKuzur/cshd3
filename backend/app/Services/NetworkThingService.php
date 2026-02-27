@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Dictionaries\ThingTypeDictionary;
 use App\DTO\NetworkThingDTO;
 use App\DTO\TelephoneDTO;
+use App\Helpers\LogHelper;
 use App\Repositories\NetworkThingRepository;
 use Illuminate\Support\Facades\DB;
 
@@ -74,6 +75,7 @@ class NetworkThingService
         }
         catch (\Exception $e) {
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
     }
     public function update($id, NetworkThingDTO $networkThingDTO){
@@ -92,6 +94,7 @@ class NetworkThingService
         }
         catch (\Exception $e) {
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
     }
 
@@ -104,6 +107,7 @@ class NetworkThingService
         }
         catch (\Exception $e) {
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
     }
     public function telephonesAll(): array

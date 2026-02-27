@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\DTO\ModelDTO;
+use App\Helpers\LogHelper;
 use App\Repositories\ModelRepository;
 use Illuminate\Support\Facades\DB;
 
@@ -45,6 +46,7 @@ class ModelService
         }
         catch (\Exception $e) {
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
     }
     public function update($id, ModelDTO $modelDTO) {
@@ -55,6 +57,7 @@ class ModelService
         }
         catch (\Exception $e) {
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
     }
     public function delete($id) {
@@ -65,6 +68,7 @@ class ModelService
         }
         catch (\Exception $e) {
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
 
     }

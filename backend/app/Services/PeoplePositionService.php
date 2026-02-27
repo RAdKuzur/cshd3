@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\DTO\HistoryPeopleDTO;
 use App\DTO\PeoplePositionDTO;
+use App\Helpers\LogHelper;
 use App\Repositories\PeoplePositionRepository;
 use App\Repositories\PeopleRepository;
 use Illuminate\Support\Facades\DB;
@@ -74,6 +75,7 @@ class PeoplePositionService
         }
         catch (\Exception $e) {
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
 
     }
@@ -90,8 +92,8 @@ class PeoplePositionService
             DB::commit();
         }
         catch (\Exception $e) {
-            Log::debug($e->getTraceAsString());
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
     }
 
@@ -107,6 +109,7 @@ class PeoplePositionService
         }
         catch (\Exception $e) {
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
     }
 }

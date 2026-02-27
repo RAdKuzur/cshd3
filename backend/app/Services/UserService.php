@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\DTO\User\ProfileDTO;
 use App\DTO\User\UserDTO;
+use App\Helpers\LogHelper;
 use App\Models\User;
 use App\Repositories\AuditoriumResponsibilityRepository;
 use App\Repositories\NotificationRepository;
@@ -115,8 +116,9 @@ class UserService
             $this->peopleRepository->create($data);
             DB::commit();
         }
-        catch (\Exception $exception){
+        catch (\Exception $e){
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
     }
     public function updateUser($id, $data){
@@ -127,8 +129,9 @@ class UserService
             $this->peopleRepository->updateByUserId($user->id, $data);
             DB::commit();
         }
-        catch (\Exception $exception){
+        catch (\Exception $e){
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
     }
     public function delete($id){
@@ -169,8 +172,9 @@ class UserService
             $this->userRepository->delete($id);
             DB::commit();
         }
-        catch (\Exception $exception){
+        catch (\Exception $e){
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
     }
 }

@@ -5,6 +5,7 @@ namespace App\Services;
 use App\DTO\ChangePasswordDTO;
 use App\Events\PasswordChanged;
 use App\Helpers\Auth;
+use App\Helpers\LogHelper;
 use App\Repositories\PermissionRepository;
 use App\Repositories\RuleRepository;
 use App\Repositories\TokenRepository;
@@ -52,6 +53,7 @@ class AuthService
         }
         catch (\Exception $e){
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
         return [
             'refreshToken' => $refreshToken,
@@ -66,6 +68,7 @@ class AuthService
         }
         catch (\Exception $e){
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
     }
     public function isAuth($accessToken, $refreshToken) : bool {
@@ -123,6 +126,7 @@ class AuthService
         }
         catch (\Exception $e){
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
             return [
                 'refreshToken' => null,
                 'accessToken' => null,
@@ -162,6 +166,7 @@ class AuthService
         }
         catch (\Exception $e){
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
     }
 }

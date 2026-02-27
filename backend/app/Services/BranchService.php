@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\DTO\BranchDTO;
+use App\Helpers\LogHelper;
 use App\Repositories\BranchRepository;
 use App\Repositories\OrganizationRepository;
 use Illuminate\Support\Facades\DB;
@@ -50,6 +51,7 @@ class BranchService
         }
         catch (\Exception $e) {
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
     }
     public function update($id, $data){
@@ -60,6 +62,7 @@ class BranchService
         }
         catch (\Exception $e) {
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
     }
     public function delete($id) {
@@ -70,6 +73,7 @@ class BranchService
         }
         catch (\Exception $e) {
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
 
     }

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\DTO\TokenDTO;
+use App\Helpers\LogHelper;
 use App\Repositories\TokenRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\DB;
@@ -48,6 +49,7 @@ class TokenService
         }
         catch (\Exception $e) {
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
     }
     public function allUsername($username) : array {
@@ -78,6 +80,7 @@ class TokenService
         }
         catch (\Exception $e) {
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
 
     }

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\DTO\AuditoriumDTO;
 use App\DTO\AuditoriumMapDTO;
+use App\Helpers\LogHelper;
 use App\Models\Auditorium;
 use App\Models\ThingAuditorium;
 use App\Repositories\AuditoriumRepository;
@@ -88,6 +89,7 @@ class AuditoriumService
         }
         catch (\Exception $e){
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
     }
     public function update($id, AuditoriumDTO $dto){
@@ -98,6 +100,7 @@ class AuditoriumService
         }
         catch (\Exception $e){
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
     }
     public function delete($id){
@@ -115,6 +118,7 @@ class AuditoriumService
         }
         catch (\Exception $e){
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
     }
 }

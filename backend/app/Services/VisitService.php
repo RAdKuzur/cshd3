@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Helpers\LogHelper;
 use App\Repositories\VisitRepository;
 use Illuminate\Support\Facades\DB;
 
@@ -22,6 +23,7 @@ class VisitService
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
     }
 }

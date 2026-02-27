@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\DTO\HistoryResourceDTO;
+use App\Helpers\LogHelper;
 use App\Repositories\HistoryResourceRepository;
 use App\Repositories\ResourceRepository;
 use Illuminate\Support\Facades\DB;
@@ -54,6 +55,7 @@ class HistoryResourceService
         }
         catch (\Exception $e) {
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
     }
     public function update($id, HistoryResourceDTO $historyResourceDTO) {
@@ -69,6 +71,7 @@ class HistoryResourceService
         }
         catch (\Exception $e) {
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
     }
     public function delete($id) {
@@ -84,6 +87,7 @@ class HistoryResourceService
         }
         catch (\Exception $e) {
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
     }
 }

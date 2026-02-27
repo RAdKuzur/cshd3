@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\DTO\FileDTO;
+use App\Helpers\LogHelper;
 use App\Models\File;
 use App\Repositories\FileRepository;
 use Illuminate\Support\Facades\DB;
@@ -50,9 +51,9 @@ class FileService
                     'filename' => $fileDTO->filename
                 ]);
                 DB::commit();
-            } catch (\Exception $exception) {
-                Log::debug($exception->getTraceAsString());
+            } catch (\Exception $e) {
                 DB::rollBack();
+                LogHelper::error($e->getMessage(), $e->getTraceAsString());
             }
         }
     }
@@ -61,9 +62,9 @@ class FileService
         try {
             $this->fileRepository->delete($id);
             DB::commit();
-        } catch (\Exception $exception) {
-            Log::debug($exception->getMessage());
+        } catch (\Exception $e) {
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
     }
     public function getFiles($tableName, $rowId) : array {

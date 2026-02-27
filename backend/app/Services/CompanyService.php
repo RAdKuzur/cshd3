@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\DTO\CompanyDTO;
+use App\Helpers\LogHelper;
 use App\Repositories\CompanyRepository;
 use Illuminate\Support\Facades\DB;
 
@@ -43,6 +44,7 @@ class CompanyService
         }
         catch (\Exception $e) {
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
 
     }
@@ -54,6 +56,7 @@ class CompanyService
         }
         catch (\Exception $e) {
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
 
     }
@@ -65,6 +68,7 @@ class CompanyService
         }
         catch (\Exception $e) {
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
     }
 }

@@ -5,6 +5,7 @@ namespace App\Services;
 
 
 use App\DTO\PositionDTO;
+use App\Helpers\LogHelper;
 use App\Repositories\PositionRepository;
 use Illuminate\Support\Facades\DB;
 
@@ -44,6 +45,7 @@ class PositionService
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
     }
     public function update($id, $data){
@@ -53,6 +55,7 @@ class PositionService
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
     }
     public function delete($id){
@@ -62,6 +65,7 @@ class PositionService
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
     }
 }

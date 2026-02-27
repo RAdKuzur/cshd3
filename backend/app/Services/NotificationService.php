@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Dictionaries\NotificationTypeDictionary;
 use App\DTO\NotificationDTO;
+use App\Helpers\LogHelper;
 use App\Models\Notification;
 use App\Repositories\NotificationRepository;
 use App\Repositories\UserRepository;
@@ -57,6 +58,7 @@ class NotificationService
         }
         catch(\Exception $e){
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
     }
     public function readNotification($notificationId){
@@ -68,6 +70,7 @@ class NotificationService
         }
         catch(\Exception $e){
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
     }
 
@@ -80,6 +83,7 @@ class NotificationService
         }
         catch(\Exception $e){
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
 
     }
@@ -97,6 +101,7 @@ class NotificationService
         }
         catch(\Exception $e){
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
     }
 }

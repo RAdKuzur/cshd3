@@ -7,6 +7,7 @@ use App\Dictionaries\ThingBalanceDictionary;
 use App\Dictionaries\ThingTypeDictionary;
 use App\DTO\Thing\ThingDTO;
 use App\DTO\Thing\UpdateThingDTO;
+use App\Helpers\LogHelper;
 use App\Models\Thing;
 use App\Repositories\BranchRepository;
 use App\Repositories\FileRepository;
@@ -200,10 +201,7 @@ class ThingService
             ];
         } catch (\Exception $e) {
             DB::rollBack();
-            logger()->error('Composite create failed', [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
             return [
                 'error' => 'Error'
             ];
@@ -316,8 +314,8 @@ class ThingService
             );
             DB::commit();
         } catch (\Exception $e) {
-            Log::debug($e->getMessage());
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
     }
 
@@ -414,6 +412,7 @@ class ThingService
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
+            LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
 
     }
