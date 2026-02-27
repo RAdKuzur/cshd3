@@ -46,9 +46,6 @@ class PeoplePositionRepository
         return !DB::table('people_positions')
                 ->where('people_id', $peopleId)
                 ->where('start_date', '>', $startDate)
-                ->exists() && DB::table('people_positions')
-                ->where('people_id', $peopleId)
-                ->where('end_date', null)
                 ->exists();
     }
 

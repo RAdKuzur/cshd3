@@ -41,10 +41,7 @@ class ThingAuditoriumRepository
         return !DB::table('thing_auditoriums')
             ->where('thing_id', $thingId)
             ->where('start_date', '>', $startDate)
-            ->exists() && DB::table('thing_auditoriums')
-                ->where('thing_id', $thingId)
-                ->where('end_date', null)
-                ->exists();
+            ->exists();
     }
 
     public function updateOldOnCreate($thingId, $endDate)
