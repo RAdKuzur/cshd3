@@ -5,6 +5,7 @@ use App\Http\Controllers\AdminBranchController;
 use App\Http\Controllers\AdminPositionController;
 use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\AuditoriumController;
+use App\Http\Controllers\AuditoriumResponsibilityController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\DeviceController;
@@ -203,6 +204,12 @@ Route::middleware([PrometheusMiddleware::class])->group(function () {
                 Route::post('/history/people-positions', [PeoplePositionController::class, 'create'])->name('history-people-positions.create');
                 Route::put('/history/people-positions/{id}', [PeoplePositionController::class, 'update'])->name('history-people-positions.update');
                 Route::delete('/history/people-positions/{id}', [PeoplePositionController::class, 'delete'])->name('history-people-positions.delete');
+
+                Route::get('/history/auditorium-responsibilities', [AuditoriumResponsibilityController::class, 'all'])->name('history-auditorium-responsibilities.all');
+                Route::get('/history/auditorium-responsibilities/{id}', [AuditoriumResponsibilityController::class, 'getOne'])->name('history-auditorium-responsibilities.get-one');
+                Route::post('/history/auditorium-responsibilities', [AuditoriumResponsibilityController::class, 'create'])->name('history-auditorium-responsibilities.create');
+                Route::put('/history/auditorium-responsibilities/{id}', [AuditoriumResponsibilityController::class, 'update'])->name('history-auditorium-responsibilities.update');
+                Route::delete('/history/auditorium-responsibilities/{id}', [AuditoriumResponsibilityController::class, 'delete'])->name('history-auditorium-responsibilities.delete');
 
                 Route::get('/model-resources', [ModelResourceController::class, 'all'])->name('model-resources.all');
                 Route::get('/model-resources/{id}', [ModelResourceController::class, 'getOne'])->name('model-resources.get-one');

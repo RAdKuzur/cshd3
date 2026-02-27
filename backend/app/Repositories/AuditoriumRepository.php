@@ -19,6 +19,10 @@ class AuditoriumRepository
             'thingAuditoriums.thing'
         ])->get();
     }
+    public function getAllWithAuditoriumResponsibilities()
+    {
+        return Auditorium::with(['auditoriumResponsibilities'])->get();
+    }
     public function get($id) : Auditorium {
         return Auditorium::find($id);
     }

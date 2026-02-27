@@ -20,7 +20,7 @@ class AuditoriumResponsibilitySeeder extends Seeder
                 'auditorium_id' => $auditorium->id,
                 'people_id' =>  DB::table('people')->inRandomOrder()->first()->id,
                 'start_date' => now(),
-                'end_date' => now(),
+                'end_date' => null,
             ]);
         }
     }

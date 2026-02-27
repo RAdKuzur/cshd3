@@ -72,6 +72,7 @@ import ReportNetworkPage from "@/pages/report/ReportNetworkPage.vue";
 import InventoryPage from "@/pages/InventoryPage.vue";
 import SecurityPage from "@/pages/SecurityPage.vue";
 import AdminSecurityPage from "@/pages/admin/security/AdminSecurityPage.vue";
+import HistoryAuditoriumResponsibilityPage from "@/pages/history/HistoryAuditoriumResponsibilityPage.vue";
 
 
 const BACKEND_URL = '';
@@ -154,7 +155,7 @@ const routes = [
 
     { path: '/things/history/resources', component: HistoryResourcePage, meta: { auth: true } },
     { path: '/things/history/thing-auditoriums', component: HistoryThingAuditoriumPage, meta: { auth: true } },
-
+    { path: '/things/history/auditorium-responsibilities', component: HistoryAuditoriumResponsibilityPage, meta: { auth: true } },
     { path: '/search', component: SearchPage, meta: { auth: true }},
     { path: '/admin/files', component: FilePage , meta: { auth: true } }
 ]

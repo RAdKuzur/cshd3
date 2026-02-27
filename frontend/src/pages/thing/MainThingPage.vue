@@ -186,6 +186,35 @@
           </div>
         </div>
 
+        <!-- Ответственность за кабинеты (новая карточка) -->
+        <div
+            class="relative overflow-hidden rounded-xl p-6 flex flex-col justify-between
+           bg-gradient-to-br from-pink-500 to-rose-600
+           hover:from-pink-600 hover:to-rose-700
+           transition-all hover:shadow-lg hover:scale-[1.01]
+           cursor-pointer group"
+            @click="navigateTo('/things/history/auditorium-responsibilities')"
+        >
+          <UserGroupIcon
+              class="absolute right-6 top-6 h-12 w-12 text-white/25 pointer-events-none"
+          />
+
+          <div class="pr-16">
+            <h3 class="text-xl font-semibold text-white mb-2">
+              Ответственность за кабинеты
+            </h3>
+            <p class="text-sm text-pink-100 leading-relaxed">
+              Назначение ответственных лиц и закрепление кабинетов за сотрудниками
+            </p>
+          </div>
+
+          <div class="mt-6 flex justify-end">
+            <ArrowRightIcon
+                class="h-5 w-5 text-white transition-transform group-hover:translate-x-1"
+            />
+          </div>
+        </div>
+
         <!-- Акты -->
         <div
             class="relative overflow-hidden rounded-xl p-6 flex flex-col justify-between
@@ -261,6 +290,7 @@ import {
   DevicePhoneMobileIcon,
   ArchiveBoxIcon,
   ClockIcon,
+  UserGroupIcon, // Добавлен новый импорт
 } from '@heroicons/vue/24/outline'
 
 const router = useRouter()
@@ -271,10 +301,11 @@ const categories = ref({
   devices: 38,
   furniture: 28,
   resources: 156,
-  resourcesHistory: 245, // Добавлено для истории перемещений (количество операций)
+  resourcesHistory: 245,
   other: 19,
   acts: 15,
-  network: 25
+  network: 25,
+  auditoriumResponsibilities: 32 // Добавлено для ответственности за кабинеты
 })
 
 // Методы
