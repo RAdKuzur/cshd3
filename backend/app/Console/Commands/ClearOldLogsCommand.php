@@ -31,5 +31,10 @@ class ClearOldLogsCommand extends Command
                 seconds: 60
             ))->delete();
         }
+        if (DB::table('error_logs')->exists()) {
+            DB::table('error_logs')->where('time', '<', now()->minus(
+                seconds: 60
+            ))->delete();
+        }
     }
 }
