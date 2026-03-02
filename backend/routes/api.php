@@ -39,9 +39,20 @@ use App\Http\Middleware\PrometheusMiddleware;
 use App\Http\Middleware\TechWorkMiddleware;
 use Illuminate\Support\Facades\Route;
 
+
 Route::get('/metrics', [MetricsController::class, 'metrics'])->name('metrics');
 Route::get('/test', [TestController::class, 'test'])->name('test');
 Route::get('/tests', [TestController::class, 'tests'])->name('tests');
+
+Route::get('/test-ip', function() {
+    return [
+        'ip_method' => request()->ip(),
+        'server_remote_addr' => request()->server('REMOTE_ADDR'),
+        'header_x_forwarded_for' => request()->header('X-Forwarded-For'),
+        'header_x_real_ip' => request()->header('X-Real-IP'),
+        'all_ips' => request()->getClientIps(),
+    ];
+});
 
 Route::middleware([PrometheusMiddleware::class])->group(function () {
 

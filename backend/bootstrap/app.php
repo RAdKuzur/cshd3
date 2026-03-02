@@ -26,6 +26,9 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 //        $middleware->append(AuthMiddleware::class);
     })
+    ->withMiddleware(function ($middleware) {
+        $middleware->trustProxies(at: ['172.19.0.0/16']);
+    })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
     })->create();
