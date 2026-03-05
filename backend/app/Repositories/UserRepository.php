@@ -65,7 +65,6 @@ class UserRepository
 
     public function update($id, $data)
     {
-        LogHelper::update(User::class, $data, ['id' => $id]);
         return DB::table('users')->where('id', $id)->update($data);
     }
     public function delete($id)
