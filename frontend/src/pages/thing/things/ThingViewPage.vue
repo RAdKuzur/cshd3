@@ -201,13 +201,82 @@
             </div>
           </div>
         </div>
+      </div>
 
-        <!-- Подробная информация о назначении кабинета -->
-<!--        <div v-if="getAuditoriumComment(thing?.auditorium_id) && getAuditoriumComment(thing?.auditorium_id) !== 'Не указано'"-->
-<!--             class="mt-4 bg-blue-50 border border-blue-100 rounded-lg p-4">-->
-<!--          <div class="text-sm font-medium text-gray-700 mb-2">Подробное описание:</div>-->
-<!--          <div class="text-gray-600 whitespace-pre-line">{{ getAuditoriumComment(thing?.auditorium_id) }}</div>-->
-<!--        </div>-->
+      <!-- История перемещений -->
+      <div v-if="!isLoading && thing && !error" class="bg-white shadow-lg border border-gray-200 p-6 mb-6">
+        <h2 class="text-xl font-semibold text-gray-900 mb-6 pb-2 border-b border-gray-200 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            История перемещений
+          </div>
+          <span v-if="historyLoading" class="text-sm text-gray-500">Загрузка...</span>
+        </h2>
+
+        <!-- Индикатор загрузки истории -->
+        <div v-if="historyLoading" class="flex justify-center items-center py-8">
+          <div class="text-gray-600">Загрузка истории...</div>
+        </div>
+
+        <!-- Сообщение об ошибке загрузки истории -->
+        <div v-else-if="historyError" class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
+          <div class="flex items-center">
+            <svg class="w-5 h-5 text-yellow-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span class="text-yellow-800">{{ historyError }}</span>
+          </div>
+        </div>
+
+        <!-- Таблица истории -->
+        <div v-else-if="historyItems.length > 0" class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+            <tr>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Дата
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                От кого
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Кому
+              </th>
+            </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+            <tr v-for="(item, index) in historyItems" :key="item.id"
+                :class="{ 'bg-gray-50': index % 2 === 0 }">
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                {{ formatDate(item.date) }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                <div v-if="item.from">
+                  <div class="font-medium">{{ getPersonName(item.from) }}</div>
+                </div>
+                <span v-else class="text-gray-400 italic">-</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                <div v-if="item.to">
+                  <div class="font-medium">{{ getPersonName(item.to) }}</div>
+
+                </div>
+                <span v-else class="text-gray-400 italic">-</span>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Пустая история -->
+        <div v-else class="text-center py-8 text-gray-500">
+          <svg class="w-12 h-12 mx-auto text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <p>История перемещений отсутствует</p>
+        </div>
       </div>
 
       <!-- Комментарий -->
@@ -222,45 +291,12 @@
         </div>
       </div>
 
-      <!-- Дополнительная информация -->
-<!--      <div v-if="!isLoading && thing && !error" class="bg-white shadow-lg border border-gray-200 p-6">
-        <h2 class="text-xl font-semibold text-gray-900 mb-4">Системная информация</h2>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div>
-            <div class="text-sm font-medium text-gray-500 mb-1">ID предмета</div>
-            <div class="text-lg font-mono text-gray-900">{{ thing?.id || 'Не указан' }}</div>
-          </div>
-
-          <div>
-            <div class="text-sm font-medium text-gray-500 mb-1">Дата создания</div>
-            <div class="text-lg text-gray-900">{{ formatDate(thing?.created_at) || 'Не указана' }}</div>
-          </div>
-
-          <div>
-            <div class="text-sm font-medium text-gray-500 mb-1">Последнее обновление</div>
-            <div class="text-lg text-gray-900">{{ formatDate(thing?.updated_at) || 'Не указана' }}</div>
-          </div>
-        </div>
-      </div>-->
-
       <!-- Действия -->
       <div v-if="!isLoading && thing && !error" class="mt-8 flex items-center justify-between bg-white shadow-lg border border-gray-200 p-6">
         <div class="text-sm text-gray-500">
-<!--          Статус: <span class="font-medium text-green-600">Активный</span>-->
         </div>
 
         <div class="flex items-center gap-3">
-<!--          <button-->
-<!--              @click="handlePrint"-->
-<!--              class="px-4 py-2 border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors flex items-center gap-2"-->
-<!--          >-->
-<!--            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">-->
-<!--              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />-->
-<!--            </svg>-->
-<!--            Печать-->
-<!--          </button>-->
-
           <button
               @click="handleDelete"
               class="px-4 py-2 bg-red-600 text-white font-medium hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors flex items-center gap-2"
@@ -289,11 +325,17 @@ const router = useRouter()
 const thing = ref(null)
 const auditoriums = ref([])
 const branches = ref({})
+const people = ref({}) // Словарь для хранения информации о людях
 const isLoading = ref(true)
 const error = ref(null)
 const conditionsMap = ref({})
 const typeMap = ref({})
 const balanceTypes = ref({})
+
+// Данные истории
+const historyItems = ref([])
+const historyLoading = ref(false)
+const historyError = ref(null)
 
 // Вычисляемое свойство для текущей аудитории
 const currentAuditorium = computed(() => {
@@ -308,7 +350,8 @@ onMounted(async () => {
     loadConditions(),
     loadAuditoriums(),
     loadBalanceTypes(),
-    loadBranches() // Загружаем отделы
+    loadBranches(),
+    loadHistory() // Загружаем историю
   ])
 })
 
@@ -329,7 +372,6 @@ const loadThingData = async () => {
     }
 
   } catch (err) {
-
     if (err.response) {
       if (err.response.status === 404) {
         error.value = 'Предмет не найден'
@@ -344,6 +386,87 @@ const loadThingData = async () => {
   } finally {
     isLoading.value = false
   }
+}
+
+// Загрузка истории перемещений
+const loadHistory = async () => {
+  try {
+    historyLoading.value = true
+    historyError.value = null
+    const thingId = route.params.id
+
+    const response = await axios.get(`${BACKEND_URL}/api/things/${thingId}/history`)
+    const data = response.data
+
+    if (data.success && data.data) {
+      historyItems.value = data.data.sort((a, b) => new Date(b.date) - new Date(a.date))
+
+      // Собираем все ID людей из истории
+      const personIds = new Set()
+      historyItems.value.forEach(item => {
+        if (item.from) personIds.add(item.from)
+        if (item.to) personIds.add(item.to)
+      })
+
+      // Загружаем информацию о людях
+      await loadPeople([...personIds])
+    } else {
+      historyItems.value = []
+    }
+  } catch (err) {
+    if (err.response?.status === 404) {
+      historyItems.value = []
+    } else {
+      historyError.value = 'Не удалось загрузить историю перемещений'
+    }
+  } finally {
+    historyLoading.value = false
+  }
+}
+
+// Загрузка информации о людях
+const loadPeople = async (personIds) => {
+  if (!personIds.length) return
+
+  try {
+    // Загружаем весь список людей
+    const response = await axios.get(`${BACKEND_URL}/api/people`)
+    const data = response.data
+
+    if (data.success && data.data) {
+      // Создаем словарь для быстрого доступа по ID
+      const peopleMap = {}
+      data.data.forEach(person => {
+        peopleMap[person.id] = person
+      })
+      people.value = peopleMap
+    }
+  } catch (err) {
+    console.error('Ошибка загрузки списка людей:', err)
+    // В случае ошибки создаем заглушки только для нужных ID
+    const fallbackPeople = {}
+    personIds.forEach(id => {
+      fallbackPeople[id] = { id, full_name: `Пользователь ${id}` }
+    })
+    people.value = fallbackPeople
+  }
+}
+
+// Получение имени человека по ID
+const getPersonName = (personId) => {
+  if (!personId) return 'Не указан'
+
+  const person = people.value[personId]
+  if (!person) return `ID: ${personId}`
+
+  // Формируем ФИО из полей firstname, surname, patronymic
+  const parts = []
+  if (person.surname) parts.push(person.surname)
+  if (person.firstname) parts.push(person.firstname)
+  if (person.patronymic) parts.push(person.patronymic)
+
+  const fullName = parts.join(' ').trim()
+  return fullName || `Пользователь ${personId}`
 }
 
 // Загрузка характеристик учёта

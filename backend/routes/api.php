@@ -104,6 +104,8 @@ Route::middleware([PrometheusMiddleware::class])->group(function () {
                 Route::put('/things/{id}', [ThingController::class, 'update'])->name('things.update');
                 Route::delete('/things/{id}', [ThingController::class, 'delete'])->name('things.delete');
 
+                Route::get('/things/{id}/history', [ThingController::class, 'history'])->name('things.history');
+
                 Route::get('/auditoriums/map', [AuditoriumController::class, 'map'])->name('auditoriums.map');
 
                 Route::get('/admin/positions', [AdminPositionController::class, 'all'])->name('admin.positions.all');

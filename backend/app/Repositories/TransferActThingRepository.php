@@ -10,6 +10,14 @@ use Illuminate\Support\Facades\DB;
 
 class TransferActThingRepository
 {
+    public function getByThingIdWithTransferAct($thingId)
+    {
+        return TransferActThing::with([
+            'transferAct',
+            'transferAct.toPerson',
+            'transferAct.fromPerson',
+        ])->where(['thing_id' => $thingId])->get();
+    }
     public function create($data){
         LogHelper::insert(TransferActThing::class, $data);
         return DB::table('transfer_act_things')->insert($data);

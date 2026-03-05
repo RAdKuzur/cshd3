@@ -150,4 +150,13 @@ class ThingController extends Controller
             'data' => $data,
         ]);
     }
+
+    public function history($id)
+    {
+        $data = $this->thingService->historyThingTransferAct($id);
+        return response()->json([
+            'success' => true,
+            'data' => $data
+        ]);
+    }
 }

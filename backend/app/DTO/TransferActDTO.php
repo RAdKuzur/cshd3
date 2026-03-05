@@ -74,4 +74,16 @@ class TransferActDTO implements DTO
             'confirmed' => $this->confirmed
         ];
     }
+
+    public function toArrayWithId()
+    {
+        return [
+            'id' => $this->id,
+            'from' => $this->from,
+            'to' => $this->to,
+            'date' => $this->date,
+            'type' => $this->type,
+            'confirmed' => $this->confirmed
+        ];
+    }
 }

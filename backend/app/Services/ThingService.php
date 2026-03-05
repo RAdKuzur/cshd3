@@ -7,6 +7,7 @@ use App\Dictionaries\ThingBalanceDictionary;
 use App\Dictionaries\ThingTypeDictionary;
 use App\DTO\Thing\ThingDTO;
 use App\DTO\Thing\UpdateThingDTO;
+use App\DTO\TransferActDTO;
 use App\Helpers\LogHelper;
 use App\Models\Thing;
 use App\Repositories\BranchRepository;
@@ -415,5 +416,21 @@ class ThingService
             LogHelper::error($e->getMessage(), $e->getTraceAsString());
         }
 
+    }
+
+    public function historyThingTransferAct($id)
+    {
+        $data = [];
+        $transferActThings = $this->transferActThingRepository->getByThingIdWithTransferAct($id);
+        foreach ($transferActThings as $transferActThing) {
+            $transferAct = new TransferActDTO(
+                id: $transferActThing->id,
+                from: $transferActThing->transferAct->fromPerson?->people_id,
+                to: $transferActThing->transferAct->toPerson?->people_id,
+                date: $transferActThing->transferAct->date,
+            );
+            $data[] = $transferAct->toArrayWithId();
+        }
+        return $data;
     }
 }
