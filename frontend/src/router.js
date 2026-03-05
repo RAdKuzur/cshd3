@@ -76,6 +76,7 @@ import HistoryAuditoriumResponsibilityPage from "@/pages/history/HistoryAuditori
 
 
 const BACKEND_URL = '';
+export const FILES_URL = 'http://localhost:6611';//TODO URL NEEDS MECHANISM FOR SETTING UP
 
 const routes = [
     { path: '/', redirect: '/home' },

@@ -272,6 +272,83 @@
             </div>
           </div>
         </div>
+
+        <!-- Файлы -->
+        <div class="bg-white rounded-2xl shadow-lg border overflow-hidden">
+          <div class="p-6">
+
+            <div class="flex justify-between items-center mb-4">
+              <h2 class="text-xl font-bold text-gray-900">Файлы</h2>
+
+              <div v-if="act.confirmed === 2" class="flex items-center gap-4">
+
+                <input
+                    ref="fileInput"
+                    type="file"
+                    class="hidden"
+                    @change="handleFileUpload"
+                />
+
+                <button
+                    @click="triggerFileSelect"
+                    class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
+                >
+                  Выбрать файл
+                </button>
+
+                <span v-if="selectedFileName" class="text-sm text-gray-600 truncate max-w-xs">
+                    {{ selectedFileName }}
+                </span>
+
+              </div>
+
+            </div>
+
+            <div v-if="files.length === 0" class="text-gray-500">
+              Файлы отсутствуют
+            </div>
+
+            <div v-else class="space-y-4">
+              <div v-for="file in files" :key="file.id"
+                   class="flex items-center justify-between border p-3 rounded">
+
+                <div>
+                  <!-- Картинка -->
+                  <a
+                      v-if="isImage(file.filename)"
+                      :href="getFileUrl(file.file_id)"
+                      :download="file.filename"
+                  >
+                    <img
+                        :src="getFileUrl(file.file_id)"
+                        class="w-32 rounded border cursor-pointer"
+                    />
+                  </a>
+
+                  <!-- Документ -->
+                  <a
+                      v-else
+                      :href="getFileUrl(file.file_id)"
+                      target="_blank"
+                      class="text-blue-600 underline"
+                  >
+                    {{ file.filename }}
+                  </a>
+                </div>
+
+                <button
+                    v-if="act.confirmed === 2"
+                    @click="deleteFile(file)"
+                    class="text-red-600"
+                >
+                  Удалить
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
       </div>
 
       <!-- Сообщение об ошибке -->
@@ -301,12 +378,13 @@
 import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios'
-import { BACKEND_URL } from '@/router.js'
+import { BACKEND_URL, FILES_URL } from '@/router.js'
 import { useAuthContextStore } from "@/services/AuthContext.js"
-
 const route = useRoute()
 const router = useRouter()
 const authStore = useAuthContextStore()
+
+const files = ref([])
 
 const isLoading = ref(false)
 const isConfirming = ref(false)
@@ -488,12 +566,95 @@ const loadActData = async () => {
       confirmations: Array.isArray(actData.confirmations) ? actData.confirmations : []
     }
 
+
+
+
   } catch (err) {
     error.value = err.response?.data?.message || err.message || 'Ошибка загрузки данных'
     things.value = []
   } finally {
     isLoading.value = false
   }
+
+  try {
+    const filesRes = await GetFilesListPHP('transfer_acts', actId)
+
+    if (filesRes.data && filesRes.data.success) {
+      files.value = filesRes.data.data
+    } else {
+      files.value = []
+    }
+  } catch (err)
+  {
+    files.value = []
+  }
+
+}
+
+const fileInput = ref(null)
+const selectedFileName = ref('')
+
+const triggerFileSelect = () => {
+  fileInput.value.click()
+}
+
+const handleFileUpload = async (event) => {
+  const file = event.target.files[0]
+  if (!file) return
+
+  selectedFileName.value = file.name
+
+  if (act.value.confirmed !== 2) {
+    error.value = 'Акт должен быть подтверждён'
+    return
+  }
+
+  try {
+    const formData = new FormData()
+    formData.append('file', file)
+
+    const goRes = await createFile(formData)
+
+    await createFilePHP({
+      table_name: 'transfer_acts',
+      row_id: act.value.id,
+      file_id: goRes.data.data.file_id,
+      filename: goRes.data.data.original_name
+    })
+
+    successMessage.value = 'Файл загружен'
+    await loadActData()
+
+  } catch (err) {
+    console.log(err)
+    error.value = 'Ошибка загрузки файла'
+  }
+}
+
+const deleteFile = async (file) => {
+  if (!confirm('Удалить файл?')) return
+
+  try {
+    // 1. удаляем связь в PHP
+    await DeleteFilePHP(file.id)
+
+    // 2. удаляем физически из Go-сервиса
+    await DeleteFile(file.file_id)
+
+    successMessage.value = 'Файл удалён'
+    await loadActData()
+
+  } catch {
+    error.value = 'Ошибка удаления файла'
+  }
+}
+
+const isImage = (filename) => {
+  return /\.(jpg|jpeg|png|gif|webp)$/i.test(filename)
+}
+
+const getFileUrl = (fileId) => {
+  return FILES_URL + '/' + fileId
 }
 
 // Подтверждение акта
@@ -643,6 +804,7 @@ onMounted(() => {
 
 // Наблюдаем за изменением ID в маршруте
 import { watch } from 'vue'
+import {createFile, createFilePHP, DeleteFile, DeleteFilePHP, GetFilesListPHP} from "@/requests/FilesRequest.js";
 watch(() => route.params.id, () => {
   loadActData()
 })
