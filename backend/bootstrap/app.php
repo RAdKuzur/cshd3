@@ -22,10 +22,11 @@ return Application::configure(basePath: dirname(__DIR__))
         $schedule->command('app:licence-check')->everyMinute();
     })
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->append(\Illuminate\Http\Middleware\TrustProxies::class);
         $middleware->api(prepend: [
             \Illuminate\Http\Middleware\HandleCors::class,
         ]);
-//        $middleware->append(AuthMiddleware::class);
+        $middleware->trustProxies(at: '*');
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
