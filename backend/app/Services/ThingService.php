@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Dictionaries\ConditionDictionary;
 use App\Dictionaries\ThingBalanceDictionary;
 use App\Dictionaries\ThingTypeDictionary;
+use App\Dictionaries\TransferActStatusDictionary;
 use App\DTO\Thing\ThingDTO;
 use App\DTO\Thing\UpdateThingDTO;
 use App\DTO\TransferActDTO;
@@ -423,13 +424,15 @@ class ThingService
         $data = [];
         $transferActThings = $this->transferActThingRepository->getByThingIdWithTransferAct($id);
         foreach ($transferActThings as $transferActThing) {
-            $transferAct = new TransferActDTO(
-                id: $transferActThing->id,
-                from: $transferActThing->transferAct->fromPerson?->people_id,
-                to: $transferActThing->transferAct->toPerson?->people_id,
-                date: $transferActThing->transferAct->date,
-            );
-            $data[] = $transferAct->toArrayWithId();
+            if ($transferActThing->transferAct->confirmed === TransferActStatusDictionary::CONFIRMED) {
+                $transferAct = new TransferActDTO(
+                    id: $transferActThing->transferAct->id,
+                    from: $transferActThing->transferAct->fromPerson?->people_id,
+                    to: $transferActThing->transferAct->toPerson?->people_id,
+                    date: $transferActThing->transferAct->date,
+                );
+                $data[] = $transferAct->toArrayWithId();
+            }
         }
         return $data;
     }
