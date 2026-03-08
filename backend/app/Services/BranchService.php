@@ -4,21 +4,38 @@ namespace App\Services;
 
 use App\DTO\BranchDTO;
 use App\Helpers\LogHelper;
+use App\Repositories\AuditoriumRepository;
+use App\Repositories\AuditoriumResponsibilityRepository;
 use App\Repositories\BranchRepository;
 use App\Repositories\OrganizationRepository;
+use App\Repositories\PeoplePositionRepository;
+use App\Repositories\ThingAuditoriumRepository;
 use Illuminate\Support\Facades\DB;
 
 class BranchService
 {
     public BranchRepository $branchRepository;
     public OrganizationRepository $organizationRepository;
+    public PeoplePositionRepository $peoplePositionRepository;
+    public AuditoriumRepository $auditoriumRepository;
+    public AuditoriumResponsibilityRepository $auditoriumResponsibilityRepository;
+    public ThingAuditoriumRepository $thingAuditoriumRepository;
+
     public function __construct(
         BranchRepository $branchRepository,
-        OrganizationRepository $organizationRepository
+        OrganizationRepository $organizationRepository,
+        PeoplePositionRepository $peoplePositionRepository,
+        AuditoriumRepository $auditoriumRepository,
+        AuditoriumResponsibilityRepository $auditoriumResponsibilityRepository,
+        ThingAuditoriumRepository $thingAuditoriumRepository
     )
     {
         $this->branchRepository = $branchRepository;
         $this->organizationRepository = $organizationRepository;
+        $this->peoplePositionRepository = $peoplePositionRepository;
+        $this->auditoriumRepository = $auditoriumRepository;
+        $this->auditoriumResponsibilityRepository = $auditoriumResponsibilityRepository;
+        $this->thingAuditoriumRepository = $thingAuditoriumRepository;
     }
 
     public function all() : array {
@@ -68,6 +85,19 @@ class BranchService
     public function delete($id) {
         DB::beginTransaction();
         try {
+            $branch = $this->branchRepository->get($id);
+            foreach ($branch->peoplePositions as $peoplePosition){
+                $this->peoplePositionRepository->delete($id);
+            }
+            foreach ($branch->auditoriums as $auditorium){
+                foreach($auditorium->auditoriumResponsibilities as $auditoriumResponsibility){
+                    $this->auditoriumResponsibilityRepository->delete($auditoriumResponsibility->id);
+                }
+                foreach ($auditorium->thingAuditoriums as $thingAuditorium) {
+                    $this->thingAuditoriumRepository->delete($thingAuditorium->id);
+                }
+                $this->auditoriumRepository->delete($auditorium->id);
+            }
             $this->branchRepository->delete($id);
             DB::commit();
         }

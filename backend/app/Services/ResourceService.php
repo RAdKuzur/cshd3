@@ -4,17 +4,25 @@ namespace App\Services;
 
 use App\DTO\ResourceDTO;
 use App\Helpers\LogHelper;
+use App\Repositories\HistoryResourceRepository;
+use App\Repositories\ModelResourceRepository;
 use App\Repositories\ResourceRepository;
 use Illuminate\Support\Facades\DB;
 
 class ResourceService
 {
     public ResourceRepository $resourceRepository;
+    public ModelResourceRepository $modelResourceRepository;
+    public HistoryResourceRepository $historyResourceRepository;
     public function __construct(
-        ResourceRepository $resourceRepository
+        ResourceRepository $resourceRepository,
+        ModelResourceRepository $modelResourceRepository,
+        HistoryResourceRepository $historyResourceRepository
     )
     {
         $this->resourceRepository = $resourceRepository;
+        $this->modelResourceRepository = $modelResourceRepository;
+        $this->historyResourceRepository = $historyResourceRepository;
     }
     public function all() : array
     {
@@ -66,6 +74,13 @@ class ResourceService
     public function delete($id){
         DB::beginTransaction();
         try {
+            $resource = $this->resourceRepository->getById($id);
+            foreach($resource->modelResources as $modelResource){
+                $this->modelResourceRepository->delete($modelResource->id);
+            }
+            foreach($resource->historyResources as $historyResource){
+                $this->historyResourceRepository->delete($historyResource->id);
+            }
             $this->resourceRepository->delete($id);
             DB::commit();
         }

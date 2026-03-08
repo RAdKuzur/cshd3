@@ -6,17 +6,21 @@ namespace App\Services;
 
 use App\DTO\PositionDTO;
 use App\Helpers\LogHelper;
+use App\Repositories\PeoplePositionRepository;
 use App\Repositories\PositionRepository;
 use Illuminate\Support\Facades\DB;
 
 class PositionService
 {
     private PositionRepository $positionRepository;
+    private PeoplePositionRepository $peoplePositionRepository;
     public function __construct(
-        PositionRepository $positionRepository
+        PositionRepository $positionRepository,
+        PeoplePositionRepository $peoplePositionRepository
     )
     {
         $this->positionRepository = $positionRepository;
+        $this->peoplePositionRepository = $peoplePositionRepository;
     }
 
     public function all() : array {
@@ -61,6 +65,10 @@ class PositionService
     public function delete($id){
         DB::beginTransaction();
         try {
+            $position = $this->positionRepository->get($id);
+            foreach($position->peoplePositions as $peoplePosition){
+                $this->peoplePositionRepository->delete($peoplePosition->id);
+            }
             $this->positionRepository->delete($id);
             DB::commit();
         } catch (\Exception $e) {

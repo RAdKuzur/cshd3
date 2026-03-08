@@ -25,7 +25,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  *
  * @property ThingAuditorium[] $thingAuditoriums
  * @property TransferActThing[] $transferActThings
- * @property NetworkThing $networkThings
+ * @property NetworkThing $networkThing
  * @property Device $device
 */
 

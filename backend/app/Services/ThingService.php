@@ -12,6 +12,7 @@ use App\DTO\TransferActDTO;
 use App\Helpers\LogHelper;
 use App\Models\Thing;
 use App\Repositories\BranchRepository;
+use App\Repositories\DeviceRepository;
 use App\Repositories\FileRepository;
 use App\Repositories\NetworkThingRepository;
 use App\Repositories\ThingAuditoriumRepository;
@@ -33,6 +34,7 @@ class ThingService
     public FileRepository $fileRepository;
     public ElasticsearchService $elasticsearchService;
     public UserRepository $userRepository;
+    public DeviceRepository $deviceRepository;
     public function __construct(
         ThingRepository $thingRepository,
         TransferActRepository $transferActRepository,
@@ -42,7 +44,8 @@ class ThingService
         NetworkThingRepository $networkThingRepository,
         FileRepository $fileRepository,
         ElasticsearchService $elasticsearchService,
-        UserRepository $userRepository
+        UserRepository $userRepository,
+        DeviceRepository $deviceRepository
     ) {
         $this->thingRepository = $thingRepository;
         $this->transferActRepository = $transferActRepository;
@@ -53,6 +56,7 @@ class ThingService
         $this->fileRepository = $fileRepository;
         $this->elasticsearchService = $elasticsearchService;
         $this->userRepository = $userRepository;
+        $this->deviceRepository = $deviceRepository;
     }
 
     public function electronics(): array
@@ -402,9 +406,8 @@ class ThingService
             foreach ($thing->transferActThings as $transferActThing) {
                 $this->transferActThingRepository->delete($transferActThing->id);
             }
-            foreach($thing->networkThings as $networkThing) {
-                $this->networkThingRepository->delete($networkThing->id);
-            }
+            $this->networkThingRepository->delete($thing->networkThing->id);
+            $this->deviceRepository->delete($thing->device->id);
             $files = $this->fileRepository->getFiles('things', $thing->id);
             foreach ($files as $file) {
                 $this->fileRepository->delete($file->id);

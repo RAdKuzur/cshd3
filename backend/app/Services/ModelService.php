@@ -4,17 +4,25 @@ namespace App\Services;
 
 use App\DTO\ModelDTO;
 use App\Helpers\LogHelper;
+use App\Repositories\DeviceRepository;
 use App\Repositories\ModelRepository;
+use App\Repositories\ModelResourceRepository;
 use Illuminate\Support\Facades\DB;
 
 class ModelService
 {
     public ModelRepository $modelRepository;
+    public DeviceRepository $deviceRepository;
+    public ModelResourceRepository $modelResourceRepository;
     public function __construct(
-        ModelRepository $modelRepository
+        ModelRepository $modelRepository,
+        DeviceRepository $deviceRepository,
+        ModelResourceRepository $modelResourceRepository
     )
     {
         $this->modelRepository = $modelRepository;
+        $this->deviceRepository = $deviceRepository;
+        $this->modelResourceRepository = $modelResourceRepository;
     }
     public function all() : array
     {
@@ -63,6 +71,13 @@ class ModelService
     public function delete($id) {
         DB::beginTransaction();
         try {
+            $model = $this->modelRepository->getById($id);
+            foreach($model->devices as $device) {
+                $this->deviceRepository->delete($device->id);
+            }
+            foreach($model->modelResources as $modelResource) {
+                $this->modelResourceRepository->delete($modelResource->id);
+            }
             $this->modelRepository->delete($id);
             DB::commit();
         }
