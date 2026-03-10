@@ -5,6 +5,7 @@ namespace App\Services;
 use App\DTO\PeopleDTO;
 use App\DTO\StaffDTO;
 use App\Repositories\BranchRepository;
+use App\Repositories\FileRepository;
 use App\Repositories\PeoplePositionRepository;
 use App\Repositories\PeopleRepository;
 
@@ -13,15 +14,18 @@ class PeopleService
     public PeopleRepository $peopleRepository;
     public BranchRepository $branchRepository;
     public PeoplePositionRepository $peoplePositionRepository;
+    public FileRepository $fileRepository;
     public function __construct(
         PeopleRepository $peopleRepository,
         BranchRepository $branchRepository,
-        PeoplePositionRepository $peoplePositionRepository
+        PeoplePositionRepository $peoplePositionRepository,
+        FileRepository $fileRepository
     )
     {
         $this->peopleRepository = $peopleRepository;
         $this->branchRepository = $branchRepository;
         $this->peoplePositionRepository = $peoplePositionRepository;
+        $this->fileRepository = $fileRepository;
     }
     public function staffAll() : array
     {
@@ -37,7 +41,7 @@ class PeopleService
                     position: $person->position->name,
                     auditorium: $person->people->auditorium->name,
                     start_date: $person->start_date,
-                    icon_link: $person->people->icon_link
+                    icon_link: $this->fileRepository->getAvatarFile($person->people->user_id)?->file_id
                 );
             }
             $data[] = [

@@ -6,6 +6,7 @@ use App\DTO\ChangePasswordDTO;
 use App\Events\PasswordChanged;
 use App\Helpers\Auth;
 use App\Helpers\LogHelper;
+use App\Repositories\FileRepository;
 use App\Repositories\PermissionRepository;
 use App\Repositories\RuleRepository;
 use App\Repositories\TokenRepository;
@@ -20,17 +21,20 @@ class AuthService
     private PermissionRepository $permissionRepository;
     private RuleRepository $ruleRepository;
     private UserRepository $userRepository;
+    private FileRepository $fileRepository;
     public function __construct(
         TokenRepository $tokenRepository,
         PermissionRepository $permissionRepository,
         RuleRepository $ruleRepository,
-        UserRepository $userRepository
+        UserRepository $userRepository,
+        FileRepository $fileRepository
     )
     {
         $this->tokenRepository = $tokenRepository;
         $this->permissionRepository = $permissionRepository;
         $this->ruleRepository = $ruleRepository;
         $this->userRepository = $userRepository;
+        $this->fileRepository = $fileRepository;
     }
 
     public function login($user) : array
@@ -121,7 +125,7 @@ class AuthService
                 'username' => $user->username,
                 'fio' => $user->people->getFullFio(),
                 'role' => $user->role,
-                'icon_link' => $user->people->icon_link
+                'icon_link' => $this->fileRepository->getAvatarFile($user->id)?->file_id
             ];
         }
         catch (\Exception $e){

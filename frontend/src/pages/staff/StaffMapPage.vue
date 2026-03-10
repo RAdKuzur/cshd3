@@ -141,7 +141,7 @@
 import { ref, computed, onMounted } from 'vue'
 import axios from 'axios'
 import Record from "@/components/layouts/Record.vue";
-import {BACKEND_URL} from "@/router.js";
+import {BACKEND_URL, FILES_URL} from "@/router.js";
 import { UserIcon } from '@heroicons/vue/24/outline'
 const activeTab = ref(null)
 const branches = ref([])
@@ -188,7 +188,7 @@ const formatEmployee = (employee) => {
     avatar: '',
     auditorium: employee.auditorium,
     start_date: employee.start_date,
-    icon_link: employee.icon_link
+    icon_link: employee.icon_link == null ? (`${BACKEND_URL}` +'/person.jpg') : (`${FILES_URL}` + '/' + employee.icon_link)
   }
 }
 

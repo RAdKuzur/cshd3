@@ -25,7 +25,6 @@ class PeopleSeeder extends Seeder
                 'birthdate' => now(),
                 'organization_id' => DB::table('organizations')->first()->id,
                 'user_id' => DB::table('users')->where('username', $user->username)->first()->id,
-                'icon_link' => '/person.jpg',
                 'auditorium_id' => Auditorium::inRandomOrder()->value('id'),
                 'is_active' => true,
                 'about' => fake()->text

@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $organization_id
  * @property int $user_id
  * @property $birthdate
- * @property string|null $icon_link
  * @property $about
  * @property int $auditorium_id
  * @property boolean $is_active
@@ -35,7 +34,6 @@ class People extends Model
         'organization_id',
         'user_id',
         'birthdate',
-        'icon_link',
         'about',
         'auditorium_id',
         'is_active'

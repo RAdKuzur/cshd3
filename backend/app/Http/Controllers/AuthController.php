@@ -10,6 +10,7 @@ use App\Http\Requests\LoginRequest;
 use App\Models\User;
 use App\Repositories\UserRepository;
 use App\Services\AuthService;
+use App\Services\FileService;
 use App\Services\RedisService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -19,14 +20,17 @@ class AuthController extends Controller
     private UserRepository $userRepository;
     private AuthService $authService;
     private RedisService $redisService;
+    private FileService $fileService;
     public function __construct(
         UserRepository $userRepository,
         AuthService $authService,
-        RedisService $redisService
+        RedisService $redisService,
+        FileService $fileService
     ){
         $this->userRepository = $userRepository;
         $this->authService = $authService;
         $this->redisService = $redisService;
+        $this->fileService = $fileService;
     }
     /* @var User $user */
     public function login(LoginRequest $request)
@@ -42,7 +46,7 @@ class AuthController extends Controller
                 'fio' => $user->people->getFullFio(),
                 'position' => $user->people->getPosition() ? $user->people->getPosition()->name : null,
                 'role' => $user->role,
-                'icon_link' => $user->people->icon_link
+                'icon_link' => $this->fileService->getAvatarLink($user->id)
             ])
                 ->cookie('refresh_token', $tokens['refreshToken'], (int)env('REFRESH_TOKEN_TIME'))
                 ->cookie('access_token', $tokens['accessToken'], (int)env('ACCESS_TOKEN_TIME'));

@@ -22,7 +22,6 @@ return new class extends Migration
             $table->string('surname')->nullable(false);
             $table->string('patronymic')->nullable();
             $table->string('phone_number')->nullable();
-            $table->string('icon_link')->nullable();
             $table->date('birthdate')->nullable();
             $table->foreignId('organization_id')->constrained('organizations');
             $table->foreignId('user_id')->constrained('users');

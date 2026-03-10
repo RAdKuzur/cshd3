@@ -23,7 +23,6 @@ class TestPeopleSeeder extends Seeder
             'birthdate' => fake()->date(),
             'organization_id' => DB::table('organizations')->first()->id,
             'user_id' => DB::table('users')->where('username', 'yagafarov')->first()->id,
-            'icon_link' => '/person.jpg',
             'auditorium_id' => Auditorium::inRandomOrder()->value('id'),
             'is_active' => true,
             'about' => fake()->text
@@ -37,7 +36,6 @@ class TestPeopleSeeder extends Seeder
             'birthdate' => fake()->date(),
             'organization_id' => DB::table('organizations')->first()->id,
             'user_id' => DB::table('users')->where('username', 'idilov')->first()->id,
-            'icon_link' => '/person.jpg',
             'auditorium_id' => Auditorium::inRandomOrder()->value('id'),
             'is_active' => true,
             'about' => fake()->text
@@ -51,7 +49,6 @@ class TestPeopleSeeder extends Seeder
             'birthdate' => fake()->date(),
             'organization_id' => DB::table('organizations')->first()->id,
             'user_id' => DB::table('users')->where('username', 'shumak')->first()->id,
-            'icon_link' => '/person.jpg',
             'auditorium_id' => Auditorium::inRandomOrder()->value('id'),
             'is_active' => true,
             'about' => fake()->text
@@ -65,7 +62,6 @@ class TestPeopleSeeder extends Seeder
             'birthdate' => fake()->date(),
             'organization_id' => DB::table('organizations')->first()->id,
             'user_id' => DB::table('users')->where('username', 'kuzurgaliev')->first()->id,
-            'icon_link' => '/person.jpg',
             'auditorium_id' => Auditorium::inRandomOrder()->value('id'),
             'is_active' => true,
             'about' => fake()->text

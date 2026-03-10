@@ -75,4 +75,8 @@ class FileService
         }
         return $data;
     }
+    public function getAvatarLink($id)
+    {
+        return $this->fileRepository->getAvatarFile($id)?->file_id;
+    }
 }

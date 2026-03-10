@@ -39,4 +39,10 @@ class FileRepository
             'row_id' => $rowId,
         ])->get();
     }
+    public function getAvatarFile($userId) : File|null {
+        return File::where([
+            'table_name' => 'users',
+            'row_id' => $userId,
+        ])->first();
+    }
 }

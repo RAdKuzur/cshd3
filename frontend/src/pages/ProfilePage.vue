@@ -46,7 +46,7 @@ const avatarUrl = computed(() => {
   if (avatarFile.value) {
     return getFileUrl(avatarFile.value.file_id)
   }
-  return '/default-avatar.jpg'
+  return '/person.jpg'
 })
 
 // Загрузка аватара пользователя

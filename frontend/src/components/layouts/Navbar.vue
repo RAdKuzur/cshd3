@@ -188,8 +188,8 @@
                 <!-- Аватар с fallback -->
                 <div class="relative">
                   <img
-                      v-if="avatarUrl"
-                      :src="avatarUrl"
+                      v-if="profileBar.icon_link"
+                      :src="profileBar.icon_link"
                       class="h-8 w-8 rounded-full border-2 border-white/20 object-cover"
                       alt="Профиль пользователя"
                       @error="handleImageError"
@@ -506,7 +506,7 @@ const profileBar = computed(() => ({
   username: authStore.user?.username || '',
   fio: authStore.user?.fio || '',
   role: authStore.user?.role || '',
-  icon_link: authStore.user?.icon_link || '',
+  icon_link: authStore.user?.icon_link != null ? (`${FILES_URL}` + '/' + authStore.user?.icon_link) : (`${BACKEND_URL}` +'/person.jpg'),
 }))
 const profileUrl = computed(() => `/profile/${profileBar.value.username}`)
 

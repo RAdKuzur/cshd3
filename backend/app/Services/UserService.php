@@ -7,6 +7,7 @@ use App\DTO\User\UserDTO;
 use App\Helpers\LogHelper;
 use App\Models\User;
 use App\Repositories\AuditoriumResponsibilityRepository;
+use App\Repositories\FileRepository;
 use App\Repositories\NotificationRepository;
 use App\Repositories\PeoplePositionRepository;
 use App\Repositories\PeopleRepository;
@@ -28,6 +29,7 @@ class UserService
     private TransferActRepository $transferActRepository;
     private TransferActThingRepository $transferActThingRepository;
     private TransferActConfirmRepository $transferActConfirmRepository;
+    private FileRepository $fileRepository;
     public function __construct(
         UserRepository $userRepository,
         PeopleRepository $peopleRepository,
@@ -37,7 +39,8 @@ class UserService
         AuditoriumResponsibilityRepository $auditoriumResponsibilityRepository,
         TransferActRepository $transferActRepository,
         TransferActThingRepository $transferActThingRepository,
-        TransferActConfirmRepository $transferActConfirmRepository
+        TransferActConfirmRepository $transferActConfirmRepository,
+        FileRepository $fileRepository
     )
     {
         $this->userRepository = $userRepository;
@@ -49,6 +52,7 @@ class UserService
         $this->transferActRepository = $transferActRepository;
         $this->transferActThingRepository = $transferActThingRepository;
         $this->transferActConfirmRepository = $transferActConfirmRepository;
+        $this->fileRepository = $fileRepository;
     }
 
     public function getProfileInfo($username) : ProfileDTO
@@ -63,7 +67,7 @@ class UserService
                 'email' => $user->email,
                 'phone' => $user->people->phone_number,
                 'about' => $user->people->about,
-                'avatar' => $user->people->icon_link,
+                'avatar' => $this->fileRepository->getAvatarFile($user->id)?->file_id
             ],
         );
     }
