@@ -184,11 +184,32 @@
                   class="relative flex max-w-xs items-center rounded-full bg-white/10 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-indigo-600 hover:bg-white/20 transition-colors duration-200"
               >
                 <span class="sr-only">Открыть меню пользователя</span>
-                <img
-                    class="h-8 w-8 rounded-full border-2 border-white/20"
-                    :src="profileBar.icon_link"
-                    alt="Профиль пользователя"
-                />
+
+                <!-- Аватар с fallback -->
+                <div class="relative">
+                  <img
+                      v-if="avatarUrl"
+                      :src="avatarUrl"
+                      class="h-8 w-8 rounded-full border-2 border-white/20 object-cover"
+                      alt="Профиль пользователя"
+                      @error="handleImageError"
+                  />
+                  <div
+                      v-else
+                      class="h-8 w-8 rounded-full border-2 border-white/20 bg-indigo-500 flex items-center justify-center text-white text-sm font-medium"
+                  >
+                    {{ userInitials }}
+                  </div>
+
+                  <!-- Индикатор загрузки аватара -->
+                  <div
+                      v-if="isAvatarLoading"
+                      class="absolute inset-0 flex items-center justify-center bg-indigo-600 rounded-full"
+                  >
+                    <ArrowPathIcon class="w-4 h-4 text-white animate-spin" />
+                  </div>
+                </div>
+
                 <span class="ml-2 mr-1 text-indigo-100 text-sm font-medium hidden lg:block">
                   {{ profileBar.fio }}
                 </span>
@@ -305,7 +326,23 @@
 
       <div v-else class="border-t border-indigo-500 pt-4 pb-3">
         <div class="flex items-center px-5">
-          <img class="h-10 w-10 rounded-full border-2 border-white/20" src="/person.jpg" alt="Профиль пользователя" />
+          <!-- Аватар в мобильной версии -->
+          <div class="relative">
+            <img
+                v-if="avatarUrl"
+                :src="avatarUrl"
+                class="h-10 w-10 rounded-full border-2 border-white/20 object-cover"
+                alt="Профиль пользователя"
+                @error="handleImageError"
+            />
+            <div
+                v-else
+                class="h-10 w-10 rounded-full border-2 border-white/20 bg-indigo-500 flex items-center justify-center text-white text-sm font-medium"
+            >
+              {{ userInitials }}
+            </div>
+          </div>
+
           <div class="ml-3">
             <div class="text-base font-medium text-white">{{ profileBar.fio }}</div>
           </div>
@@ -432,10 +469,11 @@ import { useRouter } from 'vue-router'
 import axios from 'axios'
 import Echo from 'laravel-echo'
 import Pusher from 'pusher-js'
-import { BACKEND_URL } from "@/router.js";
+import { BACKEND_URL, FILES_URL } from "@/router.js";
+import { GetFilesListPHP } from "@/requests/FilesRequest.js";
 import {
   ScaleIcon, Bars3Icon, XMarkIcon, ChevronDownIcon, UserIcon, BellIcon,
-  ArrowRightOnRectangleIcon, ArrowPathIcon, Cog6ToothIcon, ArchiveBoxIcon,  // Добавлен импорт Cog6ToothIcon
+  ArrowRightOnRectangleIcon, ArrowPathIcon, Cog6ToothIcon, ArchiveBoxIcon,
   CalculatorIcon, CommandLineIcon, BuildingStorefrontIcon, UserGroupIcon, MapIcon, DocumentIcon,  MagnifyingGlassIcon, LockClosedIcon
 } from '@heroicons/vue/24/outline'
 
@@ -451,6 +489,10 @@ const isLoading = ref(false)
 const isMarkingAsRead = ref(null)
 const isMarkingAllAsRead = ref(false)
 const showMobileNotifications = ref(false)
+
+// Реактивные переменные для аватара
+const avatarFile = ref(null)
+const isAvatarLoading = ref(false)
 
 // Ref для компонента всплывающих уведомлений
 const toastNotification = ref(null)
@@ -479,6 +521,24 @@ const currentUser = computed(() => {
   return authStore.user?.username || ''
 })
 
+// URL аватара
+const avatarUrl = computed(() => {
+  if (avatarFile.value) {
+    return `${FILES_URL}/${avatarFile.value.file_id}`
+  }
+  return null
+})
+
+// Инициалы пользователя для fallback
+const userInitials = computed(() => {
+  const fio = profileBar.value.fio || ''
+  const parts = fio.split(' ')
+  if (parts.length >= 2) {
+    return (parts[0][0] + parts[1][0]).toUpperCase()
+  }
+  return fio.substring(0, 2).toUpperCase() || '??'
+})
+
 const unreadCount = computed(() => {
   return notifications.value.filter(n => n.is_read === 1).length
 })
@@ -496,8 +556,32 @@ const navigation = [
   { name: 'Интерактивная карта', href: '/map', current: false, icon: MapIcon },
   { name: 'Панель администратора', href: '/admin', current: false, icon: CommandLineIcon },
   { name: 'Поиск', href: '/search', current: false, icon: MagnifyingGlassIcon },
-  // { name: 'Файловая система', href: '/files', current: false, icon: DocumentIcon }
 ]
+
+// Загрузка аватара пользователя
+const loadUserAvatar = async () => {
+  if (!authStore.user?.id) return
+
+  isAvatarLoading.value = true
+  try {
+    const filesRes = await GetFilesListPHP('users', authStore.user.id)
+
+    if (filesRes.data && filesRes.data.success) {
+      // Ищем файл с пометкой is_avatar или берем первый
+      const avatar = filesRes.data.data.find(f => f.is_avatar) || filesRes.data.data[0]
+      avatarFile.value = avatar || null
+    }
+  } catch (err) {
+    console.error('Ошибка загрузки аватара:', err)
+  } finally {
+    isAvatarLoading.value = false
+  }
+}
+
+// Обработка ошибки загрузки изображения
+const handleImageError = () => {
+  avatarFile.value = null
+}
 
 // Инициализация Echo для вебсокетов с публичным каналом
 const initializeEcho = () => {
@@ -547,9 +631,7 @@ const initializeEcho = () => {
           }
           playNotificationSound()
         })
-    // echo.channel(`Notification.${currentUser.value}`)
-    //     .listen('.TransferActCreated', (data) => {
-    //     })
+
     // Обработчики событий подключения
     echo.connector.pusher.connection.bind('connected', () => {
     })
@@ -568,7 +650,7 @@ const initializeEcho = () => {
 const playNotificationSound = () => {
   try {
     // Создаем простой звук уведомления
-    const audio = new Audio('data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEAQB8AAEAfAAABAAgAZGF0YQ')
+    const audio = new Audio("data:audio/wav;base64,UklGRmQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YUAAAAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA");
 
     // Альтернативный метод с использованием Web Audio API
     if (window.AudioContext || window.webkitAudioContext) {
@@ -682,6 +764,7 @@ const logout = async () => {
 onMounted(() => {
   if (authStore.user) {
     fetchNotifications()
+    loadUserAvatar()
     // Даем немного времени на загрузку страницы перед инициализацией вебсокета
     setTimeout(() => {
       initializeEcho()
@@ -693,16 +776,18 @@ onMounted(() => {
 watch(() => authStore.user, (newUser) => {
   if (newUser) {
     fetchNotifications()
+    loadUserAvatar()
     // Ждем обновления username
     setTimeout(() => {
       initializeEcho()
     }, 100)
   } else {
-    // Отключаем вебсокет при выходе
+    // Отключаем вебсокет при выходе и сбрасываем аватар
     if (echo) {
       echo.disconnect()
       echo = null
     }
+    avatarFile.value = null
   }
 })
 
@@ -755,5 +840,19 @@ onUnmounted(() => {
 
 .bg-white\/10 ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.5);
+}
+
+/* Анимация для аватара */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
 }
 </style>

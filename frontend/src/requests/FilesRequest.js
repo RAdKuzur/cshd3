@@ -7,7 +7,7 @@ export const createFile = async (dataToSend) => {
     const response = await axios.post(
         FILES_URL + '/upload',
         dataToSend
-        // Content-Type не указываем - axios сам выставит multipart/form-data с boundary
+        // axios сам выставит multipart/form-data с boundary
     );
     return response;
 };

@@ -291,6 +291,141 @@
         </div>
       </div>
 
+      <!-- Файлы -->
+      <!-- Файлы -->
+      <!-- Файлы -->
+      <div class="bg-white rounded-2xl shadow-lg border overflow-hidden">
+        <div class="p-6">
+
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-bold text-gray-900">Файлы</h2>
+
+            <div class="flex items-center gap-4">
+
+              <input
+                  ref="fileInput"
+                  type="file"
+                  class="hidden"
+                  @change="handleFileUpload"
+              />
+
+              <button
+                  @click="triggerFileSelect"
+                  class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
+              >
+                Выбрать файл
+              </button>
+
+              <span v-if="selectedFileName" class="text-sm text-gray-600 truncate max-w-xs">
+          {{ selectedFileName }}
+        </span>
+
+            </div>
+          </div>
+
+
+          <div v-if="files.length === 0" class="text-gray-500">
+            Файлы отсутствуют
+          </div>
+
+
+          <!-- ИЗОБРАЖЕНИЯ -->
+
+          <div v-if="images.length" class="mb-8">
+
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">
+              Изображения
+            </h3>
+
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+
+              <div
+                  v-for="file in images"
+                  :key="file.id"
+                  class="relative group border rounded-lg overflow-hidden bg-gray-50"
+              >
+
+                <a
+                    :href="getFileUrl(file.file_id)"
+                    :download="file.filename"
+                >
+                  <img
+                      :src="getFileUrl(file.file_id)"
+                      class="w-full h-32 object-cover transition group-hover:scale-105"
+                  />
+                </a>
+
+                <div class="p-2 text-xs text-gray-600 truncate">
+                  {{ file.filename }}
+                </div>
+
+                <button
+                    @click="deleteFile(file)"
+                    class="absolute top-2 right-2 bg-white/90 text-red-600 hover:text-red-800 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition"
+                >
+                  Удалить
+                </button>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- ДОКУМЕНТЫ -->
+
+          <div v-if="documents.length">
+
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">
+              Документы
+            </h3>
+
+            <div class="space-y-3">
+
+              <div
+                  v-for="file in documents"
+                  :key="file.id"
+                  class="flex items-center justify-between border rounded-lg p-3 hover:bg-gray-50 transition"
+              >
+
+                <a
+                    :href="getFileUrl(file.file_id)"
+                    target="_blank"
+                    class="text-blue-600 hover:underline truncate"
+                >
+                  {{ file.filename }}
+                </a>
+
+                <button
+                    @click="deleteFile(file)"
+                    class="text-red-600 hover:text-red-800"
+                >
+                  Удалить
+                </button>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <div v-if="successMessage" class="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+          <div class="flex items-center">
+            <svg class="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+            <span class="text-green-700">{{ successMessage }}</span>
+          </div>
+        </div>
+
+      </div>
+      <!-- Файлы -->
+      <!-- Файлы -->
+      <!-- Файлы -->
+
       <!-- Действия -->
       <div v-if="!isLoading && thing && !error" class="mt-8 flex items-center justify-between bg-white shadow-lg border border-gray-200 p-6">
         <div class="text-sm text-gray-500">
@@ -316,7 +451,8 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios'
-import { BACKEND_URL } from "@/router.js"
+import { BACKEND_URL, FILES_URL } from '@/router.js'
+import {createFile, createFilePHP, DeleteFile, DeleteFilePHP, GetFilesListPHP} from "@/requests/FilesRequest.js";
 
 const route = useRoute()
 const router = useRouter()
@@ -327,6 +463,8 @@ const auditoriums = ref([])
 const branches = ref({})
 const people = ref({}) // Словарь для хранения информации о людях
 const isLoading = ref(true)
+
+const successMessage = ref('')
 const error = ref(null)
 const conditionsMap = ref({})
 const typeMap = ref({})
@@ -336,6 +474,17 @@ const balanceTypes = ref({})
 const historyItems = ref([])
 const historyLoading = ref(false)
 const historyError = ref(null)
+
+// Данные Файлов
+const files = ref([])
+
+const images = computed(() => {
+  return files.value.filter(f => isImage(f.filename))
+})
+
+const documents = computed(() => {
+  return files.value.filter(f => !isImage(f.filename))
+})
 
 // Вычисляемое свойство для текущей аудитории
 const currentAuditorium = computed(() => {
@@ -351,9 +500,29 @@ onMounted(async () => {
     loadAuditoriums(),
     loadBalanceTypes(),
     loadBranches(),
-    loadHistory() // Загружаем историю
+    loadHistory(),// Загружаем историю
+    loadFiles()
   ])
 })
+
+// Загрузка данных о файлах связанных с предметом
+const loadFiles = async () => {
+  const actId = route.params.id
+  try {
+    const filesRes = await GetFilesListPHP('things', actId)
+
+    if (filesRes.data && filesRes.data.success) {
+      files.value = filesRes.data.data
+    } else {
+      files.value = []
+    }
+  } catch (err) {
+    files.value = []
+    // Пробрасываем ошибку дальше, чтобы вызывающий код мог среагировать
+    throw err
+  }
+}
+
 
 // Загрузка данных предмета
 const loadThingData = async () => {
@@ -386,7 +555,72 @@ const loadThingData = async () => {
   } finally {
     isLoading.value = false
   }
+
+
 }
+
+
+const fileInput = ref(null)
+const selectedFileName = ref('')
+
+const triggerFileSelect = () => {
+  fileInput.value.click()
+}
+
+const handleFileUpload = async (event) => {
+  const file = event.target.files[0]
+  if (!file) return
+
+  selectedFileName.value = file.name
+
+  try {
+    const formData = new FormData()
+    formData.append('file', file)
+
+    const goRes = await createFile(formData)
+
+    await createFilePHP({
+      table_name: 'things',
+      row_id: thing.value.id,
+      file_id: goRes.data.data.file_id,
+      filename: goRes.data.data.original_name
+    })
+
+    successMessage.value = 'Файл загружен'
+    await loadFiles()
+
+  } catch (err) {
+    console.log(err)
+    error.value = 'Ошибка загрузки файла'
+  }
+}
+
+const deleteFile = async (file) => {
+  if (!confirm('Удалить файл?')) return
+
+  try {
+    // 1. удаляем связь в PHP
+    await DeleteFilePHP(file.id)
+
+    // 2. удаляем физически из Go-сервиса
+    await DeleteFile(file.file_id)
+
+    successMessage.value = 'Файл удалён'
+    await loadFiles()
+
+  } catch {
+    error.value = 'Ошибка удаления файла'
+  }
+}
+
+const isImage = (filename) => {
+  return /\.(jpg|jpeg|png|gif|webp)$/i.test(filename)
+}
+
+const getFileUrl = (fileId) => {
+  return FILES_URL + '/' + fileId
+}
+
 
 // Загрузка истории перемещений
 const loadHistory = async () => {
@@ -759,6 +993,9 @@ const handleDelete = async () => {
     alert(errorMessage)
   }
 }
+
+
+
 </script>
 
 <style scoped>

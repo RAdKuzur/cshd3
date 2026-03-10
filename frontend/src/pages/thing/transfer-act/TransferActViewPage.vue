@@ -272,12 +272,13 @@
             </div>
           </div>
         </div>
-
+        <!-- Файлы -->
+        <!-- Файлы -->
         <!-- Файлы -->
         <div class="bg-white rounded-2xl shadow-lg border overflow-hidden">
           <div class="p-6">
 
-            <div class="flex justify-between items-center mb-4">
+            <div class="flex justify-between items-center mb-6">
               <h2 class="text-xl font-bold text-gray-900">Файлы</h2>
 
               <div v-if="act.confirmed === 2" class="flex items-center gap-4">
@@ -297,58 +298,106 @@
                 </button>
 
                 <span v-if="selectedFileName" class="text-sm text-gray-600 truncate max-w-xs">
-                    {{ selectedFileName }}
-                </span>
+          {{ selectedFileName }}
+        </span>
 
               </div>
-
             </div>
+
 
             <div v-if="files.length === 0" class="text-gray-500">
               Файлы отсутствуют
             </div>
 
-            <div v-else class="space-y-4">
-              <div v-for="file in files" :key="file.id"
-                   class="flex items-center justify-between border p-3 rounded">
 
-                <div>
-                  <!-- Картинка -->
+            <!-- ИЗОБРАЖЕНИЯ -->
+
+            <div v-if="images.length" class="mb-8">
+
+              <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                Изображения
+              </h3>
+
+              <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+
+                <div
+                    v-for="file in images"
+                    :key="file.id"
+                    class="relative group border rounded-lg overflow-hidden bg-gray-50"
+                >
+
                   <a
-                      v-if="isImage(file.filename)"
                       :href="getFileUrl(file.file_id)"
                       :download="file.filename"
                   >
                     <img
                         :src="getFileUrl(file.file_id)"
-                        class="w-32 rounded border cursor-pointer"
+                        class="w-full h-32 object-cover transition group-hover:scale-105"
                     />
                   </a>
 
-                  <!-- Документ -->
+                  <div class="p-2 text-xs text-gray-600 truncate">
+                    {{ file.filename }}
+                  </div>
+
+                  <button
+                      v-if="act.confirmed === 2"
+                      @click="deleteFile(file)"
+                      class="absolute top-2 right-2 bg-white/90 text-red-600 hover:text-red-800 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition"
+                  >
+                    Удалить
+                  </button>
+
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <!-- ДОКУМЕНТЫ -->
+
+            <div v-if="documents.length">
+
+              <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                Документы
+              </h3>
+
+              <div class="space-y-3">
+
+                <div
+                    v-for="file in documents"
+                    :key="file.id"
+                    class="flex items-center justify-between border rounded-lg p-3 hover:bg-gray-50 transition"
+                >
+
                   <a
-                      v-else
                       :href="getFileUrl(file.file_id)"
                       target="_blank"
-                      class="text-blue-600 underline"
+                      class="text-blue-600 hover:underline truncate"
                   >
                     {{ file.filename }}
                   </a>
+
+                  <button
+                      v-if="act.confirmed === 2"
+                      @click="deleteFile(file)"
+                      class="text-red-600 hover:text-red-800"
+                  >
+                    Удалить
+                  </button>
+
                 </div>
 
-                <button
-                    v-if="act.confirmed === 2"
-                    @click="deleteFile(file)"
-                    class="text-red-600"
-                >
-                  Удалить
-                </button>
               </div>
+
             </div>
 
           </div>
         </div>
-
+        <!-- Файлы -->
+        <!-- Файлы -->
+        <!-- Файлы -->
       </div>
 
       <!-- Сообщение об ошибке -->
@@ -385,6 +434,14 @@ const router = useRouter()
 const authStore = useAuthContextStore()
 
 const files = ref([])
+
+const images = computed(() => {
+  return files.value.filter(f => isImage(f.filename))
+})
+
+const documents = computed(() => {
+  return files.value.filter(f => !isImage(f.filename))
+})
 
 const isLoading = ref(false)
 const isConfirming = ref(false)
@@ -492,6 +549,23 @@ const totalValue = computed(() => {
   return things.value.reduce((sum, thing) => sum + (Number(thing.price) || 0), 0)
 })
 
+const loadFiles = async () => {
+  const actId = route.params.id
+  try {
+    const filesRes = await GetFilesListPHP('transfer_acts', actId)
+
+    if (filesRes.data && filesRes.data.success) {
+      files.value = filesRes.data.data
+    } else {
+      files.value = []
+    }
+  } catch (err) {
+    files.value = []
+    // Пробрасываем ошибку дальше, чтобы вызывающий код мог среагировать
+    throw err
+  }
+}
+
 // Загрузка данных акта
 const loadActData = async () => {
   const actId = route.params.id
@@ -576,18 +650,6 @@ const loadActData = async () => {
     isLoading.value = false
   }
 
-  try {
-    const filesRes = await GetFilesListPHP('transfer_acts', actId)
-
-    if (filesRes.data && filesRes.data.success) {
-      files.value = filesRes.data.data
-    } else {
-      files.value = []
-    }
-  } catch (err)
-  {
-    files.value = []
-  }
 
 }
 
@@ -623,7 +685,7 @@ const handleFileUpload = async (event) => {
     })
 
     successMessage.value = 'Файл загружен'
-    await loadActData()
+    await loadFiles()
 
   } catch (err) {
     console.log(err)
@@ -642,7 +704,7 @@ const deleteFile = async (file) => {
     await DeleteFile(file.file_id)
 
     successMessage.value = 'Файл удалён'
-    await loadActData()
+    await loadFiles()
 
   } catch {
     error.value = 'Ошибка удаления файла'
@@ -800,6 +862,7 @@ const pluralize = (number, words) => {
 // Загружаем данные при монтировании компонента
 onMounted(() => {
   loadActData()
+  loadFiles()
 })
 
 // Наблюдаем за изменением ID в маршруте
