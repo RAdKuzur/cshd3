@@ -90,39 +90,39 @@
         </div>
 
         <!-- Альтернативные варианты -->
-        <div class="mt-8">
-          <div class="text-sm text-gray-500 mb-4">Или воспользуйтесь другими способами:</div>
-          <div class="flex flex-wrap justify-center gap-3">
-            <button
-                @click="goToRegistration"
-                class="px-4 py-2 text-sm bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg border border-blue-200 transition-colors"
-            >
-              Регистрация
-            </button>
-            <button
-                @click="recoverPassword"
-                class="px-4 py-2 text-sm bg-green-50 hover:bg-green-100 text-green-700 rounded-lg border border-green-200 transition-colors"
-            >
-              Восстановить пароль
-            </button>
-            <button
-                @click="contactSupport"
-                class="px-4 py-2 text-sm bg-purple-50 hover:bg-purple-100 text-purple-700 rounded-lg border border-purple-200 transition-colors"
-            >
-              Поддержка
-            </button>
-          </div>
-        </div>
+<!--        <div class="mt-8">-->
+<!--          <div class="text-sm text-gray-500 mb-4">Или воспользуйтесь другими способами:</div>-->
+<!--          <div class="flex flex-wrap justify-center gap-3">-->
+<!--            <button-->
+<!--                @click="goToRegistration"-->
+<!--                class="px-4 py-2 text-sm bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg border border-blue-200 transition-colors"-->
+<!--            >-->
+<!--              Регистрация-->
+<!--            </button>-->
+<!--            <button-->
+<!--                @click="recoverPassword"-->
+<!--                class="px-4 py-2 text-sm bg-green-50 hover:bg-green-100 text-green-700 rounded-lg border border-green-200 transition-colors"-->
+<!--            >-->
+<!--              Восстановить пароль-->
+<!--            </button>-->
+<!--            <button-->
+<!--                @click="contactSupport"-->
+<!--                class="px-4 py-2 text-sm bg-purple-50 hover:bg-purple-100 text-purple-700 rounded-lg border border-purple-200 transition-colors"-->
+<!--            >-->
+<!--              Поддержка-->
+<!--            </button>-->
+<!--          </div>-->
+<!--        </div>-->
 
         <!-- Индикатор безопасности -->
-        <div class="mt-8 pt-6 border-t border-gray-200">
-          <div class="flex items-center justify-center text-sm text-gray-500">
-            <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-            </svg>
-            <span>Эта страница защищена системой авторизации</span>
-          </div>
-        </div>
+<!--        <div class="mt-8 pt-6 border-t border-gray-200">-->
+<!--          <div class="flex items-center justify-center text-sm text-gray-500">-->
+<!--            <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">-->
+<!--              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />-->
+<!--            </svg>-->
+<!--            <span>Эта страница защищена системой авторизации</span>-->
+<!--          </div>-->
+<!--        </div>-->
 
         <!-- Декор -->
         <div class="absolute -bottom-10 -left-10 w-20 h-20 bg-yellow-200 rounded-full opacity-20 animate-pulse"></div>
@@ -131,12 +131,12 @@
       </div>
 
       <!-- Статистика -->
-      <div class="mt-8 text-center">
-        <p class="text-sm text-gray-500">
-          Если вы считаете, что это ошибка, пожалуйста,
-          <button @click="contactSupport" class="text-orange-600 hover:text-orange-700 underline">сообщите нам</button>
-        </p>
-      </div>
+<!--      <div class="mt-8 text-center">-->
+<!--        <p class="text-sm text-gray-500">-->
+<!--          Если вы считаете, что это ошибка, пожалуйста,-->
+<!--          <button @click="contactSupport" class="text-orange-600 hover:text-orange-700 underline">сообщите нам</button>-->
+<!--        </p>-->
+<!--      </div>-->
     </div>
   </div>
 </template>

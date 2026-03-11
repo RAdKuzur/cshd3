@@ -157,7 +157,7 @@
         <!-- Дополнительная информация -->
         <div class="mt-8 pt-6 border-t border-gray-200">
           <div class="text-sm text-gray-500">
-            <p class="mb-2">Нужна дополнительная информация о лицензировании?</p>
+<!--            <p class="mb-2">Нужна дополнительная информация о лицензировании?</p>-->
             <div class="flex flex-wrap justify-center gap-4">
 <!--              <button @click="openLicenseDocs" class="text-blue-600 hover:text-blue-700 font-medium transition-colors duration-200 flex items-center">-->
 <!--                <span class="flex items-center">-->

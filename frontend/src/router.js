@@ -73,6 +73,7 @@ import InventoryPage from "@/pages/InventoryPage.vue";
 import SecurityPage from "@/pages/SecurityPage.vue";
 import AdminSecurityPage from "@/pages/admin/security/AdminSecurityPage.vue";
 import HistoryAuditoriumResponsibilityPage from "@/pages/history/HistoryAuditoriumResponsibilityPage.vue";
+import BadRequestErrorPage from "@/pages/error/BadRequestErrorPage.vue";
 
 
 const BACKEND_URL = '';
@@ -89,6 +90,7 @@ const routes = [
     { path: '/iternal-error', component: IternalErrorPage },
     { path: '/signed-url-error', component: SignedUrlErrorPage },
     { path: '/develop-page', component: DevelopPage },
+    { path: '/bad-request', component: BadRequestErrorPage },
     { path: '/home', component: HomePage },
     { path: '/login', component: LoginPage },
     { path: '/logout' }, // special route for logout
