@@ -77,7 +77,7 @@ import BadRequestErrorPage from "@/pages/error/BadRequestErrorPage.vue";
 
 
 const BACKEND_URL = '';
-export const FILES_URL = 'http://localhost:6611';//TODO URL NEEDS MECHANISM FOR SETTING UP
+export const FILES_URL = import.meta.env.VITE_FILES_URL;
 
 const routes = [
     { path: '/', redirect: '/home' },

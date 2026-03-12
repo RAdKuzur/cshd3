@@ -18,6 +18,16 @@ axios.interceptors.response.use(
     error => {
         const authStore = useAuthContextStore();
 
+        if (error.response?.status === 400) {
+            // Обработка сообщения об ошибке
+            if(error.response?.data?.message === 'unsupported file type') {
+                router.push('/bad-request');
+            } else {
+                // Общая обработка для других 400 ошибок
+                router.push('/bad-request');
+            }
+        }
+
         if (error.response?.status === 401) {
             if(error.response?.data?.error === 'Invalid signed url')
             {
