@@ -15,20 +15,6 @@ class AuditoriumSeeder extends Seeder
      */
     public function run(): void
     {
-//        DB::table('auditoriums')->truncate();
-//        for($i = 1; $i <= 1000; $i++) {
-//            $department = DB::table('departments')->inRandomOrder()->first();
-//            $floor = random_int(1, 8);
-//            DB::table('auditoriums')->insert([
-//                'name' => $department->name . $floor . $i,
-//                'number' =>  $floor . $i,
-//                'floor' => $floor,
-//                'department_id' => $department->id,
-//                'branch_id' => DB::table('branches')->inRandomOrder()->first()->id,
-//                'area' => random_int(30, 70),
-//                'comment' => fake()->text(),
-//            ]);
-//        }
         DB::beginTransaction();
         try {
             DB::table('auditoriums')->truncate();

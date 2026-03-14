@@ -14,13 +14,6 @@ class BranchSeeder extends Seeder
      */
     public function run(): void
     {
-//        DB::table('branches')->truncate();
-//        for($i = 1; $i <= 10; $i++) {
-//            DB::table('branches')->insert([
-//                'name' => 'Отдел №' . $i,
-//                'organization_id' => DB::table('organizations')->first()->id,
-//            ]);
-//        }
         DB::beginTransaction();
         try {
             DB::table('branches')->truncate();
