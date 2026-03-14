@@ -14,10 +14,19 @@ class PositionSeeder extends Seeder
     public function run(): void
     {
         //position
+        $positions = [
+            'Директор',
+            'Специалист',
+            'Судья',
+            'Программист',
+            'IT-специалист',
+            'Бухгалтер',
+            'Спец. отдела кадров'
+        ];
         DB::table('positions')->truncate();
-        for($i = 1; $i <= 10; $i++) {
+        foreach ($positions as $position) {
             DB::table('positions')->insert([
-                'name' => 'Должность №' . $i
+                'name' => $position
             ]);
         }
     }
