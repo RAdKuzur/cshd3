@@ -47,7 +47,7 @@ class AuthController extends Controller
                 'position' => $user->people->getPosition() ? $user->people->getPosition()->name : null,
                 'role' => $user->role,
                 'icon_link' => $this->fileService->getAvatarLink($user->id)
-            ])
+            ], 200)
                 ->cookie('refresh_token', $tokens['refreshToken'], (int)env('REFRESH_TOKEN_TIME'))
                 ->cookie('access_token', $tokens['accessToken'], (int)env('ACCESS_TOKEN_TIME'));
         }
@@ -64,7 +64,7 @@ class AuthController extends Controller
         $this->authService->forgotPassword($email);
         return response()->json([
             'success' => true,
-        ]);
+        ], 200);
     }
     public function changePassword(ChangePasswordRequest $request)
     {
@@ -72,7 +72,7 @@ class AuthController extends Controller
         $this->authService->changePassword($dto);
         return response()->json([
             'success' => true,
-        ]);
+        ], 200);
     }
     public function block(BlockRequest $request)
     {
@@ -83,14 +83,14 @@ class AuthController extends Controller
             env('BLOCK_PAGE_TIME') * 60);
         return response()->json([
             'success' => true
-        ]);
+        ], 200);
     }
     public function unblock(BlockRequest $request){
         $dto = $request->toDTO();
         $this->redisService->del($dto->url);
         return response()->json([
             'success' => true
-        ]);
+        ], 200);
     }
     public function refresh(Request $request)
     {
@@ -104,7 +104,7 @@ class AuthController extends Controller
                 'fio' => $refreshData['fio'],
                 'role' => $refreshData['role'],
                 'icon_link' => $refreshData['icon_link'],
-            ])
+            ], 200)
                 ->cookie('refresh_token', $refreshData['refreshToken'], (int)env('REFRESH_TOKEN_TIME'))
                 ->cookie('access_token', $refreshData['accessToken'], (int)env('ACCESS_TOKEN_TIME'));
         }
@@ -123,7 +123,7 @@ class AuthController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Выход их системы'
-        ])
+        ], 200)
             ->cookie('refresh_token', '', 0)
             ->cookie('access_token', '',0);
     }

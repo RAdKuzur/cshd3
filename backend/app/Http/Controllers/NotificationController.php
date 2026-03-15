@@ -20,33 +20,33 @@ class NotificationController extends Controller
         return response()->json([
             'success' => true,
             'data' => $notifications
-        ]);
+        ], 200);
     }
     public function readAllUserNotifications($username)
     {
         $this->notificationService->readAllUserNotifications($username);
         return response()->json([
             'success' => true,
-        ]);
+        ], 200);
     }
     public function readUserNotification($notificationId)
     {
         $this->notificationService->readNotification($notificationId);
         return response()->json([
             'success' => true,
-        ]);
+        ], 200);
     }
     public function delete($notificationId){
         $this->notificationService->delete($notificationId);
         return response()->json([
             'success' => true,
-        ]);
+        ], 204);
     }
 
     public function deleteAllUserNotifications($username){
         $this->notificationService->deleteAllUserNotifications($username);
         return response()->json([
             'success' => true,
-        ]);
+        ], 204);
     }
 }

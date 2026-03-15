@@ -28,7 +28,7 @@ class ReportController extends Controller
         return response()->json([
             'success' => true,
             'data' => $data
-        ]);
+        ], 200);
     }
     public function form($year){
         return $this->reportService->form($year);

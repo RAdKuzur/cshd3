@@ -22,7 +22,7 @@ class AdminUserController extends Controller
             'success' => true,
             'code' => 200,
             'data' => $data
-        ]);
+        ], 200);
     }
     public function getOne($id){
         $data = $this->userService->getUserInfo($id);
@@ -30,7 +30,7 @@ class AdminUserController extends Controller
             'success' => true,
             'code' => 200,
             'data' => $data
-        ]);
+        ], 200);
     }
 
     public function create(UserRequest $request){
@@ -39,7 +39,7 @@ class AdminUserController extends Controller
         return response()->json([
             'success' => true,
             'code' => 200
-        ]);
+        ], 201);
     }
 
     public function update(UserRequest $request, $id){
@@ -48,7 +48,7 @@ class AdminUserController extends Controller
         return response()->json([
             'success' => true,
             'code' => 200
-        ]);
+        ], 200);
     }
 
 
@@ -57,6 +57,6 @@ class AdminUserController extends Controller
         return response()->json([
             'success' => true,
             'code' => 200
-        ]);
+        ], 204);
     }
 }

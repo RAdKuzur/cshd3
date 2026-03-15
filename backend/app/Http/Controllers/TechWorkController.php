@@ -19,7 +19,7 @@ class TechWorkController extends Controller
         return response()->json([
             'success' => true,
             'data' => $data
-        ]);
+        ], 200);
     }
 
     public function create(TechWorkRequest $request) {
@@ -27,13 +27,13 @@ class TechWorkController extends Controller
         $this->techWorkService->create($dto);
         return response()->json([
             'success' => true,
-        ]);
+        ], 201);
     }
 
     public function cancel($id) {
         $this->techWorkService->cancel($id);
         return response()->json([
             'success' => true
-        ]);
+        ], 200);
     }
 }

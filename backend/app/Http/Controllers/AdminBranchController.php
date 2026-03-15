@@ -21,7 +21,7 @@ class AdminBranchController extends Controller
             'success' => true,
             'code' => 200,
             'data' => $data
-        ]);
+        ], 200);
     }
     public function getOne($id){
         $data = $this->branchService->getOne($id);
@@ -29,7 +29,7 @@ class AdminBranchController extends Controller
             'success' => true,
             'code' => 200,
             'data' => $data
-        ]);
+        ], 200);
     }
     public function create(BranchRequest $request){
         $branch = $request->toDTO();
@@ -37,7 +37,7 @@ class AdminBranchController extends Controller
         return response()->json([
             'success' => true,
             'code' => 200
-        ]);
+        ], 201);
     }
     public function update(BranchRequest $request, $id){
         $branch = $request->toDTO();
@@ -45,13 +45,13 @@ class AdminBranchController extends Controller
         return response()->json([
             'success' => true,
             'code' => 200
-        ]);
+        ], 200);
     }
     public function delete($id){
         $this->branchService->delete($id);
         return response()->json([
             'success' => true,
             'code' => 200
-        ]);
+        ], 204);
     }
 }

@@ -20,7 +20,7 @@ class PeoplePositionController extends Controller
         return response()->json([
             'success' => true,
             'data' => $data
-        ]);
+        ], 200);
     }
 
     public function getOne($id) {
@@ -28,7 +28,7 @@ class PeoplePositionController extends Controller
         return response()->json([
             'success' => true,
             'data' => $data
-        ]);
+        ], 200);
     }
 
     public function create(PeoplePositionRequest $request) {
@@ -36,7 +36,7 @@ class PeoplePositionController extends Controller
         $this->peoplePositionService->create($thingAuditoriumDTO);
         return response()->json([
             'success' => true
-        ]);
+        ], 201);
     }
 
     public function update(PeoplePositionRequest $request, $id) {
@@ -44,13 +44,13 @@ class PeoplePositionController extends Controller
         $this->peoplePositionService->update($id, $thingAuditoriumDTO);
         return response()->json([
             'success' => true
-        ]);
+        ], 200);
     }
 
     public function delete($id) {
         $this->peoplePositionService->delete($id);
         return response()->json([
             'success' => true
-        ]);
+        ], 204);
     }
 }

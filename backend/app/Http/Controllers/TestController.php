@@ -30,11 +30,11 @@ class TestController extends Controller
 
         return response()->json([
             'data' => 'Test endpoint'
-        ]);
+        ], 200);
     }
     public function tests(){
         return response()->json([
             'data' => 'Tests endpoint'
-        ]);
+        ], 200);
     }
 }

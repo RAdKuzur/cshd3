@@ -19,7 +19,7 @@ class PeopleController extends Controller
         return response()->json([
             'success' => true,
             'data' => $data
-        ]);
+        ], 200);
     }
 
     public function staff(){
@@ -28,6 +28,6 @@ class PeopleController extends Controller
             'success' => true,
             'data' => $data,
             'message' => 'Инфо о персонале'
-        ]);
+        ], 200);
     }
 }

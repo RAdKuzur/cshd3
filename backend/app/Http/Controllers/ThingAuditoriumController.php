@@ -22,7 +22,7 @@ class ThingAuditoriumController extends Controller
         return response()->json([
             'success' => true,
             'data' => $data
-        ]);
+        ], 200);
     }
 
     public function getOne($id) {
@@ -30,7 +30,7 @@ class ThingAuditoriumController extends Controller
         return response()->json([
             'success' => true,
             'data' => $data
-        ]);
+        ], 200);
     }
 
     public function create(ThingAuditoriumRequest $request) {
@@ -38,7 +38,7 @@ class ThingAuditoriumController extends Controller
         $this->thingAuditoriumService->create($thingAuditoriumDTO);
         return response()->json([
             'success' => true
-        ]);
+        ], 201);
     }
 
     public function update(ThingAuditoriumRequest $request, $id) {
@@ -46,13 +46,13 @@ class ThingAuditoriumController extends Controller
         $this->thingAuditoriumService->update($id, $thingAuditoriumDTO);
         return response()->json([
             'success' => true
-        ]);
+        ], 200);
     }
 
     public function delete($id) {
         $this->thingAuditoriumService->delete($id);
         return response()->json([
             'success' => true
-        ]);
+        ], 204);
     }
 }

@@ -21,7 +21,7 @@ class HistoryResourceController extends Controller
         return response()->json([
             'success' => true,
             'data' => $data
-        ]);
+        ], 200);
     }
 
     public function getOne($id) {
@@ -29,7 +29,7 @@ class HistoryResourceController extends Controller
         return response()->json([
             'success' => true,
             'data' => $data
-        ]);
+        ], 200);
     }
 
     public function create(HistoryResourceRequest $request) {
@@ -37,7 +37,7 @@ class HistoryResourceController extends Controller
         $this->historyResourceService->create($historyResourceDTO);
         return response()->json([
             'success' => true
-        ]);
+        ], 201);
     }
 
     public function update(HistoryResourceRequest $request, $id) {
@@ -45,12 +45,12 @@ class HistoryResourceController extends Controller
         $this->historyResourceService->update($id, $historyResourceDTO);
         return response()->json([
             'success' => true
-        ]);
+        ], 200);
     }
     public function delete($id) {
         $this->historyResourceService->delete($id);
         return response()->json([
             'success' => true
-        ]);
+        ], 204);
     }
 }

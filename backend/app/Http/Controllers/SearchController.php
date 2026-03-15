@@ -28,6 +28,6 @@ class SearchController extends Controller
         return response()->json([
             'success' => true,
             'data' => $data
-        ]);
+        ], 200);
     }
 }

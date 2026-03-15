@@ -22,6 +22,6 @@ class LicenceController extends Controller
         $this->licenceService->create($dto);
         return response()->json([
             'success' => true
-        ]);
+        ], 201);
     }
 }

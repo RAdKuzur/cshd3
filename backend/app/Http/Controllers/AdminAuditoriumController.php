@@ -23,7 +23,7 @@ class AdminAuditoriumController extends Controller
             'success' => true,
             'code' => 200,
             'data' => $data
-        ]);
+        ], 200);
     }
 
     public function create(AuditoriumRequest $request){
@@ -32,7 +32,7 @@ class AdminAuditoriumController extends Controller
         return response()->json([
             'success' => true,
             'code' => 200,
-        ]);
+        ], 201);
     }
     public function update(AuditoriumRequest $request, $id){
         $auditoriumDTO = $request->toDTO();
@@ -40,13 +40,13 @@ class AdminAuditoriumController extends Controller
         return response()->json([
             'success' => true,
             'code' => 200,
-        ]);
+        ], 200);
     }
     public function delete($id){
         $this->auditoriumService->delete($id);
         return response()->json([
             'success' => true,
             'code' => 200,
-        ]);
+        ], 204);
     }
 }

@@ -21,7 +21,7 @@ class AuditoriumController extends Controller
             'success' => true,
             'code' => 200,
             'data' => $data
-        ]);
+        ], 200);
     }
     public function map(){
         $data = $this->auditoriumService->map();
@@ -29,6 +29,6 @@ class AuditoriumController extends Controller
             'success' => true,
             'code' => 200,
             'data' => $data
-        ]);
+        ], 200);
     }
 }

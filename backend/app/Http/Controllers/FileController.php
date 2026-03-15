@@ -51,7 +51,7 @@ class FileController extends Controller
         return response()->json([
             'success' => true,
             'data' => $files
-        ]);
+        ], 200);
     }
     #[OA\Get(
         path: "/api/files/{id}",
@@ -94,7 +94,7 @@ class FileController extends Controller
         return response()->json([
             'success' => true,
             'data' => $file
-        ]);
+        ], 200);
     }
     #[OA\Post(
         path: "/api/files",
@@ -120,7 +120,7 @@ class FileController extends Controller
     {
         $fileDTO = $request->toFileDTO();
         $this->fileService->create($fileDTO);
-        return response()->json(['success' => true]);
+        return response()->json(['success' => true], 201);
     }
     #[OA\Delete(
         path: "/api/files/{id}",
@@ -143,7 +143,7 @@ class FileController extends Controller
         $this->fileService->delete($id);
         return response()->json([
             'success' => true
-        ]);
+        ], 204);
     }
     #[OA\Get(
         path: "/api/files/{tableName}/row/{rowId}",
@@ -202,6 +202,6 @@ class FileController extends Controller
         return response()->json([
             'success' => true,
             'data' => $files
-        ]);
+        ], 200);
     }
 }

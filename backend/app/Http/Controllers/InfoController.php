@@ -34,7 +34,7 @@ class InfoController extends Controller
             'code' => 200,
             'types' => json_decode(json_encode($types, JSON_FORCE_OBJECT)),
             'conditions' => json_decode(json_encode($conditions, JSON_FORCE_OBJECT)),
-        ]);
+        ], 200);
     }
     public function balance(){
         $balanceTypes = ThingBalanceDictionary::type();
@@ -42,7 +42,7 @@ class InfoController extends Controller
             'success' => true,
             'code' => 200,
             'types' => json_decode(json_encode($balanceTypes, JSON_FORCE_OBJECT)),
-        ]);
+        ], 200);
     }
     public function departments(){
         $data = $this->departmentService->all();
@@ -50,7 +50,7 @@ class InfoController extends Controller
             'success' => true,
             'code' => 200,
             'data' => $data
-        ]);
+        ], 200);
     }
     public function branches(){
         $data = $this->branchService->all();
@@ -58,7 +58,7 @@ class InfoController extends Controller
             'success' => true,
             'code' => 200,
             'data' => $data,
-        ]);
+        ], 200);
     }
     public function transferActTypes(){
         $data = TransferActDictionary::type();
@@ -66,7 +66,7 @@ class InfoController extends Controller
             'success' => true,
             'code' => 200,
             'data' => $data
-        ]);
+        ], 200);
     }
     public function roles()
     {
@@ -75,7 +75,7 @@ class InfoController extends Controller
             'success' => true,
             'code' => 200,
             'data' => $data
-        ]);
+        ], 200);
     }
 
     public function resourceTypes()
@@ -85,6 +85,6 @@ class InfoController extends Controller
             'success' => true,
             'code' => 200,
             'data' => $data
-        ]);
+        ], 200);
     }
 }

@@ -25,7 +25,7 @@ class ThingController extends Controller
         return response()->json([
             'success' => true,
             'data' => $data,
-        ]);
+        ], 200);
     }
     public function simpleThings()
     {
@@ -34,7 +34,7 @@ class ThingController extends Controller
             'success' => true,
             'code' => 200,
             'data' => $electronics,
-        ]);
+        ], 200);
     }
     public function electronics()
     {
@@ -43,7 +43,7 @@ class ThingController extends Controller
             'success' => true,
             'code' => 200,
             'data' => $electronics,
-        ]);
+        ], 200);
     }
 
     public function furniture()
@@ -53,7 +53,7 @@ class ThingController extends Controller
             'success' => true,
             'code' => 200,
             'data' => $electronics,
-        ]);
+        ], 200);
     }
 
     public function personThings($id)
@@ -62,7 +62,7 @@ class ThingController extends Controller
         return response()->json([
             'success' => true,
             'data' => $data,
-        ]);
+        ], 200);
     }
 
     public function getFreeThings()
@@ -71,7 +71,7 @@ class ThingController extends Controller
         return response()->json([
             'success' => true,
             'data' => $data
-        ]);
+        ], 200);
     }
     public function transferActThings($id)
     {
@@ -79,30 +79,26 @@ class ThingController extends Controller
         return response()->json([
             'success' => true,
             'data' => $data
-        ]);
+        ], 200);
     }
     public function compositeCreate(StoreThingRequest $request) {
         $dto = ThingDTO::fromArray($request->validated());
         $result = $this->thingService->compositeCreate($dto);
-        return response()->json(
-            [
-                'success' => true,
-                'data' => $result,
-                'code' => 200,
-            ]
-        );
+        return response()->json([
+            'success' => true,
+            'data' => $result,
+            'code' => 200,
+        ], 201);
     }
 
     public function update(UpdateThingRequest $request, $id) {
         $dto = UpdateThingDTO::fromArray($request->validated());
         $this->thingService->update($id, $dto);
-        return response()->json(
-            [
-                'message' => $request,
-                'success' => true,
-                'code' => 200,
-            ]
-        );
+        return response()->json([
+            'message' => $request,
+            'success' => true,
+            'code' => 200,
+        ],200);
     }
 
     public function create(ThingRequest $request){
@@ -111,7 +107,7 @@ class ThingController extends Controller
         return response()->json([
             'success' => true,
             'code' => 200,
-        ]);
+        ], 201);
     }
     public function getOne($id)
     {
@@ -120,7 +116,7 @@ class ThingController extends Controller
             'success' => true,
             'code' => 200,
             'data' => $model,
-        ]);
+        ], 200);
     }
 
     public function delete($id){
@@ -128,7 +124,7 @@ class ThingController extends Controller
         return response()->json([
             'success' => true,
             'code' => 200,
-        ]);
+        ], 204);
     }
 
     public function filterArm()
@@ -140,7 +136,7 @@ class ThingController extends Controller
         return response()->json([
             'success' => true,
             'data' => $data,
-        ]);
+        ], 200);
     }
     public function inventory($username)
     {
@@ -148,7 +144,7 @@ class ThingController extends Controller
         return response()->json([
             'success' => true,
             'data' => $data,
-        ]);
+        ], 200);
     }
 
     public function history($id)
@@ -157,6 +153,6 @@ class ThingController extends Controller
         return response()->json([
             'success' => true,
             'data' => $data
-        ]);
+        ], 200);
     }
 }

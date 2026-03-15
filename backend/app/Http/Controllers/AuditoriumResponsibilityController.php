@@ -21,7 +21,7 @@ class AuditoriumResponsibilityController extends Controller
         return response()->json([
             'success' => true,
             'data' => $data
-        ]);
+        ], 200);
     }
 
     public function getOne($id) {
@@ -29,7 +29,7 @@ class AuditoriumResponsibilityController extends Controller
         return response()->json([
             'success' => true,
             'data' => $data
-        ]);
+        ], 200);
     }
 
     public function create(AuditoriumResponsibilityRequest $request) {
@@ -37,7 +37,7 @@ class AuditoriumResponsibilityController extends Controller
         $this->auditoriumResponsibilityService->create($auditoriumResponsibilityDTO);
         return response()->json([
             'success' => true
-        ]);
+        ], 201);
     }
 
     public function update(AuditoriumResponsibilityRequest $request, $id) {
@@ -45,13 +45,13 @@ class AuditoriumResponsibilityController extends Controller
         $this->auditoriumResponsibilityService->update($id, $auditoriumResponsibilityDTO);
         return response()->json([
             'success' => true
-        ]);
+        ], 200);
     }
 
     public function delete($id) {
         $this->auditoriumResponsibilityService->delete($id);
         return response()->json([
             'success' => true
-        ]);
+        ], 204);
     }
 }

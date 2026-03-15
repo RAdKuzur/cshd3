@@ -24,6 +24,6 @@ class UserController extends Controller
             'success' => true,
             'data' => $data,
             'message' => 'Инфо о профиле'
-        ]);
+        ], 200);
     }
 }

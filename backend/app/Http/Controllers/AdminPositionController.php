@@ -22,7 +22,7 @@ class AdminPositionController extends Controller
             'success' => true,
             'code' => 200,
             'data' => $data
-        ]);
+        ], 200);
     }
 
     public function create(PositionRequest $request){
@@ -31,7 +31,7 @@ class AdminPositionController extends Controller
         return response()->json([
             'success' => true,
             'code' => 200,
-        ]);
+        ], 201);
     }
     public function update(PositionRequest $request, $id){
         $data = $request->validated();
@@ -39,13 +39,13 @@ class AdminPositionController extends Controller
         return response()->json([
             'success' => true,
             'code' => 200,
-        ]);
+        ], 200);
     }
     public function delete($id){
         $this->positionService->delete($id);
         return response()->json([
             'success' => true,
             'code' => 200,
-        ]);
+        ], 204);
     }
 }

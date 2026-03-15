@@ -22,7 +22,7 @@ class CompanyController extends Controller
         return response()->json([
             'success' => true,
             'data' => $data
-        ]);
+        ], 200);
     }
 
     public function getOne($id) {
@@ -30,26 +30,26 @@ class CompanyController extends Controller
         return response()->json([
             'success' => true,
             'data' => $data
-        ]);
+        ], 200);
     }
     public function create(CompanyRequest $request) {
         $dto = $request->toDTO();
         $this->companyService->create($dto);
         return response()->json([
             'success' => true
-        ]);
+        ], 201);
     }
     public function update($id, CompanyRequest $request) {
         $dto = $request->toDTO();
         $this->companyService->update($id, $dto);
         return response()->json([
             'success' => true
-        ]);
+        ], 200);
     }
     public function delete($id) {
         $this->companyService->delete($id);
         return response()->json([
             'success' => true
-        ]);
+        ], 204);
     }
 }
