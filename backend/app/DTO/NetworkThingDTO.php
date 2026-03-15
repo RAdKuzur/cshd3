@@ -54,4 +54,15 @@ class NetworkThingDTO implements DTO
             'comment' => $this->comment
         ];
     }
+
+    public function toSearchArray(): array {
+        return [
+            'IP Адрес' => $this->ip_address,
+            'Номер телефона' => $this->phone_number,
+            'Комментарий' => $this->comment,
+        ];
+    }
+    public function toSearchString(): string {
+        return $this->comment;
+    }
 }

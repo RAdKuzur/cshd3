@@ -105,7 +105,7 @@
         </div>
 
         <!-- Результаты поиска -->
-        <div v-if="searchResults && searchResults.length > 0" class="bg-white rounded-2xl shadow-xl p-8">
+        <div v-if="paginatedResults.length > 0" class="bg-white rounded-2xl shadow-xl p-8">
           <div class="flex justify-between items-center mb-6">
             <h2 class="text-2xl font-bold text-gray-900">
               Найдено результатов: {{ searchResults.length }}
@@ -121,37 +121,125 @@
             </button>
           </div>
 
-          <div class="space-y-4">
+          <div class="space-y-6">
             <div
-                v-for="(result, index) in searchResults"
-                :key="index"
-                class="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                v-for="(result, index) in paginatedResults"
+                :key="result.link"
+                class="border border-gray-200 rounded-lg hover:shadow-md transition-shadow overflow-hidden"
             >
-              <div class="flex items-center">
-                <div class="flex-shrink-0 h-10 w-10 bg-indigo-100 rounded-lg flex items-center justify-center mr-4">
-                  <span class="text-indigo-600 font-semibold">{{ index + 1 }}</span>
-                </div>
-                <div>
-                  <div class="text-sm text-gray-500 mb-1">
-                    Ссылка на элемент
+              <!-- Заголовок результата с ID и ссылкой -->
+              <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 h-8 w-8 bg-indigo-100 rounded-lg flex items-center justify-center mr-3">
+                    <span class="text-indigo-600 font-semibold text-sm">{{ getResultNumber(index) }}</span>
                   </div>
-                  <div class="font-medium text-gray-900">
-                    {{ extractIdFromLink(result.link) }}
+                  <div>
+                    <div class="text-sm text-gray-500">
+                      ID элемента
+                    </div>
+                    <div class="font-medium text-gray-900">
+                      {{ extractIdFromLink(result.link) }}
+                    </div>
+                  </div>
+                </div>
+
+                <a
+                    :href="result.link"
+                    target="_blank"
+                    class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-medium rounded-lg shadow-sm hover:from-indigo-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200"
+                >
+                  <svg class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                  Перейти
+                </a>
+              </div>
+
+              <!-- Атрибуты -->
+              <div class="px-6 py-4">
+                <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wider mb-3">
+                  Атрибуты элемента
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div
+                      v-for="(value, key) in result.attributes"
+                      :key="key"
+                      class="bg-gray-50 rounded-lg p-3 border border-gray-100"
+                  >
+                    <div class="text-xs font-medium text-gray-500 mb-1">{{ key }}</div>
+                    <div class="text-sm text-gray-900 break-words">
+                      {{ formatAttributeValue(value) }}
+                    </div>
                   </div>
                 </div>
               </div>
-
-              <a
-                  :href="result.link"
-                  target="_blank"
-                  class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-medium rounded-lg shadow-sm hover:from-indigo-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200"
-              >
-                <svg class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                </svg>
-                Перейти
-              </a>
             </div>
+          </div>
+
+          <!-- Пагинация -->
+          <div v-if="totalPages > 1" class="mt-8 flex justify-center">
+            <nav class="flex items-center space-x-2" aria-label="Pagination">
+              <!-- Кнопка "Предыдущая" -->
+              <button
+                  @click="changePage(currentPage - 1)"
+                  :disabled="currentPage === 1"
+                  class="relative inline-flex items-center px-3 py-2 rounded-lg border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white transition-colors"
+              >
+                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+                <span class="ml-1">Предыдущая</span>
+              </button>
+
+              <!-- Номера страниц -->
+              <div class="hidden md:flex items-center space-x-1">
+                <button
+                    v-for="page in displayedPages"
+                    :key="page"
+                    @click="changePage(page)"
+                    :class="[
+                      'relative inline-flex items-center px-4 py-2 text-sm font-medium rounded-lg transition-colors',
+                      currentPage === page
+                        ? 'z-10 bg-indigo-600 text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+                        : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
+                    ]"
+                >
+                  {{ page }}
+                </button>
+              </div>
+
+              <!-- Выпадающий список для мобильных -->
+              <div class="md:hidden">
+                <select
+                    v-model="currentPage"
+                    @change="changePage(currentPage)"
+                    class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-lg"
+                >
+                  <option v-for="page in totalPages" :key="page" :value="page">
+                    Страница {{ page }} из {{ totalPages }}
+                  </option>
+                </select>
+              </div>
+
+              <!-- Кнопка "Следующая" -->
+              <button
+                  @click="changePage(currentPage + 1)"
+                  :disabled="currentPage === totalPages"
+                  class="relative inline-flex items-center px-3 py-2 rounded-lg border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white transition-colors"
+              >
+                <span class="mr-1">Следующая</span>
+                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </nav>
+          </div>
+
+          <!-- Информация о пагинации -->
+          <div v-if="totalPages > 1" class="mt-4 text-center text-sm text-gray-500">
+            Показаны {{ (currentPage - 1) * itemsPerPage + 1 }} -
+            {{ Math.min(currentPage * itemsPerPage, searchResults.length) }}
+            из {{ searchResults.length }} результатов
           </div>
         </div>
 
@@ -236,14 +324,11 @@
         </div>
       </div>
     </main>
-
-    <!-- Футер -->
-
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import axios from 'axios'
 import { BACKEND_URL } from '@/router.js'
 
@@ -254,12 +339,63 @@ const isSearching = ref(false)
 const searchHistory = ref([])
 const error = ref(null)
 
+// Параметры пагинации
+const currentPage = ref(1)
+const itemsPerPage = ref(5) // Количество результатов на странице
+
 // Загружаем историю поиска из localStorage
 onMounted(() => {
   const savedHistory = localStorage.getItem('searchHistory')
   if (savedHistory) {
     searchHistory.value = JSON.parse(savedHistory)
   }
+})
+
+// Вычисляемые свойства для пагинации
+const paginatedResults = computed(() => {
+  if (!searchResults.value) return []
+
+  const start = (currentPage.value - 1) * itemsPerPage.value
+  const end = start + itemsPerPage.value
+  return searchResults.value.slice(start, end)
+})
+
+const totalPages = computed(() => {
+  if (!searchResults.value) return 0
+  return Math.ceil(searchResults.value.length / itemsPerPage.value)
+})
+
+// Вычисляемые страницы для отображения
+const displayedPages = computed(() => {
+  const delta = 2 // Количество страниц слева и справа от текущей
+  const range = []
+  const rangeWithDots = []
+  let l
+
+  for (let i = 1; i <= totalPages.value; i++) {
+    if (i === 1 || i === totalPages.value || (i >= currentPage.value - delta && i <= currentPage.value + delta)) {
+      range.push(i)
+    }
+  }
+
+  range.forEach((i) => {
+    if (l) {
+      if (i - l === 2) {
+        rangeWithDots.push(l + 1)
+      } else if (i - l !== 1) {
+        rangeWithDots.push('...')
+      }
+    }
+    rangeWithDots.push(i)
+    l = i
+  })
+
+  return rangeWithDots
+})
+
+// Сбрасываем страницу при новом поиске
+watch(searchResults, () => {
+  currentPage.value = 1
 })
 
 // Функция поиска
@@ -307,6 +443,23 @@ const performSearch = async () => {
   }
 }
 
+// Изменение страницы
+const changePage = (page) => {
+  if (page >= 1 && page <= totalPages.value) {
+    currentPage.value = page
+    // Плавный скролл к результатам
+    document.querySelector('.bg-white.rounded-2xl.shadow-xl.p-8')?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start'
+    })
+  }
+}
+
+// Получение номера результата с учетом пагинации
+const getResultNumber = (index) => {
+  return (currentPage.value - 1) * itemsPerPage.value + index + 1
+}
+
 // Извлечение ID из ссылки
 const extractIdFromLink = (link) => {
   try {
@@ -317,6 +470,17 @@ const extractIdFromLink = (link) => {
     // Если не удалось распарсить как URL, возвращаем как есть
     return link
   }
+}
+
+// Форматирование значения атрибута
+const formatAttributeValue = (value) => {
+  if (value === null || value === undefined) {
+    return '—'
+  }
+  if (typeof value === 'string' && value.trim() === '') {
+    return '—'
+  }
+  return value
 }
 
 // Добавление в историю
@@ -359,6 +523,7 @@ const clearSearch = () => {
   searchQuery.value = ''
   searchResults.value = null
   error.value = null
+  currentPage.value = 1
 }
 </script>
 
@@ -368,5 +533,32 @@ const clearSearch = () => {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+/* Анимация для появления результатов */
+.border-gray-200 {
+  transition: all 0.2s ease-in-out;
+}
+
+.border-gray-200:hover {
+  transform: translateY(-2px);
+}
+
+/* Стили для пагинации */
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Стили для выпадающего списка на мобильных */
+select {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 0.5rem center;
+  background-repeat: no-repeat;
+  background-size: 1.5em 1.5em;
+  padding-right: 2.5rem;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  appearance: none;
 }
 </style>

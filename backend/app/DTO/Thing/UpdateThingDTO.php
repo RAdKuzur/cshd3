@@ -46,4 +46,7 @@ class UpdateThingDTO implements DTO
             'comment' => $this->comment,
         ];
     }
+    public function toSearchString(): string {
+        return $this->comment;
+    }
 }

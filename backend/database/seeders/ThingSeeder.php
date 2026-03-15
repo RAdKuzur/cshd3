@@ -39,7 +39,7 @@ class ThingSeeder extends Seeder
         DB::table('things')->truncate();
         for($i = 1; $i <= 1000; $i++){
             $thingId = DB::table('things')->insertGetId([
-                'name' => fake()->word(),
+                'name' => $name = fake()->word(),
                 'serial_number' => $i,
                 'inv_number' => $i,
                 'operation_date' => Carbon::create(
@@ -62,8 +62,14 @@ class ThingSeeder extends Seeder
             $this->elasticsearchService->index(
                 ElasticsearchService::THING_INDEX,
                 [
-                    'comment' => $fakeText,
-                    'id' => $thingId
+                    'info' => $fakeText,
+                    'id' => $thingId,
+                    'attributes' => [
+                        'Наименование' => $name,
+                        'Инвентарный №' => $i,
+                        'Серийный №' => $i,
+                        'Комментарий' => $fakeText
+                    ]
                 ]
             );
 
@@ -71,7 +77,7 @@ class ThingSeeder extends Seeder
         //things-furniture
         for($i = 1001; $i <= 2000; $i++){
             $thingId = DB::table('things')->insertGetId([
-                'name' => fake()->word(),
+                'name' => $name = fake()->word(),
                 'serial_number' => $i,
                 'inv_number' => $i,
                 'operation_date' => Carbon::create(
@@ -94,8 +100,14 @@ class ThingSeeder extends Seeder
             $this->elasticsearchService->index(
                 ElasticsearchService::THING_INDEX,
                [
-                   'comment' => $fakeText,
-                   'id' => $thingId
+                   'info' => $fakeText,
+                   'id' => $thingId,
+                   'attributes' => [
+                       'Наименование' => $name,
+                       'Инвентарный №' => $i,
+                       'Серийный №' => $i,
+                       'Комментарий' => $fakeText
+                   ]
                ]
             );
         }

@@ -23,7 +23,8 @@ class SearchService
             $hits = $this->elasticsearchService->search($index, $query)->asObject()->hits->hits;
             foreach ($hits as $hit) {
                 $data[] = [
-                    'link' => UrlHelper::createUrlFromSearch($index, $hit->_source->id)
+                    'link' => UrlHelper::createUrlFromSearch($index, $hit->_source->id),
+                    'attributes' => $hit->_source->attributes
                 ];
             }
 

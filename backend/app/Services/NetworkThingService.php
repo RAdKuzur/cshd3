@@ -66,8 +66,9 @@ class NetworkThingService
                 $this->elasticsearchService->index(
                     ElasticsearchService::NETWORK_THING_INDEX,
                     [
-                        'comment' => $networkThingDTO->comment,
-                        'id' => $networkThingId
+                        'info' => $networkThingDTO->toSearchString(),
+                        'id' => $networkThingId,
+                        'attributes' => $networkThingDTO->toSearchArray(),
                     ]
                 );
             }
@@ -86,8 +87,9 @@ class NetworkThingService
                 ElasticsearchService::NETWORK_THING_INDEX,
                 $id,
                 [
-                    'comment' => $networkThingDTO->comment,
-                    'id' => $id
+                    'info' => $networkThingDTO->toSearchString(),
+                    'id' => $id,
+                    'attributes' => $networkThingDTO->toSearchArray(),
                 ]
             );
             DB::commit();

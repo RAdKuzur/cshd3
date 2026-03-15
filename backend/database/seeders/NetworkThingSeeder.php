@@ -36,15 +36,20 @@ class NetworkThingSeeder extends Seeder
         foreach ($networkThings as $networkThing) {
             $networkThingsId = DB::table('network_things')->insertGetId([
                 'thing_id' => $networkThing->id,
-                'ip_address' => fake()->ipv4(),
-                'phone_number' => null,
+                'ip_address' => $ip = fake()->ipv4(),
+                'phone_number' => $phone = null,
                 'comment' => $fakeText = fake()->text()
             ]);
             $this->elasticsearchService->index(
                 ElasticsearchService::NETWORK_THING_INDEX,
                 [
-                    'comment' => $fakeText,
-                    'id' => $networkThingsId
+                    'info' => $fakeText,
+                    'id' => $networkThingsId,
+                    'attributes' => [
+                        'IP Адрес' => $ip,
+                        'Номер телефона' => $phone,
+                        'Комментарий' => $fakeText,
+                    ]
                 ]
             );
         }
@@ -55,15 +60,20 @@ class NetworkThingSeeder extends Seeder
         foreach ($telephones as $telephone) {
             $networkThingsId = DB::table('network_things')->insertGetId([
                 'thing_id' => $telephone->id,
-                'ip_address' => null,
-                'phone_number' => fake()->phoneNumber(),
+                'ip_address' => $ip = null,
+                'phone_number' => $phone = fake()->phoneNumber(),
                 'comment' => $fakeText = fake()->text()
             ]);
             $this->elasticsearchService->index(
                 ElasticsearchService::NETWORK_THING_INDEX,
                 [
-                    'comment' => $fakeText,
-                    'id' => $networkThingsId
+                    'info' => $fakeText,
+                    'id' => $networkThingsId,
+                    'attributes' => [
+                        'IP Адрес' => $ip,
+                        'Номер телефона' => $phone,
+                        'Комментарий' => $fakeText,
+                    ]
                 ]
             );
         }

@@ -76,4 +76,16 @@ class ThingDTO implements DTO
             'is_blocked' => $this->is_blocked,
         ];
     }
+
+    public function toSearchArray(): array {
+        return [
+            'Наименование' => $this->name,
+            'Инвентарный №' => $this->inv_number,
+            'Серийный №' => $this->serial_number,
+            'Комментарий' => $this->comment,
+        ];
+    }
+    public function toSearchString(): string {
+        return $this->comment;
+    }
 }

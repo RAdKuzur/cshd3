@@ -20,7 +20,7 @@ class SearchController extends Controller
         $data = $this->searchService->search([
             'query' => [
                 'match_phrase_prefix' => [
-                    'comment' => $request->binding()
+                    'info' => $request->binding()
                 ]
             ],
             'size' => 10000

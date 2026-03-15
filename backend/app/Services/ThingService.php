@@ -196,8 +196,9 @@ class ThingService
             $this->elasticsearchService->index(
                 ElasticsearchService::THING_INDEX,
                 [
-                    'comment' => $dto->comment,
-                    'id' => $thingId
+                    'info' => $dto->toSearchString(),
+                    'id' => $thingId,
+                    'attributes' => $dto->toSearchArray()
                 ]
             );
             DB::commit();
@@ -314,8 +315,9 @@ class ThingService
             $this->elasticsearchService->index(
                 ElasticsearchService::THING_INDEX,
                 [
-                    'comment' => $thing->comment,
-                    'id' => $thingId
+                    'info' => $thing->toSearchString(),
+                    'id' => $thingId,
+                    'attributes' => $thing->toSearchArray()
                 ]
             );
             DB::commit();
@@ -330,6 +332,7 @@ class ThingService
         DB::transaction(function () use ($id, $dto) {
 
             $thing = $this->thingRepository->get($id);
+
 //          $thing->update([
 //              'condition' => $dto->condition,
 //              'comment' => $dto->comment,
@@ -338,12 +341,19 @@ class ThingService
                 'condition' => $dto->condition,
                 'comment' => $dto->comment,
             ]);
+            $thingDTO = new ThingDTO(
+                name: $thing->name,
+                serial_number: $thing->serial_number,
+                inv_number: $thing->inv_number,
+                comment: $dto->comment,
+            );
             $this->elasticsearchService->updateById(
                 ElasticsearchService::THING_INDEX,
                 $id,
                 [
-                    'comment' => $dto->comment,
-                    'id' => $id
+                    'info' => $dto->toSearchString(),
+                    'id' => $id,
+                    'attributes' => $thingDTO->toSearchArray()
                 ]
             );
 
