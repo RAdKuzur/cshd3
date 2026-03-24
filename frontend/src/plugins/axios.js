@@ -13,10 +13,14 @@ axios.interceptors.request.use(config => {
     return config;
 });
 
+let isRefreshing = false;
+let queue = [];
+
 axios.interceptors.response.use(
     response => response,
-    error => {
+    async error => {
         const authStore = useAuthContextStore();
+        const originalRequest = error.config;
 
         if (error.response?.status === 400) {
             // Обработка сообщения об ошибке
@@ -28,15 +32,34 @@ axios.interceptors.response.use(
             }
         }
 
-        if (error.response?.status === 401) {
+        if (error.response?.status === 401 && !originalRequest._retry) {
             if(error.response?.data?.error === 'Invalid signed url')
             {
                 router.push('/signed-url-error');
             }
-            else {
-                Cookies.remove("access_token");
-                Cookies.remove("refresh_token");
+
+            originalRequest._retry = true;
+
+            if (isRefreshing) {
+                return new Promise((resolve) => {
+                    queue.push(() => resolve(axios(originalRequest)));
+                });
+            }
+
+            isRefreshing = true;
+
+            try {
+                await authStore.refresh();
+
+                queue.forEach(cb => cb());
+                queue = [];
+
+                return axios(originalRequest);
+            } catch (e) {
                 authStore.user = null;
+                router.push('/login');
+            } finally {
+                isRefreshing = false;
             }
         }
 
