@@ -35,7 +35,7 @@ class AuditoriumSeeder extends Seeder
                         'floor' => ((string)$number)[0],
                         'department_id' => DB::table('departments')->where('name', $department)->first()->id,
                         'branch_id' => DB::table('branches')->where('name', $branch)->first()->id,
-                        'area' => 0,
+                        'area' => rand(1, 100),
                         'comment' => $comment
                     ];
                     DB::table('auditoriums')->insert($auditorium);

@@ -18,7 +18,7 @@ class LicenceSeeder extends Seeder
         DB::table('licences')->truncate();
         DB::table('licences')->insert([
             'code' => Crypt::encrypt('licence_code'),
-            'expires_at' => now()->addDays(30),
+            'expires_at' => now()->addDays(45),
             'is_revoked' => LicenceDictionary::ACTIVE
         ]);
     }

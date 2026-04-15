@@ -24,7 +24,7 @@ class LicenceMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (env('LICENCE_URL') == '' || $this->licenceService->check()) {
+        if ($this->licenceService->check()) {
             return $next($request);
         }
         else {
