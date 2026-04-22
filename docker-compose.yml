@@ -16,13 +16,13 @@ services:
     command: >
       bash -c "
         docker-entrypoint.sh postgres &
-        PID=\$!
+        PID=\$$!
         sleep 5
         cp /tmp/pg_hba.conf /var/lib/postgresql/data/pg_hba.conf
         chown postgres:postgres /var/lib/postgresql/data/pg_hba.conf
         chmod 600 /var/lib/postgresql/data/pg_hba.conf
         pg_ctl reload -D /var/lib/postgresql/data
-        wait \$PID
+        wait \$$PID
       "
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_DATABASE}"]
