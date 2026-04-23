@@ -78,56 +78,56 @@
     </div>
 
     <!-- Преимущества -->
-    <div class="bg-white py-24 sm:py-32">
-      <div class="mx-auto max-w-7xl px-6 lg:px-8">
-        <div class="mx-auto max-w-2xl lg:text-center">
-          <h2 class="text-base/7 font-semibold text-indigo-600">Преимущества системы</h2>
-          <p class="mt-2 text-4xl font-semibold tracking-tight text-pretty text-gray-900 sm:text-5xl lg:text-balance">
-            Почему выбирают нашу систему
-          </p>
-        </div>
-        <div class="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-none">
-          <dl class="grid max-w-xl grid-cols-1 gap-x-8 gap-y-16 lg:max-w-none lg:grid-cols-3">
-            <div
-                v-for="benefit in benefits"
-                :key="benefit.name"
-                class="flex flex-col text-center"
-            >
-              <dt class="text-base/7 font-semibold text-gray-900">
-                <div class="mx-auto flex size-16 items-center justify-center rounded-full bg-indigo-100 mb-4">
-                  <component :is="benefit.icon" class="size-8 text-indigo-600" aria-hidden="true" />
-                </div>
-                {{ benefit.name }}
-              </dt>
-              <dd class="mt-2 flex flex-auto flex-col text-base/7 text-gray-600">
-                <p class="flex-auto">{{ benefit.description }}</p>
-              </dd>
-            </div>
-          </dl>
-        </div>
-      </div>
-    </div>
+<!--    <div class="bg-white py-24 sm:py-32">-->
+<!--      <div class="mx-auto max-w-7xl px-6 lg:px-8">-->
+<!--        <div class="mx-auto max-w-2xl lg:text-center">-->
+<!--          <h2 class="text-base/7 font-semibold text-indigo-600">Преимущества системы</h2>-->
+<!--          <p class="mt-2 text-4xl font-semibold tracking-tight text-pretty text-gray-900 sm:text-5xl lg:text-balance">-->
+<!--            Почему выбирают нашу систему-->
+<!--          </p>-->
+<!--        </div>-->
+<!--        <div class="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-none">-->
+<!--          <dl class="grid max-w-xl grid-cols-1 gap-x-8 gap-y-16 lg:max-w-none lg:grid-cols-3">-->
+<!--            <div-->
+<!--                v-for="benefit in benefits"-->
+<!--                :key="benefit.name"-->
+<!--                class="flex flex-col text-center"-->
+<!--            >-->
+<!--              <dt class="text-base/7 font-semibold text-gray-900">-->
+<!--                <div class="mx-auto flex size-16 items-center justify-center rounded-full bg-indigo-100 mb-4">-->
+<!--                  <component :is="benefit.icon" class="size-8 text-indigo-600" aria-hidden="true" />-->
+<!--                </div>-->
+<!--                {{ benefit.name }}-->
+<!--              </dt>-->
+<!--              <dd class="mt-2 flex flex-auto flex-col text-base/7 text-gray-600">-->
+<!--                <p class="flex-auto">{{ benefit.description }}</p>-->
+<!--              </dd>-->
+<!--            </div>-->
+<!--          </dl>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
 
     <!-- CTA секция -->
-    <div class="bg-white">
-      <div class="mx-auto max-w-7xl px-6 py-16 lg:px-8">
-        <div class="mx-auto max-w-2xl text-center">
-          <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-            Начните работу с системой сегодня
-          </h2>
-          <p class="mx-auto mt-6 max-w-xl text-lg leading-8 text-gray-600">
-            Получите доступ ко всем модулям системы управления Московского областного суда
-          </p>
-          <div class="mt-10 flex items-center justify-center gap-x-6">
-            <router-link to="/login">
-              <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg font-semibold shadow-sm transition-colors">
-                Перейти в систему
-              </button>
-            </router-link>
-          </div>
-        </div>
-      </div>
-    </div>
+<!--    <div class="bg-white">-->
+<!--      <div class="mx-auto max-w-7xl px-6 py-16 lg:px-8">-->
+<!--        <div class="mx-auto max-w-2xl text-center">-->
+<!--          <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">-->
+<!--            Начните работу с системой сегодня-->
+<!--          </h2>-->
+<!--          <p class="mx-auto mt-6 max-w-xl text-lg leading-8 text-gray-600">-->
+<!--            Получите доступ ко всем модулям системы управления Московского областного суда-->
+<!--          </p>-->
+<!--          <div class="mt-10 flex items-center justify-center gap-x-6">-->
+<!--            <router-link to="/login">-->
+<!--              <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg font-semibold shadow-sm transition-colors">-->
+<!--                Перейти в систему-->
+<!--              </button>-->
+<!--            </router-link>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
   </div>
 </template>
 
