@@ -110,12 +110,12 @@
             </div>
           </div>
 
-          <div>
-            <div class="text-sm font-medium text-gray-500 mb-1">Родительский предмет</div>
-            <div class="text-lg text-gray-900">
-              {{ thing?.thing_parent_id ? thing.thing_parent_id : 'Не указан' }}
-            </div>
-          </div>
+<!--          <div>-->
+<!--            <div class="text-sm font-medium text-gray-500 mb-1">Родительский предмет</div>-->
+<!--            <div class="text-lg text-gray-900">-->
+<!--              {{ thing?.thing_parent_id ? thing.thing_parent_id : 'Не указан' }}-->
+<!--            </div>-->
+<!--          </div>-->
 
           <div>
             <div class="text-sm font-medium text-gray-500 mb-1">Состояние</div>

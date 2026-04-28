@@ -25,6 +25,7 @@ class NetworkThingRequest extends FormRequest
         return [
             'thing_id' => 'required|integer',
             'ip_address' => 'nullable|string',
+            'domain' => 'nullable|string',
             'phone_number' => 'nullable|string',
             'comment' => 'nullable|string',
         ];
@@ -34,6 +35,7 @@ class NetworkThingRequest extends FormRequest
         return new NetworkThingDTO(
             thing_id: $this->validated('thing_id'),
             ip_address: $this->validated('ip_address'),
+            domain: $this->validated('domain'),
             phone_number: $this->validated('phone_number'),
             comment: $this->validated('comment'),
         );

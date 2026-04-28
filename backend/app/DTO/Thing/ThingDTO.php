@@ -13,6 +13,7 @@ class ThingDTO implements DTO
     public function __construct(
         public readonly ?string $id = null,
         public readonly ?string $name = null,
+        public readonly ?string $second_name = null,
         public readonly ?string $serial_number = null,
         public readonly ?string $inv_number= null,
         public readonly ?string $operation_date = null,
@@ -32,6 +33,7 @@ class ThingDTO implements DTO
     {
         return new self(
             name: $data['name'],
+            second_name: $data['second_name'],
             serial_number: $data['serial_number'] ?? null,
             inv_number: $data['inv_number'] ?? null,
             operation_date: Carbon::parse($data['operation_date']),
@@ -63,6 +65,7 @@ class ThingDTO implements DTO
     {
         return [
             'name' => $this->name,
+            'second_name' => $this->second_name,
             'serial_number' => $this->serial_number,
             'inv_number' => $this->inv_number,
             'operation_date' => $this->operation_date,

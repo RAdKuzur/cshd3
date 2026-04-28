@@ -117,6 +117,31 @@
                 </div>
               </div>
 
+              <!-- Домен -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                  Домен
+                  <span class="text-xs text-gray-500 ml-1">(необязательно)</span>
+                </label>
+                <div class="relative">
+                  <input
+                      v-model="form.domain"
+                      type="text"
+                      placeholder="Например: example.com или server.local"
+                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                      :class="{ 'border-red-300': errors.domain }"
+                  >
+                  <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                    <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                    </svg>
+                  </div>
+                </div>
+                <div v-if="errors.domain" class="mt-2 text-sm text-red-600">
+                  {{ errors.domain }}
+                </div>
+              </div>
+
               <!-- Номер телефона -->
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">
@@ -226,21 +251,21 @@
       </div>
 
       <!-- Подсказка -->
-<!--      <div v-if="!isLoading && !error" class="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">-->
-<!--        <div class="flex items-start">-->
-<!--          <svg class="w-5 h-5 text-blue-400 mt-0.5 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">-->
-<!--            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />-->
-<!--          </svg>-->
-<!--          <div>-->
-<!--            <h3 class="text-sm font-medium text-blue-800 mb-1">Важная информация</h3>-->
-<!--            <ul class="text-sm text-blue-700 space-y-1">-->
-<!--              <li>• Основное устройство нельзя изменить после создания</li>-->
-<!--              <li>• Для изменения основного устройства создайте новое сетевое устройство</li>-->
-<!--              <li>• Все изменения сохраняются сразу после нажатия кнопки "Сохранить"</li>-->
-<!--            </ul>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </div>-->
+      <!--      <div v-if="!isLoading && !error" class="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">-->
+      <!--        <div class="flex items-start">-->
+      <!--          <svg class="w-5 h-5 text-blue-400 mt-0.5 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">-->
+      <!--            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />-->
+      <!--          </svg>-->
+      <!--          <div>-->
+      <!--            <h3 class="text-sm font-medium text-blue-800 mb-1">Важная информация</h3>-->
+      <!--            <ul class="text-sm text-blue-700 space-y-1">-->
+      <!--              <li>• Основное устройство нельзя изменить после создания</li>-->
+      <!--              <li>• Для изменения основного устройства создайте новое сетевое устройство</li>-->
+      <!--              <li>• Все изменения сохраняются сразу после нажатия кнопки "Сохранить"</li>-->
+      <!--            </ul>-->
+      <!--          </div>-->
+      <!--        </div>-->
+      <!--      </div>-->
     </div>
   </div>
 </template>
@@ -260,6 +285,7 @@ const networkThingId = route.params.id
 const form = reactive({
   thing_id: null,
   ip_address: '',
+  domain: '',
   phone_number: '',
   comment: ''
 })
@@ -267,6 +293,7 @@ const form = reactive({
 // Исходные данные (для сравнения изменений)
 const originalData = reactive({
   ip_address: '',
+  domain: '',
   phone_number: '',
   comment: ''
 })
@@ -285,6 +312,7 @@ const submitError = ref('')
 // Ошибки валидации
 const errors = reactive({
   ip_address: '',
+  domain: '',
   phone_number: '',
   comment: ''
 })
@@ -292,6 +320,7 @@ const errors = reactive({
 // Проверка наличия изменений
 const hasChanges = computed(() => {
   return form.ip_address !== originalData.ip_address ||
+      form.domain !== originalData.domain ||
       form.phone_number !== originalData.phone_number ||
       form.comment !== originalData.comment
 })
@@ -319,11 +348,13 @@ const loadNetworkThingData = async () => {
       // Заполняем форму
       form.thing_id = data.data.thing_id
       form.ip_address = data.data.ip_address || ''
+      form.domain = data.data.domain || ''
       form.phone_number = data.data.phone_number || ''
       form.comment = data.data.comment || ''
 
       // Сохраняем оригинальные данные
       originalData.ip_address = data.data.ip_address || ''
+      originalData.domain = data.data.domain || ''
       originalData.phone_number = data.data.phone_number || ''
       originalData.comment = data.data.comment || ''
 
@@ -431,6 +462,12 @@ const validateForm = () => {
     }
   }
 
+  // Валидация domain (если указан)
+  if (form.domain && form.domain.length > 255) {
+    errors.domain = 'Домен слишком длинный (максимум 255 символов)'
+    isValid = false
+  }
+
   // Валидация phone_number (если указан)
   if (form.phone_number && form.phone_number.length > 50) {
     errors.phone_number = 'Номер телефона слишком длинный'
@@ -478,6 +515,7 @@ const handleSubmit = async () => {
     const updateData = {
       thing_id: form.thing_id, // Отправляем всегда
       ip_address: form.ip_address || null,
+      domain: form.domain || null,
       phone_number: form.phone_number || null,
       comment: form.comment || null
     }

@@ -162,6 +162,31 @@
                 </div>
               </div>
 
+              <!-- Домен -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                  Домен
+                  <span class="text-xs text-gray-500 ml-1">(необязательно)</span>
+                </label>
+                <div class="relative">
+                  <input
+                      v-model="form.domain"
+                      type="text"
+                      placeholder="Например: example.com или server.local"
+                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                      :class="{ 'border-red-300': errors.domain }"
+                  >
+                  <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                    <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                    </svg>
+                  </div>
+                </div>
+                <div v-if="errors.domain" class="mt-2 text-sm text-red-600">
+                  {{ errors.domain }}
+                </div>
+              </div>
+
               <!-- Номер телефона -->
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">
@@ -259,6 +284,7 @@
             <ul class="text-sm text-blue-700 space-y-1">
               <li>• <span class="font-medium">Основное устройство</span> — обязательно для заполнения</li>
               <li>• <span class="font-medium">IP-адрес</span> — должен быть валидным IP-адресом</li>
+              <li>• <span class="font-medium">Домен</span> — доменное имя устройства (например, example.com)</li>
               <li>• <span class="font-medium">Номер телефона</span> — можно указывать в любом формате</li>
               <li>• <span class="font-medium">Комментарий</span> — дополнительная информация об устройстве</li>
             </ul>
@@ -281,6 +307,7 @@ const router = useRouter()
 const form = reactive({
   thing_id: null,
   ip_address: '',
+  domain: '',
   phone_number: '',
   comment: ''
 })
@@ -289,6 +316,7 @@ const form = reactive({
 const errors = reactive({
   thing_id: '',
   ip_address: '',
+  domain: '',
   phone_number: '',
   comment: ''
 })
@@ -412,6 +440,12 @@ const validateForm = () => {
     }
   }
 
+  // Валидация domain (если указан)
+  if (form.domain && form.domain.length > 255) {
+    errors.domain = 'Домен слишком длинный (максимум 255 символов)'
+    isValid = false
+  }
+
   // Валидация phone_number (если указан)
   if (form.phone_number && form.phone_number.length > 50) {
     errors.phone_number = 'Номер телефона слишком длинный'
@@ -441,6 +475,7 @@ const handleSubmit = async () => {
     const response = await axios.post(`${BACKEND_URL}/api/network-things`, {
       thing_id: form.thing_id,
       ip_address: form.ip_address || null,
+      domain: form.domain || null,
       phone_number: form.phone_number || null,
       comment: form.comment || null
     })

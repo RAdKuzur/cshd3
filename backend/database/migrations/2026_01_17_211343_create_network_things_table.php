@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('thing_id')->constrained('things');
             $table->string('ip_address')->nullable();
+            $table->string('domain')->nullable();
             $table->string('phone_number')->nullable();
             $table->string('comment')->nullable();
             $table->timestamps();

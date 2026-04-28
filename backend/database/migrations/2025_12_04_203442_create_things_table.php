@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('things', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable(false);
+            $table->string('second_name')->nullable();
             $table->string('serial_number')->nullable();
             $table->string('inv_number')->nullable();
             $table->date('operation_date')->nullable();

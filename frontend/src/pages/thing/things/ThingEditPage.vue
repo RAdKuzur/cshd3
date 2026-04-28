@@ -171,28 +171,28 @@
               </div>
 
               <!-- Родительский предмет -->
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">
-                  Родительский предмет (опционально)
-                </label>
-                <select
-                    disabled
-                    v-model="formData.thing_parent_id"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
-                >
-                  <option value="">Не выбрано</option>
-                  <option
-                      v-for="item in parentThings"
-                      :key="item.id"
-                      :value="item.id"
-                  >
-                    {{ item.inv_number }}
-                  </option>
-                </select>
-                <p class="mt-1 text-sm text-gray-500">
-                  Если предмет является частью другого ОС
-                </p>
-              </div>
+<!--              <div>-->
+<!--                <label class="block text-sm font-medium text-gray-700 mb-2">-->
+<!--                  Родительский предмет (опционально)-->
+<!--                </label>-->
+<!--                <select-->
+<!--                    disabled-->
+<!--                    v-model="formData.thing_parent_id"-->
+<!--                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"-->
+<!--                >-->
+<!--                  <option value="">Не выбрано</option>-->
+<!--                  <option-->
+<!--                      v-for="item in parentThings"-->
+<!--                      :key="item.id"-->
+<!--                      :value="item.id"-->
+<!--                  >-->
+<!--                    {{ item.inv_number }}-->
+<!--                  </option>-->
+<!--                </select>-->
+<!--                <p class="mt-1 text-sm text-gray-500">-->
+<!--                  Если предмет является частью другого ОС-->
+<!--                </p>-->
+<!--              </div>-->
 
               <!-- Аудитория размещения -->
               <div>

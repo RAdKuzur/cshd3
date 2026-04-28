@@ -16,7 +16,7 @@
             </router-link>
             <div>
               <h1 class="text-3xl font-bold text-gray-900">Сетевое устройство</h1>
-<!--              <p class="text-gray-600 mt-2">Устройство #{{ networkThing?.id }}</p>-->
+              <!--              <p class="text-gray-600 mt-2">Устройство #{{ networkThing?.id }}</p>-->
             </div>
           </div>
 
@@ -70,6 +70,20 @@
           </div>
 
           <div>
+            <div class="text-sm font-medium text-gray-500 mb-1">Домен</div>
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
+                <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                </svg>
+              </div>
+              <div class="text-lg font-mono text-gray-900">
+                {{ networkThing?.domain || 'Не указан' }}
+              </div>
+            </div>
+          </div>
+
+          <div>
             <div class="text-sm font-medium text-gray-500 mb-1">Номер телефона</div>
             <div class="flex items-center gap-2">
               <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
@@ -88,10 +102,10 @@
             <div class="text-lg font-mono text-indigo-600 font-semibold">{{ networkThing?.inv_number || 'Не указан' }}</div>
           </div>
 
-<!--          <div>-->
-<!--            <div class="text-sm font-medium text-gray-500 mb-1">ID основного устройства</div>-->
-<!--            <div class="text-lg font-mono text-gray-900">{{ networkThing?.thing_id || 'Не указан' }}</div>-->
-<!--          </div>-->
+          <!--          <div>-->
+          <!--            <div class="text-sm font-medium text-gray-500 mb-1">ID основного устройства</div>-->
+          <!--            <div class="text-lg font-mono text-gray-900">{{ networkThing?.thing_id || 'Не указан' }}</div>-->
+          <!--          </div>-->
         </div>
       </div>
 
@@ -174,47 +188,47 @@
       </div>
 
       <!-- Системная информация -->
-<!--      <div v-if="!isLoading && networkThing && !error" class="bg-white shadow-lg border border-gray-200 p-6">-->
-<!--        <h2 class="text-xl font-semibold text-gray-900 mb-4">Системная информация</h2>-->
+      <!--      <div v-if="!isLoading && networkThing && !error" class="bg-white shadow-lg border border-gray-200 p-6">-->
+      <!--        <h2 class="text-xl font-semibold text-gray-900 mb-4">Системная информация</h2>-->
 
-<!--        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">-->
-<!--          <div>-->
-<!--            <div class="text-sm font-medium text-gray-500 mb-1">ID сетевого устройства</div>-->
-<!--            <div class="text-lg font-mono text-gray-900">{{ networkThing?.id || 'Не указан' }}</div>-->
-<!--          </div>-->
+      <!--        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">-->
+      <!--          <div>-->
+      <!--            <div class="text-sm font-medium text-gray-500 mb-1">ID сетевого устройства</div>-->
+      <!--            <div class="text-lg font-mono text-gray-900">{{ networkThing?.id || 'Не указан' }}</div>-->
+      <!--          </div>-->
 
-<!--          <div>-->
-<!--            <div class="text-sm font-medium text-gray-500 mb-1">ID связанного предмета</div>-->
-<!--            <div class="text-lg font-mono text-gray-900">-->
-<!--              <router-link-->
-<!--                  v-if="networkThing?.thing_id"-->
-<!--                  :to="`/things/view/${networkThing.thing_id}`"-->
-<!--                  class="text-indigo-600 hover:text-indigo-800 hover:underline"-->
-<!--              >-->
-<!--                {{ networkThing.thing_id }}-->
-<!--              </router-link>-->
-<!--              <span v-else>Не указан</span>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </div>-->
+      <!--          <div>-->
+      <!--            <div class="text-sm font-medium text-gray-500 mb-1">ID связанного предмета</div>-->
+      <!--            <div class="text-lg font-mono text-gray-900">-->
+      <!--              <router-link-->
+      <!--                  v-if="networkThing?.thing_id"-->
+      <!--                  :to="`/things/view/${networkThing.thing_id}`"-->
+      <!--                  class="text-indigo-600 hover:text-indigo-800 hover:underline"-->
+      <!--              >-->
+      <!--                {{ networkThing.thing_id }}-->
+      <!--              </router-link>-->
+      <!--              <span v-else>Не указан</span>-->
+      <!--            </div>-->
+      <!--          </div>-->
+      <!--        </div>-->
+      <!--      </div>-->
 
       <!-- Действия -->
       <div v-if="!isLoading && networkThing && !error" class="mt-8 flex items-center justify-between bg-white shadow-lg border border-gray-200 p-6">
         <div class="text-sm text-gray-500">
-<!--          Статус: <span class="font-medium text-green-600">Активный</span>-->
+          <!--          Статус: <span class="font-medium text-green-600">Активный</span>-->
         </div>
 
         <div class="flex items-center gap-3">
-<!--          <button-->
-<!--              @click="handlePrint"-->
-<!--              class="px-4 py-2 border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors flex items-center gap-2"-->
-<!--          >-->
-<!--            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">-->
-<!--              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />-->
-<!--            </svg>-->
-<!--            Печать-->
-<!--          </button>-->
+          <!--          <button-->
+          <!--              @click="handlePrint"-->
+          <!--              class="px-4 py-2 border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors flex items-center gap-2"-->
+          <!--          >-->
+          <!--            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">-->
+          <!--              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />-->
+          <!--            </svg>-->
+          <!--            Печать-->
+          <!--          </button>-->
 
           <button
               @click="handleDelete"

@@ -24,6 +24,7 @@ class ThingRequest extends FormRequest
     {
         return [
             'name' => 'required',
+            'second_name' => 'nullable',
             'inv_number' => 'nullable',
             'serial_number' => 'nullable',
             'operation_date' => 'nullable',
@@ -39,6 +40,7 @@ class ThingRequest extends FormRequest
     public function toThingDTO() : ThingDTO {
         return new ThingDTO(
             name: $this->validated('name'),
+            second_name: $this->validated('second_name'),
             serial_number: $this->validated('serial_number'),
             inv_number: $this->validated('inv_number'),
             operation_date: $this->validated('operation_date'),

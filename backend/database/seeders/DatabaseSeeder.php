@@ -25,12 +25,12 @@ class DatabaseSeeder extends Seeder
             PositionSeeder::class,
             //PeopleSeeder::class,
             TestPeopleSeeder::class,
-            AuditoriumResponsibilitySeeder::class,
-            ThingSeeder::class,
+            //AuditoriumResponsibilitySeeder::class,
+            //ThingSeeder::class,
             //TransferActSeeder::class,
             LicenceSeeder::class,
-            NetworkThingSeeder::class,
-            ResourceSeeder::class
+            //NetworkThingSeeder::class,
+            //ResourceSeeder::class
         ]);
     }
 }

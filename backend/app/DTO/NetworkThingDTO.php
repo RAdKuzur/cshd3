@@ -8,6 +8,7 @@ class NetworkThingDTO implements DTO
 
     public ?int $thing_id;
     public ?string $ip_address;
+    public ?string $domain;
     public ?string $phone_number;
     public ?string $comment;
     public ?string $inv_number;
@@ -17,6 +18,7 @@ class NetworkThingDTO implements DTO
         ?int $id = null,
         ?int $thing_id = null,
         ?string $ip_address = null,
+        ?string $domain = null,
         ?string $phone_number = null,
         ?string $comment = null,
         ?string $inv_number = null,
@@ -26,6 +28,7 @@ class NetworkThingDTO implements DTO
         $this->id = $id;
         $this->thing_id = $thing_id;
         $this->ip_address = $ip_address;
+        $this->domain = $domain;
         $this->phone_number = $phone_number;
         $this->comment = $comment;
         $this->inv_number = $inv_number;
@@ -39,6 +42,7 @@ class NetworkThingDTO implements DTO
             $array['id'],
             $array['thing_id'],
             $array['ip_address'],
+            $array['domain'],
             $array['phone_number'],
             $array['comment'],
             $array['inv_number'],
@@ -50,6 +54,7 @@ class NetworkThingDTO implements DTO
         return [
             'thing_id' => $this->thing_id,
             'ip_address' => $this->ip_address,
+            'domain' => $this->domain,
             'phone_number' => $this->phone_number,
             'comment' => $this->comment
         ];
