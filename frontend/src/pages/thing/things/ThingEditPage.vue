@@ -54,11 +54,28 @@
                     v-model="formData.name"
                     type="text"
                     disabled
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 cursor-not-allowed"
                     placeholder="Например: Ноутбук Dell Latitude 5420"
                 />
                 <p class="mt-1 text-sm text-gray-500">
                   Полное название основного средства
+                </p>
+              </div>
+
+              <!-- Дополнительное название -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                  Дополнительное название
+                </label>
+                <input
+                    v-model="formData.second_name"
+                    type="text"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                    placeholder="Например: Рабочая станция Иванова"
+                    disabled
+                />
+                <p class="mt-1 text-sm text-gray-500">
+                  Альтернативное или краткое название предмета
                 </p>
               </div>
 
@@ -71,7 +88,7 @@
                     v-model="formData.serial_number"
                     type="text"
                     disabled
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 cursor-not-allowed"
                     placeholder="Например: CN-0R3XX1-64180-2B9-016K"
                 />
                 <p class="mt-1 text-sm text-gray-500">
@@ -88,7 +105,7 @@
                     v-model="formData.inv_number"
                     type="text"
                     disabled
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 cursor-not-allowed"
                     placeholder="Например: INV-2024-001"
                 />
                 <p class="mt-1 text-sm text-gray-500">
@@ -105,7 +122,7 @@
                     v-model="formData.operation_date"
                     type="date"
                     disabled
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 cursor-not-allowed"
                 />
                 <p class="mt-1 text-sm text-gray-500">
                   Дата начала использования предмета
@@ -130,7 +147,7 @@
                     v-model="formData.thing_type_id"
                     required
                     disabled
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 cursor-not-allowed"
                 >
                   <option value="">Выберите тип</option>
                   <option
@@ -154,7 +171,7 @@
                 <select
                     disabled
                     v-model="formData.balance"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 cursor-not-allowed"
                 >
                   <option value="">Выберите характеристику</option>
                   <option
@@ -170,30 +187,6 @@
                 </p>
               </div>
 
-              <!-- Родительский предмет -->
-<!--              <div>-->
-<!--                <label class="block text-sm font-medium text-gray-700 mb-2">-->
-<!--                  Родительский предмет (опционально)-->
-<!--                </label>-->
-<!--                <select-->
-<!--                    disabled-->
-<!--                    v-model="formData.thing_parent_id"-->
-<!--                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"-->
-<!--                >-->
-<!--                  <option value="">Не выбрано</option>-->
-<!--                  <option-->
-<!--                      v-for="item in parentThings"-->
-<!--                      :key="item.id"-->
-<!--                      :value="item.id"-->
-<!--                  >-->
-<!--                    {{ item.inv_number }}-->
-<!--                  </option>-->
-<!--                </select>-->
-<!--                <p class="mt-1 text-sm text-gray-500">-->
-<!--                  Если предмет является частью другого ОС-->
-<!--                </p>-->
-<!--              </div>-->
-
               <!-- Аудитория размещения -->
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">
@@ -202,7 +195,7 @@
                 <select
                     disabled
                     v-model="formData.auditorium_id"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 cursor-not-allowed"
                 >
                   <option value="">Не выбрано</option>
                   <option
@@ -224,7 +217,6 @@
                   Состояние
                 </label>
                 <select
-                    disabled
                     v-model="selectedCondition"
                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
                 >
@@ -254,7 +246,7 @@
                       type="number"
                       min="0"
                       step="0.01"
-                      class="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                      class="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-lg bg-gray-50 cursor-not-allowed"
                       placeholder="0.00"
                   />
                   <span class="absolute left-3 top-3.5 text-gray-500">₽</span>
@@ -526,6 +518,7 @@
     </div>
   </div>
 </template>
+
 <script setup>
 import { ref, reactive, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -549,7 +542,7 @@ const conditionId = ref(null)
 // Динамические данные с сервера
 const types = ref({})
 const conditions = ref({})
-const balanceTypes = ref({}) // Добавляем характеристики учёта
+const balanceTypes = ref({})
 const parentThings = ref([])
 const auditoriums = ref([])
 const isLoading = ref(false)
@@ -559,14 +552,12 @@ const error = ref(null)
 // Вычисляемое свойство для выбранного состояния
 const selectedCondition = computed({
   get() {
-    // Преобразуем ID состояния в строку для поиска в условиях
     if (conditionId.value !== null && conditions.value[conditionId.value]) {
       return conditions.value[conditionId.value]
     }
     return ''
   },
   set(value) {
-    // Находим ID по строковому значению
     for (const [key, label] of Object.entries(conditions.value)) {
       if (label === value) {
         conditionId.value = parseInt(key)
@@ -595,7 +586,6 @@ const loadThingData = async () => {
     if (response.data.success && response.data.data) {
       const data = response.data.data
 
-
       // Сохраняем оригинальный ID состояния
       conditionId.value = data.condition
 
@@ -613,17 +603,18 @@ const loadThingData = async () => {
       // Преобразование данных для формы
       formData.value = {
         name: data.name || '',
+        second_name: data.second_name || '', // Добавлено поле дополнительного названия
         serial_number: data.serial_number || '',
         inv_number: data.inv_number || '',
         operation_date: operationDate,
         thing_type_id: data.thing_type_id || '',
-        balance: data.balance || '', // Добавляем поле характеристики учёта
+        balance: data.balance || '',
         thing_parent_id: data.thing_parent_id || '',
         auditorium_id: data.auditorium_id || '',
         price: data.price || 0,
         comment: data.comment || '',
         is_composite: data.is_composite || 0,
-        children: data.children,
+        children: data.children || [],
       }
 
       originalData.value = {
@@ -644,40 +635,33 @@ const loadThingData = async () => {
 // Загрузка типов, условий, родительских предметов и аудиторий с сервера
 const loadFormData = async () => {
   try {
-    // Загружаем все данные параллельно
     const [typesResponse, balanceResponse, parentsResponse, auditoriumsResponse] = await Promise.all([
       axios.get(BACKEND_URL + '/api/info/thing-types'),
-      axios.get(BACKEND_URL + '/api/info/balance'), // Добавляем запрос характеристик учёта
+      axios.get(BACKEND_URL + '/api/info/balance'),
       axios.get(BACKEND_URL + '/api/things/simple-things'),
       axios.get(BACKEND_URL + '/api/auditoriums')
     ])
 
-    // Обработка типов и условий
     if (typesResponse.data.success) {
       types.value = typesResponse.data.types || {}
       conditions.value = typesResponse.data.conditions || {}
-
-      // После загрузки условий, обновляем вычисляемое свойство
     } else {
       types.value = {}
       conditions.value = {}
     }
 
-    // Обработка характеристик учёта
     if (balanceResponse.data.success) {
       balanceTypes.value = balanceResponse.data.types || {}
     } else {
       balanceTypes.value = {}
     }
 
-    // Обработка родительских предметов
     if (parentsResponse.data.success) {
       parentThings.value = parentsResponse.data.data || []
     } else {
       parentThings.value = []
     }
 
-    // Обработка аудиторий
     if (auditoriumsResponse.data.success) {
       auditoriums.value = auditoriumsResponse.data.data || []
     } else {
@@ -708,12 +692,13 @@ const handleSubmit = async () => {
 
     // Валидация
     if (!formData.value.name || !formData.value.thing_type_id) {
-      alert('Пожалуйста, заполните все обязательные поля (Название, Тип предмета и Стоимость)')
+      alert('Пожалуйста, заполните все обязательные поля')
       return
     }
 
     // Подготовка данных для отправки
     const dataToSend = {
+      second_name: formData.value.second_name || null, // Добавлено поле дополнительного названия
       condition: conditionId.value,
       comment: formData.value.comment || null,
 
@@ -730,7 +715,6 @@ const handleSubmit = async () => {
         delete: deletedIds
       }
     }
-
 
     // Отправка данных на сервер
     const response = await axios.put(
@@ -751,7 +735,6 @@ const handleSubmit = async () => {
     }
 
   } catch (error) {
-
     let errorMessage = 'Произошла ошибка при обновлении предмета'
 
     if (error.response) {

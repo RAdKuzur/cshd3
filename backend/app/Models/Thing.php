@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /** @property int $id
  * @property string $name
+ * @property string $second_name
  * @property string $serial_number
  * @property string $inv_number
  * @property $operation_date
@@ -40,6 +41,7 @@ class Thing extends Model
     protected $table = 'things';
     protected $fillable = [
         'name',
+        'second_name',
         'serial_number',
         'inv_number',
         'operation_date',

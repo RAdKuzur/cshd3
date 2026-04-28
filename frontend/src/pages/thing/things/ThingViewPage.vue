@@ -61,6 +61,11 @@
           </div>
 
           <div>
+            <div class="text-sm font-medium text-gray-500 mb-1">Дополнительное название</div>
+            <div class="text-lg text-gray-900">{{ thing?.second_name || 'Не указано' }}</div>
+          </div>
+
+          <div>
             <div class="text-sm font-medium text-gray-500 mb-1">Инвентарный номер</div>
             <div class="text-lg font-mono text-indigo-600 font-semibold">{{ thing?.inv_number || 'Не указан' }}</div>
           </div>
@@ -109,13 +114,6 @@
               <div class="text-lg text-gray-900">{{ getBalanceLabel(thing?.balance) || 'Не указано' }}</div>
             </div>
           </div>
-
-<!--          <div>-->
-<!--            <div class="text-sm font-medium text-gray-500 mb-1">Родительский предмет</div>-->
-<!--            <div class="text-lg text-gray-900">-->
-<!--              {{ thing?.thing_parent_id ? thing.thing_parent_id : 'Не указан' }}-->
-<!--            </div>-->
-<!--          </div>-->
 
           <div>
             <div class="text-sm font-medium text-gray-500 mb-1">Состояние</div>
@@ -261,7 +259,6 @@
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                 <div v-if="item.to">
                   <div class="font-medium">{{ getPersonName(item.to) }}</div>
-
                 </div>
                 <span v-else class="text-gray-400 italic">-</span>
               </td>
@@ -292,8 +289,6 @@
       </div>
 
       <!-- Файлы -->
-      <!-- Файлы -->
-      <!-- Файлы -->
       <div class="bg-white rounded-2xl shadow-lg border overflow-hidden">
         <div class="p-6">
 
@@ -317,34 +312,28 @@
               </button>
 
               <span v-if="selectedFileName" class="text-sm text-gray-600 truncate max-w-xs">
-          {{ selectedFileName }}
-        </span>
+                {{ selectedFileName }}
+              </span>
 
             </div>
           </div>
-
 
           <div v-if="files.length === 0" class="text-gray-500">
             Файлы отсутствуют
           </div>
 
-
           <!-- ИЗОБРАЖЕНИЯ -->
-
           <div v-if="images.length" class="mb-8">
-
             <h3 class="text-lg font-semibold text-gray-800 mb-4">
               Изображения
             </h3>
 
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-
               <div
                   v-for="file in images"
                   :key="file.id"
                   class="relative group border rounded-lg overflow-hidden bg-gray-50"
               >
-
                 <a
                     :href="getFileUrl(file.file_id)"
                     :download="file.filename"
@@ -365,30 +354,22 @@
                 >
                   Удалить
                 </button>
-
               </div>
-
             </div>
-
           </div>
 
-
           <!-- ДОКУМЕНТЫ -->
-
           <div v-if="documents.length">
-
             <h3 class="text-lg font-semibold text-gray-800 mb-4">
               Документы
             </h3>
 
             <div class="space-y-3">
-
               <div
                   v-for="file in documents"
                   :key="file.id"
                   class="flex items-center justify-between border rounded-lg p-3 hover:bg-gray-50 transition"
               >
-
                 <a
                     :href="getFileUrl(file.file_id)"
                     target="_blank"
@@ -403,11 +384,8 @@
                 >
                   Удалить
                 </button>
-
               </div>
-
             </div>
-
           </div>
 
         </div>
@@ -422,9 +400,6 @@
         </div>
 
       </div>
-      <!-- Файлы -->
-      <!-- Файлы -->
-      <!-- Файлы -->
 
       <!-- Действия -->
       <div v-if="!isLoading && thing && !error" class="mt-8 flex items-center justify-between bg-white shadow-lg border border-gray-200 p-6">
@@ -461,7 +436,7 @@ const router = useRouter()
 const thing = ref(null)
 const auditoriums = ref([])
 const branches = ref({})
-const people = ref({}) // Словарь для хранения информации о людях
+const people = ref({})
 const isLoading = ref(true)
 
 const successMessage = ref('')
@@ -500,7 +475,7 @@ onMounted(async () => {
     loadAuditoriums(),
     loadBalanceTypes(),
     loadBranches(),
-    loadHistory(),// Загружаем историю
+    loadHistory(),
     loadFiles()
   ])
 })
@@ -518,11 +493,9 @@ const loadFiles = async () => {
     }
   } catch (err) {
     files.value = []
-    // Пробрасываем ошибку дальше, чтобы вызывающий код мог среагировать
     throw err
   }
 }
-
 
 // Загрузка данных предмета
 const loadThingData = async () => {
@@ -555,10 +528,7 @@ const loadThingData = async () => {
   } finally {
     isLoading.value = false
   }
-
-
 }
-
 
 const fileInput = ref(null)
 const selectedFileName = ref('')
@@ -599,10 +569,7 @@ const deleteFile = async (file) => {
   if (!confirm('Удалить файл?')) return
 
   try {
-    // 1. удаляем связь в PHP
     await DeleteFilePHP(file.id)
-
-    // 2. удаляем физически из Go-сервиса
     await DeleteFile(file.file_id)
 
     successMessage.value = 'Файл удалён'
@@ -621,7 +588,6 @@ const getFileUrl = (fileId) => {
   return FILES_URL + '/' + fileId
 }
 
-
 // Загрузка истории перемещений
 const loadHistory = async () => {
   try {
@@ -635,14 +601,12 @@ const loadHistory = async () => {
     if (data.success && data.data) {
       historyItems.value = data.data.sort((a, b) => new Date(b.date) - new Date(a.date))
 
-      // Собираем все ID людей из истории
       const personIds = new Set()
       historyItems.value.forEach(item => {
         if (item.from) personIds.add(item.from)
         if (item.to) personIds.add(item.to)
       })
 
-      // Загружаем информацию о людях
       await loadPeople([...personIds])
     } else {
       historyItems.value = []
@@ -663,12 +627,10 @@ const loadPeople = async (personIds) => {
   if (!personIds.length) return
 
   try {
-    // Загружаем весь список людей
     const response = await axios.get(`${BACKEND_URL}/api/people`)
     const data = response.data
 
     if (data.success && data.data) {
-      // Создаем словарь для быстрого доступа по ID
       const peopleMap = {}
       data.data.forEach(person => {
         peopleMap[person.id] = person
@@ -677,7 +639,6 @@ const loadPeople = async (personIds) => {
     }
   } catch (err) {
     console.error('Ошибка загрузки списка людей:', err)
-    // В случае ошибки создаем заглушки только для нужных ID
     const fallbackPeople = {}
     personIds.forEach(id => {
       fallbackPeople[id] = { id, full_name: `Пользователь ${id}` }
@@ -693,7 +654,6 @@ const getPersonName = (personId) => {
   const person = people.value[personId]
   if (!person) return `ID: ${personId}`
 
-  // Формируем ФИО из полей firstname, surname, patronymic
   const parts = []
   if (person.surname) parts.push(person.surname)
   if (person.firstname) parts.push(person.firstname)
@@ -713,7 +673,7 @@ const loadBalanceTypes = async () => {
       balanceTypes.value = data.types || {}
     }
   } catch (err) {
-    balanceTypes.value = staticBalances
+    balanceTypes.value = {}
   }
 }
 
@@ -760,7 +720,7 @@ const loadConditions = async () => {
       conditionsMap.value = data.conditions || {}
     }
   } catch (err) {
-    conditionsMap.value = staticConditions
+    conditionsMap.value = {}
     typeMap.value = {}
   }
 }
@@ -853,7 +813,7 @@ const getBalanceLabel = (balanceId) => {
   if (Object.keys(balanceTypes.value).length > 0) {
     return balanceTypes.value[balanceId] || `Характеристика ${balanceId}`
   }
-  return staticBalances[balanceId] || `Характеристика ${balanceId}`
+  return `Характеристика ${balanceId}`
 }
 
 // Методы форматирования
@@ -901,7 +861,7 @@ const getConditionLabel = (conditionId) => {
     return conditionsMap.value[conditionId] || `Состояние ${conditionId}`
   }
 
-  return staticConditions[conditionId] || `Состояние ${conditionId}`
+  return `Состояние ${conditionId}`
 }
 
 const getConditionColor = (conditionId) => {
@@ -955,10 +915,6 @@ const handleEdit = () => {
   router.push(`/things/edit/${route.params.id}`)
 }
 
-const handlePrint = () => {
-  window.print()
-}
-
 const handleDelete = async () => {
   if (!confirm('Вы уверены, что хотите удалить этот предмет? Это действие нельзя отменить.')) {
     return
@@ -975,11 +931,13 @@ const handleDelete = async () => {
     const data = response.data
     if (data.success) {
       alert('Предмет успешно удален')
-      router.push('/things/things')
+      router.push('/things')
     } else {
+      router.push('/things')
       throw new Error(data.message || 'Ошибка при удалении')
     }
   } catch (err) {
+    router.push('/things')
     let errorMessage = 'Не удалось удалить предмет'
     if (err.response) {
       errorMessage += `: ${err.response.status}`
@@ -989,12 +947,9 @@ const handleDelete = async () => {
     } else if (err.message) {
       errorMessage += `: ${err.message}`
     }
-
-    alert(errorMessage)
+    //alert(errorMessage)
   }
 }
-
-
 
 </script>
 

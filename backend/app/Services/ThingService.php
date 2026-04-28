@@ -143,6 +143,7 @@ class ThingService
         return new ThingDTO(
             id: $model->id,
             name: $model->name,
+            second_name: $model->second_name,
             serial_number: $model->serial_number,
             inv_number: $model->inv_number,
             operation_date: $model->operation_date,
@@ -416,8 +417,12 @@ class ThingService
             foreach ($thing->transferActThings as $transferActThing) {
                 $this->transferActThingRepository->delete($transferActThing->id);
             }
-            $this->networkThingRepository->delete($thing->networkThing->id);
-            $this->deviceRepository->delete($thing->device->id);
+            if ($thing->networkThing) {
+                $this->networkThingRepository->delete($thing->networkThing->id);
+            }
+            if ($thing->device) {
+                $this->deviceRepository->delete($thing->device->id);
+            }
             $files = $this->fileRepository->getFiles('things', $thing->id);
             foreach ($files as $file) {
                 $this->fileRepository->delete($file->id);

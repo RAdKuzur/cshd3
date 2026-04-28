@@ -38,6 +38,7 @@ class NetworkThingSeeder extends Seeder
                 'thing_id' => $networkThing->id,
                 'ip_address' => $ip = fake()->ipv4(),
                 'phone_number' => $phone = null,
+                'domain' => 'DOMAIN',
                 'comment' => $fakeText = fake()->text()
             ]);
             $this->elasticsearchService->index(
@@ -61,6 +62,7 @@ class NetworkThingSeeder extends Seeder
             $networkThingsId = DB::table('network_things')->insertGetId([
                 'thing_id' => $telephone->id,
                 'ip_address' => $ip = null,
+                'domain' => null,
                 'phone_number' => $phone = fake()->phoneNumber(),
                 'comment' => $fakeText = fake()->text()
             ]);
