@@ -134,13 +134,13 @@
                 <label class="block text-sm font-medium text-gray-700 mb-2">
                   Кабинет размещения
                 </label>
-                <select v-model="formData.auditorium_id"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors">
-                  <option value="">Не выбрано</option>
-                  <option v-for="auditorium in auditoriums" :key="auditorium.id" :value="auditorium.id">
-                    {{ auditorium.name }}
-                  </option>
-                </select>
+                <SearchSelect
+                    v-model="formData.auditorium_id"
+                    :options="auditoriums"
+                    value-field="id"
+                    label-field="name"
+                    placeholder="Не выбрано"
+                />
                 <p class="mt-1 text-sm text-gray-500">
                   Кабинет, где находится предмет
                 </p>
@@ -285,6 +285,7 @@
 import { ref, reactive, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { createSimpleThing, createCompositeThing } from '@/requests/thingRequest.js'
+import SearchSelect from '@/components/SearchSelect.vue'
 import axios from "axios"
 
 import { BACKEND_URL } from "@/router.js";
