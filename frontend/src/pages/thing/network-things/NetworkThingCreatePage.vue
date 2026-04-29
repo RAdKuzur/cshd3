@@ -217,7 +217,7 @@
             <div class="mb-8">
               <label class="block text-sm font-medium text-gray-700 mb-2">
                 Комментарий
-                <span class="text-xs text-gray-500 ml-1">(необязательно)</span>
+                <span class="text-xs text-gray-500 ml-1">(обязательно)</span>
               </label>
               <textarea
                   v-model="form.comment"
@@ -451,6 +451,12 @@ const validateForm = () => {
     errors.phone_number = 'Номер телефона слишком длинный'
     isValid = false
   }
+
+  if (!form.comment) {
+    errors.comment = 'Комментарий должен быть'
+    isValid = false
+  }
+
 
   // Валидация comment (если указан)
   if (form.comment && form.comment.length > 1000) {

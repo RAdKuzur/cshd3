@@ -459,10 +459,14 @@ const handleSubmit = async () => {
   try {
     isSubmitting.value = true
 
-    if (!formData.name || !formData.thing_type_id) {
-      alert('Пожалуйста, заполните все обязательные поля')
+    if (!formData.name || !formData.thing_type_id
+        || !formData.serial_number || !formData.inv_number
+        || !formData.operation_date || !formData.thing_type_id
+        || !formData.price || !formData.comment)  {
+      alert('Пожалуйста, заполните все обязательные поля *')
       return
     }
+
 
     // Подготовка данных для отправки
     const dataToSend = {

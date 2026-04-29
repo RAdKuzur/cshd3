@@ -466,7 +466,7 @@
 
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">
-                Комментарий
+                Комментарий *
               </label>
               <textarea
                   v-model="formData.comment"
@@ -691,10 +691,14 @@ const handleSubmit = async () => {
     isSubmitting.value = true
 
     // Валидация
-    if (!formData.value.name || !formData.value.thing_type_id) {
-      alert('Пожалуйста, заполните все обязательные поля')
+    if (!formData.name || !formData.thing_type_id
+        || !formData.serial_number || !formData.inv_number
+        || !formData.operation_date || !formData.thing_type_id
+        || !formData.price || !formData.comment)  {
+      alert('Пожалуйста, заполните все обязательные поля *')
       return
     }
+
 
     // Подготовка данных для отправки
     const dataToSend = {

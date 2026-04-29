@@ -474,11 +474,17 @@ const validateForm = () => {
     isValid = false
   }
 
+  if (!form.comment) {
+    errors.comment = 'Комментарий не должен быть пустым'
+    isValid = false
+  }
+
   // Валидация comment (если указан)
   if (form.comment && form.comment.length > 1000) {
     errors.comment = 'Комментарий не должен превышать 1000 символов'
     isValid = false
   }
+
 
   return isValid
 }
