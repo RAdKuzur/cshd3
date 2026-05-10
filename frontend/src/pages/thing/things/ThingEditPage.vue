@@ -690,21 +690,25 @@ const handleSubmit = async () => {
   try {
     isSubmitting.value = true
 
+    const data = formData.value;
+
     // Валидация
-    if (!formData.name || !formData.thing_type_id
-        || !formData.serial_number || !formData.inv_number
-        || !formData.operation_date || !formData.thing_type_id
-        || !formData.price || !formData.comment)  {
+    if (!data.name ||
+        !data.thing_type_id ||
+        !data.serial_number ||
+        !data.inv_number ||
+        !data.operation_date ||
+        !data.price ||
+        !data.comment) {
       alert('Пожалуйста, заполните все обязательные поля *')
       return
     }
 
-
     // Подготовка данных для отправки
     const dataToSend = {
-      second_name: formData.value.second_name || null, // Добавлено поле дополнительного названия
+      second_name: data.second_name || null,
       condition: conditionId.value,
-      comment: formData.value.comment || null,
+      comment: data.comment || null,
 
       children: {
         create: newChildren.map(child => ({
@@ -733,7 +737,7 @@ const handleSubmit = async () => {
 
     if (response.data && response.data.success) {
       alert('Предмет успешно обновлен!')
-      router.push('/things')
+      router.back()
     } else {
       throw new Error(response.data?.message || 'Ошибка при обновлении предмета')
     }

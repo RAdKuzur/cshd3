@@ -241,7 +241,7 @@
 
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">
-                Комментарий
+                Комментарий *
               </label>
               <textarea v-model="formData.comment" rows="4"
                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
@@ -518,7 +518,7 @@ const handleSubmit = async () => {
 
     if (response.data.success) {
       alert('Предмет успешно создан!')
-      router.push('/things')
+      router.back()
     } else {
       throw new Error(response.data?.message || 'Ошибка при создании предмета')
     }

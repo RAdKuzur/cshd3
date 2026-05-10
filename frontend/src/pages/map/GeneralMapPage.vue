@@ -320,14 +320,14 @@
 
       <!-- Панель управления -->
       <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-6 mb-8">
-        <div class="flex flex-col lg:flex-row items-center justify-between gap-6">
+        <div class="flex flex-col lg:flex-row items-start justify-between gap-6">
           <!-- Поиск -->
           <div class="w-full lg:flex-1">
             <div class="relative w-full">
               <input
                   v-model="searchQuery"
                   type="text"
-                  placeholder="Поиск..."
+                  placeholder="Поиск по названию кабинета, объектам, сотрудникам, телефонам..."
                   class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg
              focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500
              bg-white shadow-sm"
@@ -341,27 +341,158 @@
             </div>
           </div>
 
-          <!-- Фильтры -->
-          <div class="flex flex-wrap gap-3">
-            <select
-                v-model="buildingFilter"
-                class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-            >
-              <option value="">Все корпуса</option>
-              <option v-for="building in buildings" :key="building" :value="building">
-                {{ building }}
-              </option>
-            </select>
+          <!-- Кнопка сброса фильтров -->
+          <button
+              v-if="selectedBuildings.length > 0 || selectedBranches.length > 0"
+              @click="resetFilters"
+              class="px-4 py-3 text-sm text-red-600 hover:text-red-700 font-medium flex items-center gap-2 transition-colors whitespace-nowrap"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+            Сбросить фильтры
+          </button>
+        </div>
 
-            <select
-                v-model="branchFilter"
-                class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+        <!-- Фильтры в виде чекбоксов -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6 pt-6 border-t border-gray-200">
+          <!-- Фильтр по корпусам -->
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <label class="text-sm font-semibold text-gray-700 flex items-center">
+                <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                </svg>
+                Корпуса
+              </label>
+              <button
+                  @click="toggleAllBuildings"
+                  class="text-xs text-indigo-600 hover:text-indigo-700 font-medium"
+              >
+                {{ selectedBuildings.length === buildings.length ? 'Снять все' : 'Выбрать все' }}
+              </button>
+            </div>
+            <div class="flex flex-wrap gap-3">
+              <label
+                  v-for="building in buildings"
+                  :key="building"
+                  class="inline-flex items-center cursor-pointer group"
+              >
+                <div class="relative">
+                  <input
+                      type="checkbox"
+                      :value="building"
+                      v-model="selectedBuildings"
+                      class="sr-only peer"
+                  >
+                  <div class="w-5 h-5 border-2 rounded-md transition-all duration-200
+                              peer-checked:bg-indigo-600 peer-checked:border-indigo-600
+                              border-gray-300 group-hover:border-indigo-400
+                              flex items-center justify-center">
+                    <svg
+                        v-show="selectedBuildings.includes(building)"
+                        class="w-3 h-3 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                </div>
+                <span class="ml-2 text-sm text-gray-700 group-hover:text-gray-900 transition-colors">
+                  {{ building }}
+                </span>
+              </label>
+            </div>
+            <div class="mt-2 text-xs text-gray-500">
+              Выбрано: {{ selectedBuildings.length }} из {{ buildings.length }}
+            </div>
+          </div>
+
+          <!-- Фильтр по отделам -->
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <label class="text-sm font-semibold text-gray-700 flex items-center">
+                <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                </svg>
+                Отделы
+              </label>
+              <button
+                  @click="toggleAllBranches"
+                  class="text-xs text-indigo-600 hover:text-indigo-700 font-medium"
+              >
+                {{ selectedBranches.length === branchesList.length ? 'Снять все' : 'Выбрать все' }}
+              </button>
+            </div>
+            <div class="flex flex-wrap gap-3 max-h-32 overflow-y-auto p-1">
+              <label
+                  v-for="branch in branchesList"
+                  :key="branch.id"
+                  class="inline-flex items-center cursor-pointer group"
+              >
+                <div class="relative">
+                  <input
+                      type="checkbox"
+                      :value="branch.id"
+                      v-model="selectedBranches"
+                      class="sr-only peer"
+                  >
+                  <div class="w-5 h-5 border-2 rounded-md transition-all duration-200
+                              peer-checked:bg-purple-600 peer-checked:border-purple-600
+                              border-gray-300 group-hover:border-purple-400
+                              flex items-center justify-center">
+                    <svg
+                        v-show="selectedBranches.includes(branch.id)"
+                        class="w-3 h-3 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                </div>
+                <span class="ml-2 text-sm text-gray-700 group-hover:text-gray-900 transition-colors">
+                  {{ branch.name }}
+                </span>
+              </label>
+            </div>
+            <div class="mt-2 text-xs text-gray-500">
+              Выбрано: {{ selectedBranches.length }} из {{ branchesList.length }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Активные фильтры (чипы) -->
+        <div v-if="selectedBuildings.length > 0 || selectedBranches.length > 0" class="mt-4 pt-4 border-t border-gray-200">
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="text-xs text-gray-500">Активные фильтры:</span>
+            <div
+                v-for="building in selectedBuildings"
+                :key="building"
+                class="inline-flex items-center gap-1 px-2 py-1 bg-indigo-50 text-indigo-700 rounded-md text-xs"
             >
-              <option value="">Все отделы</option>
-              <option v-for="branch in branchesList" :key="branch.id" :value="branch.id">
-                {{ branch.name }}
-              </option>
-            </select>
+              <span>Корпус {{ building }}</span>
+              <button @click="removeBuildingFilter(building)" class="hover:text-indigo-900">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <div
+                v-for="branchId in selectedBranches"
+                :key="branchId"
+                class="inline-flex items-center gap-1 px-2 py-1 bg-purple-50 text-purple-700 rounded-md text-xs"
+            >
+              <span>{{ getBranchName(branchId) }}</span>
+              <button @click="removeBranchFilter(branchId)" class="hover:text-purple-900">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -574,16 +705,16 @@ const router = useRouter()
 const auditoriums = ref([])
 const selectedAuditorium = ref(null)
 const searchQuery = ref('')
-const buildingFilter = ref('')
+const selectedBuildings = ref([])
+const selectedBranches = ref([])
 const floorFilter = ref('')
-const branchFilter = ref('')
 const activeFloor = ref(1)
 const isLoading = ref(false)
 const error = ref(null)
 const types = ref({})
 const balanceTypes = ref({})
 const branches = ref({})
-const telephones = ref([]) // Добавляем телефоны
+const telephones = ref([])
 
 // Загрузка данных
 const loadData = async () => {
@@ -596,7 +727,7 @@ const loadData = async () => {
       axios.get(BACKEND_URL + '/api/info/thing-types'),
       axios.get(BACKEND_URL + '/api/info/balance'),
       axios.get(BACKEND_URL + '/api/info/branches'),
-      axios.get(BACKEND_URL + '/api/telephones') // Добавляем загрузку телефонов
+      axios.get(BACKEND_URL + '/api/telephones')
     ])
 
     if (mapResponse.data.success) {
@@ -648,7 +779,7 @@ const filteredAuditoriums = computed(() => {
     const query = searchQuery.value.toLowerCase()
     filtered = filtered.filter(a =>
         a.auditorium_name.toLowerCase().includes(query) ||
-        (a.comment && a.comment.toLowerCase().includes(query)) || // Поиск по комментарию
+        (a.comment && a.comment.toLowerCase().includes(query)) ||
         a.things.some(t =>
             (t.name && t.name.toLowerCase().includes(query)) ||
             t.inv_number.toLowerCase().includes(query) ||
@@ -660,25 +791,27 @@ const filteredAuditoriums = computed(() => {
             e.fio.toLowerCase().includes(query) ||
             (e.position && e.position.toLowerCase().includes(query))
         )) ||
-        // Добавляем поиск по телефонным номерам
-        (getAuditoriumTelephones(a.auditorium_id).some(t =>
+        getAuditoriumTelephones(a.auditorium_id).some(t =>
             t.phone_number.toLowerCase().includes(query)
-        ))
+        )
     )
   }
 
-  if (buildingFilter.value) {
-    filtered = filtered.filter(a =>
-        getBuildingFromName(a.auditorium_name) === buildingFilter.value
-    )
+  if (selectedBuildings.value.length > 0) {
+    filtered = filtered.filter(a => {
+      const building = getBuildingFromName(a.auditorium_name)
+      return selectedBuildings.value.includes(building)
+    })
+  }
+
+  if (selectedBranches.value.length > 0) {
+    filtered = filtered.filter(a => {
+      return a.branch_id && selectedBranches.value.includes(a.branch_id)
+    })
   }
 
   if (floorFilter.value) {
     filtered = filtered.filter(a => a.floor === parseInt(floorFilter.value))
-  }
-
-  if (branchFilter.value) {
-    filtered = filtered.filter(a => a.branch_id === parseInt(branchFilter.value))
   }
 
   return filtered
@@ -710,24 +843,57 @@ const branchesList = computed(() => {
   })).sort((a, b) => a.name.localeCompare(b.name))
 })
 
-// Получаем телефоны для конкретного кабинета
+// Методы для работы с фильтрами
+const resetFilters = () => {
+  selectedBuildings.value = []
+  selectedBranches.value = []
+}
+
+const toggleAllBuildings = () => {
+  if (selectedBuildings.value.length === buildings.value.length) {
+    selectedBuildings.value = []
+  } else {
+    selectedBuildings.value = [...buildings.value]
+  }
+}
+
+const toggleAllBranches = () => {
+  const allBranchIds = branchesList.value.map(b => b.id)
+  if (selectedBranches.value.length === allBranchIds.length) {
+    selectedBranches.value = []
+  } else {
+    selectedBranches.value = allBranchIds
+  }
+}
+
+const removeBuildingFilter = (building) => {
+  const index = selectedBuildings.value.indexOf(building)
+  if (index > -1) {
+    selectedBuildings.value.splice(index, 1)
+  }
+}
+
+const removeBranchFilter = (branchId) => {
+  const index = selectedBranches.value.indexOf(branchId)
+  if (index > -1) {
+    selectedBranches.value.splice(index, 1)
+  }
+}
+
 const getAuditoriumTelephones = (auditoriumId) => {
   return telephones.value.filter(t => t.auditorium_id === auditoriumId)
 }
 
-// Получаем телефоны для выбранного кабинета
 const selectedAuditoriumTelephones = computed(() => {
   if (!selectedAuditorium.value) return []
   return getAuditoriumTelephones(selectedAuditorium.value.auditorium_id)
 })
 
-// Обновляем статистику с учетом телефонов
 const workingThingsCount = computed(() => {
   if (!selectedAuditorium.value?.things) return 0
   return selectedAuditorium.value.things.filter(t => t.condition === 1).length
 })
 
-// Методы
 const setActiveFloor = (floor) => {
   activeFloor.value = floor
   selectedAuditorium.value = null
@@ -788,11 +954,11 @@ const getPhonesWord = (count) => {
 
 const getConditionColor = (conditionId) => {
   const colorMap = {
-    1: 'bg-green-500',  // Исправно работает
-    2: 'bg-red-500',    // Сломано
-    3: 'bg-yellow-500', // В ремонте
-    4: 'bg-blue-500',   // Резерв
-    5: 'bg-gray-500'    // Другое
+    1: 'bg-green-500',
+    2: 'bg-red-500',
+    3: 'bg-yellow-500',
+    4: 'bg-blue-500',
+    5: 'bg-gray-500'
   }
   return colorMap[conditionId] || 'bg-gray-400'
 }
@@ -816,18 +982,14 @@ const getBalanceLabel = (balanceId) => {
   return staticBalances[balanceId] || `Характеристика ${balanceId}`
 }
 
-// Метод для форматирования номера телефона
 const formatPhoneNumber = (phone) => {
   if (!phone) return ''
-  // Убираем все нецифровые символы
   const cleaned = phone.replace(/\D/g, '')
 
-  // Проверяем российский номер (начинается с 7 или 8 и имеет 11 цифр)
   if (cleaned.length === 11 && (cleaned.startsWith('7') || cleaned.startsWith('8'))) {
     return `+7 (${cleaned.slice(1, 4)}) ${cleaned.slice(4, 7)}-${cleaned.slice(7, 9)}-${cleaned.slice(9)}`
   }
 
-  // Для международных номеров оставляем как есть
   return phone
 }
 
