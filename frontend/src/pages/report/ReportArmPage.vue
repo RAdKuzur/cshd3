@@ -3,10 +3,23 @@
     <div class="max-w-8xl mx-auto">
       <!-- Заголовок -->
       <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900">Фильтр АРМ</h1>
-        <p class="text-gray-600 mt-2">Поиск по отделу и дате</p>
+        <div class="flex items-center gap-4 mb-2">
+          <router-link
+              to="/reports"
+              class="flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-blue-600
+             transition-colors border border-gray-300 rounded-lg hover:border-blue-400"
+          >
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Назад
+          </router-link>
+          <div>
+            <h1 class="text-3xl font-bold text-gray-900">Фильтр АРМ</h1>
+            <p class="text-gray-600 mt-2">Поиск по отделу и дате</p>
+          </div>
+        </div>
       </div>
-
       <!-- Форма фильтрации -->
       <div class="mb-8 bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">

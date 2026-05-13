@@ -4,11 +4,23 @@
 
       <!-- Заголовок и кнопка создания -->
       <div class="mb-6 flex justify-between items-center">
-        <div>
-          <h1 class="text-3xl font-bold text-gray-900">Акты передачи материальных ценностей</h1>
-          <p class="text-gray-600 mt-2">
-            Всего актов: {{ filteredActs.length }}
-          </p>
+        <div class="flex items-center gap-4">
+          <router-link
+              to="/things"
+              class="flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-blue-600
+           transition-colors border border-gray-300 rounded-lg hover:border-blue-400"
+          >
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Назад
+          </router-link>
+          <div>
+            <h1 class="text-3xl font-bold text-gray-900">Акты передачи материальных ценностей</h1>
+            <p class="text-gray-600 mt-2">
+              Всего актов: {{ filteredActs.length }}
+            </p>
+          </div>
         </div>
 
         <router-link

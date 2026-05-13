@@ -313,9 +313,23 @@
       ></div>
 
       <!-- Заголовок -->
-      <div class="text-center mb-8">
-        <h1 class="text-4xl font-bold text-gray-900 mb-4">Интерактивный план здания</h1>
-        <p class="text-xl text-gray-600">Нажмите на кабинет для просмотра информации</p>
+      <div class="mb-8 relative">
+        <div class="absolute left-0 top-0">
+          <router-link
+              to="/map"
+              class="flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-blue-600
+             transition-colors border border-gray-300 rounded-lg hover:border-blue-400"
+          >
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Назад
+          </router-link>
+        </div>
+        <div class="text-center">
+          <h1 class="text-4xl font-bold text-gray-900 mb-4">Интерактивный план здания</h1>
+          <p class="text-xl text-gray-600">Нажмите на кабинет для просмотра информации</p>
+        </div>
       </div>
 
       <!-- Панель управления -->

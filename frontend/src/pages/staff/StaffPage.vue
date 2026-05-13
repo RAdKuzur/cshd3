@@ -2,13 +2,27 @@
   <div class="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 p-6">
     <div class="max-w-6xl mx-auto">
       <!-- Заголовок -->
-      <div class="mb-12 text-center">
-        <h1 class="text-4xl font-bold text-gray-900 mb-4">
-          Модуль управления кадрами
-        </h1>
-        <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-          Управляйте персоналом организации. Просматривайте список сотрудников и историю кадровых изменений
-        </p>
+      <div class="mb-12 relative">
+        <div class="absolute left-0 top-0">
+          <router-link
+              to="/"
+              class="flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-blue-600
+             transition-colors border border-gray-300 rounded-lg hover:border-blue-400"
+          >
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Назад
+          </router-link>
+        </div>
+        <div class="text-center">
+          <h1 class="text-4xl font-bold text-gray-900 mb-4">
+            Модуль управления кадрами
+          </h1>
+          <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+            Управляйте персоналом организации. Просматривайте список сотрудников и историю кадровых изменений
+          </p>
+        </div>
       </div>
 
       <!-- Сетка карточек (2 карточки, центрированные) -->

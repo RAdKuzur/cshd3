@@ -4,9 +4,21 @@
       <!-- Заголовок и элементы управления -->
       <div class="mb-8">
         <div class="flex justify-between items-center">
-          <div>
-            <h1 class="text-3xl font-bold text-gray-900">Техника и Электроника</h1>
-            <p class="text-gray-600 mt-2">Всего предметов: {{ filteredItems.length }}</p>
+          <div class="flex items-center gap-4">
+            <router-link
+                to="/things"
+                class="flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-blue-600
+             transition-colors border border-gray-300 rounded-lg hover:border-blue-400"
+            >
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+              Назад
+            </router-link>
+            <div>
+              <h1 class="text-3xl font-bold text-gray-900">Техника и Электроника</h1>
+              <p class="text-gray-600 mt-2">Всего предметов: {{ filteredItems.length }}</p>
+            </div>
           </div>
           <router-link to="/things/create">
             <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg font-semibold shadow-sm transition-colors">
