@@ -87,7 +87,7 @@ class BranchService
         try {
             $branch = $this->branchRepository->get($id);
             foreach ($branch->peoplePositions as $peoplePosition){
-                $this->peoplePositionRepository->delete($id);
+                $this->peoplePositionRepository->delete($peoplePosition->id);
             }
             foreach ($branch->auditoriums as $auditorium){
                 foreach($auditorium->auditoriumResponsibilities as $auditoriumResponsibility){

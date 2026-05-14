@@ -77,7 +77,7 @@ class CompanyService
         try {
             $company = $this->companyRepository->getById($id);
             foreach($company->models as $model) {
-                $model = $this->modelRepository->getById($id);
+                $model = $this->modelRepository->getById($model->id);
                 foreach($model->devices as $device) {
                     $this->deviceRepository->delete($device->id);
                 }

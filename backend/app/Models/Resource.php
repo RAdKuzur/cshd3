@@ -24,7 +24,7 @@ class Resource extends Model
     {
         return $this->hasMany(ModelResource::class);
     }
-    public function historyResource() {
+    public function historyResources() {
         return $this->hasMany(HistoryResource::class);
     }
 }
