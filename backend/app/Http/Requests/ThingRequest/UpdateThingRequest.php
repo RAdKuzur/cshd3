@@ -16,8 +16,9 @@ class UpdateThingRequest extends FormRequest {
         return [
             'condition' => ['nullable', 'integer'],
             'comment' => ['nullable', 'string'],
-
+            'price' => ['nullable', 'numeric'],
             'children' => ['nullable', 'array'],
+            'thing_type_id' => ['nullable', 'integer'],
 
             'children.create' => ['nullable', 'array'],
             'children.create.*.name' => ['required', 'string'],

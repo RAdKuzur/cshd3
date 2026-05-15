@@ -341,6 +341,8 @@ class ThingService
             $this->thingRepository->update($id,[
                 'condition' => $dto->condition,
                 'comment' => $dto->comment,
+                'price' => $dto->price,
+                'thing_type_id' => $dto->thing_type_id
             ]);
             $thingDTO = new ThingDTO(
                 name: $thing->name,

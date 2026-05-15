@@ -147,8 +147,7 @@
                 <select
                     v-model="formData.thing_type_id"
                     required
-                    disabled
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 cursor-not-allowed"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg"
                 >
                   <option value="">Выберите тип</option>
                   <option
@@ -242,12 +241,11 @@
                 </label>
                 <div class="relative">
                   <input
-                      disabled
                       v-model.number="formData.price"
                       type="number"
                       min="0"
                       step="0.01"
-                      class="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-lg bg-gray-50 cursor-not-allowed"
+                      class="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-lg"
                       placeholder="0.00"
                   />
                   <span class="absolute left-3 top-3.5 text-gray-500">₽</span>
@@ -710,7 +708,8 @@ const handleSubmit = async () => {
       second_name: data.second_name || null,
       condition: conditionId.value,
       comment: data.comment || null,
-
+      price: data.price || 0,
+      thing_type_id: data.thing_type_id,
       children: {
         create: newChildren.map(child => ({
           name: child.name,
