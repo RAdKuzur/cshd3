@@ -339,6 +339,10 @@ class ThingService
 //              'comment' => $dto->comment,
 //          ]);
             $this->thingRepository->update($id,[
+                'name' => $dto->name,
+                'inv_number' => $dto->inv_number,
+                'serial_number' => $dto->serial_number,
+                'operation_date' => $dto->operation_date,
                 'condition' => $dto->condition,
                 'comment' => $dto->comment,
                 'price' => $dto->price,

@@ -12,6 +12,10 @@ class UpdateThingDTO implements DTO
      * @param int[] $childrenToDelete
      */
     public function __construct(
+        public readonly ?string $name,
+        public readonly ?string $inv_number,
+        public readonly ?string $serial_number,
+        public readonly ?string $operation_date,
         public readonly ?int $condition = null,
         public readonly ?string $comment = null,
         public readonly ?float $price = null,
@@ -23,6 +27,10 @@ class UpdateThingDTO implements DTO
     public static function fromArray(array $data): self
     {
         return new self(
+            name: $data['name'] ?? null,
+            inv_number: $data['inv_number'] ?? null,
+            serial_number: $data['serial_number'] ?? null,
+            operation_date: $data['operation_date'] ?? null,
             condition: $data['condition'] ?? null,
             comment: $data['comment'] ?? null,
             price: $data['price'] ?? null,
@@ -46,6 +54,10 @@ class UpdateThingDTO implements DTO
     public function toArray(): array
     {
         return [
+            'name' => $this->name,
+            'inv_number' => $this->inv_number,
+            'serial_number' => $this->serial_number,
+            'operation_date' => $this->operation_date,
             'condition' => $this->condition,
             'comment' => $this->comment,
             'price' => $this->price,

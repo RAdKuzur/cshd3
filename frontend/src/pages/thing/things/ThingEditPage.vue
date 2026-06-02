@@ -54,8 +54,7 @@
                 <input
                     v-model="formData.name"
                     type="text"
-                    disabled
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 cursor-not-allowed"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg"
                     placeholder="Например: Ноутбук Dell Latitude 5420"
                 />
                 <p class="mt-1 text-sm text-gray-500">
@@ -73,7 +72,6 @@
                     type="text"
                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
                     placeholder="Например: Рабочая станция Иванова"
-                    disabled
                 />
                 <p class="mt-1 text-sm text-gray-500">
                   Альтернативное или краткое название предмета
@@ -88,8 +86,7 @@
                 <input
                     v-model="formData.serial_number"
                     type="text"
-                    disabled
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 cursor-not-allowed"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg"
                     placeholder="Например: CN-0R3XX1-64180-2B9-016K"
                 />
                 <p class="mt-1 text-sm text-gray-500">
@@ -105,8 +102,7 @@
                 <input
                     v-model="formData.inv_number"
                     type="text"
-                    disabled
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 cursor-not-allowed"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg"
                     placeholder="Например: INV-2024-001"
                 />
                 <p class="mt-1 text-sm text-gray-500">
@@ -122,8 +118,7 @@
                 <input
                     v-model="formData.operation_date"
                     type="date"
-                    disabled
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 cursor-not-allowed"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg"
                 />
                 <p class="mt-1 text-sm text-gray-500">
                   Дата начала использования предмета
@@ -591,11 +586,22 @@ const loadThingData = async () => {
       // Форматирование даты для input type="date"
       let operationDate = ''
       if (data.operation_date) {
-        try {
-          const date = new Date(data.operation_date)
-          operationDate = date.toISOString().split('T')[0]
-        } catch (e) {
-          operationDate = data.operation_date
+        if (typeof data.operation_date === 'string') {
+          if (data.operation_date.includes(' ')) {
+            operationDate = data.operation_date.split(' ')[0]
+          }
+          else if (data.operation_date.includes('T')) {
+            operationDate = data.operation_date.split('T')[0]
+          }
+          else if (data.operation_date.length === 10) {
+            operationDate = data.operation_date
+          }
+          else if (data.operation_date.includes('.')) {
+            const parts = data.operation_date.split('.')
+            if (parts.length === 3) {
+              operationDate = `${parts[2]}-${parts[1]}-${parts[0]}`
+            }
+          }
         }
       }
 
@@ -705,7 +711,11 @@ const handleSubmit = async () => {
 
     // Подготовка данных для отправки
     const dataToSend = {
+      name: data.name,
+      inv_number: data.inv_number,
+      serial_number: data.serial_number,
       second_name: data.second_name || null,
+      operation_date: data.operation_date,
       condition: conditionId.value,
       comment: data.comment || null,
       price: data.price || 0,

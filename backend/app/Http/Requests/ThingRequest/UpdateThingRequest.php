@@ -14,6 +14,10 @@ class UpdateThingRequest extends FormRequest {
     public function rules(): array
     {
         return [
+            'name' => ['nullable', 'string'],
+            'inv_number' => ['nullable', 'string'],
+            'serial_number' => ['nullable', 'string'],
+            'operation_date' => ['nullable', 'string'],
             'condition' => ['nullable', 'integer'],
             'comment' => ['nullable', 'string'],
             'price' => ['nullable', 'numeric'],
