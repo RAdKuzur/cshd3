@@ -369,23 +369,17 @@
                   Материальное средство *
                 </label>
                 <div class="relative">
-                  <select
+                  <SearchSelect
                       v-model="form.thing_id"
-                      required
-                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white"
+                      :options="thingsList"
+                      value-field="id"
+                      label-field="name"
+                      placeholder="Выберите МС"
+                      :disabled-options="disabledThingsIds"
+                      disabled-field="id"
                       :disabled="isSaving || thingsLoading || !!editingMovement"
-                  >
-                    <option value="">Выберите МС</option>
-                    <option
-                        v-for="thing in thingsList"
-                        :key="thing.id"
-                        :value="thing.id"
-                        :disabled="!editingMovement && hasCurrentLocation(thing.id)"
-                    >
-                      {{ thing.name }} (Инв. №{{ thing.inv_number }})
-                      {{ hasCurrentLocation(thing.id) ? ' (уже имеет текущее расположение)' : '' }}
-                    </option>
-                  </select>
+                      @select="onThingSelected"
+                  />
                   <div v-if="thingsLoading" class="absolute right-3 top-3">
                     <svg class="animate-spin h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                       <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -401,21 +395,16 @@
                   Аудитория *
                 </label>
                 <div class="relative">
-                  <select
+                  <SearchSelect
                       v-model="form.auditorium_id"
-                      required
-                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white"
+                      :options="auditoriumsForForm"
+                      value-field="id"
+                      :format-label="formatAuditoriumLabel"
+                      placeholder="Выберите аудиторию"
+                      search-placeholder="Поиск аудитории..."
+                      empty-text="Аудитории не найдены"
                       :disabled="isSaving || auditoriumsFormLoading"
-                  >
-                    <option value="">Выберите аудиторию</option>
-                    <option
-                        v-for="auditorium in auditoriumsForForm"
-                        :key="auditorium.id"
-                        :value="auditorium.id"
-                    >
-                      {{ auditorium.name }} (этаж {{ auditorium.floor }}) - {{ auditorium.number }}
-                    </option>
-                  </select>
+                  />
                   <div v-if="auditoriumsFormLoading" class="absolute right-3 top-3">
                     <svg class="animate-spin h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                       <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -526,6 +515,7 @@
 import { ref, computed, watch, onMounted } from 'vue'
 import axios from 'axios'
 import { BACKEND_URL } from '@/router.js'
+import SearchSelect from "@/components/SearchSelect.vue";
 
 // Реактивные данные
 const headers = ref([
