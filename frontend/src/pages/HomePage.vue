@@ -12,8 +12,7 @@
                 <ScaleIcon class="w-8 h-8 text-white" />
               </div>
               <div class="text-left">
-                <h1 class="text-2xl font-bold text-gray-900">Мособлсуд</h1>
-                <p class="text-gray-600">Московский областной суд</p>
+                <h1 class="text-2xl font-bold text-gray-900">Московский областной суд</h1>
               </div>
             </div>
 
@@ -30,13 +29,13 @@
                   Перейти в систему
                 </button>
               </router-link>
-              <button
-                  @click="scrollToFeatures"
-                  class="text-sm font-semibold leading-6 text-gray-900 flex items-center"
-              >
-                Узнать больше
-                <ChevronDownIcon class="w-4 h-4 ml-1" />
-              </button>
+<!--              <button-->
+<!--                  @click="scrollToFeatures"-->
+<!--                  class="text-sm font-semibold leading-6 text-gray-900 flex items-center"-->
+<!--              >-->
+<!--                Узнать больше-->
+<!--                <ChevronDownIcon class="w-4 h-4 ml-1" />-->
+<!--              </button>-->
             </div>
           </div>
         </div>
@@ -44,38 +43,38 @@
     </div>
 
     <!-- Основные модули -->
-    <div id="features" class="py-24 sm:py-32">
-      <div class="mx-auto max-w-7xl px-6 lg:px-8">
-        <div class="mx-auto max-w-2xl lg:text-center">
-          <h2 class="text-base/7 font-semibold text-indigo-600">Системные модули</h2>
-          <p class="mt-2 text-4xl font-semibold tracking-tight text-pretty text-gray-900 sm:text-5xl lg:text-balance">
-            Комплексное управление судебной деятельностью
-          </p>
-          <p class="mt-6 text-lg/8 text-gray-700">
-            Современная платформа для автоматизации ключевых процессов Московского областного суда,
-            обеспечивающая эффективное управление ресурсами и документацией
-          </p>
-        </div>
-        <div class="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-4xl">
-          <dl class="grid max-w-xl grid-cols-1 gap-x-8 gap-y-10 lg:max-w-none lg:grid-cols-2 lg:gap-y-16">
-            <div
-                v-for="feature in features"
-                :key="feature.name"
-                class="relative pl-16 cursor-pointer group"
-                @click="navigateToModule(feature.route)"
-            >
-              <dt class="text-base/7 font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors">
-                <div class="absolute top-0 left-0 flex size-10 items-center justify-center rounded-lg bg-indigo-600 group-hover:bg-indigo-700 transition-colors">
-                  <component :is="feature.icon" class="size-6 text-white" aria-hidden="true" />
-                </div>
-                {{ feature.name }}
-              </dt>
-              <dd class="mt-2 text-base/7 text-gray-600">{{ feature.description }}</dd>
-            </div>
-          </dl>
-        </div>
-      </div>
-    </div>
+<!--    <div id="features" class="py-24 sm:py-32">-->
+<!--      <div class="mx-auto max-w-7xl px-6 lg:px-8">-->
+<!--        <div class="mx-auto max-w-2xl lg:text-center">-->
+<!--          <h2 class="text-base/7 font-semibold text-indigo-600">Системные модули</h2>-->
+<!--          <p class="mt-2 text-4xl font-semibold tracking-tight text-pretty text-gray-900 sm:text-5xl lg:text-balance">-->
+<!--            Комплексное управление судебной деятельностью-->
+<!--          </p>-->
+<!--          <p class="mt-6 text-lg/8 text-gray-700">-->
+<!--            Современная платформа для автоматизации ключевых процессов Московского областного суда,-->
+<!--            обеспечивающая эффективное управление ресурсами и документацией-->
+<!--          </p>-->
+<!--        </div>-->
+<!--        <div class="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-4xl">-->
+<!--          <dl class="grid max-w-xl grid-cols-1 gap-x-8 gap-y-10 lg:max-w-none lg:grid-cols-2 lg:gap-y-16">-->
+<!--            <div-->
+<!--                v-for="feature in features"-->
+<!--                :key="feature.name"-->
+<!--                class="relative pl-16 cursor-pointer group"-->
+<!--                @click="navigateToModule(feature.route)"-->
+<!--            >-->
+<!--              <dt class="text-base/7 font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors">-->
+<!--                <div class="absolute top-0 left-0 flex size-10 items-center justify-center rounded-lg bg-indigo-600 group-hover:bg-indigo-700 transition-colors">-->
+<!--                  <component :is="feature.icon" class="size-6 text-white" aria-hidden="true" />-->
+<!--                </div>-->
+<!--                {{ feature.name }}-->
+<!--              </dt>-->
+<!--              <dd class="mt-2 text-base/7 text-gray-600">{{ feature.description }}</dd>-->
+<!--            </div>-->
+<!--          </dl>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
 
     <!-- Преимущества -->
 <!--    <div class="bg-white py-24 sm:py-32">-->

@@ -90,181 +90,181 @@ export default {
 </script>
 
 <template>
-  <footer class="bg-gradient-to-br from-gray-900 to-blue-900 text-white">
-    <!-- Основной контент футера -->
-    <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8">
-      <div class="xl:grid xl:grid-cols-3 xl:gap-8">
+<!--  <footer class="bg-gradient-to-br from-gray-900 to-blue-900 text-white">-->
+<!--    &lt;!&ndash; Основной контент футера &ndash;&gt;-->
+<!--    <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8">-->
+<!--      <div class="xl:grid xl:grid-cols-3 xl:gap-8">-->
 
-        <!-- Левая колонка - Информация -->
-        <div class="space-y-8 xl:col-span-1">
-          <!-- Логотип и описание -->
-          <div class="flex items-center">
-            <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center mr-4">
-              <ScaleIcon class="w-7 h-7 text-white" />
-            </div>
-            <div>
-              <h3 class="text-2xl font-bold">Мособлсуд</h3>
-              <p class="text-gray-300 text-sm">Московский областной суд</p>
-            </div>
-          </div>
+<!--        &lt;!&ndash; Левая колонка - Информация &ndash;&gt;-->
+<!--        <div class="space-y-8 xl:col-span-1">-->
+<!--          &lt;!&ndash; Логотип и описание &ndash;&gt;-->
+<!--          <div class="flex items-center">-->
+<!--            <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center mr-4">-->
+<!--              <ScaleIcon class="w-7 h-7 text-white" />-->
+<!--            </div>-->
+<!--            <div>-->
+<!--              <h3 class="text-2xl font-bold">Мособлсуд</h3>-->
+<!--              <p class="text-gray-300 text-sm">Московский областной суд</p>-->
+<!--            </div>-->
+<!--          </div>-->
 
-          <p class="text-gray-300 text-base leading-relaxed">
-            Единая система управления и автоматизации деятельности
-            Московского областного суда.
-          </p>
+<!--          <p class="text-gray-300 text-base leading-relaxed">-->
+<!--            Единая система управления и автоматизации деятельности-->
+<!--            Московского областного суда.-->
+<!--          </p>-->
 
-          <!-- Контакты (закомментировано) -->
-          <!-- <div class="space-y-3">
-            <h4 class="text-lg font-semibold text-white mb-4">Контакты</h4>
-            <div
-                v-for="contact in contacts"
-                :key="contact.text"
-                class="flex items-start space-x-3 group cursor-pointer"
-            >
-              <component
-                  :is="contact.icon"
-                  class="w-5 h-5 text-indigo-400 mt-0.5 flex-shrink-0 group-hover:text-indigo-300 transition-colors"
-              />
-              <a
-                  :href="contact.href"
-                  class="text-gray-300 hover:text-white transition-colors text-sm leading-relaxed"
-              >
-                {{ contact.text }}
-              </a>
-            </div>
-          </div> -->
-        </div>
+<!--          &lt;!&ndash; Контакты (закомментировано) &ndash;&gt;-->
+<!--          &lt;!&ndash; <div class="space-y-3">-->
+<!--            <h4 class="text-lg font-semibold text-white mb-4">Контакты</h4>-->
+<!--            <div-->
+<!--                v-for="contact in contacts"-->
+<!--                :key="contact.text"-->
+<!--                class="flex items-start space-x-3 group cursor-pointer"-->
+<!--            >-->
+<!--              <component-->
+<!--                  :is="contact.icon"-->
+<!--                  class="w-5 h-5 text-indigo-400 mt-0.5 flex-shrink-0 group-hover:text-indigo-300 transition-colors"-->
+<!--              />-->
+<!--              <a-->
+<!--                  :href="contact.href"-->
+<!--                  class="text-gray-300 hover:text-white transition-colors text-sm leading-relaxed"-->
+<!--              >-->
+<!--                {{ contact.text }}-->
+<!--              </a>-->
+<!--            </div>-->
+<!--          </div> &ndash;&gt;-->
+<!--        </div>-->
 
-        <!-- Центральная колонка - Быстрые ссылки -->
-        <div class="mt-12 grid grid-cols-2 gap-8 xl:mt-0 xl:col-span-2">
-          <div class="md:grid md:grid-cols-2 md:gap-8">
-            <!-- Модули системы -->
-            <div>
-              <h4 class="text-lg font-semibold text-white mb-6 flex items-center">
-                <span class="w-2 h-2 bg-indigo-500 rounded-full mr-2"></span>
-                Модули системы
-              </h4>
-              <ul class="space-y-3">
-                <li
-                    v-for="link in quickLinks"
-                    :key="link.name"
-                >
-                  <a
-                      :href="link.href"
-                      @click.prevent="navigateTo(link.href)"
-                      class="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors group"
-                  >
-                    <component
-                        :is="link.icon"
-                        class="w-4 h-4 text-indigo-400 group-hover:text-indigo-300 transition-colors"
-                    />
-                    <span class="text-sm">{{ link.name }}</span>
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <!-- Поддержка -->
-<!--            <div class="mt-12 md:mt-0">-->
+<!--        &lt;!&ndash; Центральная колонка - Быстрые ссылки &ndash;&gt;-->
+<!--        <div class="mt-12 grid grid-cols-2 gap-8 xl:mt-0 xl:col-span-2">-->
+<!--          <div class="md:grid md:grid-cols-2 md:gap-8">-->
+<!--            &lt;!&ndash; Модули системы &ndash;&gt;-->
+<!--            <div>-->
 <!--              <h4 class="text-lg font-semibold text-white mb-6 flex items-center">-->
-<!--                <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>-->
-<!--                Работа с системой-->
+<!--                <span class="w-2 h-2 bg-indigo-500 rounded-full mr-2"></span>-->
+<!--                Модули системы-->
 <!--              </h4>-->
 <!--              <ul class="space-y-3">-->
-<!--                <li>-->
-<!--                  <a href="#" class="text-gray-300 hover:text-white transition-colors text-sm">-->
-<!--                    Документация-->
-<!--                  </a>-->
-<!--                </li>-->
-<!--                <li>-->
-<!--                  <a href="#" class="text-gray-300 hover:text-white transition-colors text-sm">-->
-<!--                    Частые вопросы-->
+<!--                <li-->
+<!--                    v-for="link in quickLinks"-->
+<!--                    :key="link.name"-->
+<!--                >-->
+<!--                  <a-->
+<!--                      :href="link.href"-->
+<!--                      @click.prevent="navigateTo(link.href)"-->
+<!--                      class="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors group"-->
+<!--                  >-->
+<!--                    <component-->
+<!--                        :is="link.icon"-->
+<!--                        class="w-4 h-4 text-indigo-400 group-hover:text-indigo-300 transition-colors"-->
+<!--                    />-->
+<!--                    <span class="text-sm">{{ link.name }}</span>-->
 <!--                  </a>-->
 <!--                </li>-->
 <!--              </ul>-->
 <!--            </div>-->
-          </div>
 
-          <!-- Правая колонка - Рассылка -->
-          <div class="md:grid md:grid-cols-1 md:gap-8">
-            <div>
-              <!-- Рассылка новостей (закомментировано) -->
-              <!-- <h4 class="text-lg font-semibold text-white mb-6 flex items-center">
-                <span class="w-2 h-2 bg-purple-500 rounded-full mr-2"></span>
-                Рассылка новостей
-              </h4>
-              <p class="text-gray-300 text-sm mb-4 leading-relaxed">
-                Подпишитесь на рассылку, чтобы получать актуальные новости
-                о работе системы и обновлениях.
-              </p>
-
-              <form @submit="subscribeToNewsletter" class="space-y-3">
-                <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
-                  <input
-                      name="email"
-                      type="email"
-                      required
-                      placeholder="your.email@example.com"
-                      class="flex-1 px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
-                  >
-                  <button
-                      type="submit"
-                      class="px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-medium rounded-lg shadow-sm transition-all duration-200 transform hover:scale-105"
-                  >
-                    Подписаться
-                  </button>
-                </div>
-                <p class="text-gray-400 text-xs">
-                  Подписываясь, вы соглашаетесь с нашей политикой конфиденциальности
-                </p>
-              </form> -->
-
-              <!-- Социальные сети -->
-              <div class="mt-8">
-                <h5 class="text-sm font-semibold text-white mb-4">Официальные ресурсы</h5>
-                <div class="flex space-x-4">
-                  <a
-                      v-for="social in socialLinks"
-                      :key="social.name"
-                      :href="social.href"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      class="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors group"
-                  >
-                    <component
-                        :is="social.icon"
-                        class="w-5 h-5 text-indigo-400 group-hover:text-indigo-300 transition-colors"
-                    />
-                    <span class="text-sm">{{ social.name }}</span>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Нижняя часть футера -->
-      <div class="mt-12 pt-8 border-t border-gray-700">
-        <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-          <div class="flex items-center space-x-6">
-            <p class="text-gray-400 text-sm">
-              © {{ getCurrentYear() }} Московский областной суд. Все права защищены.
-            </p>
-          </div>
-
-<!--          <div class="flex space-x-6">-->
-<!--            <a href="#" class="text-gray-400 hover:text-white transition-colors text-sm">-->
-<!--              Политика конфиденциальности-->
-<!--            </a>-->
-<!--            <a href="#" class="text-gray-400 hover:text-white transition-colors text-sm">-->
-<!--              Условия использования-->
-<!--            </a>-->
+<!--            &lt;!&ndash; Поддержка &ndash;&gt;-->
+<!--&lt;!&ndash;            <div class="mt-12 md:mt-0">&ndash;&gt;-->
+<!--&lt;!&ndash;              <h4 class="text-lg font-semibold text-white mb-6 flex items-center">&ndash;&gt;-->
+<!--&lt;!&ndash;                <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>&ndash;&gt;-->
+<!--&lt;!&ndash;                Работа с системой&ndash;&gt;-->
+<!--&lt;!&ndash;              </h4>&ndash;&gt;-->
+<!--&lt;!&ndash;              <ul class="space-y-3">&ndash;&gt;-->
+<!--&lt;!&ndash;                <li>&ndash;&gt;-->
+<!--&lt;!&ndash;                  <a href="#" class="text-gray-300 hover:text-white transition-colors text-sm">&ndash;&gt;-->
+<!--&lt;!&ndash;                    Документация&ndash;&gt;-->
+<!--&lt;!&ndash;                  </a>&ndash;&gt;-->
+<!--&lt;!&ndash;                </li>&ndash;&gt;-->
+<!--&lt;!&ndash;                <li>&ndash;&gt;-->
+<!--&lt;!&ndash;                  <a href="#" class="text-gray-300 hover:text-white transition-colors text-sm">&ndash;&gt;-->
+<!--&lt;!&ndash;                    Частые вопросы&ndash;&gt;-->
+<!--&lt;!&ndash;                  </a>&ndash;&gt;-->
+<!--&lt;!&ndash;                </li>&ndash;&gt;-->
+<!--&lt;!&ndash;              </ul>&ndash;&gt;-->
+<!--&lt;!&ndash;            </div>&ndash;&gt;-->
 <!--          </div>-->
-        </div>
-      </div>
-    </div>
-  </footer>
+
+<!--          &lt;!&ndash; Правая колонка - Рассылка &ndash;&gt;-->
+<!--          <div class="md:grid md:grid-cols-1 md:gap-8">-->
+<!--            <div>-->
+<!--              &lt;!&ndash; Рассылка новостей (закомментировано) &ndash;&gt;-->
+<!--              &lt;!&ndash; <h4 class="text-lg font-semibold text-white mb-6 flex items-center">-->
+<!--                <span class="w-2 h-2 bg-purple-500 rounded-full mr-2"></span>-->
+<!--                Рассылка новостей-->
+<!--              </h4>-->
+<!--              <p class="text-gray-300 text-sm mb-4 leading-relaxed">-->
+<!--                Подпишитесь на рассылку, чтобы получать актуальные новости-->
+<!--                о работе системы и обновлениях.-->
+<!--              </p>-->
+
+<!--              <form @submit="subscribeToNewsletter" class="space-y-3">-->
+<!--                <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">-->
+<!--                  <input-->
+<!--                      name="email"-->
+<!--                      type="email"-->
+<!--                      required-->
+<!--                      placeholder="your.email@example.com"-->
+<!--                      class="flex-1 px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"-->
+<!--                  >-->
+<!--                  <button-->
+<!--                      type="submit"-->
+<!--                      class="px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-medium rounded-lg shadow-sm transition-all duration-200 transform hover:scale-105"-->
+<!--                  >-->
+<!--                    Подписаться-->
+<!--                  </button>-->
+<!--                </div>-->
+<!--                <p class="text-gray-400 text-xs">-->
+<!--                  Подписываясь, вы соглашаетесь с нашей политикой конфиденциальности-->
+<!--                </p>-->
+<!--              </form> &ndash;&gt;-->
+
+<!--              &lt;!&ndash; Социальные сети &ndash;&gt;-->
+<!--&lt;!&ndash;              <div class="mt-8">&ndash;&gt;-->
+<!--&lt;!&ndash;                <h5 class="text-sm font-semibold text-white mb-4">Официальные ресурсы</h5>&ndash;&gt;-->
+<!--&lt;!&ndash;                <div class="flex space-x-4">&ndash;&gt;-->
+<!--&lt;!&ndash;                  <a&ndash;&gt;-->
+<!--&lt;!&ndash;                      v-for="social in socialLinks"&ndash;&gt;-->
+<!--&lt;!&ndash;                      :key="social.name"&ndash;&gt;-->
+<!--&lt;!&ndash;                      :href="social.href"&ndash;&gt;-->
+<!--&lt;!&ndash;                      target="_blank"&ndash;&gt;-->
+<!--&lt;!&ndash;                      rel="noopener noreferrer"&ndash;&gt;-->
+<!--&lt;!&ndash;                      class="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors group"&ndash;&gt;-->
+<!--&lt;!&ndash;                  >&ndash;&gt;-->
+<!--&lt;!&ndash;                    <component&ndash;&gt;-->
+<!--&lt;!&ndash;                        :is="social.icon"&ndash;&gt;-->
+<!--&lt;!&ndash;                        class="w-5 h-5 text-indigo-400 group-hover:text-indigo-300 transition-colors"&ndash;&gt;-->
+<!--&lt;!&ndash;                    />&ndash;&gt;-->
+<!--&lt;!&ndash;                    <span class="text-sm">{{ social.name }}</span>&ndash;&gt;-->
+<!--&lt;!&ndash;                  </a>&ndash;&gt;-->
+<!--&lt;!&ndash;                </div>&ndash;&gt;-->
+<!--&lt;!&ndash;              </div>&ndash;&gt;-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      &lt;!&ndash; Нижняя часть футера &ndash;&gt;-->
+<!--      <div class="mt-12 pt-8 border-t border-gray-700">-->
+<!--        <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">-->
+<!--          <div class="flex items-center space-x-6">-->
+<!--&lt;!&ndash;            <p class="text-gray-400 text-sm">&ndash;&gt;-->
+<!--&lt;!&ndash;              © {{ getCurrentYear() }} Московский областной суд. Все права защищены.&ndash;&gt;-->
+<!--&lt;!&ndash;            </p>&ndash;&gt;-->
+<!--          </div>-->
+
+<!--&lt;!&ndash;          <div class="flex space-x-6">&ndash;&gt;-->
+<!--&lt;!&ndash;            <a href="#" class="text-gray-400 hover:text-white transition-colors text-sm">&ndash;&gt;-->
+<!--&lt;!&ndash;              Политика конфиденциальности&ndash;&gt;-->
+<!--&lt;!&ndash;            </a>&ndash;&gt;-->
+<!--&lt;!&ndash;            <a href="#" class="text-gray-400 hover:text-white transition-colors text-sm">&ndash;&gt;-->
+<!--&lt;!&ndash;              Условия использования&ndash;&gt;-->
+<!--&lt;!&ndash;            </a>&ndash;&gt;-->
+<!--&lt;!&ndash;          </div>&ndash;&gt;-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </footer>-->
 </template>
 
 <style scoped>

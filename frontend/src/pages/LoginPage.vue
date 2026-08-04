@@ -20,7 +20,7 @@
             Добро пожаловать
           </h2>
           <p class="text-gray-600 text-lg">
-            Войдите в систему Мособлсуд
+            Войдите в систему
           </p>
         </div>
 
@@ -108,21 +108,21 @@
       </div>
 
       <!-- Информация о системе -->
-      <div class="mt-8 text-center">
-        <div class="bg-white/50 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-          <h3 class="text-lg font-semibold text-gray-900 mb-2">
-            Московский областной суд
-          </h3>
-          <p class="text-gray-600 text-sm">
-            Единая система управления основными средствами, кадрами и документооборотом
-          </p>
-          <div class="mt-4 flex justify-center space-x-6 text-xs text-gray-500">
-            <span>🔒 Безопасно</span>
-            <span>⚡ Быстро</span>
-            <span>🎯 Удобно</span>
-          </div>
-        </div>
-      </div>
+<!--      <div class="mt-8 text-center">-->
+<!--        <div class="bg-white/50 backdrop-blur-sm rounded-2xl p-6 border border-white/20">-->
+<!--          <h3 class="text-lg font-semibold text-gray-900 mb-2">-->
+<!--            Московский областной суд-->
+<!--          </h3>-->
+<!--          <p class="text-gray-600 text-sm">-->
+<!--            Единая система управления основными средствами, кадрами и документооборотом-->
+<!--          </p>-->
+<!--          <div class="mt-4 flex justify-center space-x-6 text-xs text-gray-500">-->
+<!--            <span>🔒 Безопасно</span>-->
+<!--            <span>⚡ Быстро</span>-->
+<!--            <span>🎯 Удобно</span>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
     </div>
 
     <!-- Модальное окно восстановления пароля -->
