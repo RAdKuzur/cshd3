@@ -9,6 +9,7 @@ class ThingBalanceDictionary implements BaseDictionary
     public const BALANCE = 3;
     public const RESOURCE = 4;
     public const DESTROYED = 5;
+    public const TEMPORARY = 6;
 
     public static function type(){
         return [
@@ -16,7 +17,8 @@ class ThingBalanceDictionary implements BaseDictionary
             self::OS => 'Основное средство',
             self::BALANCE => 'За балансом',
             self::RESOURCE => 'Расходный материал',
-            self::DESTROYED => 'Списано'
+            self::DESTROYED => 'Списано',
+            self::TEMPORARY => 'На временном хранении'
         ];
     }
     public static function get($index){
