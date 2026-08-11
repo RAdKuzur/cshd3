@@ -55,7 +55,7 @@ class ThingSeeder extends Seeder
                 'condition' => ConditionDictionary::OK,
                 'price' => rand(1, 100000),
                 'comment' => $fakeText = fake()->text(),
-                'balance' => ThingBalanceDictionary::NONE_BALANCE,
+                'balance' => array_rand([ThingBalanceDictionary::TEMPORARY => ThingBalanceDictionary::TEMPORARY, ThingBalanceDictionary::OS => ThingBalanceDictionary::OS]),
                 'is_composite' => false,
                 'is_blocked' => Thing::NOT_BLOCKED
             ]);

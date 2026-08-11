@@ -43,7 +43,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/metrics', [MetricsController::class, 'metrics'])->name('metrics');
 Route::get('/test', [TestController::class, 'test'])->name('test');
 Route::get('/tests', [TestController::class, 'tests'])->name('tests');
-
+Route::get('/demo', [ThingController::class, 'demo'])->name('demo');
 Route::middleware([PrometheusMiddleware::class])->group(function () {
 
     Route::post('/login', [AuthController::class, 'login'])->name('login');

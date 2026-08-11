@@ -70,6 +70,10 @@ class ThingRepository
     {
         return $query->where('thing_type_id', $type);
     }
+    public function balanceQuery($query, $balance)
+    {
+        return $query->where('balance', $balance);
+    }
     public function conditionQuery($query, $condition)
     {
         return $query->where('condition', $condition);

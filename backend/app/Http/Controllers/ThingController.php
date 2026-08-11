@@ -155,4 +155,13 @@ class ThingController extends Controller
             'data' => $data
         ], 200);
     }
+
+    public function demo()
+    {
+        $data = $this->thingService->demo();
+        return response()->json([
+            'success' => true,
+            'data' => $data
+        ], 200);
+    }
 }

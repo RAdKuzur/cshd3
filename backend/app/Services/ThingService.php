@@ -22,7 +22,11 @@ use App\Repositories\TransferActThingRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Style\Border;
 class ThingService
 {
     public ThingRepository $thingRepository;
@@ -456,6 +460,27 @@ class ThingService
                     date: $transferActThing->transferAct->date,
                 );
                 $data[] = $transferAct->toArrayWithId();
+            }
+        }
+        return $data;
+    }
+
+    public function demo()
+    {
+        $data = [];
+        $years = range(2004, 2025);
+        $thingTypes = ThingTypeDictionary::type();
+        foreach ($thingTypes as $index => $thingType) {
+            foreach ($years as $year) {
+                $query = $this->thingRepository->query();
+                $query = $this->thingRepository->thingTypeQuery(clone $query, $index);
+                $query = $this->thingRepository->betweenYearsQuery(clone $query, $year, $year + 1);
+                $queryOS = $this->thingRepository->balanceQuery(clone $query, ThingBalanceDictionary::OS);
+                $queryTemp = $this->thingRepository->balanceQuery(clone $query, ThingBalanceDictionary::TEMPORARY);
+                $data[$thingType][$year] = [
+                    ThingBalanceDictionary::OS => $queryOS->count(),
+                    ThingBalanceDictionary::TEMPORARY => $queryTemp->count(),
+                ];
             }
         }
         return $data;
