@@ -18,7 +18,7 @@ class TransferActDictionary implements BaseDictionary
             self::DESTROY => 'Акт о списании материальных средств',
             self::ENROLL_BALANCE => 'Акт о приёме мат.средств (Баланс)',
             self::ENROLL_RESOURCE => 'Акт о приёме мат.средств (Расходные материалы)',
-            self::ENROLL_TEMPORARY => 'Акт о приёме мат.средств (Временное хранение)'
+            self::ENROLL_TEMPORARY => 'Акт о приёме мат.средств (Безвоз. пользование)'
         ];
     }
 

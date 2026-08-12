@@ -18,7 +18,7 @@ class ThingBalanceDictionary implements BaseDictionary
             self::BALANCE => 'За балансом',
             self::RESOURCE => 'Расходный материал',
             self::DESTROYED => 'Списано',
-            self::TEMPORARY => 'На временном хранении'
+            self::TEMPORARY => 'На безвоз. пользовании'
         ];
     }
     public static function get($index){
