@@ -347,6 +347,7 @@ class ThingService
                 'inv_number' => $dto->inv_number,
                 'serial_number' => $dto->serial_number,
                 'operation_date' => $dto->operation_date,
+                'second_name' => $dto->second_name,
                 'condition' => $dto->condition,
                 'comment' => $dto->comment,
                 'price' => $dto->price,
@@ -474,7 +475,7 @@ class ThingService
             foreach ($years as $year) {
                 $query = $this->thingRepository->query();
                 $query = $this->thingRepository->thingTypeQuery(clone $query, $index);
-                $query = $this->thingRepository->betweenYearsQuery(clone $query, $year, $year + 1);
+                $query = $this->thingRepository->betweenYearsQuery(clone $query, $year, $year);
                 $queryOS = $this->thingRepository->balanceQuery(clone $query, ThingBalanceDictionary::OS);
                 $queryTemp = $this->thingRepository->balanceQuery(clone $query, ThingBalanceDictionary::TEMPORARY);
                 $data[$thingType][$year] = [

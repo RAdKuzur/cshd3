@@ -608,7 +608,7 @@ const loadThingData = async () => {
       // Преобразование данных для формы
       formData.value = {
         name: data.name || '',
-        second_name: data.second_name || '', // Добавлено поле дополнительного названия
+        second_name: data.second_name,
         serial_number: data.serial_number || '',
         inv_number: data.inv_number || '',
         operation_date: operationDate,
@@ -714,7 +714,7 @@ const handleSubmit = async () => {
       name: data.name,
       inv_number: data.inv_number,
       serial_number: data.serial_number,
-      second_name: data.second_name || null,
+      second_name: data.second_name,
       operation_date: data.operation_date,
       condition: conditionId.value,
       comment: data.comment || null,

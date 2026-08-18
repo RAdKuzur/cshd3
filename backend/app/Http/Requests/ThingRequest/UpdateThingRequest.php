@@ -15,6 +15,7 @@ class UpdateThingRequest extends FormRequest {
     {
         return [
             'name' => ['nullable', 'string'],
+            'second_name' => ['nullable', 'string'],
             'inv_number' => ['nullable', 'string'],
             'serial_number' => ['nullable', 'string'],
             'operation_date' => ['nullable', 'string'],

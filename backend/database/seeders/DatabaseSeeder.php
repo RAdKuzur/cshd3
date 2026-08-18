@@ -26,7 +26,7 @@ class DatabaseSeeder extends Seeder
             //PeopleSeeder::class,
             TestPeopleSeeder::class,
             //AuditoriumResponsibilitySeeder::class,
-            //ThingSeeder::class,
+            ThingSeeder::class,
             //TransferActSeeder::class,
             LicenceSeeder::class,
             //NetworkThingSeeder::class,

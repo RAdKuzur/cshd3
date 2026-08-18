@@ -13,6 +13,7 @@ class UpdateThingDTO implements DTO
      */
     public function __construct(
         public readonly ?string $name,
+        public readonly ?string $second_name,
         public readonly ?string $inv_number,
         public readonly ?string $serial_number,
         public readonly ?string $operation_date,
@@ -28,6 +29,7 @@ class UpdateThingDTO implements DTO
     {
         return new self(
             name: $data['name'] ?? null,
+            second_name: $data['second_name'] ?? null,
             inv_number: $data['inv_number'] ?? null,
             serial_number: $data['serial_number'] ?? null,
             operation_date: $data['operation_date'] ?? null,

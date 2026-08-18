@@ -41,7 +41,7 @@ class AdminBranchController extends Controller
     }
     public function update(BranchRequest $request, $id){
         $branch = $request->toDTO();
-        $this->branchService->update($id, $branch->toArray());
+        $this->branchService->update($id, ['name' => $branch->name]);
         return response()->json([
             'success' => true,
             'code' => 200
