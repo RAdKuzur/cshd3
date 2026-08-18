@@ -469,7 +469,7 @@ class ThingService
     public function demo()
     {
         $data = [];
-        $years = range(2004, 2025);
+        $years = range(2004, 2026);
         $thingTypes = ThingTypeDictionary::type();
         foreach ($thingTypes as $index => $thingType) {
             foreach ($years as $year) {
