@@ -335,9 +335,9 @@
       <!-- Панель управления -->
       <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-6 mb-8">
         <div class="flex flex-col lg:flex-row items-start justify-between gap-6">
-          <!-- Поиск -->
-          <div class="w-full lg:flex-1">
-            <div class="relative w-full">
+          <!-- Поиск + селекты -->
+          <div class="w-full lg:flex-1 flex flex-col md:flex-row gap-3">
+            <div class="relative flex-1 min-w-[240px]">
               <input
                   v-model="searchQuery"
                   type="text"
@@ -353,11 +353,35 @@
                 </svg>
               </div>
             </div>
+
+            <!-- Фильтр по сотрудникам -->
+            <select
+                v-model="employeesFilter"
+                class="px-4 py-3 border border-gray-300 rounded-lg bg-white shadow-sm
+             focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500
+             text-sm text-gray-700 min-w-[200px]"
+            >
+              <option value="">Сотрудники: все</option>
+              <option value="with">Только с сотрудниками</option>
+              <option value="without">Только без сотрудников</option>
+            </select>
+
+            <!-- Фильтр по объектам учёта -->
+            <select
+                v-model="thingsFilter"
+                class="px-4 py-3 border border-gray-300 rounded-lg bg-white shadow-sm
+             focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500
+             text-sm text-gray-700 min-w-[200px]"
+            >
+              <option value="">Объекты учёта: все</option>
+              <option value="with">Только с объектами</option>
+              <option value="without">Только без объектов</option>
+            </select>
           </div>
 
           <!-- Кнопка сброса фильтров -->
           <button
-              v-if="selectedBuildings.length > 0 || selectedBranches.length > 0"
+              v-if="selectedBuildings.length > 0 || selectedBranches.length > 0 || employeesFilter || thingsFilter"
               @click="resetFilters"
               class="px-4 py-3 text-sm text-red-600 hover:text-red-700 font-medium flex items-center gap-2 transition-colors whitespace-nowrap"
           >
@@ -480,7 +504,8 @@
         </div>
 
         <!-- Активные фильтры (чипы) -->
-        <div v-if="selectedBuildings.length > 0 || selectedBranches.length > 0" class="mt-4 pt-4 border-t border-gray-200">
+        <div v-if="selectedBuildings.length > 0 || selectedBranches.length > 0 || employeesFilter || thingsFilter"
+             class="mt-4 pt-4 border-t border-gray-200">
           <div class="flex items-center gap-2 flex-wrap">
             <span class="text-xs text-gray-500">Активные фильтры:</span>
             <div
@@ -502,6 +527,28 @@
             >
               <span>{{ getBranchName(branchId) }}</span>
               <button @click="removeBranchFilter(branchId)" class="hover:text-purple-900">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <div
+                v-if="employeesFilter"
+                class="inline-flex items-center gap-1 px-2 py-1 bg-amber-50 text-amber-700 rounded-md text-xs"
+            >
+              <span>{{ employeesFilter === 'with' ? 'Только с сотрудниками' : 'Только без сотрудников' }}</span>
+              <button @click="employeesFilter = ''" class="hover:text-amber-900">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <div
+                v-if="thingsFilter"
+                class="inline-flex items-center gap-1 px-2 py-1 bg-emerald-50 text-emerald-700 rounded-md text-xs"
+            >
+              <span>{{ thingsFilter === 'with' ? 'Только с объектами' : 'Только без объектов' }}</span>
+              <button @click="thingsFilter = ''" class="hover:text-emerald-900">
                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
@@ -730,6 +777,10 @@ const balanceTypes = ref({})
 const branches = ref({})
 const telephones = ref([])
 
+// Новые фильтры: сотрудники и объекты учёта
+const employeesFilter = ref('') // '' | 'with' | 'without'
+const thingsFilter = ref('')    // '' | 'with' | 'without'
+
 // Загрузка данных
 const loadData = async () => {
   try {
@@ -828,6 +879,20 @@ const filteredAuditoriums = computed(() => {
     filtered = filtered.filter(a => a.floor === parseInt(floorFilter.value))
   }
 
+  // Фильтр по сотрудникам
+  if (employeesFilter.value === 'with') {
+    filtered = filtered.filter(a => a.employees && a.employees.length > 0)
+  } else if (employeesFilter.value === 'without') {
+    filtered = filtered.filter(a => !a.employees || a.employees.length === 0)
+  }
+
+  // Фильтр по объектам учёта
+  if (thingsFilter.value === 'with') {
+    filtered = filtered.filter(a => a.things && a.things.length > 0)
+  } else if (thingsFilter.value === 'without') {
+    filtered = filtered.filter(a => !a.things || a.things.length === 0)
+  }
+
   return filtered
 })
 
@@ -861,6 +926,8 @@ const branchesList = computed(() => {
 const resetFilters = () => {
   selectedBuildings.value = []
   selectedBranches.value = []
+  employeesFilter.value = ''
+  thingsFilter.value = ''
 }
 
 const toggleAllBuildings = () => {

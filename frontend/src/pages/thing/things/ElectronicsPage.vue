@@ -148,7 +148,15 @@
                   </div>
                 </div>
               </td>
-
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="ml-4">
+                    <div class="text-sm text-gray-500">
+                      {{ item.second_name || '—' }}
+                    </div>
+                  </div>
+                </div>
+              </td>
               <!-- Тип и состояние -->
               <td class="px-6 py-4 whitespace-nowrap">
                 <div class="flex items-center">
@@ -179,9 +187,9 @@
                     <div class="text-sm font-medium text-gray-900">
                       {{ getBalanceLabel(item.balance) }}
                     </div>
-<!--                    <div class="text-xs text-indigo-500">-->
-<!--                      Характеристика учёта-->
-<!--                    </div>-->
+                    <!--                    <div class="text-xs text-indigo-500">-->
+                    <!--                      Характеристика учёта-->
+                    <!--                    </div>-->
                   </div>
                 </div>
               </td>
@@ -345,6 +353,7 @@ const router = useRouter()
 // Реактивные данные
 const headers = ref([
   { key: 'name', label: 'Название и номер' },
+  { key: 'second_name', label: 'Дополнительное название'},
   { key: 'condition', label: 'Состояние и тип' },
   { key: 'balance', label: 'Характеристика учёта' },
   { key: 'auditorium_name', label: 'Кабинет размещения' },
@@ -406,6 +415,7 @@ const loadData = async () => {
         return {
           id: item.id,
           name: `${item.name}`,
+          second_name: item.second_name,
           inv_number: item.inv_number,
           serial_number: item.serial_number,
           type: item.thing_type_id,
@@ -448,6 +458,7 @@ const filteredItems = computed(() => {
     const query = searchQuery.value.toLowerCase()
     filtered = filtered.filter(item =>
         (item.name && item.name.toLowerCase().includes(query)) ||
+        (item.second_name && item.second_name.toLowerCase().includes(query)) ||
         (item.serial_number && item.serial_number.toLowerCase().includes(query)) ||
         (item.inv_number && item.inv_number.toString().toLowerCase().includes(query)) ||
         (getTypeName(item.type) && getTypeName(item.type).toLowerCase().includes(query)) ||
@@ -481,17 +492,21 @@ const filteredItems = computed(() => {
       aVal = new Date(aVal)
       bVal = new Date(bVal)
     } else if (sortKey.value === 'condition') {
-      // Сортировка по состоянию - используем порядок из conditions
       aVal = Object.values(conditions.value).indexOf(getConditionLabel(a.condition))
       bVal = Object.values(conditions.value).indexOf(getConditionLabel(b.condition))
     } else if (sortKey.value === 'auditorium_name') {
-      // Сортировка по аудитории
       aVal = a.auditorium_name || 'Я'
       bVal = b.auditorium_name || 'Я'
     } else if (sortKey.value === 'balance') {
-      // Сортировка по характеристике учёта
       aVal = getBalanceLabel(a.balance) || 'Я'
       bVal = getBalanceLabel(b.balance) || 'Я'
+    } else if (sortKey.value === 'second_name') {
+      // Приводим к строке и обрабатываем пустые значения
+      aVal = (a.second_name || '').toString().toLowerCase()
+      bVal = (b.second_name || '').toString().toLowerCase()
+    } else if (sortKey.value === 'name') {
+      aVal = (a.name || '').toString().toLowerCase()
+      bVal = (b.name || '').toString().toLowerCase()
     }
 
     if (aVal < bVal) return sortOrder.value === 'asc' ? -1 : 1

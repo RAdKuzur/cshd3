@@ -70,6 +70,7 @@ class ThingService
             ->map(fn ($electronic) => new ThingDTO(
                 id: $electronic->id,
                 name: $electronic->name,
+                second_name: $electronic->second_name,
                 serial_number: $electronic->serial_number,
                 inv_number: $electronic->inv_number,
                 operation_date: $electronic->operation_date,
