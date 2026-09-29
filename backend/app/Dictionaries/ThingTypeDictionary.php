@@ -54,10 +54,28 @@ class ThingTypeDictionary implements BaseDictionary
     public const INFO_KIOSK = 46;
     public const INFO_PANEL = 47;
     public const STATION_AUDIO_VIDEO_PROTOCOL = 48;
+    public const IBP = 49;
+    public const CAMERA = 50;
     public const TABLE = 100;
     public const CHAIR = 101;
     public const SHELF = 102;
     public const SOFA = 103;
+    public const STAND = 104;
+    public const COOLER = 105;
+    public const CANCELAR = 106;
+    public const SAFE = 107;
+    public const TUMBA = 108;
+    public const FRIDGE = 109;
+    public const SPLIT_SYSTEM = 110;
+    public const TRIBUNE = 111;
+    public const SVCH = 112;
+    public const DESK = 113;
+    public const LAMP = 114;
+    public const SKAMIYA = 115;
+    public const SHTATIV = 117;
+    public const PLANTS = 118;
+    public const REGULATE_TEMP_FREQ = 119;
+    public const OTHER_FURNITURE = 120;
 
     public const ELECTRONICS = [
         self::PC,
@@ -107,13 +125,31 @@ class ThingTypeDictionary implements BaseDictionary
         self::WITNESS_DEFENCE,
         self::INFO_KIOSK,
         self::INFO_PANEL,
-        self::STATION_AUDIO_VIDEO_PROTOCOL
+        self::STATION_AUDIO_VIDEO_PROTOCOL,
+        self::IBP,
+        self::CAMERA
     ];
     public const FURNITURE = [
         self::TABLE,
         self::CHAIR,
         self::SHELF,
         self::SOFA,
+        self::STAND,
+        self::COOLER,
+        self::CANCELAR,
+        self::SAFE,
+        self::TUMBA,
+        self::FRIDGE,
+        self::SPLIT_SYSTEM,
+        self::TRIBUNE,
+        self::SVCH,
+        self::DESK,
+        self::LAMP,
+        self::SKAMIYA,
+        self::SHTATIV,
+        self::PLANTS,
+        self::REGULATE_TEMP_FREQ,
+        self::OTHER_FURNITURE
     ];
     public const SHORT_REPORT_TYPES = [
         self::ARM,
@@ -226,11 +262,29 @@ class ThingTypeDictionary implements BaseDictionary
             self::WITNESS_DEFENCE => 'Комплекс обеспечения защиты свидетеля',
             self::INFO_KIOSK => 'Информационный киоск',
             self::INFO_PANEL => 'Информационная ЖК-панель (информационное табло)',
+            self::IBP => 'ИБП',
+            self::CAMERA => 'Камера',
             self::TABLE => 'Стол',
             self::CHAIR => 'Стул/кресло',
             self::SHELF => 'Шкаф',
             self::SOFA => 'Диван',
-            self::STATION_AUDIO_VIDEO_PROTOCOL => 'Стационарный комплект аудиовидеопротоколирования'
+            self::STATION_AUDIO_VIDEO_PROTOCOL => 'Стационарный комплект аудиовидеопротоколирования',
+            self::STAND => 'Стенд',
+            self::COOLER => 'Кулер',
+            self::CANCELAR => 'Канцелярский инвертарь',
+            self::SAFE => 'Сейф',
+            self::TUMBA => 'Тумба',
+            self::FRIDGE => 'Холодильник',
+            self::SPLIT_SYSTEM => 'Кондиционер',
+            self::TRIBUNE => 'Трибуна',
+            self::SVCH => 'Микроволновая печь',
+            self::DESK => 'Доска',
+            self::LAMP => 'Лампа',
+            self::SKAMIYA => 'Скамья',
+            self::SHTATIV => 'Штатив',
+            self::PLANTS => 'Растение',
+            self::REGULATE_TEMP_FREQ => 'Регулятор температуры/частоты',
+            self::OTHER_FURNITURE => 'Прочая мебель',
         ];
     }
     public static function get($index){
