@@ -24,7 +24,7 @@
         </div>
 
         <router-link
-            to="/transfer-acts/create"
+            to="transfer-acts/create"
             class="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 flex items-center transition"
         >
           <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -96,6 +96,7 @@
         <table class="w-full">
           <thead class="bg-gradient-to-r from-indigo-500 to-purple-600">
           <tr>
+<!--            <th class="px-6 py-4 text-left text-sm text-white">ID</th>-->
             <th class="px-6 py-4 text-left text-sm text-white">Тип акта</th>
             <th class="px-6 py-4 text-left text-sm text-white">МОЛ списания</th>
             <th class="px-6 py-4 text-left text-sm text-white">МОЛ зачисления</th>
@@ -111,6 +112,11 @@
               :key="act.id"
               class="hover:bg-indigo-50 transition"
           >
+            <!-- ID -->
+<!--            <td class="px-6 py-4 font-mono text-sm">-->
+<!--              #{{ act.id }}-->
+<!--            </td>-->
+
             <!-- Тип -->
             <td class="px-6 py-4 font-medium">
               {{ act.typeLabel }}
@@ -147,7 +153,7 @@
             <td class="px-6 py-4">
               <div class="flex gap-3">
                 <router-link
-                    :to="`/transfer-acts/view/${act.id}`"
+                    :to="`transfer-acts/view/${act.id}`"
                     class="text-indigo-600 hover:text-indigo-800 flex items-center"
                     title="Просмотр"
                 >
@@ -159,7 +165,7 @@
 
                 <router-link
                     v-if="act.confirmed === 1"
-                    :to="`/transfer-acts/edit/${act.id}`"
+                    :to="`transfer-acts/edit/${act.id}`"
                     class="text-green-600 hover:text-green-800 flex items-center"
                     title="Редактировать"
                 >
@@ -183,7 +189,7 @@
           <p class="mt-1 text-sm text-gray-500">Начните с создания нового акта передачи.</p>
           <div class="mt-6">
             <router-link
-                to="/transfer-acts/create"
+                to="transfer-acts/create"
                 class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
             >
               <svg class="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -310,7 +316,6 @@ const loadData = async () => {
         if (timeB !== timeA) {
           return timeB - timeA
         }
-        // Если даты одинаковые, сортируем по ID по убыванию
         return (b.id || 0) - (a.id || 0)
       })
 
@@ -394,9 +399,9 @@ watch([searchQuery, typeFilter], () => {
 
 // utils
 const formatDate = (date) => {
-  if (!date) return '—'
-  const dateObj = new Date(date)
-  if (isNaN(dateObj.getTime())) return '—'
-  return dateObj.toLocaleDateString('ru-RU')
+  if (!date) return '-';
+  const dateObj = new Date(date);
+  if (isNaN(dateObj.getTime())) return '-';
+  return dateObj.toLocaleDateString('ru-RU');
 }
 </script>
