@@ -462,19 +462,25 @@ const handleSubmit = async () => {
   try {
     isSubmitting.value = true
 
+    const isPriceInvalid =
+        formData.price === '' ||
+        formData.price === null ||
+        formData.price === undefined ||
+        Number.isNaN(Number(formData.price)) ||
+        Number(formData.price) < 0
+
     if (!formData.name || !formData.thing_type_id
         || !formData.serial_number || !formData.inv_number
-        || !formData.operation_date || !formData.thing_type_id
-        || !formData.price || !formData.comment)  {
+        || !formData.operation_date || isPriceInvalid
+        || !formData.comment)  {
       alert('Пожалуйста, заполните все обязательные поля *')
       return
     }
 
-
     // Подготовка данных для отправки
     const dataToSend = {
       name: formData.name,
-      second_name: formData.second_name || null, // Добавлено поле дополнительного названия
+      second_name: formData.second_name || null,
       serial_number: formData.serial_number,
       inv_number: formData.inv_number,
       operation_date: formData.operation_date,
@@ -483,13 +489,17 @@ const handleSubmit = async () => {
       thing_parent_id: formData.thing_parent_id ? parseInt(formData.thing_parent_id) : null,
       auditorium_id: formData.auditorium_id ? parseInt(formData.auditorium_id) : null,
       condition: 1,
-      price: parseFloat(formData.price),
+      price: parseFloat(formData.price), // 0 корректно превратится в 0
       comment: formData.comment || '',
       is_composite: formData.is_composite,
       children: formData.is_composite
           ? formData.children.map(child => ({
             ...child,
-            thing_type_id: Number(child.thing_type_id)
+            thing_type_id: Number(child.thing_type_id),
+            // Если у дочернего элемента указан 0, сохраняем 0, а не null
+            price: (child.price !== '' && child.price !== null && child.price !== undefined)
+                ? parseFloat(child.price)
+                : null
           }))
           : []
     }

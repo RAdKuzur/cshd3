@@ -24,7 +24,7 @@
         </div>
 
         <router-link
-            to="transfer-acts/create"
+            to="/transfer-acts/create"
             class="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 flex items-center transition"
         >
           <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -80,12 +80,22 @@
         <p class="mt-2 text-gray-600">Загрузка данных...</p>
       </div>
 
+      <!-- Ошибка загрузки -->
+      <div v-else-if="errorMessage" class="bg-red-50 border border-red-200 rounded-2xl p-6 text-center">
+        <p class="text-red-700 font-medium">{{ errorMessage }}</p>
+        <button
+            @click="loadData"
+            class="mt-4 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
+        >
+          Повторить попытку
+        </button>
+      </div>
+
       <!-- Таблица -->
       <div v-else class="bg-white rounded-2xl shadow-lg border overflow-hidden">
         <table class="w-full">
           <thead class="bg-gradient-to-r from-indigo-500 to-purple-600">
           <tr>
-<!--            <th class="px-6 py-4 text-left text-sm text-white">ID</th>-->
             <th class="px-6 py-4 text-left text-sm text-white">Тип акта</th>
             <th class="px-6 py-4 text-left text-sm text-white">МОЛ списания</th>
             <th class="px-6 py-4 text-left text-sm text-white">МОЛ зачисления</th>
@@ -101,11 +111,6 @@
               :key="act.id"
               class="hover:bg-indigo-50 transition"
           >
-            <!-- ID -->
-<!--            <td class="px-6 py-4 font-mono text-sm">-->
-<!--              #{{ act.id }}-->
-<!--            </td>-->
-
             <!-- Тип -->
             <td class="px-6 py-4 font-medium">
               {{ act.typeLabel }}
@@ -142,7 +147,7 @@
             <td class="px-6 py-4">
               <div class="flex gap-3">
                 <router-link
-                    :to="`transfer-acts/view/${act.id}`"
+                    :to="`/transfer-acts/view/${act.id}`"
                     class="text-indigo-600 hover:text-indigo-800 flex items-center"
                     title="Просмотр"
                 >
@@ -150,12 +155,11 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                   </svg>
-
                 </router-link>
 
                 <router-link
-                    v-if = "act.confirmed === 1"
-                    :to="`transfer-acts/edit/${act.id}`"
+                    v-if="act.confirmed === 1"
+                    :to="`/transfer-acts/edit/${act.id}`"
                     class="text-green-600 hover:text-green-800 flex items-center"
                     title="Редактировать"
                 >
@@ -179,7 +183,7 @@
           <p class="mt-1 text-sm text-gray-500">Начните с создания нового акта передачи.</p>
           <div class="mt-6">
             <router-link
-                to="transfer-acts/create"
+                to="/transfer-acts/create"
                 class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
             >
               <svg class="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -191,28 +195,48 @@
         </div>
 
         <!-- Пагинация -->
-        <div class="px-6 py-4 border-t bg-gray-50 flex justify-between items-center">
+        <div v-if="filteredActs.length > 0" class="px-6 py-4 border-t bg-gray-50 flex justify-between items-center">
           <div class="text-sm text-gray-600">
             Показано {{ startIndex }}–{{ endIndex }} из {{ filteredActs.length }}
           </div>
 
           <div class="flex items-center gap-2">
             <button
+                @click="goToFirstPage"
+                :disabled="currentPage === 1"
+                class="px-3 py-1 border rounded disabled:opacity-50 hover:bg-gray-100 transition"
+                title="Первая страница"
+            >
+              В начало
+            </button>
+
+            <button
                 @click="prevPage"
                 :disabled="currentPage === 1"
-                class="px-3 py-1 border rounded disabled:opacity-50 hover:bg-gray-50"
+                class="px-3 py-1 border rounded disabled:opacity-50 hover:bg-gray-100 transition"
             >
               Назад
             </button>
 
-            <span>{{ currentPage }} / {{ totalPages }}</span>
+            <span class="px-2 text-sm font-medium text-gray-700">
+              {{ currentPage }} / {{ totalPages }}
+            </span>
 
             <button
                 @click="nextPage"
-                :disabled="currentPage === totalPages"
-                class="px-3 py-1 border rounded disabled:opacity-50 hover:bg-gray-50"
+                :disabled="currentPage >= totalPages"
+                class="px-3 py-1 border rounded disabled:opacity-50 hover:bg-gray-100 transition"
             >
               Вперёд
+            </button>
+
+            <button
+                @click="goToLastPage"
+                :disabled="currentPage >= totalPages"
+                class="px-3 py-1 border rounded disabled:opacity-50 hover:bg-gray-100 transition"
+                title="Последняя страница"
+            >
+              В конец
             </button>
           </div>
         </div>
@@ -228,6 +252,7 @@ import axios from 'axios'
 import { BACKEND_URL } from '@/router.js'
 
 const isLoading = ref(false)
+const errorMessage = ref('')
 
 const acts = ref([])
 const people = ref({})
@@ -243,6 +268,7 @@ const perPage = 10
 
 const loadData = async () => {
   isLoading.value = true
+  errorMessage.value = ''
 
   try {
     const [actsRes, peopleRes, typesRes] = await Promise.all([
@@ -265,7 +291,7 @@ const loadData = async () => {
     }
 
     if (actsRes.data.success) {
-      acts.value = actsRes.data.data.map(a => ({
+      const mappedActs = actsRes.data.data.map(a => ({
         id: a.id,
         from: a.from,
         to: a.to,
@@ -276,8 +302,23 @@ const loadData = async () => {
         confirmed: a.confirmed,
         date: a.date
       }))
+
+      // Сортировка по убыванию даты (самые новые сверху)
+      mappedActs.sort((a, b) => {
+        const timeA = a.date ? new Date(a.date).getTime() : 0
+        const timeB = b.date ? new Date(b.date).getTime() : 0
+        if (timeB !== timeA) {
+          return timeB - timeA
+        }
+        // Если даты одинаковые, сортируем по ID по убыванию
+        return (b.id || 0) - (a.id || 0)
+      })
+
+      acts.value = mappedActs
     }
   } catch (error) {
+    console.error('Ошибка при загрузке актов передачи:', error)
+    errorMessage.value = 'Не удалось загрузить данные. Проверьте соединение с сервером.'
   } finally {
     isLoading.value = false
   }
@@ -290,7 +331,7 @@ const filteredActs = computed(() => {
   let list = acts.value
 
   if (searchQuery.value) {
-    const q = searchQuery.value.toLowerCase()
+    const q = searchQuery.value.trim().toLowerCase()
     list = list.filter(a =>
         a.fromName.toLowerCase().includes(q) ||
         a.toName.toLowerCase().includes(q)
@@ -313,7 +354,7 @@ const resetFilters = () => {
 
 // пагинация
 const totalPages = computed(() =>
-    Math.ceil(filteredActs.value.length / perPage)
+    Math.max(1, Math.ceil(filteredActs.value.length / perPage))
 )
 
 const paginatedActs = computed(() => {
@@ -331,8 +372,21 @@ const endIndex = computed(() =>
     Math.min(currentPage.value * perPage, filteredActs.value.length)
 )
 
-const prevPage = () => currentPage.value > 1 && currentPage.value--
-const nextPage = () => currentPage.value < totalPages.value && currentPage.value++
+const goToFirstPage = () => {
+  currentPage.value = 1
+}
+
+const prevPage = () => {
+  if (currentPage.value > 1) currentPage.value--
+}
+
+const nextPage = () => {
+  if (currentPage.value < totalPages.value) currentPage.value++
+}
+
+const goToLastPage = () => {
+  currentPage.value = totalPages.value
+}
 
 watch([searchQuery, typeFilter], () => {
   currentPage.value = 1
@@ -340,14 +394,9 @@ watch([searchQuery, typeFilter], () => {
 
 // utils
 const formatDate = (date) => {
-  if (!date) return '-';
-  const dateObj = new Date(date);
-  return dateObj.toLocaleDateString('ru-RU');
-  // Или если нужен конкретный формат:
-  // return new Intl.DateTimeFormat('ru-RU', {
-  //   year: 'numeric',
-  //   month: '2-digit',
-  //   day: '2-digit'
-  // }).format(dateObj);
+  if (!date) return '—'
+  const dateObj = new Date(date)
+  if (isNaN(dateObj.getTime())) return '—'
+  return dateObj.toLocaleDateString('ru-RU')
 }
 </script>

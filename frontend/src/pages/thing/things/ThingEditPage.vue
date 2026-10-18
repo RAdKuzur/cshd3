@@ -697,13 +697,20 @@ const handleSubmit = async () => {
 
     const data = formData.value;
 
+    const isPriceInvalid =
+        data.price === '' ||
+        data.price === null ||
+        data.price === undefined ||
+        Number.isNaN(Number(data.price)) ||
+        Number(data.price) < 0
+
     // Валидация
     if (!data.name ||
         !data.thing_type_id ||
         !data.serial_number ||
         !data.inv_number ||
         !data.operation_date ||
-        !data.price ||
+        isPriceInvalid ||
         !data.comment) {
       alert('Пожалуйста, заполните все обязательные поля *')
       return
@@ -718,7 +725,7 @@ const handleSubmit = async () => {
       operation_date: data.operation_date,
       condition: conditionId.value,
       comment: data.comment || null,
-      price: data.price || 0,
+      price: parseFloat(data.price), // Корректно передаст 0
       thing_type_id: data.thing_type_id,
       children: {
         create: newChildren.map(child => ({
@@ -726,7 +733,10 @@ const handleSubmit = async () => {
           thing_type_id: parseInt(child.thing_type_id),
           serial_number: child.serial_number || null,
           inv_number: child.inv_number || null,
-          price: child.price ? parseFloat(child.price) : null,
+          // Исправлено: теперь 0 не превращается в null
+          price: (child.price !== '' && child.price !== null && child.price !== undefined)
+              ? parseFloat(child.price)
+              : null,
           condition: child.condition ?? null
         })),
 
